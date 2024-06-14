@@ -26,9 +26,9 @@
                 <RowDefinition Height="580"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="{Binding ManufactureDate.Value,Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding ManufactureDate,Converter={StaticResource DateTimeConverter}}" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
             </StackPanel>
-            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable.Value}" SelectedIndex="{Binding SelectedIndex.Value}" SelectedItem="{Binding SelectedItem.Value}"
+            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->
                 <DataGrid.Columns>

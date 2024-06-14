@@ -5,8 +5,6 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
-using Reactive.Bindings;
-using System.Reactive.Disposables;
 using System;
 
 #pragma warning disable
@@ -33,11 +31,29 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelWindowMain : Common, IWindow, IDisposable
+    public class ViewModelWindowMain : Common, IWindow
     {
-        //変数
-        CompositeDisposable Disposable                              //解放処理イベント
-        { get; } = new CompositeDisposable();
+
+        //プロパティ変数
+        Frame _FramePage;
+        WindowState _DisplayState;
+        WindowStyle _DisplayStyle;
+        double _WindowLeft;
+        double _WindowTop;
+        double _WindowWidth;
+        double _WindowHeight;
+        string _ProcessName;
+        string _ProcessWork;
+        string _FunctionColor;
+        bool _VisiblePower;
+        bool _VisibleList;
+        bool _VisibleInfo;
+        bool _VisibleDefect;
+        bool _VisibleArrow;
+        bool _VisiblePlan;
+        string _IconPlan;
+        string _IconList;
+        int _IconSize;
 
         //プロパティ
         public static ViewModelWindowMain Instance                  //インスタンス
@@ -45,47 +61,101 @@ namespace Display
         public IKeyDown Ikeydown                                    //インターフェース
         { get; set; }
 
-
-
-
-        public ReactivePropertySlim<Frame> FramePage                //FramePage
-        { get; set; } = new ReactivePropertySlim<Frame>();
-        public ReactivePropertySlim<WindowState> DisplayState       //最大化・Window化
-        { get; set; } = new ReactivePropertySlim<WindowState>();
-        public ReactivePropertySlim<WindowStyle> DisplayStyle       //最大化・最小化・閉じるボタン
-        { get; set; } = new ReactivePropertySlim<WindowStyle>();
-        public ReactivePropertySlim<double> WindowLeft              //Windowの位置（Left）
-        { get; set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<double> WindowTop               //Windowの位置（Top）
-        { get; set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<double> WindowWidth             //Windowの大きさ（Width）
-        { get; set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<double> WindowHeight            //Windowの大きさ（Height）
-        { get; set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<string> ProcessName             //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ProcessWork             //工程区分表示
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> FunctionColor           //ページ名色
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<bool> VisiblePower              //表示・非表示（電源ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleList               //表示・非表示（一覧ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleInfo               //表示・非表示（登録ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleDefect             //表示・非表示（不良ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleArrow              //表示・非表示（矢印ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisiblePlan               //表示・非表示（予定ボタン）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<string> IconPlan                //アイコン（計画一覧）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> IconList                //アイコン（計画一覧）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<int> IconSize                   //アイコンサイズ
-        { get; set; } = new ReactivePropertySlim<int>();
+        public Frame FramePage                //FramePage
+        {
+            get { return _FramePage; }
+            set { SetProperty(ref _FramePage, value); }
+        }
+        public WindowState DisplayState       //最大化・Window化
+        {
+            get { return _DisplayState; }
+            set { SetProperty(ref _DisplayState, value); }
+        }
+        public WindowStyle DisplayStyle       //最大化・最小化・閉じるボタン
+        {
+            get { return _DisplayStyle; }
+            set { SetProperty(ref _DisplayStyle, value); }
+        }
+        public double WindowLeft              //Windowの位置（Left）
+        {
+            get { return _WindowLeft; }
+            set { SetProperty(ref _WindowLeft, value); }
+        }
+        public double WindowTop               //Windowの位置（Top）
+        {
+            get { return _WindowTop; }
+            set { SetProperty(ref _WindowTop, value); }
+        }
+        public double WindowWidth             //Windowの大きさ（Width）
+        {
+            get { return _WindowWidth; }
+            set { SetProperty(ref _WindowWidth, value); }
+        }
+        public double WindowHeight            //Windowの大きさ（Height）
+        {
+            get { return _WindowHeight; }
+            set { SetProperty(ref _WindowHeight, value); }
+        }
+        public string ProcessName             //工程区分
+        {
+            get { return _ProcessName; }
+            set { SetProperty(ref _ProcessName, value); }
+        }
+        public string ProcessWork             //工程区分表示
+        {
+            get { return _ProcessWork; }
+            set { SetProperty(ref _ProcessWork, value); }
+        }
+        public string FunctionColor           //ページ名色
+        {
+            get { return _FunctionColor; }
+            set { SetProperty(ref _FunctionColor, value); }
+        }
+        public bool VisiblePower              //表示・非表示（電源ボタン）
+        {
+            get { return _VisiblePower; }
+            set { SetProperty(ref _VisiblePower, value); }
+        }
+        public bool VisibleList               //表示・非表示（一覧ボタン）
+        {
+            get { return _VisibleList; }
+            set { SetProperty(ref _VisibleList, value); }
+        }
+        public bool VisibleInfo               //表示・非表示（登録ボタン）
+        {
+            get { return _VisibleInfo; }
+            set { SetProperty(ref _VisibleInfo, value); }
+        }
+        public bool VisibleDefect             //表示・非表示（不良ボタン）
+        {
+            get { return _VisibleDefect; }
+            set { SetProperty(ref _VisibleDefect, value); }
+        }
+        public bool VisibleArrow              //表示・非表示（矢印ボタン）
+        {
+            get { return _VisibleArrow; }
+            set { SetProperty(ref _VisibleArrow, value); }
+        }
+        public bool VisiblePlan               //表示・非表示（予定ボタン）
+        {
+            get { return _VisiblePlan; }
+            set { SetProperty(ref _VisiblePlan, value); }
+        }
+        public string IconPlan                //アイコン（計画一覧）
+        {
+            get { return _IconPlan; }
+            set { SetProperty(ref _IconPlan, value); }
+        }
+        public string IconList                //アイコン（計画一覧）
+        {
+            get { return _IconList; }
+            set { SetProperty(ref _IconList, value); }
+        }
+        public int IconSize                   //アイコンサイズ
+        {
+            get { return _IconSize; }
+            set { SetProperty(ref _IconSize, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -104,14 +174,14 @@ namespace Display
 
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
-            DisplayState.Value = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
-            DisplayStyle.Value = WindowStyle.None;
+            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            DisplayStyle = WindowStyle.None;
 
             //データベース接続文字列
             SQL.DB = INI.GetString("Database", "Database");
             SQL.ConnectString = INI.GetString("Database", "ConnectString");
             SQL.DatabaseOpen();
-            FunctionColor.Value = (SQL.ConnectString.Contains("DEV")) ? "0.5" : "1";
+            FunctionColor = (SQL.ConnectString.Contains("DEV")) ? "0.5" : "1";
         }
 
         //開始処理
@@ -124,11 +194,11 @@ namespace Display
             StartPage();
 
             //ボタン設定
-            VisiblePower.Value = false;
-            VisibleList.Value = false;
-            VisibleInfo.Value = false;
-            VisibleDefect.Value = false;
-            VisibleArrow.Value = false;
+            VisiblePower = false;
+            VisibleList = false;
+            VisibleInfo = false;
+            VisibleDefect = false;
+            VisibleArrow = false;
         }
 
         //終了処理
@@ -164,28 +234,28 @@ namespace Display
 
                 case "F1":
                     //計画一覧画面
-                    FramePage.Value.Navigate(new PlanList());
+                    FramePage.Navigate(new PlanList());
                     INI.WriteString("Page", "Initial", "PlanList");
                     break;
 
                 case "F2":
                     //搬入登録画面
                     ViewModelInProcessInfo.Instance.InProcessCODE = null;
-                    FramePage.Value.Navigate(new InProcessInfo());
+                    FramePage.Navigate(new InProcessInfo());
                     INI.WriteString("Page", "Initial", "InProcessInfo");
                     break;
 
                 case "F3":
                     //搬出登録画面
-                    ViewModelTransportInfo.Instance.InProcessCODE.Value = null;
-                    FramePage.Value.Navigate(new TransportList());
+                    ViewModelTransportInfo.Instance.InProcessCODE = null;
+                    FramePage.Navigate(new TransportList());
                     INI.WriteString("Page", "Initial", "TransportList");
                     break;
 
                 case "F4":
                     //実績登録画面
-                    ViewModelManufactureList.Instance.ManufactureCODE.Value = null;
-                    FramePage.Value.Navigate(new ManufactureInfo());
+                    ViewModelManufactureList.Instance.ManufactureCODE = null;
+                    FramePage.Navigate(new ManufactureInfo());
                     INI.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 
@@ -196,13 +266,13 @@ namespace Display
 
                 case "F11":
                     //不良登録画面（Debug）
-                    FramePage.Value.Navigate(new DefectInfo());
+                    FramePage.Navigate(new DefectInfo());
                     break;
 
                 case "F12":
                     //設定画面
                     ViewModelManufactureInfo.Instance.Status = null;
-                    FramePage.Value.Navigate(new Setting());
+                    FramePage.Navigate(new Setting());
                     break;
 
                 case "DisplayInfo":
@@ -225,40 +295,40 @@ namespace Display
         //Windowサイズ・位置復元
         private void LoadWindowProperty()
         {
-            if (DisplayStyle.Value == WindowStyle.None)
+            if (DisplayStyle == WindowStyle.None)
             {
-                WindowLeft.Value = 0;
-                WindowTop.Value = 0;
-                WindowWidth.Value = 0;
-                WindowHeight.Value = 0;
+                WindowLeft = 0;
+                WindowTop = 0;
+                WindowWidth = 0;
+                WindowHeight = 0;
             }
             else
             {
                 //Windowのサイズ・位置を復元 
-                WindowLeft.Value = Properties.Settings.Default.WindowLeft;
-                WindowTop.Value = Properties.Settings.Default.WindowTop;
-                WindowWidth.Value = Properties.Settings.Default.WindowWidth;
-                WindowHeight.Value = Properties.Settings.Default.WindowHeight;
+                WindowLeft = Properties.Settings.Default.WindowLeft;
+                WindowTop = Properties.Settings.Default.WindowTop;
+                WindowWidth = Properties.Settings.Default.WindowWidth;
+                WindowHeight = Properties.Settings.Default.WindowHeight;
             }
 
-            WindowLeft.Value = 0;
-            WindowTop.Value = 0;
-            WindowWidth.Value = 0;
-            WindowHeight.Value = 0;
+            WindowLeft = 0;
+            WindowTop = 0;
+            WindowWidth = 0;
+            WindowHeight = 0;
 
             //Width・Heightのデフォルト値
-            if (WindowWidth.Value <= 0) { WindowWidth.Value = 1280; }
-            if (WindowHeight.Value <= 0) { WindowHeight.Value = 880; }
+            if (WindowWidth <= 0) { WindowWidth = 1280; }
+            if (WindowHeight <= 0) { WindowHeight = 880; }
         }
 
         //Windowのサイズ・位置を記憶
         private void SaveWindowProperty()
         {
-            if (DisplayState.Value == WindowState.Maximized) { return; }
-            Properties.Settings.Default.WindowLeft = WindowLeft.Value;
-            Properties.Settings.Default.WindowTop = WindowTop.Value;
-            Properties.Settings.Default.WindowWidth = WindowWidth.Value;
-            Properties.Settings.Default.WindowHeight = WindowHeight.Value;
+            if (DisplayState == WindowState.Maximized) { return; }
+            Properties.Settings.Default.WindowLeft = WindowLeft;
+            Properties.Settings.Default.WindowTop = WindowTop;
+            Properties.Settings.Default.WindowWidth = WindowWidth;
+            Properties.Settings.Default.WindowHeight = WindowHeight;
             Properties.Settings.Default.Save();
         }
 
@@ -266,13 +336,13 @@ namespace Display
         public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
         {
             var window = WindowMain.Instance;
-            var matrix = window.RenderTransform.Value;
+            var matrix = window.RenderTransform;
             var delta = e.DeltaManipulation;
             var offsetFromParent = VisualTreeHelper.GetOffset(window);
 
             var offsetX = delta.Translation.X;
             var offsetY = delta.Translation.Y;
-            matrix.Translate(offsetX, offsetY);
+            matrix.Value.Translate(offsetX, offsetY);
 
             //スワイプ処理
             if (offsetY > 80) { KeyDown("ESC"); }               //上から下（電源を切る）
@@ -284,12 +354,9 @@ namespace Display
         //アイコン初期化
         public void InitializeIcon()
         {
-            IconList.Value = "ViewList";
-            IconPlan.Value = "FileClockOutline";
-            IconSize.Value = 30;
+            IconList = "ViewList";
+            IconPlan = "FileClockOutline";
+            IconSize = 30;
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

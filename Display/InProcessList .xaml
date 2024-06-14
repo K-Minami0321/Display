@@ -29,8 +29,8 @@
                 <RowDefinition Height="70"/>
                 <RowDefinition Height="580"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate.Value,Converter={StaticResource DateTimeConverter}}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
-            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable.Value}" SelectedIndex="{Binding SelectedIndex.Value}" SelectedItem="{Binding SelectedItem.Value}"
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter}}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->
                 <DataGrid.Columns>
@@ -48,28 +48,28 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="形状" Visibility="{Binding Path=DataContext.VisibleShape.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="90">
+                    <DataGridTemplateColumn Header="形状" Visibility="{Binding Path=DataContext.VisibleShape, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="90">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding 形状}" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderUnit.Value,FallbackValue=素材数量, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleUnit.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120">
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderUnit,FallbackValue=素材数量, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleUnit, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding 素材数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderAmount.Value,FallbackValue=数量, Source={StaticResource proxyElement}}" Width="120" >
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderAmount,FallbackValue=数量, Source={StaticResource proxyElement}}" Width="120" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding 数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderWeight.Value,FallbackValue=単重, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleWeight.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120" >
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderWeight,FallbackValue=単重, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleWeight, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding 重量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>

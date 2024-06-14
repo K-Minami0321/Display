@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using Reactive.Bindings;
 
 //-----------------------------------------------------------------
 //
@@ -971,9 +970,9 @@ namespace Display
     //インターフェース
     public interface ISelect
     {
-        ReactivePropertySlim<int> SelectedIndex     //行選択
+        int SelectedIndex                           //行選択
         { get; set; }
-        ReactivePropertySlim<double> ScrollIndex    //スクロール位置
+        double ScrollIndex                          //スクロール位置
         { get; set; }
         void SelectList();                          //DataGrid選択処理
     }
@@ -1014,12 +1013,12 @@ namespace Display
             if (Iselect == null) { return; }
 
             //選択行をセット
-            Iselect.SelectedIndex.Value = AssociatedObject.SelectedIndex;
+            Iselect.SelectedIndex = AssociatedObject.SelectedIndex;
 
             //スクロール値をセット
             var chack = Scroll;
             SetScrollViewer();
-            if (chack != null) { Iselect.ScrollIndex.Value = Scroll.VerticalOffset; }
+            if (chack != null) { Iselect.ScrollIndex = Scroll.VerticalOffset; }
         }
 
         //キーが押された時

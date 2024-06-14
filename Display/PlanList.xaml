@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="900*"/>
                         <ColumnDefinition Width="260"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Visibility="{Binding VisibleUnit.Value,Converter={StaticResource CollapsedConverter}}">
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Visibility="{Binding VisibleUnit,Converter={StaticResource CollapsedConverter}}">
                         <Button Command="{Binding CommandButton}" CommandParameter="Sheet" Style="{StaticResource Search}">
                             <WrapPanel>
                                 <TextBlock Text="シート"/>
@@ -57,9 +57,9 @@
                             </i:Interaction.Triggers>
                         </Button>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding UpdateDate.Value}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding UpdateDate}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
                 </Grid>
-                <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable.Value}" SelectedIndex="{Binding SelectedIndex.Value}" SelectedItem="{Binding SelectedItem.Value}"
+                <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                           ColumnHeaderStyle="{StaticResource DefultHeader}">
                     <!-- 項目設定 -->
                     <DataGrid.Columns>
@@ -97,7 +97,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="形状" Width="90" Visibility="{Binding Path=DataContext.VisibleUnit.Value,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
+                        <DataGridTemplateColumn Header="形状" Width="90" Visibility="{Binding Path=DataContext.VisibleUnit,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding 形状}" HorizontalAlignment="Center"/>
@@ -113,7 +113,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="完了" Width="120" Visibility="{Binding Path=DataContext.VisibleAmount.Value,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
+                        <DataGridTemplateColumn Header="完了" Width="120" Visibility="{Binding Path=DataContext.VisibleAmount,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">

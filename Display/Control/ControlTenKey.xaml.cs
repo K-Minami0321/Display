@@ -1,6 +1,5 @@
 ﻿using ClassBase;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -26,13 +25,19 @@ namespace Display
     //ViewModel
     public class ViewModelControlTenKey : Common, ITenKey
     {
+        //プロパティ変数
+        string _InputString;
+
         //プロパティ
         public static ViewModelControlTenKey Instance   //インスタンス
         { get; set; } = new ViewModelControlTenKey();
         public ITenKey Itenkey                          //インターフェース
         { get; set; }
-        public ReactiveProperty<string> InputString     //入力文字
-        { get; set; } = new ReactiveProperty<string>();
+        public string InputString     //入力文字
+        {
+            get { return _InputString; }
+            set { SetProperty(ref _InputString, value); }
+        }
 
         //イベント
         ActionCommand commandButton;
@@ -43,7 +48,7 @@ namespace Display
         {
             //呼び出し元で実行
             if (Itenkey == null) { return; }
-            SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_TOUCH);
+            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Itenkey.KeyDown(value); 
         }
     }

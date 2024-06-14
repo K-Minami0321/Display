@@ -9,12 +9,12 @@
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:ViewModelWindowMain}"
         d:DesignWidth="1280" d:DesignHeight="800" 
         MinWidth="1280" MinHeight="800"
-        Left="{Binding WindowLeft.Value,Mode=TwoWay}"
-        Top="{Binding WindowTop.Value,Mode=TwoWay}"
-        Width="{Binding WindowWidth.Value,Mode=TwoWay}"
-        Height="{Binding WindowHeight.Value,Mode=TwoWay}"
-        WindowStyle="{Binding DisplayStyle.Value}"
-        WindowState="{Binding DisplayState.Value}"
+        Left="{Binding WindowLeft,Mode=TwoWay}"
+        Top="{Binding WindowTop,Mode=TwoWay}"
+        Width="{Binding WindowWidth,Mode=TwoWay}"
+        Height="{Binding WindowHeight,Mode=TwoWay}"
+        WindowStyle="{Binding DisplayStyle}"
+        WindowState="{Binding DisplayState}"
         FontSize="30" FontFamily="Meiryo UI"
         IsManipulationEnabled="True">
     <!-- イベント設定 -->
@@ -70,13 +70,13 @@
                         <ColumnDefinition Width="600"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Border CornerRadius="2" Background="{Binding ProcessName.Value,Converter={StaticResource ProcessColorConverter},FallbackValue=#90A4AE}" 
-                            MinWidth="240" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding FunctionColor.Value}" >
-                        <TextBlock Text="{Binding ProcessWork.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" 
+                    <Border CornerRadius="2" Background="{Binding ProcessName,Converter={StaticResource ProcessColorConverter},FallbackValue=#90A4AE}" 
+                            MinWidth="240" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding FunctionColor}" >
+                        <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" 
                                    Foreground="#FFFFFF" FontWeight="Medium" Padding="40,0,40,0"/>
                     </Border>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Visibility="{Binding VisibleArrow.Value,Converter={StaticResource CollapsedConverter}}">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Visibility="{Binding VisibleArrow,Converter={StaticResource CollapsedConverter}}">
                             <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="PreviousDate" Opacity="0.9">
                                 <WrapPanel>
                                     <materialDesign:PackIcon Kind="ArrowLeftBold" Height="35" Width="35" HorizontalAlignment="Center"/>
@@ -108,7 +108,7 @@
                                 </i:Interaction.Triggers>
                             </Button>-->
                         </StackPanel>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DefectInfo" Visibility="{Binding VisibleDefect.Value,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DefectInfo" Visibility="{Binding VisibleDefect,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
                                 <materialDesign:PackIcon Kind="ToyBrickRemove" Height="30" Width="30" HorizontalAlignment="Center"/>
                             </WrapPanel>
@@ -118,9 +118,9 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList.Value,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
-                                <materialDesign:PackIcon Kind="{Binding IconList.Value,FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="{Binding IconList,FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
                             </WrapPanel>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
@@ -128,9 +128,9 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan.Value,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
-                                <materialDesign:PackIcon Kind="{Binding IconPlan.Value,FallbackValue=FileClockOutline}" Height="{Binding IconSize.Value,FallbackValue=30}" Width="{Binding IconSize.Value,FallbackValue=30}" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="{Binding IconPlan,FallbackValue=FileClockOutline}" Height="{Binding IconSize,FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
                             </WrapPanel>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
@@ -138,7 +138,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayInfo" Visibility="{Binding VisibleInfo.Value,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayInfo" Visibility="{Binding VisibleInfo,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
                                 <materialDesign:PackIcon Kind="Pen" Height="30" Width="30" HorizontalAlignment="Center"/>
                             </WrapPanel>
@@ -148,7 +148,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower.Value,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
                                 <materialDesign:PackIcon Kind="Power" Height="35" Width="35" HorizontalAlignment="Center" />
                             </WrapPanel>

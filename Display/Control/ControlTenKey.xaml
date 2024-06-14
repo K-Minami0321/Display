@@ -126,10 +126,10 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Grid.Row="7" Grid.Column="5" Content="{Binding InputString.Value,FallbackValue=.}" Command="{Binding CommandButton}" CommandParameter="{Binding InputString.Value,FallbackValue=.}" Style="{StaticResource TenKey}">
+            <Button Grid.Row="7" Grid.Column="5" Content="{Binding InputString,FallbackValue=.}" Command="{Binding CommandButton}" CommandParameter="{Binding InputString,FallbackValue=.}" Style="{StaticResource TenKey}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="TouchDown">
-                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="{Binding InputString.Value,FallbackValue=.}"/>
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="{Binding InputString,FallbackValue=.}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>

@@ -1,10 +1,5 @@
 ﻿using ClassBase;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -25,35 +20,71 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelPlanList : Common, IKeyDown, ISelect, IDisposable
+    public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
-        //変数
-        CompositeDisposable Disposable                      //解放処理イベント
-        { get; } = new CompositeDisposable();
+
+        //プロパティ変数
+        string _LotNumber;
+        string _ProcessName;
+        string _InProcessCODE;
+        string _UpdateDate;
+        string _File;
+        bool _VisibleUnit;
+        bool _VisibleAmount;
+        bool _EnableSelect;
 
         //プロパティ
         public static ViewModelPlanList Instance            //インスタンス
         { get; set; } = new ViewModelPlanList();
-        public ReactivePropertySlim<string> LotNumber       //ロット番号
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ProcessName     //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessCODE   //搬入CODE
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> UpdateDate      //更新表示
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> File            //ファイル名
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<bool> VisibleUnit       //表示・非表示（コイル・シート絞り込み）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleAmount     //表示・非表示（完了数）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> EnableSelect      //選択可能
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<int> SelectedIndex      //行選択
-        { get; set; } = new ReactivePropertySlim<int>();
-        public ReactivePropertySlim<double> ScrollIndex     //スクロール位置
-        { get; set; } = new ReactivePropertySlim<double>();
+        public string LotNumber       //ロット番号
+        {
+            get { return _LotNumber; }
+            set { SetProperty(ref _LotNumber, value); }
+        }
+        public string ProcessName     //工程区分
+        {
+            get { return management.ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                management.ProcessName = value;
+                iProcess = ProcessCategory.SetProcess(value);
+            }
+        }
+        public string InProcessCODE   //搬入CODE
+        {
+            get { return management.InProcessCODE; }
+            set 
+            { 
+                SetProperty(ref _InProcessCODE, value);
+                management.InProcessCODE = value;
+            }
+        }
+        public string UpdateDate      //更新表示
+        {
+            get { return _UpdateDate; }
+            set { SetProperty(ref _UpdateDate, value); }
+        }
+        public string File            //ファイル名
+        {
+            get { return _File; }
+            set { SetProperty(ref _File, value); }
+        }
+        public bool VisibleUnit       //表示・非表示（コイル・シート絞り込み）
+        {
+            get { return _VisibleUnit; }
+            set { SetProperty(ref _VisibleUnit, value); }
+        }
+        public bool VisibleAmount     //表示・非表示（完了数）
+        {
+            get { return _VisibleAmount; }
+            set { SetProperty(ref _VisibleAmount, value); }
+        }
+        public bool EnableSelect      //選択可能
+        {
+            get { return _EnableSelect; }
+            set { SetProperty(ref _EnableSelect, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -61,28 +92,12 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ設定
-            ProcessName = management.ToReactivePropertySlimAsSynchronized(x => x.ProcessName).AddTo(Disposable);
-            InProcessCODE = management.ToReactivePropertySlimAsSynchronized(x => x.InProcessCODE).AddTo(Disposable);
-
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-            }).AddTo(Disposable);
-        }
-
         //コンストラクター
         internal ViewModelPlanList()
         {
             management = new Management();
-            SelectedIndex.Value = -1;
-            ScrollIndex.Value = 0;
-            SetProperty();
+            SelectedIndex = -1;
+            ScrollIndex = 0;
         }
 
         //ロード時
@@ -92,7 +107,7 @@ namespace Display
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-            ViewModelWindowMain.Instance.ProcessName.Value = INI.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
 
             //初期設定
             Initialize();
@@ -103,39 +118,39 @@ namespace Display
         private void Initialize()
         {
             //キャプション表示
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
-            ViewModelWindowMain.Instance.ProcessWork.Value = ProcessName.Value + "計画一覧";
-            UpdateDate.Value = management.SelectFile() + "版";
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
+            UpdateDate = management.SelectFile() + "版";
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = true;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = false;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconPlan.Value = "refresh";
-            ViewModelWindowMain.Instance.IconSize.Value = 35;
+            ViewModelWindowMain.Instance.IconPlan = "refresh";
+            ViewModelWindowMain.Instance.IconSize = 35;
 
             //画面設定
             switch (INI.GetString("Page", "Initial"))
             {
                 case "PlanList":
                     //計画一覧
-                    ViewModelWindowMain.Instance.VisibleList.Value = false;
-                    ViewModelWindowMain.Instance.VisibleInfo.Value = false;
-                    EnableSelect.Value = false;
+                    ViewModelWindowMain.Instance.VisibleList = false;
+                    ViewModelWindowMain.Instance.VisibleInfo = false;
+                    EnableSelect = false;
                     break;
 
                 default:
-                    ViewModelWindowMain.Instance.VisibleList.Value = true;
-                    ViewModelWindowMain.Instance.VisibleInfo.Value = true;
-                    EnableSelect.Value = true;
+                    ViewModelWindowMain.Instance.VisibleList = true;
+                    ViewModelWindowMain.Instance.VisibleInfo = true;
+                    EnableSelect = true;
                     break;
             }
 
             //表示・非表示
-            VisibleUnit.Value = ProcessName.Value == "合板" ? true : false;
-            VisibleAmount.Value = !VisibleUnit.Value;
+            VisibleUnit = ProcessName == "合板" ? true : false;
+            VisibleAmount = !VisibleUnit;
         }
 
         //キーイベント
@@ -145,19 +160,19 @@ namespace Display
             {
                 case "DisplayInfo":
                     //作業登録画面
-                    LotNumber.Value = null;
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessInfo());
+                    LotNumber = null;
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    SelectedIndex.Value = -1;
-                    ScrollIndex.Value = 0;
+                    SelectedIndex = -1;
+                    ScrollIndex = 0;
                     management.SelectFile();
                     DiaplayList();
                     break;
@@ -175,22 +190,22 @@ namespace Display
         //一覧表示
         private void DiaplayList(string where = "")
         {
-            var selectIndex = SelectedIndex.Value;
+            var selectIndex = SelectedIndex;
             management.SelectFile();
-            SelectTable.Value = management.SelectPlanList(where, true);
+            SelectTable = management.SelectPlanList(where, true);
 
             //行選択・スクロール設定
             DataGridBehavior.Instance.SetScrollViewer();
-            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex.Value);
-            SelectedIndex.Value = selectIndex;
+            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
+            SelectedIndex = selectIndex;
         }
 
         //選択処理
         public void SelectList()
         {
-            if (SelectedItem.Value.Row.ItemArray[14].ToString() == "完了") { return; }
-            LotNumber.Value = SelectedItem.Value.Row.ItemArray[1].ToString();
-            if (EnableSelect.Value) { DiaplayPage(); }
+            if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
+            LotNumber = SelectedItem.Row.ItemArray[1].ToString();
+            if (EnableSelect) { DiaplayPage(); }
         }
 
         //スワイプ処理
@@ -203,8 +218,5 @@ namespace Display
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

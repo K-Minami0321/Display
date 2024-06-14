@@ -1,75 +1,88 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.ComponentModel;
 using System.Data;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 
 #pragma warning disable
 namespace Display
 {
     //共通クラス
-    public class Common : Shared, INotifyPropertyChanged, IDisposable
+    public class Common : Shared, INotifyPropertyChanged
     {
         //インスタンス
         public IniFile INI = new IniFile(CONST.SETTING_INI);
         public Sound SOUND = new Sound();
 
-        //変数
-        CompositeDisposable Disposable                          //解放処理イベント
-        { get; } = new CompositeDisposable();
+        //プロパティ変数
+        DataTable _SelectTable;
+        DataRowView _SelectedItem;
+        int _SelectedIndex;
+        double _ScrollIndex;
+        object _Focus;
+        string _NextFocus;
+        string _SoundFolder;
+        string _QuantityLabel;
+        string _AmountLabel;
+        string _UnitLabel;
+        bool _VisibleCoil;
+
 
         //プロパティ
-        public ReactivePropertySlim<DataTable> SelectTable      //一覧データ
-        { get; set; } = new ReactivePropertySlim<DataTable>();
-        public ReactivePropertySlim<DataRowView> SelectedItem   //選択した行
-        { get; set; } = new ReactivePropertySlim<DataRowView>();
-        public ReactivePropertySlim<int> SelectedIndex          //行選択
-        { get; set; } = new ReactivePropertySlim<int>();
-        public ReactivePropertySlim<string> SoundFolder         //サウンドフォルダ
-        { get; set; } = new ReactivePropertySlim<string>(FOLDER.ApplicationPath() + @"Sound\");
-        public ReactivePropertySlim<object> Focus               //フォーカス
-        { get; set; } = new ReactivePropertySlim<object>();
-        public ReactivePropertySlim<string> NextFocus           //次のフォーカス
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<double> ScrollIndex         //スクロール位置
-        { get; set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<string> HeaderAmount        //ヘッダー（重量・数量）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<bool> VisibleShirringUnit   //ヘッダー表示・非表示（枚数・コイル数）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<string> ProductCODE         //社番
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ProductName         //品番
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ShapeName           //形状
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ShirringUnit        //コイル数
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> QuantityLabel       //ラベル（重量・枚数）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> AmountLabel         //ラベル（シート数・コイル数・数量）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> UnitLabel           //ラベル（重量・数量）
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<bool> VisibleCoil           //表示・非表示（コイル項目）
-        { get; set; } = new ReactivePropertySlim<bool>();
-
-        //プロパティ定義
-        private void SetProperty()
+        public DataTable SelectTable        //一覧データ
         {
-            //プロパティ設定
-            ShapeName = management.ToReactivePropertySlimAsSynchronized(x => x.ShapeName).AddTo(Disposable);
-            ShirringUnit = management.ToReactivePropertySlimAsSynchronized(x => x.ShirringUnit).AddTo(Disposable);
-
-            //プロパティ定義
-            ShapeName.Subscribe(x =>
-            {
-                iShape = Shape.SetShape(x);
-            }).AddTo(Disposable);
+            get { return _SelectTable; }
+            set { SetProperty(ref _SelectTable, value); }
+        }
+        public DataRowView SelectedItem     //選択した行
+        {
+            get { return _SelectedItem; }
+            set { SetProperty(ref _SelectedItem, value); }
+        }
+        public int SelectedIndex            //行選択
+        {
+            get { return _SelectedIndex; }
+            set { SetProperty(ref _SelectedIndex, value); }
+        }
+        public double ScrollIndex           //スクロール位置
+        {
+            get { return _ScrollIndex; }
+            set { SetProperty(ref _ScrollIndex, value); }
+        }
+        public object Focus                 //フォーカス
+        {
+            get { return _Focus; }
+            set { SetProperty(ref _Focus, value); }
+        }
+        public string NextFocus             //次のフォーカス
+        {
+            get { return _NextFocus; }
+            set { SetProperty(ref _NextFocus, value); }
+        }
+        public string SoundFolder           //サウンドフォルダ
+        {
+            get { return _SoundFolder; }
+            set { SetProperty(ref _SoundFolder, value); }
+        }
+        public string QuantityLabel         //ラベル（重量・枚数）
+        {
+            get { return _QuantityLabel; }
+            set { SetProperty(ref _QuantityLabel, value); }
+        }
+        public string AmountLabel           //ラベル（シート数・コイル数・数量）
+        {
+            get { return _AmountLabel; }
+            set { SetProperty(ref _AmountLabel, value); }
+        }
+        public string UnitLabel             //ラベル（重量・数量）
+        {
+            get { return _UnitLabel; }
+            set { SetProperty(ref _UnitLabel, value); }
+        }
+        public bool VisibleCoil             //表示・非表示（コイル項目）
+        {
+            get { return _VisibleCoil; }
+            set { SetProperty(ref _VisibleCoil, value); }
         }
 
         //スタートページを表示
@@ -88,40 +101,35 @@ namespace Display
         {
             //ページ移動
             Type type = Type.GetType("Display." + INI.GetString("Page", "Initial"));
-            ViewModelWindowMain.Instance.FramePage.Value = WindowMain.Instance.FramePage;
-            ViewModelWindowMain.Instance.FramePage.Value.Navigate(Activator.CreateInstance(type));
+            ViewModelWindowMain.Instance.FramePage = WindowMain.Instance.FramePage;
+            ViewModelWindowMain.Instance.FramePage.Navigate(Activator.CreateInstance(type));
         }
 
         //ロット番号の取得・表示
         public string DisplayLotNumber(string value)
         {
-            SetProperty();
-
             //データ取得
-            var productname = ProductName.Value;
+            var productname = ProductName;
             management.LotNumber = management.CorrectionLotNumber(value);
             management.Select(management.LotNumber);
             //if (SQL.DataCount == 0) { return string.Empty; }
 
             //データ表示
-            ProductName.Value = management.ProductName;
-            QuantityLabel.Value = (ShapeName.Value == "コイル") ? "重 量" : "枚 数";
-            iShape = Shape.SetShape(ShapeName.Value);
+            ProductName = management.ProductName;
+            QuantityLabel = (ShapeName == "コイル") ? "重 量" : "枚 数";
+            iShape = Shape.SetShape(ShapeName);
 
             if (iProcess != null)
             {
                 ProcessName = iProcess.Name;
-                VisibleCoil.Value = (ProcessName == "合板" && ShapeName.Value == "コイル") ? true : false;
-                UnitLabel.Value = (ProcessName == "合板") ? "重 量" : "数 量";
+                VisibleCoil = (ProcessName == "合板" && ShapeName == "コイル") ? true : false;
+                UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             }
-            AmountLabel.Value = (!string.IsNullOrEmpty(ShapeName.Value)) ? iShape.Unit : "枚 数";
+            AmountLabel = (!string.IsNullOrEmpty(ShapeName)) ? iShape.Unit : "枚 数";
 
-            if (!string.IsNullOrEmpty(ProductName.Value) && ProductName.Value != productname) { SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(ProductName) && ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             return management.LotNumber;
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 
 }

@@ -2,14 +2,8 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,59 +25,138 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelSetting : Common, IKeyDown, IDisposable
+    public class ViewModelSetting : Common, IKeyDown
     {
-        //変数
-        CompositeDisposable Disposable                  //解放処理イベント
-        { get; } = new CompositeDisposable();
-
         //プロパティ変数
-        string _EquipmentCODE;
+        string _Version;
+        string _Connection;
+        string _Server;
+        string _ProcessName;
+        string _Worker;
+        string _LogText;
+        string _Log = CONST.SQL_LOG;
+        bool _IsServer;
+        bool _IsProcessName;
+        bool _IsEquipment;
+        bool _IsWorker;
+        bool _IsServerOpen;
+        bool _IsProcessOpen;
+        bool _IsEquipmentOpen;
+        bool _IsWorkerOpen;
+        List<string> _ProcessNames;
+        List<string> _Workers;
+        List<string> _EquipmentCODES;
+        List<string> _Servers;
 
         //プロパティ
-        public static ViewModelSetting Instance         //インスタンス
+        public static ViewModelSetting Instance     //インスタンス
         { get; set; } = new ViewModelSetting();
+        public string Version                       //バージョン
+        {
+            get { return _Version; }
+            set { SetProperty(ref _Version, value); }
+        }
+        public string Connection                    //接続文字列
+        {
+            get { return _Connection; }
+            set { SetProperty(ref _Connection, value); }
+        }
+        public string Server                        //サーバーIP
+        {
+            get { return _Server; }
+            set { SetProperty(ref _Server, value); }
+        }
+        public string ProcessName                   //工程区分
+        {
+            get { return _ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
 
-
-
-        public ReactivePropertySlim<string> Version                 //バージョン
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Connection              //接続文字列
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Server                  //サーバーIP
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ProcessName             //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Worker                  //担当者
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> LogText                 //表示ログ
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Log                     //ログファイル
-        { get; set; } = new ReactivePropertySlim<string>(CONST.SQL_LOG);
-        public ReactivePropertySlim<bool> IsServer                  //サーバーコンボボックス
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsProcessName             //工程区分コンボボックス
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsEquipment               //設備コンボボックス
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsWorker                  //作業者コンボボックス
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsServerOpen              //コンボボックスが開いているかどうか
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsProcessOpen             //コンボボックスが開いているかどうか
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsEquipmentOpen           //コンボボックスが開いているかどうか
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsWorkerOpen              //コンボボックスが開いているかどうか
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<List<string>> ProcessNames      //工程区分コンボボックス
-        { get; set; } = new ReactivePropertySlim<List<string>>();
-        public ReactivePropertySlim<List<string>> Workers           //作業者コンボボックス
-        { get; set; } = new ReactivePropertySlim<List<string>>();
-        public ReactivePropertySlim<List<string>> EquipmentCODES    //設備コンボボックス
-        { get; set; } = new ReactivePropertySlim<List<string>>();
-        public ReactivePropertySlim<List<string>> Servers           //サーバーコンボックス
-        { get; set; } = new ReactivePropertySlim<List<string>>();
+                iProcess = ProcessCategory.SetProcess(value);
+                EquipmentCODES = iProcess.Equipments;
+                Workers = iProcess.Workers;
+            }
+        }
+        public string Worker                        //担当者
+        {
+            get { return _Worker; }
+            set { SetProperty(ref _Worker, value); }
+        }
+        public string LogText                       //表示ログ
+        {
+            get { return _LogText; }
+            set { SetProperty(ref _LogText, value); }
+        }
+        public string Log                           //ログファイル
+        {
+            get { return _Log; }
+            set 
+            { 
+                SetProperty(ref _Log, value);
+                LogText = string.Empty; DisplayLog();
+            }
+        }
+        public bool IsServer                        //サーバーコンボボックス
+        {
+            get { return _IsServer; }
+            set { SetProperty(ref _IsServer, value); }
+        }
+        public bool IsProcessName                   //工程区分コンボボックス
+        {
+            get { return _IsProcessName; }
+            set { SetProperty(ref _IsProcessName, value); }
+        }
+        public bool IsEquipment                     //設備コンボボックス
+        {
+            get { return _IsEquipment; }
+            set { SetProperty(ref _IsEquipment, value); }
+        }
+        public bool IsWorker                        //作業者コンボボックス
+        {
+            get { return _IsWorker; }
+            set { SetProperty(ref _IsWorker, value); }
+        }
+        public bool IsServerOpen                    //コンボボックスが開いているかどうか
+        {
+            get { return _IsServerOpen; }
+            set { SetProperty(ref _IsServerOpen, value); }
+        }
+        public bool IsProcessOpen                   //コンボボックスが開いているかどうか
+        {
+            get { return _IsProcessOpen; }
+            set { SetProperty(ref _IsProcessOpen, value); }
+        }
+        public bool IsEquipmentOpen                 //コンボボックスが開いているかどうか
+        {
+            get { return _IsEquipmentOpen; }
+            set { SetProperty(ref _IsEquipmentOpen, value); }
+        }
+        public bool IsWorkerOpen                    //コンボボックスが開いているかどうか
+        {
+            get { return _IsWorkerOpen; }
+            set { SetProperty(ref _IsWorkerOpen, value); }
+        }
+        public List<string> ProcessNames            //工程区分コンボボックス
+        {
+            get { return _ProcessNames; }
+            set { SetProperty(ref _ProcessNames, value); }
+        }
+        public List<string> Workers                 //作業者コンボボックス
+        {
+            get { return _Workers; }
+            set { SetProperty(ref _Workers, value); }
+        }
+        public List<string> EquipmentCODES          //設備コンボボックス
+        {
+            get { return _EquipmentCODES; }
+            set { SetProperty(ref _EquipmentCODES, value); }
+        }
+        public List<string> Servers                 //サーバーコンボックス
+        {
+            get { return _Servers; }
+            set { SetProperty(ref _Servers, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -91,27 +164,10 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                iProcess = ProcessCategory.SetProcess(x);
-                EquipmentCODES.Value = Equipment.SetEquipment(x);
-                Workers.Value = Employee.SetWorker(x);
-            }).AddTo(Disposable);
-            Log.Subscribe(x =>
-            {
-                LogText.Value = string.Empty; DisplayLog();
-            }).AddTo(Disposable);
-        }
-
         //コンストラクター
         internal ViewModelSetting()
         {
             manufacture = new Manufacture();
-            SetProperty();
         }
 
         //ロード時
@@ -131,43 +187,43 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ViewModelWindowMain.Instance.ProcessWork.Value = "設定画面";
-            ViewModelWindowMain.Instance.ProcessName.Value = "設定";
-            Version.Value = CONST.DISPLAY_VERSION;
+            ViewModelWindowMain.Instance.ProcessWork = "設定画面";
+            ViewModelWindowMain.Instance.ProcessName = "設定";
+            Version = CONST.DISPLAY_VERSION;
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = false;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = true;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = false;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
+            ViewModelWindowMain.Instance.VisibleList = false;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.InitializeIcon();
 
             //初期表示
-            ProcessNames.Value = ProcessCategory.ProcessList();     //コンボボックス設定
-            Servers.Value = Maintenance.SetServer();        //サーバー設定
-            Setting.Instance.Server.Focus();                //フォーカス
+            ProcessNames = ProcessCategory.ProcessList();       //コンボボックス設定
+            Servers = Maintenance.SetServer();                  //サーバー設定
+            Setting.Instance.Server.Focus();                    //フォーカス
         }
 
         //データ表示
         private void DisplayData()
         {
-            Connection.Value = INI.GetString("Database", "ConnectString");
-            Server.Value = SQL.GetServerIP(Connection.Value);
-            ProcessName.Value = INI.GetString("Page", "Process");
+            Connection = INI.GetString("Database", "ConnectString");
+            Server = SQL.GetServerIP(Connection);
+            ProcessName = INI.GetString("Page", "Process");
             EquipmentCODE = INI.GetString("Page", "Equipment");
-            Worker.Value = INI.GetString("Page", "Worker");
+            Worker = INI.GetString("Page", "Worker");
         }
 
         //ログ表示
         private void DisplayLog()
         {
-            var file = FOLDER.ApplicationPath() + @"log\" + Log.Value;
+            var file = FOLDER.ApplicationPath() + @"log\" + Log;
             if (File.Exists(file))
             {
                 StreamReader reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
-                if (reader != null) { LogText.Value = reader.ReadToEnd(); }
+                if (reader != null) { LogText = reader.ReadToEnd(); }
             }  
         }
 
@@ -191,52 +247,52 @@ namespace Display
 
                 case "Server":
                     //サーバーコンボボックス
-                    IsServer.Value = true;
-                    IsServerOpen.Value = true;
+                    IsServer = true;
+                    IsServerOpen = true;
                     break;
 
                 case "ProcessName":
                     //工程区分コンボボックス
-                    IsProcessName.Value = true;
-                    IsProcessOpen.Value = true;
+                    IsProcessName = true;
+                    IsProcessOpen = true;
                     break;
 
                 case "Equipment":
                     //設備コンボボックス
-                    IsEquipment.Value = true;
-                    IsEquipmentOpen.Value = true;
+                    IsEquipment = true;
+                    IsEquipmentOpen = true;
                     break;
 
                 case "Worker":
                     //作業者コンボボックス
-                    IsWorker.Value = true;
-                    IsWorkerOpen.Value = true;
+                    IsWorker = true;
+                    IsWorkerOpen = true;
                     break;
 
                 case "SQL":
                     //SQLログ
-                    Log.Value = CONST.SQL_LOG;
+                    Log = CONST.SQL_LOG;
                     break;
 
                 case "Error":
                     //Errorログ
-                    Log.Value = CONST.ERROR_LOG;
+                    Log = CONST.ERROR_LOG;
                     break;
 
                 case "Debug":
                     //Debugログ
-                    Log.Value = CONST.DEBUG_LOG;
+                    Log = CONST.DEBUG_LOG;
                     break;
 
                 case "Grid":
-                    IsServer.Value = IsServerOpen.Value;
-                    IsProcessName.Value = IsProcessOpen.Value;
-                    IsEquipment.Value = IsEquipmentOpen.Value;
-                    IsWorker.Value = IsWorkerOpen.Value;
-                    IsServerOpen.Value = false;
-                    IsProcessOpen.Value = false;
-                    IsEquipmentOpen.Value = false;
-                    IsWorkerOpen.Value = false;
+                    IsServer = IsServerOpen;
+                    IsProcessName = IsProcessOpen;
+                    IsEquipment = IsEquipmentOpen;
+                    IsWorker = IsWorkerOpen;
+                    IsServerOpen = false;
+                    IsProcessOpen = false;
+                    IsEquipmentOpen = false;
+                    IsWorkerOpen = false;
                     break;
 
                 case "DisplayInfo":
@@ -246,8 +302,8 @@ namespace Display
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.ProcessName.Value = ProcessName.Value;
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.ProcessName = ProcessName;
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
                     break;
             }
         }
@@ -256,14 +312,14 @@ namespace Display
         public void RegistData()
         {
             //サーバー情報取得
-            var server = SQL.GetServerIP(Connection.Value);
-            var connection = Connection.Value.Replace(server, Server.Value);
+            var server = SQL.GetServerIP(Connection);
+            var connection = Connection.Replace(server, Server);
 
             //INIファイル書き込み
             INI.WriteString("Database", "ConnectString", connection);
-            INI.WriteString("Page", "Process", ProcessName.Value);
+            INI.WriteString("Page", "Process", ProcessName);
             INI.WriteString("Page", "Equipment", EquipmentCODE);
-            INI.WriteString("Page", "Worker", Worker.Value);
+            INI.WriteString("Page", "Worker", Worker);
             StartPage();
         }
 
@@ -277,8 +333,5 @@ namespace Display
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

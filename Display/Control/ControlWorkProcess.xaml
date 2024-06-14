@@ -18,7 +18,7 @@
     <Grid Margin="20,40,20,40">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="Process" Visibility="{Binding VisivleProcess.Value,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,20">
+                <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="Process" Visibility="{Binding VisivleProcess,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,20">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="Wrench" Margin="0,3,10,0" Height="30" Width="30"/>
                         <TextBlock Text="設備別" FontWeight="Medium"/>
@@ -29,7 +29,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="All" Visibility="{Binding VisivleAll.Value,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,20">
+                <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="All" Visibility="{Binding VisivleAll,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,20">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="Wrench" Margin="0,3,10,0" Height="30" Width="30"/>
                         <TextBlock Text="全工程" FontWeight="Medium"/>
@@ -41,7 +41,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <ListBox ItemsSource="{Binding WorkProcesses.Value}" SelectedValue="{Binding WorkProcess.Value}" Height="415">
+            <ListBox ItemsSource="{Binding WorkProcesses}" SelectedValue="{Binding WorkProcess}" Height="415">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeftButtonUp">
                         <i:InvokeCommandAction Command="{Binding SelectionChanged}"/>

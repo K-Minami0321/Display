@@ -16,7 +16,7 @@
     <!-- 画面表示 -->
     <Grid Margin="20,40,20,40">
         <StackPanel Orientation="Vertical">
-            <ListBox ItemsSource="{Binding Defects.Value}" SelectedValue="{Binding Defect.Value}" Height="480">
+            <ListBox ItemsSource="{Binding Defects}" SelectedValue="{Binding Defect}" Height="480">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeftButtonUp">
                         <i:InvokeCommandAction Command="{Binding SelectionChanged}"/>

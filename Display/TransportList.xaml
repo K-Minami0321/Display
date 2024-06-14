@@ -25,7 +25,7 @@
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="580"/>
             </Grid.RowDefinitions>
-            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable.Value}" SelectedIndex="{Binding SelectedIndex.Value}" SelectedItem="{Binding SelectedItem.Value}"
+            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="ロット番号" Width="200">

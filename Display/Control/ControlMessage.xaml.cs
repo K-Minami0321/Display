@@ -1,6 +1,5 @@
 ﻿using ClassBase;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -21,9 +20,9 @@ namespace Display
         public ControlMessage(string messege,string contents, string type)
         {
             DataContext = ViewModelControlMessage.Instance;
-            ViewModelControlMessage.Instance.Message.Value = messege;
-            ViewModelControlMessage.Instance.Contents.Value = contents;
-            ViewModelControlMessage.Instance.Type.Value = type;
+            ViewModelControlMessage.Instance.Message = messege;
+            ViewModelControlMessage.Instance.Contents = contents;
+            ViewModelControlMessage.Instance.Type = type;
             InitializeComponent();
         }
     }
@@ -31,19 +30,41 @@ namespace Display
     //ViewModel
     public class ViewModelControlMessage : Common
     {
+        //プロパティ変数
+        string _Message;
+        string _Contents;
+        string _Type;
+        string _ButtonOK;
+        bool _IsButtonCancel;
+
         //プロパティ
         public static ViewModelControlMessage Instance  //インスタンス
         { get; set; } = new ViewModelControlMessage();
-        public ReactiveProperty<string> Message         //処理メッセージ
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> Contents        //処理内容
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> Type            //メッセージボックスタイプ
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> ButtonOK        //ボタン表示名
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<bool> IsButtonCancel    //ボタン表示
-        { get; set; } = new ReactiveProperty<bool>();
+        public string Message                           //処理メッセージ
+        {
+            get { return _Message; }
+            set { SetProperty(ref _Message, value); }
+        }
+        public string Contents                          //処理内容
+        {
+            get { return _Contents; }
+            set { SetProperty(ref _Contents, value); }
+        }
+        public string Type                              //メッセージボックスタイプ
+        {
+            get { return _Type; }
+            set { SetProperty(ref _Type, value); }
+        }
+        public string ButtonOK                          //ボタン表示名
+        {
+            get { return _ButtonOK; }
+            set { SetProperty(ref _ButtonOK, value); }
+        }
+        public bool IsButtonCancel                      //ボタン表示
+        {
+            get { return _IsButtonCancel; }
+            set { SetProperty(ref _IsButtonCancel, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -52,18 +73,18 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            switch (Type.Value)
+            switch (Type)
             {
                 case "警告":
-                    ButtonOK.Value = "はい";
-                    IsButtonCancel.Value = true;
-                    SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_WARNING);
+                    ButtonOK = "はい";
+                    IsButtonCancel = true;
+                    SOUND.PlayAsync(SoundFolder + CONST.SOUND_WARNING);
                     break;
 
                 case "確認":
-                    ButtonOK.Value = "OK";
-                    IsButtonCancel.Value = false;
-                    SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_NOTICE);
+                    ButtonOK = "OK";
+                    IsButtonCancel = false;
+                    SOUND.PlayAsync(SoundFolder + CONST.SOUND_NOTICE);
                     break;
             }
         }

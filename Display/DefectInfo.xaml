@@ -38,15 +38,15 @@
                                 <RowDefinition Height="70"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="作業日"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ManufactureDate.Value,Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding manufacture.ManufactureDate,Converter={StaticResource DateTimeConverter}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProductName.Value}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号" />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LotNumber.Value}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding management.LotNumber}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="工 程"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding WorkProcess.Value}" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding manufacture.WorkProcess}" />
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="不良区分"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="Category" Text="{Binding Category.Value}" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="Category" Text="{Binding defect.Category}" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Category"/>
@@ -57,7 +57,7 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="不良内容"/>
-                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="Contents" Text="{Binding Contents.Value}"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="Contents" Text="{Binding defect.Contents}"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Contents"/>
@@ -69,8 +69,8 @@
                             </TextBox>
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="数 量"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" >
-                                <TextBox x:Name="Amount" Text="{Binding Amount.Value}" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength.Value}">
+                                <TextBox x:Name="Amount" Text="{Binding defect.Amount}" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Amount"/>
@@ -81,9 +81,9 @@
                                     </i:Interaction.Behaviors>
                                 </TextBox>
                                 <TextBlock Text="個" Margin="10,0,30,0"/>
-                                <TextBox x:Name="Weight" Text="{Binding Weight.Value}"  Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding WeightLength.Value}"
-                                         Visibility="{Binding VisibleWeight.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                                <TextBox x:Name="Weight" Text="{Binding defect.Weight}"  Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding WeightLength}"
+                                         Visibility="{Binding VisibleWeight,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Weight"/>
@@ -93,18 +93,18 @@
                                         <local:TextBoxMode/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <TextBlock Text="kg" Margin="10,0,30,0" Visibility="{Binding VisibleWeight.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}"/>
+                                <TextBlock Text="kg" Margin="10,0,30,0" Visibility="{Binding VisibleWeight,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}"/>
                             </StackPanel>
                         </Grid>
                         <!-- 右領域 -->
                         <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
-                            <Grid Visibility="{Binding VisibleCategory.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                            <Grid Visibility="{Binding VisibleCategory,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
                                 <local:ControlDefectCategory/>
                             </Grid>
-                            <Grid Visibility="{Binding VisibleDefect.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                            <Grid Visibility="{Binding VisibleDefect,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
                                 <local:ControlDefect/>
                             </Grid>
-                            <Grid  Visibility="{Binding VisibleTenKey.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Visible}">
+                            <Grid  Visibility="{Binding VisibleTenKey,Converter={StaticResource CollapsedConverter},FallbackValue=Visible}">
                                 <local:ControlTenKey/>
                             </Grid>
                         </Grid>
@@ -117,7 +117,7 @@
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Add">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="{Binding ButtonName.Value}" FontWeight="Medium"/>
+                            <TextBlock Text="{Binding ButtonName}" FontWeight="Medium"/>
                         </WrapPanel>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TouchDown">
@@ -125,7 +125,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Del" Visibility="{Binding VisibleDelete.Value,Converter={StaticResource CollapsedConverter}}">
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Del" Visibility="{Binding VisibleDelete,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>
                             <TextBlock Text="削 除" FontWeight="Medium" />

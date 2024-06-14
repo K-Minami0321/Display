@@ -76,30 +76,30 @@ namespace Display
                 switch (value)
                 {
                     case "合板":
-                        if (NextFocus != null) { NextFocus.Value = "Amount"; }
+                        if (NextFocus != null) { NextFocus = "Amount"; }
                         VisibleItem1 = true;
                         VisibleItem2 = true;
                         WeightLabel = "焼結重量";
-                        UnitLabel.Value = "重 量";
+                        UnitLabel = "重 量";
                         AmountRow = 5;
                         Notice = "※スリッター時のみ記入";
                         break;
 
                     case "プレス":
-                        if (NextFocus != null) { NextFocus.Value = "LotNumber"; }
+                        if (NextFocus != null) { NextFocus = "LotNumber"; }
                         VisibleItem1 = true;
                         VisibleItem2 = false;
                         WeightLabel = "単 重";
-                        UnitLabel.Value = "数 量";
+                        UnitLabel = "数 量";
                         AmountRow = 5;
                         Notice = string.Empty;
                         break;
 
                     default:
-                        if (NextFocus != null) { NextFocus.Value = "LotNumber"; }
+                        if (NextFocus != null) { NextFocus = "LotNumber"; }
                         VisibleItem1 = false;
                         VisibleItem2 = false;
-                        UnitLabel.Value = "数 量";
+                        UnitLabel = "数 量";
                         AmountRow = 4;
                         Notice = string.Empty;
                         break;
@@ -184,7 +184,7 @@ namespace Display
                 if (value) { return; }
                 Notice = string.Empty;
                 AmountWidth = inProcess.Amount.Length * 50;
-                inProcess.Amount = !VisibleCoil.Value ? inProcess.Amount : CONVERT.ConvertCircleEnclosing(inProcess.Amount);
+                inProcess.Amount = !VisibleCoil ? inProcess.Amount : CONVERT.ConvertCircleEnclosing(inProcess.Amount);
             }
         }
         public int AmountWidth                          //コイル数テキストボックスのWidth
@@ -235,20 +235,20 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelWindowMain.Instance.ProcessName.Value = INI.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
 
             //キャプション・ボタン表示
             DisplayCapution();
             Initialize(false);
 
             //履歴から仕掛データ読み込み
-            InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE.Value;
+            InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
             RegFlg = string.IsNullOrEmpty(InProcessCODE);
 
             if (RegFlg)
             {
                 //予定表からロット番号取得
-                LotNumber = ViewModelPlanList.Instance.LotNumber.Value;     //データ取得
+                LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
 
                 if (LotNumber == null) { LotNumber = string.Empty; }
                 DiaplayLotNumber();
@@ -261,16 +261,16 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName.Value;
-            ViewModelWindowMain.Instance.ProcessWork.Value = "仕掛搬入";
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬入";
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = true;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = true;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = false;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = true;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisibleList = true;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = false;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
         }
 
@@ -302,8 +302,8 @@ namespace Display
 
             if (flg) 
             {
-                ViewModelInProcessList.Instance.InProcessCODE.Value = null;
-                ViewModelPlanList.Instance.LotNumber.Value = null;
+                ViewModelInProcessList.Instance.InProcessCODE = null;
+                ViewModelPlanList.Instance.LotNumber = null;
             }
         }
 
@@ -340,7 +340,7 @@ namespace Display
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             inProcess.AmountLabel = (!string.IsNullOrEmpty(management.ShapeName)) ? iShape.Unit : "枚 数";
 
-            if (!string.IsNullOrEmpty(inProcess.ProductName) && inProcess.ProductName != productname) { SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(inProcess.ProductName) && inProcess.ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             return management.LotNumber;
         }
 
@@ -425,13 +425,13 @@ namespace Display
                 case "DisplayList":
                     //仕掛在庫一覧画面
                     Initialize(); SetGotFocus("LotNumber");
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
                     Initialize(); SetGotFocus("LotNumber");
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
                     break;
             }
         }
@@ -439,7 +439,7 @@ namespace Display
         //選択処理
         public void SelectionItem(object value)
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Worker":
                     inProcess.Worker = value.ToString();
@@ -528,7 +528,7 @@ namespace Display
         //入力制御
         private void DisplayText(object value)
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "LotNumber":
                     if (LotNumber.Length < LotNumberLength)
@@ -570,7 +570,7 @@ namespace Display
         //文字列消去
         private void ClearText()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "LotNumber":
                     LotNumber = string.Empty;
@@ -600,7 +600,7 @@ namespace Display
         //バックスペース処理
         private void BackSpaceText()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "LotNumber":
                     if (LotNumber.Length > 0)
@@ -642,7 +642,7 @@ namespace Display
         //次のフォーカスへ
         private void SetNextFocus()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "LotNumber":
                     SetGotFocus("Worker");
@@ -675,14 +675,14 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
-            Focus.Value = value;
-            switch (Focus.Value)
+            Focus = value;
+            switch (Focus)
             {
                 case "LotNumber":
                     InProcessInfo.Instance.TextLotNumber.Focus();
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString.Value = "-";
+                    ViewModelControlTenKey.Instance.InputString = "-";
                     if (LotNumber != null) { InProcessInfo.Instance.TextLotNumber.Select(LotNumber.Length, 0); }
                     break;
 
@@ -697,7 +697,7 @@ namespace Display
                     InProcessInfo.Instance.TextWeight.Focus();
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString.Value = ".";
+                    ViewModelControlTenKey.Instance.InputString = ".";
                     if (inProcess.Weight != null) { InProcessInfo.Instance.TextWeight.Select(inProcess.Weight.Length, 0); }
                     break;
 
@@ -705,7 +705,7 @@ namespace Display
                     InProcessInfo.Instance.TextUnit.Focus();
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString.Value = ".";
+                    ViewModelControlTenKey.Instance.InputString = ".";
                     if (inProcess.Unit != null) { InProcessInfo.Instance.TextUnit.Select(inProcess.Unit.Length, 0); }
                     break;
 
@@ -719,7 +719,7 @@ namespace Display
                     InProcessInfo.Instance.TextAmount.Focus();
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString.Value = ".";
+                    ViewModelControlTenKey.Instance.InputString = ".";
                     if (inProcess.Amount != null) { InProcessInfo.Instance.TextAmount.Select(inProcess.Amount.Length, 0); }
                     break;
 

@@ -1,10 +1,6 @@
 ﻿using ClassBase;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -31,27 +27,50 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelControlWorkProcess : Common, IWorkProcess, IDisposable
+    public class ViewModelControlWorkProcess : Common, IWorkProcess
     {
-        //変数
-        CompositeDisposable Disposable                          //解放処理イベント
-        { get; } = new CompositeDisposable();
+        //プロパティ変数
+        string _ProcessName;
+        bool _VisivleProcess;
+        bool _VisivleAll;
+        string _WorkProcess;
+        List<string> _WorkProcesses;
 
         //プロパティ
         public static ViewModelControlWorkProcess Instance      //インスタンス
         { get; set; } = new ViewModelControlWorkProcess();
         public IWorkProcess IworkProcess                        //インターフェース
         { get; set; }
-        public ReactiveProperty<string> ProcessName             //工程区分
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<bool> VisivleProcess            //設備
-        { get; set; } = new ReactiveProperty<bool>();
-        public ReactiveProperty<bool> VisivleAll                //すべて
-        { get; set; } = new ReactiveProperty<bool>();
-        public ReactiveProperty<string> WorkProcess             //工程
-        { get; set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<List<string>> WorkProcesses     //工程リスト
-        { get; set; } = new ReactiveProperty<List<string>>();
+        public string ProcessName                               //工程区分
+        {
+            get { return _ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                if (value == null) { return; }
+                iProcess = ProcessCategory.SetProcess(value);
+            }
+        }
+        public bool VisivleProcess                              //設備
+        {
+            get { return _VisivleProcess; }
+            set { SetProperty(ref _VisivleProcess, value); }
+        }
+        public bool VisivleAll                                  //すべて
+        {
+            get { return _VisivleAll; }
+            set { SetProperty(ref _VisivleAll, value); }
+        }
+        public string WorkProcess                               //工程
+        {
+            get { return _WorkProcess; }
+            set { SetProperty(ref _WorkProcess, value); }
+        }
+        public List<string> WorkProcesses                       //工程リスト
+        {
+            get { return _WorkProcesses; }
+            set { SetProperty(ref _WorkProcesses, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -61,28 +80,11 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-            }).AddTo(Disposable);
-        }
-
-        //コンストラクター
-        public ViewModelControlWorkProcess()
-        {
-            SetProperty();
-        }
-
         //ロード時
         private void OnLoad()
         {
             Instance = this;
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
             KeyDown("Process");
         }
 
@@ -90,10 +92,10 @@ namespace Display
         public void SelectionItem(object value)
         {
             //呼び出し元で実行
-            value = WorkProcess.Value != null ? WorkProcess.Value.ToString() : string.Empty;
+            value = WorkProcess != null ? WorkProcess.ToString() : string.Empty;
             if (IworkProcess == null) { return; }
  
-            SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_TOUCH);
+            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             IworkProcess.SelectionItem(value);
         }
 
@@ -103,20 +105,17 @@ namespace Display
             switch (value)
             {
                 case "Process":
-                    WorkProcesses.Value = iProcess.WorkProcesses;
-                    VisivleProcess.Value = false;
-                    VisivleAll.Value = true;
+                    WorkProcesses = iProcess.WorkProcesses;
+                    VisivleProcess = false;
+                    VisivleAll = true;
                     break;
 
                 case "All":
-                    WorkProcesses.Value = iProcess.WorkProcesses;
-                    VisivleProcess.Value = true;
-                    VisivleAll.Value = false;
+                    WorkProcesses = iProcess.WorkProcesses;
+                    VisivleProcess = true;
+                    VisivleAll = false;
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

@@ -38,9 +38,9 @@
                             <RowDefinition Height="70"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Ver"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Version.Value}" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Version}" FontWeight="Bold"/>
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="接続先"/>
-                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="Server" Text="{Binding Server.Value}" ItemsSource="{Binding Servers.Value}" IsDropDownOpen="{Binding IsServer.Value}" HorizontalAlignment="Stretch">
+                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="Server" Text="{Binding Server}" ItemsSource="{Binding Servers}" IsDropDownOpen="{Binding IsServer}" HorizontalAlignment="Stretch">
                             <i:Interaction.Behaviors>
                                 <local:ComboBoxBehavior/>
                             </i:Interaction.Behaviors>
@@ -52,7 +52,7 @@
                         </ComboBox>
                         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="※システム再起動で反映" VerticalAlignment="Top" Foreground="#FFFF0000" FontSize="20" FontWeight="Bold"/>
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="工程区分"/>
-                        <ComboBox Grid.Row="3" Grid.Column="1" Text="{Binding ProcessName.Value}" ItemsSource="{Binding ProcessNames.Value}" IsDropDownOpen="{Binding IsProcessName.Value}" HorizontalAlignment="Stretch" Margin="0,0,180,0">
+                        <ComboBox Grid.Row="3" Grid.Column="1" Text="{Binding ProcessName}" ItemsSource="{Binding ProcessNames}" IsDropDownOpen="{Binding IsProcessName}" HorizontalAlignment="Stretch" Margin="0,0,180,0">
                             <i:Interaction.Behaviors>
                                 <local:ComboBoxBehavior/>
                             </i:Interaction.Behaviors>
@@ -63,7 +63,7 @@
                             </i:Interaction.Triggers>
                         </ComboBox>
                         <TextBlock Grid.Row="4" Grid.Column="0" Text="設 備"/>
-                        <ComboBox Grid.Row="4" Grid.Column="1" Text="{Binding EquipmentCODE}" ItemsSource="{Binding EquipmentCODES.Value}" IsDropDownOpen="{Binding IsEquipment.Value}" HorizontalAlignment="Stretch" Margin="0,0,50,0">
+                        <ComboBox Grid.Row="4" Grid.Column="1" Text="{Binding EquipmentCODE}" ItemsSource="{Binding EquipmentCODES}" IsDropDownOpen="{Binding IsEquipment}" HorizontalAlignment="Stretch" Margin="0,0,50,0">
                             <i:Interaction.Behaviors>
                                 <local:ComboBoxBehavior/>
                             </i:Interaction.Behaviors>
@@ -74,7 +74,7 @@
                             </i:Interaction.Triggers>
                         </ComboBox>
                         <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
-                        <ComboBox Grid.Row="5" Grid.Column="1" Text="{Binding Worker.Value}" ItemsSource="{Binding Workers.Value}" IsDropDownOpen="{Binding IsWorker.Value}" HorizontalAlignment="Stretch" Margin="0,0,50,0" >
+                        <ComboBox Grid.Row="5" Grid.Column="1" Text="{Binding Worker}" ItemsSource="{Binding Workers}" IsDropDownOpen="{Binding IsWorker}" HorizontalAlignment="Stretch" Margin="0,0,50,0" >
                             <i:Interaction.Behaviors>
                                 <local:ComboBoxBehavior/>
                             </i:Interaction.Behaviors>
@@ -129,7 +129,7 @@
                                 </i:Interaction.Triggers>
                             </Button>
                         </StackPanel>
-                        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding LogText.Value}" FontSize="14" IsReadOnly="True"
+                        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding LogText}" FontSize="14" IsReadOnly="True"
                                  Style="{StaticResource LogStyle}" AcceptsReturn="True" TextWrapping="NoWrap"
                                  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
                             <i:Interaction.Behaviors>

@@ -1,11 +1,7 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -26,31 +22,104 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelInProcessList : Common, IKeyDown, ISelect, IDisposable
+    public class ViewModelInProcessList : Common, IKeyDown, ISelect
     {
-        //変数
-        CompositeDisposable Disposable                      //解放処理イベント
-        { get; } = new CompositeDisposable();
+        //プロパティ変数
+        string _ProcessName;
+        string _InProcessCODE;
+        string _InProcessDate;
+        bool _VisibleShape;
+        bool _VisibleUnit;
+        bool _VisibleWeight;
+        string _HeaderUnit;
+        string _HeaderWeight;
+        string _HeaderAmount;
 
         //プロパティ
-        public static ViewModelInProcessList Instance       //インスタンス
+        public static ViewModelInProcessList Instance   //インスタンス
         { get; set; } = new ViewModelInProcessList();
-        public ReactivePropertySlim<string> ProcessName     //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessCODE   //仕掛在庫CODE
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessDate   //作業日
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<bool> VisibleShape      //表示・非表示（形状）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleUnit       //表示・非表示（コイル・枚数）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleWeight     //表示・非表示（重量）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<string> HeaderUnit      //コイル・枚数
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> HeaderWeight    //焼結重量・単重
-        { get; set; } = new ReactivePropertySlim<string>();
+        public string ProcessName                       //工程区分
+        {
+            get { return inProcess.ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                inProcess.ProcessName = value;
+
+                if (value == null) { return; }
+                iProcess = ProcessCategory.SetProcess(value);
+                switch (value)
+                {
+                    case "合板":
+                        VisibleShape = true;
+                        VisibleUnit = true;
+                        VisibleWeight = false;
+                        HeaderUnit = "数量";
+                        HeaderAmount = "重量";
+                        break;
+
+                    case "プレス":
+                        VisibleShape = false;
+                        VisibleUnit = false;
+                        VisibleWeight = true;
+                        HeaderAmount = "数量";
+                        HeaderWeight = "単重";
+                        break;
+
+                    default:
+                        VisibleShape = false;
+                        VisibleUnit = false;
+                        VisibleWeight = false;
+                        HeaderAmount = "数量";
+                        break;
+                }
+            }
+        }
+        public string InProcessCODE                     //仕掛在庫CODE
+        {
+            get { return _InProcessCODE; }
+            set { SetProperty(ref _InProcessCODE, value); }
+        }
+        public string InProcessDate                     //作業日
+        {
+            get { return inProcess.InProcessDate; }
+            set 
+            { 
+                SetProperty(ref _InProcessDate, value);
+                inProcess.InProcessDate = value;
+                DiaplayList();
+            }
+        }
+        public bool VisibleShape                        //表示・非表示（形状）
+        {
+            get { return _VisibleShape; }
+            set { SetProperty(ref _VisibleShape, value); }
+        }
+        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
+        {
+            get { return _VisibleUnit; }
+            set { SetProperty(ref _VisibleUnit, value); }
+        }
+        public bool VisibleWeight                       //表示・非表示（重量）
+        {
+            get { return _VisibleWeight; }
+            set { SetProperty(ref _VisibleWeight, value); }
+        }
+        public string HeaderUnit                        //コイル・枚数
+        {
+            get { return _HeaderUnit; }
+            set { SetProperty(ref _HeaderUnit, value); }
+        }
+        public string HeaderWeight                      //焼結重量・単重
+        {
+            get { return _HeaderWeight; }
+            set { SetProperty(ref _HeaderWeight, value); }
+        }
+        public string HeaderAmount                      //ヘッダー（重量・数量）
+        {
+            get { return _HeaderAmount; }
+            set { SetProperty(ref _HeaderAmount, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -58,58 +127,11 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ設定
-            ProcessName = inProcess.ToReactivePropertySlimAsSynchronized(x => x.ProcessName).AddTo(Disposable);
-            InProcessDate = inProcess.ToReactivePropertySlimAsSynchronized(x => x.InProcessDate).AddTo(Disposable);
-
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-                switch (x)
-                {
-                    case "合板":
-                        VisibleShape.Value = true;
-                        VisibleUnit.Value = true;
-                        VisibleWeight.Value = false;
-                        HeaderUnit.Value = "数量";
-                        HeaderAmount.Value = "重量";
-                        break;
-
-                    case "プレス":
-                        VisibleShape.Value = false;
-                        VisibleUnit.Value = false;
-                        VisibleWeight.Value = true;
-                        HeaderAmount.Value = "数量";
-                        HeaderWeight.Value = "単重";
-                        break;
-
-                    default:
-                        VisibleShape.Value = false;
-                        VisibleUnit.Value = false;
-                        VisibleWeight.Value = false;
-                        HeaderAmount.Value = "数量";
-                        break;
-                }
-            }).AddTo(Disposable);
-            InProcessDate.Subscribe(x =>
-            {
-                DiaplayList();
-            }).AddTo(Disposable);
-        }
-
         //コンストラクター
         internal ViewModelInProcessList()
         {
             inProcess = new InProcess();
-            SetProperty();
-
-            //初期設定
-            InProcessDate.Value = STRING.ToDateDB(SetToDay(DateTime.Now));
+            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //ロード時
@@ -129,18 +151,18 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
-            ViewModelWindowMain.Instance.ProcessWork.Value = "搬入履歴";
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ViewModelWindowMain.Instance.ProcessWork = "搬入履歴";
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = true;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = true;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = true;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = true;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisibleList = true;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = true;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList.Value = "refresh";
+            ViewModelWindowMain.Instance.IconList = "refresh";
         }
 
         //キーイベント
@@ -150,34 +172,34 @@ namespace Display
             {
                 case "DisplayInfo":
                     //仕掛在庫登録画面
-                    InProcessCODE.Value = null;
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessInfo());
+                    InProcessCODE = null;
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    InProcessDate.Value = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessList());
+                    InProcessDate = DateTime.Now.ToString("yyyyMMdd");
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
                     break;
 
                 case "PreviousDate":
                     //前日へ移動
-                    InProcessDate.Value = DATETIME.AddDate(InProcessDate.Value, -1).ToString("yyyyMMdd");
+                    InProcessDate = DATETIME.AddDate(InProcessDate, -1).ToString("yyyyMMdd");
                     break;
                 
                 case "NextDate":
                     //次の日へ移動
-                    InProcessDate.Value = DATETIME.AddDate(InProcessDate.Value, 1).ToString("yyyyMMdd");
+                    InProcessDate = DATETIME.AddDate(InProcessDate, 1).ToString("yyyyMMdd");
                     break;
 
                 case "Today":
                     //当日へ移動
-                    InProcessDate.Value = DateTime.Now.ToString("yyyyMMdd");
+                    InProcessDate = DateTime.Now.ToString("yyyyMMdd");
                     break;
             }
         }
@@ -185,17 +207,17 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            SelectedIndex.Value = -1;
-            SelectTable.Value = inProcess.SelectList(null, null);           
+            SelectedIndex = -1;
+            SelectTable = inProcess.SelectList(null, null);           
         }
 
         //選択処理
         public async void SelectList()
         {
-            if(SelectedItem.Value == null) { return; }
-            InProcessCODE.Value = SelectedItem.Value.Row.ItemArray[0].ToString();
-            ViewModelPlanList.Instance.LotNumber.Value = null;
-            ViewModelWindowMain.Instance.FramePage.Value.Navigate(new InProcessInfo());
+            if(SelectedItem == null) { return; }
+            InProcessCODE = SelectedItem.Row.ItemArray[0].ToString();
+            ViewModelPlanList.Instance.LotNumber = null;
+            ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
         }
 
         //スワイプ処理
@@ -208,8 +230,5 @@ namespace Display
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

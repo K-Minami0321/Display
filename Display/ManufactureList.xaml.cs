@@ -1,14 +1,10 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static NPOI.HSSF.Util.HSSFColor;
+
 
 #pragma warning disable
 namespace Display
@@ -27,14 +23,13 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManufactureList : Common, IKeyDown, ISelect, IDisposable
+    public class ViewModelManufactureList : Common, IKeyDown, ISelect
     {
-        //変数
-        CompositeDisposable Disposable                      //解放処理イベント
-        { get; } = new CompositeDisposable();
-
         //プロパティ変数
         string _EquipmentCODE;
+        string _ProcessName;
+        string _ManufactureCODE;
+        string _ManufactureDate;
 
         //プロパティ
         public static ViewModelManufactureList Instance     //インスタンス
@@ -58,48 +53,44 @@ namespace Display
                 {
                     name = iProcess.Name;
                 }
-                ViewModelWindowMain.Instance.ProcessWork.Value = name;
+                ViewModelWindowMain.Instance.ProcessWork = name;
             }
         }
-
-
-
-        public ReactivePropertySlim<string> ProcessName     //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ManufactureCODE //加工CODE
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ManufactureDate //作業日
-        { get; set; } = new ReactivePropertySlim<string>();
+        public string ProcessName     //工程区分
+        {
+            get { return _ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                iProcess = ProcessCategory.SetProcess(value);
+            }
+        }
+        public string ManufactureCODE //加工CODE
+        {
+            get { return _ManufactureCODE; }
+            set { SetProperty(ref _ManufactureCODE, value); }
+        }
+        public string ManufactureDate //作業日
+        {
+            get { return _ManufactureDate; }
+            set 
+            { 
+                SetProperty(ref _ManufactureDate, value);
+                DiaplayList();
+            }
+        }
 
         //イベント
         ActionCommand commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-            }).AddTo(Disposable);
-            ManufactureDate.Subscribe(x =>
-            {
-                DiaplayList();
-
-            }).AddTo(Disposable);
-
-        }
 
         //コンストラクター
         internal ViewModelManufactureList()
         {
             equipment = new Equipment();
             manufacture = new Manufacture();
-            ManufactureDate.Value = SetToDay(DateTime.Now);
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
-            SetProperty();
+            ManufactureDate = SetToDay(DateTime.Now);
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
         }
 
         //ロード時
@@ -120,25 +111,25 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
             EquipmentCODE = INI.GetString("Page", "Equipment");
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = true;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = true;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = true;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisibleList = true;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList.Value = "refresh";
+            ViewModelWindowMain.Instance.IconList = "refresh";
         }
 
         //初期化
         private void Initialize()
         {
             //初期設定
-            ManufactureCODE.Value = string.Empty;
-            SelectedIndex.Value = -1;
+            ManufactureCODE = string.Empty;
+            SelectedIndex = -1;
         }
 
         //キーイベント
@@ -148,33 +139,33 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new ManufactureInfo());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
                     break;
 
                 case "DisplayList":
                     //搬入一覧画面
-                    ManufactureDate.Value = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new ManufactureList());
+                    ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
                     break;
 
                 case "PreviousDate":
                     //前日へ移動
-                    ManufactureDate.Value = DATETIME.AddDate(ManufactureDate.Value, -1).ToString("yyyyMMdd");
+                    ManufactureDate = DATETIME.AddDate(ManufactureDate, -1).ToString("yyyyMMdd");
                     break;
 
                 case "NextDate":
                     //次の日へ移動
-                    ManufactureDate.Value = DATETIME.AddDate(ManufactureDate.Value, 1).ToString("yyyyMMdd");
+                    ManufactureDate = DATETIME.AddDate(ManufactureDate, 1).ToString("yyyyMMdd");
                     break;
 
                 case "Today":
                     //当日へ移動
-                    ManufactureDate.Value = DateTime.Now.ToString("yyyyMMdd");
+                    ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
                     break;
             }
         }
@@ -182,17 +173,18 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            manufacture.ManufactureDate = ManufactureDate.Value;
+            manufacture.ManufactureDate = ManufactureDate;
             manufacture.Equipment1 = EquipmentCODE;
-            SelectTable.Value = manufacture.SelectHistoryListDate(iProcess.Name);
+            if (iProcess == null) { return; }
+            SelectTable = manufacture.SelectHistoryListDate(iProcess.Name);
         }
 
         //選択処理
         public async void SelectList()
         {
-            if (SelectedItem.Value == null) { return; }
-            ManufactureCODE.Value = SelectedItem.Value.Row.ItemArray[0].ToString();
-            ViewModelWindowMain.Instance.FramePage.Value.Navigate(new ManufactureInfo());
+            if (SelectedItem == null) { return; }
+            ManufactureCODE = SelectedItem.Row.ItemArray[0].ToString();
+            ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
         }
 
         //スワイプ処理
@@ -205,8 +197,5 @@ namespace Display
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

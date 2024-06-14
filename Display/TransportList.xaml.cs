@@ -1,10 +1,5 @@
 ﻿using ClassBase;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -25,32 +20,28 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportList : Common, IKeyDown, ISelect, IDisposable
+    public class ViewModelTransportList : Common, IKeyDown, ISelect
     {
-        //変数
-        CompositeDisposable Disposable                      //解放処理イベント
-        { get; } = new CompositeDisposable();
-
+        //プロパティ変数
+        string _ProcessName;
+        string _InProcessCODE;
         //プロパティ
         public static ViewModelTransportList Instance       //インスタンス
         { get; set; } = new ViewModelTransportList();
-        public ReactivePropertySlim<string> ProcessName     //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessCODE   //仕掛在庫CODE
-        { get; set; } = new ReactivePropertySlim<string>();
-
-        //プロパティ定義
-        private void SetProperty()
+        public string ProcessName     //工程区分
         {
-            //プロパティ設定
-            ProcessName = inProcess.ToReactivePropertySlimAsSynchronized(x => x.ProcessName).AddTo(Disposable);
-
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-            }).AddTo(Disposable);
+            get { return inProcess.ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                inProcess.ProcessName = value;
+                iProcess = ProcessCategory.SetProcess(value);
+            }
+        }
+        public string InProcessCODE   //仕掛在庫CODE
+        {
+            get { return _InProcessCODE; }
+            set { SetProperty(ref _InProcessCODE, value); }
         }
 
         //イベント
@@ -61,7 +52,6 @@ namespace Display
         internal ViewModelTransportList()
         {
             inProcess = new InProcess();
-            SetProperty();
         }
 
         //ロード時
@@ -71,7 +61,7 @@ namespace Display
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-            ViewModelWindowMain.Instance.ProcessName.Value = INI.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
 
             //初期設定
             DisplayCapution();
@@ -83,26 +73,26 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
-            ViewModelWindowMain.Instance.ProcessWork.Value = "仕掛引取";
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = true;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = false;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = false;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = false;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisibleList = true;
+            ViewModelWindowMain.Instance.VisibleInfo = false;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = false;
+            ViewModelWindowMain.Instance.VisiblePlan = false;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList.Value = "refresh";
+            ViewModelWindowMain.Instance.IconList = "refresh";
         }
 
         //初期化
         private void Initialize()
         {
             //初期設定
-            InProcessCODE.Value = string.Empty;
-            SelectedIndex.Value = -1;
+            InProcessCODE = string.Empty;
+            SelectedIndex = -1;
         }
 
         //キーイベント
@@ -112,12 +102,12 @@ namespace Display
             {
                 case "DisplayInfo":
                     //仕掛在庫移動登録
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportInfo());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
                     break;
 
                 case "DisplayList":
                     //仕掛在庫移動一覧
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
             }
         }
@@ -125,15 +115,15 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            SelectTable.Value = inProcess.SelectGetList();
+            SelectTable = inProcess.SelectGetList();
         }
 
         //選択処理
         public async void SelectList()
         {
-            if (SelectedItem.Value == null) { return; }
-            InProcessCODE.Value = SelectedItem.Value.Row.ItemArray[0].ToString();
-            ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportInfo());
+            if (SelectedItem == null) { return; }
+            InProcessCODE = SelectedItem.Row.ItemArray[0].ToString();
+            ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
         }
 
         //スワイプ処理
@@ -146,8 +136,5 @@ namespace Display
                     break;
             }
         }
-
-        //解放処理
-        public void Dispose() => Disposable.Dispose();
     }
 }

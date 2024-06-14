@@ -1,12 +1,7 @@
 ﻿using ClassBase;
-using DocumentFormat.OpenXml.EMMA;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,35 +23,50 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportInfo : Common, IKeyDown, ITenKey, IWorker, IDisposable
+    public class ViewModelTransportInfo : Common, IKeyDown, ITenKey, IWorker
     {
-        //変数
-        CompositeDisposable Disposable                      //解放処理イベント
-        { get; } = new CompositeDisposable();
+
+        //プロパティ変数
+        string _LotNumber;
+        string _ProcessName;
+        int _AmountLength = 6;
+        bool _VisibleTenKey;
+        bool _VisibleWorker;
 
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
-        public ReactivePropertySlim<string> LotNumber       //ロット番号
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> ProcessName     //工程区分
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessCODE   //仕掛在庫CODE
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> InProcessDate   //引取日
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<int> AmountLength       //文字数（数量）
-        { get; set; } = new ReactivePropertySlim<int>(6);
-        public ReactivePropertySlim<bool> VisibleTenKey     //表示・非表示（テンキー）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> VisibleWorker     //表示・非表示（作業者）
-        { get; set; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<string> Amount          //数量
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Worker          //担当者
-        { get; set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<string> Status          //作業区分
-        { get; set; } = new ReactivePropertySlim<string>("移動");
+        public string LotNumber                             //ロット番号
+        {
+            get { return _LotNumber; }
+            set { SetProperty(ref _LotNumber, value); }
+        }
+        public string ProcessName                           //工程区分
+        {
+            get { return _ProcessName; }
+            set 
+            { 
+                SetProperty(ref _ProcessName, value);
+                if (value == null) { return; }
+                iProcess = ProcessCategory.SetProcess(value);
+            }
+        }
+        public int AmountLength                             //文字数（数量）
+        {
+            get { return _AmountLength; }
+            set { SetProperty(ref _AmountLength, value); }
+        }
+        public bool VisibleTenKey                           //表示・非表示（テンキー）
+        {
+            get { return _VisibleTenKey; }
+            set { SetProperty(ref _VisibleTenKey, value); }
+        }
+        public bool VisibleWorker                           //表示・非表示（作業者）
+        {
+            get { return _VisibleWorker; }
+            set { SetProperty(ref _VisibleWorker, value); }
+        }
+
 
         //イベント
         ActionCommand commandLoad;
@@ -68,32 +78,12 @@ namespace Display
         ActionCommand lostFocus;
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
-        //プロパティ定義
-        private void SetProperty()
-        {
-            //プロパティ設定
-            LotNumber = inProcess.ToReactivePropertySlimAsSynchronized(x => x.LotNumber).AddTo(Disposable);
-            ProcessName = inProcess.ToReactivePropertySlimAsSynchronized(x => x.ProcessName).AddTo(Disposable);
-            InProcessCODE = inProcess.ToReactivePropertySlimAsSynchronized(x => x.InProcessCODE).AddTo(Disposable);
-            InProcessDate = inProcess.ToReactivePropertySlimAsSynchronized(x => x.InProcessDate).AddTo(Disposable);
-            Amount = inProcess.ToReactivePropertySlimAsSynchronized(x => x.Amount).AddTo(Disposable);
-            Worker = inProcess.ToReactivePropertySlimAsSynchronized(x => x.Worker).AddTo(Disposable);
-            Status = inProcess.ToReactivePropertySlimAsSynchronized(x => x.Status).AddTo(Disposable);
-
-            //プロパティ定義
-            ProcessName.Subscribe(x =>
-            {
-                if (x == null) { return; }
-                iProcess = ProcessCategory.SetProcess(x);
-            }).AddTo(Disposable);
-        }
 
         //コンストラクター
         internal ViewModelTransportInfo()
         {
             inProcess = new InProcess();
             management = new Management();
-            SetProperty();
         }
 
         //ロード時
@@ -104,7 +94,7 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelWindowMain.Instance.ProcessName.Value = INI.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
             DisplayCapution();
             DisplayData();
         }
@@ -113,31 +103,31 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName.Value = ViewModelWindowMain.Instance.ProcessName.Value;
-            ViewModelWindowMain.Instance.ProcessWork.Value = "仕掛搬出";
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬出";
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower.Value = true;
-            ViewModelWindowMain.Instance.VisibleList.Value = true;
-            ViewModelWindowMain.Instance.VisibleInfo.Value = false;
-            ViewModelWindowMain.Instance.VisibleDefect.Value = false;
-            ViewModelWindowMain.Instance.VisibleArrow.Value = false;
-            ViewModelWindowMain.Instance.VisiblePlan.Value = false;
+            ViewModelWindowMain.Instance.VisiblePower = true;
+            ViewModelWindowMain.Instance.VisibleList = true;
+            ViewModelWindowMain.Instance.VisibleInfo = false;
+            ViewModelWindowMain.Instance.VisibleDefect = false;
+            ViewModelWindowMain.Instance.VisibleArrow = false;
+            ViewModelWindowMain.Instance.VisiblePlan = false;
             ViewModelWindowMain.Instance.InitializeIcon();
 
             //編集モード
-            InProcessCODE.Value = ViewModelTransportList.Instance.InProcessCODE.Value;
+            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
         }
 
         //初期化
         public void Initialize()
         {
             //入力データ初期化
-            InProcessDate.Value = SetToDay(DateTime.Now);
-            ProductName.Value = string.Empty;
-            LotNumber.Value = string.Empty;
-            Amount.Value = string.Empty;
-            Worker.Value = INI.GetString("Page", "Worker");
+            inProcess.InProcessDate = SetToDay(DateTime.Now);
+            inProcess.ProductName = string.Empty;
+            inProcess.LotNumber = string.Empty;
+            inProcess.Amount = string.Empty;
+            inProcess.Worker = INI.GetString("Page", "Worker");
         }
 
         //データ表示
@@ -146,7 +136,7 @@ namespace Display
             //前工程の仕掛取得
             Initialize();
             inProcess.TransportSelect();
-            LotNumber.Value = DisplayLotNumber(LotNumber.Value);
+            LotNumber = DisplayLotNumber(LotNumber);
             SetGotFocus("Amount");
         }
 
@@ -165,7 +155,7 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
 
                 case "Enter":
@@ -195,7 +185,7 @@ namespace Display
 
                 case "DisplayList":
                     //搬出一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
             }
         }
@@ -203,10 +193,10 @@ namespace Display
         //選択処理
         public void SelectionItem(object value)
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Worker":
-                    Worker.Value = value.ToString();
+                    inProcess.Worker = value.ToString();
                     break;
             }
             NextFocus();
@@ -216,8 +206,9 @@ namespace Display
         private void RegistData()
         {
             //登録
-            //inProcess.Resist();
-            ViewModelWindowMain.Instance.FramePage.Value.Navigate(new TransportList());
+            inProcess.Status = "移動";
+            inProcess.Resist(InProcessCODE);
+            ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
 
         }
 
@@ -230,7 +221,7 @@ namespace Display
             var messege2 = string.Empty;
             var messege3 = string.Empty;
 
-            if (string.IsNullOrEmpty(Worker.Value))
+            if (string.IsNullOrEmpty(inProcess.Worker))
             {
                 focus = "Worker";
                 messege1 = "担当者を選択してください";
@@ -239,7 +230,7 @@ namespace Display
                 result = false;
             }
 
-            if (string.IsNullOrEmpty(Amount.Value))
+            if (string.IsNullOrEmpty(inProcess.Amount))
             {
                 focus = "Amount";
                 messege1 = "重量を入力してください";
@@ -260,13 +251,13 @@ namespace Display
         //入力制御
         private void DisplayText(object value)
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Amount":
-                    if (Amount.Value.Length < AmountLength.Value)
+                    if (inProcess.Amount.Length < AmountLength)
                     {
-                        Amount.Value += value.ToString();
-                        TransportInfo.Instance.Amount.Select(Amount.Value.Length, 0);
+                        inProcess.Amount += value.ToString();
+                        TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
                     }
                     break;
                 default:
@@ -277,11 +268,11 @@ namespace Display
         //文字列消去
         private void ClearText()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Amount":
-                    Amount.Value = string.Empty;
-                    TransportInfo.Instance.Amount.Select(Amount.Value.Length, 0);
+                    inProcess.Amount = string.Empty;
+                    TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
                     break;
 
                 default:
@@ -292,13 +283,13 @@ namespace Display
         //バックスペース処理
         private void BackSpaceText()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Amount":
-                    if (Amount.Value.Length > 0)
+                    if (inProcess.Amount.Length > 0)
                     {
-                        Amount.Value = Amount.Value[..^1];
-                        TransportInfo.Instance.Amount.Select(Amount.Value.Length, 0);
+                        inProcess.Amount = inProcess.Amount[..^1];
+                        TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
                     }
                     break;
 
@@ -310,7 +301,7 @@ namespace Display
         //次のフォーカスへ
         private void NextFocus()
         {
-            switch (Focus.Value)
+            switch (Focus)
             {
                 case "Amount":
                     SetGotFocus("Worker");
@@ -328,22 +319,22 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
-            Focus.Value = value;
-            switch (Focus.Value)
+            Focus = value;
+            switch (Focus)
             {
                 case "Amount":
                     TransportInfo.Instance.Amount.Focus();
-                    VisibleTenKey.Value = true;
-                    VisibleWorker.Value = false;
-                    ViewModelControlTenKey.Instance.InputString.Value = ".";
-                    if (Amount != null) { TransportInfo.Instance.Amount.Select(Amount.Value.Length, 0); }
+                    VisibleTenKey = true;
+                    VisibleWorker = false;
+                    ViewModelControlTenKey.Instance.InputString = ".";
+                    if (inProcess.Amount != null) { TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0); }
                     break;
 
                 case "Worker":
                     TransportInfo.Instance.Worker.Focus();
-                    VisibleTenKey.Value = false;
-                    VisibleWorker.Value = true;
-                    if (Worker != null) { TransportInfo.Instance.Worker.Select(Worker.Value.Length, 0); }
+                    VisibleTenKey = false;
+                    VisibleWorker = true;
+                    if (inProcess.Worker != null) { TransportInfo.Instance.Worker.Select(inProcess.Worker.Length, 0); }
                     break;
 
                 default:
@@ -354,7 +345,7 @@ namespace Display
         //フォーカス処理（LostFoucus）
         private void SetLostFocus()
         {
-            LotNumber.Value = DisplayLotNumber(LotNumber.Value);
+            LotNumber = DisplayLotNumber(LotNumber);
         }
 
         //スワイプ処理
