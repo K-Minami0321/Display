@@ -1148,7 +1148,7 @@ namespace Display
     public class CircleEnclosingConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => CONVERT.ConvertCircleEnclosing(value);
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => CONVERT.ConvertCircleEnclosing(STRING.ToTrim(value));
     }
 
     //完了表記

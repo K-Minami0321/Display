@@ -83,7 +83,7 @@
                                 </TextBox>
                                 <TextBlock Text="{Binding Notice}" FontSize="22" VerticalAlignment="Bottom" Foreground="#FF0000" FontWeight="Bold" Margin="10,0,0,5"/>
                             </StackPanel>
-                            <TextBlock Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="0" Text="{Binding UnitLabel.Value,FallbackValue=数 量}"/>
+                            <TextBlock Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="0" Text="{Binding inProcess.UnitLabel,FallbackValue=数 量}"/>
                             <StackPanel Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="TextUnit" Text="{Binding inProcess.Unit}" Width="150"
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding UnitLength}">
@@ -111,7 +111,7 @@
                                     </i:Interaction.Behaviors>
                                 </CheckBox>
                             </StackPanel>
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding AmountLabel.Value,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding inProcess.AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="TextAmount" Text="{Binding inProcess.Amount}" Width="{Binding AmountWidth,FallbackValue=150}"
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
@@ -127,8 +127,8 @@
                                 </TextBox>
                                 <StackPanel Orientation="Horizontal" Visibility="{Binding inProcess.VisibleCoil,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,0" >
                                     <TextBlock Text="{Binding inProcess.Coil,Converter={StaticResource CircleEnclosingConverter},FallbackValue=①}" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}" FontSize="40" TextAlignment="Center" Width="55"/>
-                                    <TextBlock Text="／" FontSize="40" TextAlignment="Center"/>
-                                    <TextBlock Text="{Binding inProcess.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="40" TextAlignment="Center" Width="55"/>
+                                    <TextBlock Text="／" FontSize="40" TextAlignment="Center" Visibility="{Binding inProcess.VisibleCoil,Converter={StaticResource CollapsedConverter}}"/>
+                                    <TextBlock Text="{Binding management.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="40" TextAlignment="Center" Width="55"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

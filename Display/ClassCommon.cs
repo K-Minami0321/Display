@@ -115,7 +115,7 @@ namespace Display
                 UnitLabel.Value = (ProcessName == "合板") ? "重 量" : "数 量";
             }
             AmountLabel.Value = (!string.IsNullOrEmpty(ShapeName.Value)) ? iShape.Unit : "枚 数";
-            
+
             if (!string.IsNullOrEmpty(ProductName.Value) && ProductName.Value != productname) { SOUND.PlayAsync(SoundFolder.Value + CONST.SOUND_LOT); }
             return management.LotNumber;
         }
