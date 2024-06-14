@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>note-edit.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="note-edit.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="ReactiveProperty.WPF" Version="9.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ClassBase\ClassBase.csproj" />
+    <ProjectReference Include="..\..\ClassLibrary\ClassLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Control\ControlDefectCategory.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Control\ControlDefect.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Control\ControlWorkProcess.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="DefectInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="TransportInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="InProcessList .xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="TransportList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PlanList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ManufactureList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Setting.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ManufactureInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,143 @@
+﻿<Page x:Class="Display.DefectInfo"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelDefectInfo}"
+      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
+      FontSize="35" FontFamily="Meiryo UI"
+      Title="不良登録">
+    <!-- イベント -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CommandLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <!-- 画面表示 -->
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <!-- 上領域 -->
+            <Grid Background="#D7DCDE" Margin="0,10,0,20" Height="560">
+                <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                        <!-- 左領域 -->
+                        <Grid Margin="40,40,0,40" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="380"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="70"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="作業日"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ManufactureDate.Value,Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProductName.Value}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LotNumber.Value}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="工 程"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding WorkProcess.Value}" />
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="不良区分"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="Category" Text="{Binding Category.Value}" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Category"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <i:Interaction.Behaviors>
+                                    <local:TextBoxMode/>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="不良内容"/>
+                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="Contents" Text="{Binding Contents.Value}"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Contents"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <i:Interaction.Behaviors>
+                                    <local:TextBoxMode/>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="数 量"/>
+                            <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" >
+                                <TextBox x:Name="Amount" Text="{Binding Amount.Value}" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength.Value}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Amount"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <i:Interaction.Behaviors>
+                                        <local:TextBoxMode/>
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBlock Text="個" Margin="10,0,30,0"/>
+                                <TextBox x:Name="Weight" Text="{Binding Weight.Value}"  Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding WeightLength.Value}"
+                                         Visibility="{Binding VisibleWeight.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Weight"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <i:Interaction.Behaviors>
+                                        <local:TextBoxMode/>
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBlock Text="kg" Margin="10,0,30,0" Visibility="{Binding VisibleWeight.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- 右領域 -->
+                        <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
+                            <Grid Visibility="{Binding VisibleCategory.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                                <local:ControlDefectCategory/>
+                            </Grid>
+                            <Grid Visibility="{Binding VisibleDefect.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                                <local:ControlDefect/>
+                            </Grid>
+                            <Grid  Visibility="{Binding VisibleTenKey.Value,Converter={StaticResource CollapsedConverter},FallbackValue=Visible}">
+                                <local:ControlTenKey/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <!-- 下領域 -->
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Add">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="{Binding ButtonName.Value}" FontWeight="Medium"/>
+                        </WrapPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TouchDown">
+                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Add"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Del" Visibility="{Binding VisibleDelete.Value,Converter={StaticResource CollapsedConverter}}">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="削 除" FontWeight="Medium" />
+                        </WrapPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TouchDown">
+                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Del"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>

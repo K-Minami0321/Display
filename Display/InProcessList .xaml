@@ -1,0 +1,100 @@
+﻿<Page x:Class="Display.InProcessList "
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelInProcessList}"
+      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
+      FontSize="35" FontFamily="Meiryo UI" 
+      Title="搬入一覧">
+    <!-- イベント -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CommandLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <!-- 画面表示 -->
+    <Grid>
+        <Grid.Resources>
+            <FrameworkElement x:Key="proxyElement" />
+        </Grid.Resources>
+        <ContentControl Visibility="Collapsed" Content="{StaticResource proxyElement}" />
+        <Grid Background="#FFFFFF">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="580"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate.Value,Converter={StaticResource DateTimeConverter}}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+            <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable.Value}" SelectedIndex="{Binding SelectedIndex.Value}" SelectedItem="{Binding SelectedItem.Value}"
+                      ColumnHeaderStyle="{StaticResource DefultHeader}">
+                <!-- 項目設定 -->
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="ロット番号" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="品番" Width="300*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 品番}" HorizontalAlignment="Left" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="形状" Visibility="{Binding Path=DataContext.VisibleShape.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="90">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 形状}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderUnit.Value,FallbackValue=素材数量, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleUnit.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 素材数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderAmount.Value,FallbackValue=数量, Source={StaticResource proxyElement}}" Width="120" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{Binding Path=DataContext.HeaderWeight.Value,FallbackValue=単重, Source={StaticResource proxyElement}}" Visibility="{Binding Path=DataContext.VisibleWeight.Value, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="120" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 重量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="担当者" Width="180">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 作業者}" HorizontalAlignment="Left"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding 完了,Converter={StaticResource CompletedConverter}}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{Binding 仕掛区分,Converter={StaticResource ProcessColorConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <i:Interaction.Behaviors>
+                    <local:DataGridBehavior/>
+                </i:Interaction.Behaviors>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>

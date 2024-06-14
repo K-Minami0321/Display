@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="Display.ControlTenKey"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Display"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:ViewModelControlTenKey}"
+             d:DesignWidth="580" d:DesignHeight="580" >
+    <Grid>
+        <Grid Margin="20,40,20,40" Width="500" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="1" Grid.Column="1" Content="7" Command="{Binding CommandButton}" CommandParameter="7" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="7"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="3" Content="8" Command="{Binding CommandButton}" CommandParameter="8" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="8"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="5" Content="9" Command="{Binding CommandButton}" CommandParameter="9" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="9"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="7" Command="{Binding CommandButton}" CommandParameter="BS" Style="{StaticResource TenKey}">
+                <WrapPanel>
+                    <materialDesign:PackIcon Kind="KeyboardBackspace" Margin="0,0,0,0" Height="60" Width="60" />
+                </WrapPanel>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="BS"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="1" Content="4" Command="{Binding CommandButton}" CommandParameter="4" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="4"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="3" Content="5" Command="{Binding CommandButton}" CommandParameter="5" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="5"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="5" Content="6" Command="{Binding CommandButton}" CommandParameter="6" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="6"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="7" Content="クリア" Command="{Binding CommandButton}" CommandParameter="CLEAR" Style="{StaticResource TenKey}" FontSize="35">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="CLEAR"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="1" Content="1" Command="{Binding CommandButton}" CommandParameter="1" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="1"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="3" Content="2" Command="{Binding CommandButton}" CommandParameter="2" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="2"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="5" Content="3" Command="{Binding CommandButton}" CommandParameter="3" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="3"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="7" Grid.RowSpan="3" Content="確定" Command="{Binding CommandButton}" CommandParameter="Enter" Style="{StaticResource TenKey}" Height="230" FontSize="35">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Enter"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" Content="0" Command="{Binding CommandButton}" CommandParameter="0" Style="{StaticResource TenKey}" Width="230">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="0"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Grid.Row="7" Grid.Column="5" Content="{Binding InputString.Value,FallbackValue=.}" Command="{Binding CommandButton}" CommandParameter="{Binding InputString.Value,FallbackValue=.}" Style="{StaticResource TenKey}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="{Binding InputString.Value,FallbackValue=.}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

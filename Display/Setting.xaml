@@ -1,0 +1,171 @@
+﻿<Page x:Class="Display.Setting"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelSetting}"
+      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
+      FontSize="35" FontFamily="Meiryo UI"
+      Title="設定画面">
+    <!-- イベント -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CommandLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <!-- 画面表示 -->
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <!-- 上領域 -->
+            <Grid Background="#D7DCDE" Margin="0,10,0,10" Height="560">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                    <!-- 左領域 -->
+                    <Grid Margin="40,40,0,40" Width="570" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="280*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Ver"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Version.Value}" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="接続先"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="Server" Text="{Binding Server.Value}" ItemsSource="{Binding Servers.Value}" IsDropDownOpen="{Binding IsServer.Value}" HorizontalAlignment="Stretch">
+                            <i:Interaction.Behaviors>
+                                <local:ComboBoxBehavior/>
+                            </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Server"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="※システム再起動で反映" VerticalAlignment="Top" Foreground="#FFFF0000" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="工程区分"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" Text="{Binding ProcessName.Value}" ItemsSource="{Binding ProcessNames.Value}" IsDropDownOpen="{Binding IsProcessName.Value}" HorizontalAlignment="Stretch" Margin="0,0,180,0">
+                            <i:Interaction.Behaviors>
+                                <local:ComboBoxBehavior/>
+                            </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ProcessName"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="設 備"/>
+                        <ComboBox Grid.Row="4" Grid.Column="1" Text="{Binding EquipmentCODE}" ItemsSource="{Binding EquipmentCODES.Value}" IsDropDownOpen="{Binding IsEquipment.Value}" HorizontalAlignment="Stretch" Margin="0,0,50,0">
+                            <i:Interaction.Behaviors>
+                                <local:ComboBoxBehavior/>
+                            </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Equipment"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
+                        <ComboBox Grid.Row="5" Grid.Column="1" Text="{Binding Worker.Value}" ItemsSource="{Binding Workers.Value}" IsDropDownOpen="{Binding IsWorker.Value}" HorizontalAlignment="Stretch" Margin="0,0,50,0" >
+                            <i:Interaction.Behaviors>
+                                <local:ComboBoxBehavior/>
+                            </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Worker"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                    </Grid>
+                    <!-- 右領域 -->
+                    <Grid HorizontalAlignment="Left" Margin="0,40,0,60">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="510"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="400"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                            <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="SQL" Margin="0,0,0,0">
+                                <WrapPanel>
+                                    <materialDesign:PackIcon Kind="Database" Margin="0,3,10,0" Height="30" Width="30"/>
+                                    <TextBlock Text="SQL" FontWeight="Medium"/>
+                                </WrapPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="SQL"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="Error" Margin="10,0,0,0">
+                                <WrapPanel>
+                                    <materialDesign:PackIcon Kind="Error" Margin="0,3,10,0" Height="30" Width="30"/>
+                                    <TextBlock Text="Error" FontWeight="Medium"/>
+                                </WrapPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Error"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button Style="{StaticResource Select}" Command="{Binding CommandButton}" CommandParameter="Debug" Margin="10,0,0,0">
+                                <WrapPanel>
+                                    <materialDesign:PackIcon Kind="Bug" Margin="0,3,10,0" Height="30" Width="30"/>
+                                    <TextBlock Text="Debug" FontWeight="Medium"/>
+                                </WrapPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Debug"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding LogText.Value}" FontSize="14" IsReadOnly="True"
+                                 Style="{StaticResource LogStyle}" AcceptsReturn="True" TextWrapping="NoWrap"
+                                 HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                            <i:Interaction.Behaviors>
+                                <local:TextBoxBehavior/>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <!-- 下領域 -->
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="登　録" FontWeight="Medium"/>
+                        </WrapPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TouchDown">
+                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Regist"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Margin="10,0,0,0">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="取　消" FontWeight="Medium"/>
+                        </WrapPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TouchDown">
+                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Cancel"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>
