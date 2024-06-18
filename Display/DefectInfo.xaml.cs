@@ -225,7 +225,7 @@ namespace Display
         {
             //不良データ取得
             Initialize();
-            DefectList = defect.Select();
+            DefectList = defect.Select(ManufactureCODE);
         }
 
         //ロット取得

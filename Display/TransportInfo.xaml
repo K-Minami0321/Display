@@ -73,7 +73,7 @@
                         </Grid>
                         <!-- 右領域 -->
                         <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
-                            <Grid  Visibility="{Binding VisibleTenKey.,Converter={StaticResource CollapsedConverter}}">
+                            <Grid  Visibility="{Binding VisibleTenKey,Converter={StaticResource CollapsedConverter}}">
                                 <local:ControlTenKey/>
                             </Grid>
                             <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">

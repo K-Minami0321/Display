@@ -89,10 +89,10 @@ namespace Display
         public void StartPage()
         {
             //初期化
-            ViewModelManufactureInfo.Instance.Initialize();
-            ViewModelInProcessInfo.Instance.Initialize();
-            ViewModelTransportInfo.Instance.Initialize();
-            ViewModelDefectInfo.Instance.Initialize();
+            //ViewModelManufactureInfo.Instance.Initialize();
+            //ViewModelInProcessInfo.Instance.Initialize();
+            //ViewModelTransportInfo.Instance.Initialize();
+            //ViewModelDefectInfo.Instance.Initialize();
             DiaplayPage();
         }
 

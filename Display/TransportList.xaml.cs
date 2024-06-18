@@ -25,10 +25,11 @@ namespace Display
         //プロパティ変数
         string _ProcessName;
         string _InProcessCODE;
+
         //プロパティ
-        public static ViewModelTransportList Instance       //インスタンス
+        public static ViewModelTransportList Instance   //インスタンス
         { get; set; } = new ViewModelTransportList();
-        public string ProcessName     //工程区分
+        public string ProcessName                       //工程区分
         {
             get { return inProcess.ProcessName; }
             set 
@@ -38,7 +39,7 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string InProcessCODE   //仕掛在庫CODE
+        public string InProcessCODE                     //仕掛在庫CODE
         {
             get { return _InProcessCODE; }
             set { SetProperty(ref _InProcessCODE, value); }

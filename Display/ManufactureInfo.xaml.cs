@@ -139,7 +139,7 @@ namespace Display
                 }
             }
         }
-        public string ManufactureCODE                       //加工CODE
+        public string ManufactureCODE                       //製造CODE
         {
             get { return manufacture.ManufactureCODE; }
             set 
@@ -395,7 +395,7 @@ namespace Display
         //データ表示
         private void DisplayData()
         {
-            manufacture.Select();
+            manufacture.Select(ManufactureCODE);
             DisplayLotNumber(LotNumber);        //ロット情報の取得
         }
 
@@ -654,7 +654,7 @@ namespace Display
 
             //登録処理
             manufacture.InsertLog(RegFlg);
-            manufacture.Resist();
+            manufacture.Resist(ManufactureCODE);
 
             //不良データ登録
             if (DefectList != null)
@@ -729,11 +729,10 @@ namespace Display
         {
             //製造実績削除
             manufacture.DeleteLog();
-            manufacture.Delete();
+            manufacture.Delete(ManufactureCODE);
 
             //製造不良削除
-            //defect.ManufactureCODE = ManufactureCODE;
-            //defect.Delete();
+            //defect.Delete(ManufactureCODE);
 
             //処理完了
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
@@ -863,10 +862,13 @@ namespace Display
         //フォーカス処理（GotForcus）
         private void SetGotFocus(object value)
         {
+            if (ManufactureInfo.Instance == null) { return; }
+
             Focus = value;
             switch (Focus)
             {
                 case "LotNumber":
+                    
                     ManufactureInfo.Instance.LotNumber.Focus();
                     VisibleTenKey = true;
                     VisibleWorker = false;

@@ -43,21 +43,21 @@ namespace Display
         }
         public string ProcessName     //工程区分
         {
-            get { return management.ProcessName; }
+            get { return plan.ProcessName; }
             set 
             { 
                 SetProperty(ref _ProcessName, value);
-                management.ProcessName = value;
+                plan.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
         public string InProcessCODE   //搬入CODE
         {
-            get { return management.InProcessCODE; }
+            get { return plan.InProcessCODE; }
             set 
             { 
                 SetProperty(ref _InProcessCODE, value);
-                management.InProcessCODE = value;
+                plan.InProcessCODE = value;
             }
         }
         public string UpdateDate      //更新表示
@@ -95,7 +95,7 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
-            management = new Management();
+            plan = new Plan();
             SelectedIndex = -1;
             ScrollIndex = 0;
         }
@@ -120,7 +120,7 @@ namespace Display
             //キャプション表示
             ProcessName = ViewModelWindowMain.Instance.ProcessName;
             ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
-            UpdateDate = management.SelectFile() + "版";
+            UpdateDate = plan.SelectFile() + "版";
 
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
@@ -173,7 +173,7 @@ namespace Display
                     //計画一覧画面
                     SelectedIndex = -1;
                     ScrollIndex = 0;
-                    management.SelectFile();
+                    plan.SelectFile();
                     DiaplayList();
                     break;
 
@@ -191,8 +191,8 @@ namespace Display
         private void DiaplayList(string where = "")
         {
             var selectIndex = SelectedIndex;
-            management.SelectFile();
-            SelectTable = management.SelectPlanList(where, true);
+            plan.SelectFile();
+            SelectTable = plan.SelectPlanList(where, true);
 
             //行選択・スクロール設定
             DataGridBehavior.Instance.SetScrollViewer();

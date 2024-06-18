@@ -1,5 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
+using DocumentFormat.OpenXml.Bibliography;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -27,7 +28,7 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
     {
         //プロパティ変数
-        bool _RegFlg = false;
+        bool _RegFlg;
         string _ProcessName;
         string _InProcessCODE;
         string _InProcessDate;
@@ -52,6 +53,14 @@ namespace Display
         //プロパティ
         public static ViewModelInProcessInfo Instance   //インスタンス
         { get; set; } = new ViewModelInProcessInfo();
+        public string LotNumber                         //ロット番号（テキストボックス）
+        {
+            get { return _LotNumber; }
+            set 
+            { 
+                SetProperty(ref _LotNumber, value);
+            }
+        }
         public bool RegFlg                              //新規・既存フラグ
         {
             get { return _RegFlg; }
@@ -60,7 +69,19 @@ namespace Display
                 SetProperty(ref _RegFlg, value);
                 VisibleCancel = value;
                 VisibleDelete = !value;
-                if (!value) { DisplayData(); }
+
+                //データ取得
+                if (!value) 
+                { 
+                    DisplayData();
+                }
+                else
+                {
+                    //予定表からロット番号取得
+                    LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
+                    DisplayLot();
+                    SetGotFocus("Worker");
+                }
             }
         }
         public string ProcessName                       //工程区分
@@ -114,11 +135,6 @@ namespace Display
                 SetProperty(ref _InProcessCODE, value);
                 ButtonName = string.IsNullOrEmpty(value) ? "登　録" : "修　正";
             }
-        }
-        public string LotNumber                         //ロット番号（テキストボックス）
-        {
-            get { return _LotNumber; }
-            set {  SetProperty(ref _LotNumber, value); }
         }
         public int LotNumberLength                      //文字数（ロット番号）
         {
@@ -236,24 +252,11 @@ namespace Display
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
-
-            //キャプション・ボタン表示
             DisplayCapution();
-            Initialize(false);
 
             //履歴から仕掛データ読み込み
             InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
             RegFlg = string.IsNullOrEmpty(InProcessCODE);
-
-            if (RegFlg)
-            {
-                //予定表からロット番号取得
-                LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
-
-                if (LotNumber == null) { LotNumber = string.Empty; }
-                DiaplayLotNumber();
-                SetGotFocus("Worker");
-            }
             if (string.IsNullOrEmpty(inProcess.ProductName)) { SetGotFocus("LotNumber"); }
         }
 
@@ -272,6 +275,7 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
+            Initialize(false);
         }
 
         //初期化
@@ -287,17 +291,18 @@ namespace Display
             inProcess.Weight = string.Empty;
             inProcess.Unit = string.Empty;
             inProcess.Status = "搬入";
+            inProcess.UnitLabel = "重 量";
             inProcess.Worker = INI.GetString("Page", "Worker");
             inProcess.IsCompleted = false;
             inProcess.Coil = string.Empty;
             inProcess.ShirringUnit = string.Empty;
             inProcess.Comment = string.Empty;
-            inProcess.VisibleCoil = false;
-            inProcess.AmountLabel = "枚 数";
+            VisibleCoil = false;
+            AmountLabel = "枚 数";
             LotNumber = string.Empty;
             AmountWidth = 150;
             NextFocus = null;
-             RegFlg = true;
+            RegFlg = false;
             IsEnable = true;
 
             if (flg) 
@@ -308,18 +313,29 @@ namespace Display
         }
 
         //ロット番号処理
-        private void DiaplayLotNumber()
+        private void DisplayLot()
         {
-            LotNumber = DisplayLotNumber(LotNumber);
+            //データ表示
+            var productname = inProcess.ProductName;
+            
+            inProcess.LotNumber = LotNumber;
+            inProcess.ProductName = management.ProductName;
+            iShape = Shape.SetShape(management.ShapeName);
+            management.QuantityLabel = (management.ShapeName == "コイル") ? "重 量" : "枚 数";
+            ProcessName = iProcess.Name;
+            VisibleCoil = (ProcessName == "合板" && management.ShapeName == "コイル") ? true : false;
+            inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
+            AmountLabel = (!string.IsNullOrEmpty(management.ShapeName)) ? iShape.Unit : "枚 数";
 
-            inProcess.DisplayInProcessData(LotNumber);   //仕掛情報取得
-            inProcess.SetNextProcess();                   //製品によって次工程を設定
+            inProcess.DisplayInProcessData(LotNumber);      //仕掛情報取得
+            inProcess.SetNextProcess();                     //製品によって次工程を設定
 
             //コイル数取得
             inProcess.Coil = inProcess.InProcessCoil(LotNumber);
-            if (string.IsNullOrEmpty(management.ShirringUnit)) { inProcess.VisibleCoil = false; }
-
-            inProcess.LotNumber = LotNumber;
+            if (string.IsNullOrEmpty(management.ShirringUnit)) { VisibleCoil = false; }
+            
+            //サウンド再生
+            if (!string.IsNullOrEmpty(inProcess.ProductName) && inProcess.ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
         }
 
         //ロット番号の取得・表示
@@ -335,10 +351,11 @@ namespace Display
             iShape = Shape.SetShape(management.ShapeName);
             management.QuantityLabel = (management.ShapeName == "コイル") ? "重 量" : "枚 数";
 
+
             ProcessName = iProcess.Name;
-            inProcess.VisibleCoil = (ProcessName == "合板" && management.ShapeName == "コイル") ? true : false;
+            VisibleCoil = (ProcessName == "合板" && management.ShapeName == "コイル") ? true : false;
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
-            inProcess.AmountLabel = (!string.IsNullOrEmpty(management.ShapeName)) ? iShape.Unit : "枚 数";
+            AmountLabel = (!string.IsNullOrEmpty(management.ShapeName)) ? iShape.Unit : "枚 数";
 
             if (!string.IsNullOrEmpty(inProcess.ProductName) && inProcess.ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             return management.LotNumber;
@@ -348,8 +365,7 @@ namespace Display
         private void DisplayData()
         {
             inProcess.Select(InProcessCODE);
-            LotNumber = inProcess.LotNumber;
-            DiaplayLotNumber();
+            LotNumber = management.Display(inProcess.LotNumber);
             IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
             SetGotFocus("LotNumber");
         }
@@ -519,7 +535,7 @@ namespace Display
         {
             //削除処理
             inProcess.DeleteLog();
-            inProcess.DeleteHistory();
+            inProcess.DeleteHistory(InProcessCODE);
 
             //処理完了
             Initialize();
@@ -528,9 +544,12 @@ namespace Display
         //入力制御
         private void DisplayText(object value)
         {
+
             switch (Focus)
             {
                 case "LotNumber":
+                    
+                    if (LotNumber == null) { LotNumber = string.Empty; }
                     if (LotNumber.Length < LotNumberLength)
                     {
                         LotNumber += value.ToString();
@@ -728,10 +747,11 @@ namespace Display
             }
         }
 
-        //フォーカス処理（LostFoucus）
+        //ロット番号フォーカス処理（LostFoucus）
         private void SetLostFocus()
         {
-            DiaplayLotNumber();
+            LotNumber = management.Display(CorrectionLotNumber(LotNumber));
+            DisplayLot();
 
             //製品によって次の工程が変わる
             if (!string.IsNullOrEmpty(inProcess.ProductName))
