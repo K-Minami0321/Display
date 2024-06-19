@@ -64,6 +64,10 @@ namespace Display
             get { return _SoundFolder; }
             set { SetProperty(ref _SoundFolder, value); }
         }
+
+
+
+
         public string QuantityLabel         //ラベル（重量・枚数）
         {
             get { return _QuantityLabel; }
@@ -79,11 +83,7 @@ namespace Display
             get { return _UnitLabel; }
             set { SetProperty(ref _UnitLabel, value); }
         }
-        public bool VisibleCoil             //表示・非表示（コイル項目）
-        {
-            get { return _VisibleCoil; }
-            set { SetProperty(ref _VisibleCoil, value); }
-        }
+
 
         //スタートページを表示
         public void StartPage()
@@ -122,7 +122,7 @@ namespace Display
             if (iProcess != null)
             {
                 ProcessName = iProcess.Name;
-                VisibleCoil = (ProcessName == "合板" && ShapeName == "コイル") ? true : false;
+                //VisibleCoil = (ProcessName == "合板" && ShapeName == "コイル") ? true : false;
                 UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             }
             AmountLabel = (!string.IsNullOrEmpty(ShapeName)) ? iShape.Unit : "枚 数";
