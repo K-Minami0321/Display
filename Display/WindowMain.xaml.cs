@@ -5,7 +5,6 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
-using System;
 
 #pragma warning disable
 namespace Display
@@ -33,7 +32,6 @@ namespace Display
     //ViewModel
     public class ViewModelWindowMain : Common, IWindow
     {
-
         //プロパティ変数
         Frame _FramePage;
         WindowState _DisplayState;
@@ -56,102 +54,102 @@ namespace Display
         int _IconSize;
 
         //プロパティ
-        public static ViewModelWindowMain Instance                  //インスタンス
+        public static ViewModelWindowMain Instance      //インスタンス
         { get; set; } = new ViewModelWindowMain();
-        public IKeyDown Ikeydown                                    //インターフェース
+        public IKeyDown Ikeydown                        //インターフェース
         { get; set; }
 
-        public Frame FramePage                //FramePage
+        public Frame FramePage                          //FramePage
         {
             get { return _FramePage; }
             set { SetProperty(ref _FramePage, value); }
         }
-        public WindowState DisplayState       //最大化・Window化
+        public WindowState DisplayState                 //最大化・Window化
         {
             get { return _DisplayState; }
             set { SetProperty(ref _DisplayState, value); }
         }
-        public WindowStyle DisplayStyle       //最大化・最小化・閉じるボタン
+        public WindowStyle DisplayStyle                 //最大化・最小化・閉じるボタン
         {
             get { return _DisplayStyle; }
             set { SetProperty(ref _DisplayStyle, value); }
         }
-        public double WindowLeft              //Windowの位置（Left）
+        public double WindowLeft                        //Windowの位置（Left）
         {
             get { return _WindowLeft; }
             set { SetProperty(ref _WindowLeft, value); }
         }
-        public double WindowTop               //Windowの位置（Top）
+        public double WindowTop                         //Windowの位置（Top）
         {
             get { return _WindowTop; }
             set { SetProperty(ref _WindowTop, value); }
         }
-        public double WindowWidth             //Windowの大きさ（Width）
+        public double WindowWidth                       //Windowの大きさ（Width）
         {
             get { return _WindowWidth; }
             set { SetProperty(ref _WindowWidth, value); }
         }
-        public double WindowHeight            //Windowの大きさ（Height）
+        public double WindowHeight                      //Windowの大きさ（Height）
         {
             get { return _WindowHeight; }
             set { SetProperty(ref _WindowHeight, value); }
         }
-        public string ProcessName             //工程区分
+        public string ProcessName                       //工程区分
         {
             get { return _ProcessName; }
             set { SetProperty(ref _ProcessName, value); }
         }
-        public string ProcessWork             //工程区分表示
+        public string ProcessWork                       //工程区分表示
         {
             get { return _ProcessWork; }
             set { SetProperty(ref _ProcessWork, value); }
         }
-        public string FunctionColor           //ページ名色
+        public string FunctionColor                     //ページ名色
         {
             get { return _FunctionColor; }
             set { SetProperty(ref _FunctionColor, value); }
         }
-        public bool VisiblePower              //表示・非表示（電源ボタン）
+        public bool VisiblePower                        //表示・非表示（電源ボタン）
         {
             get { return _VisiblePower; }
             set { SetProperty(ref _VisiblePower, value); }
         }
-        public bool VisibleList               //表示・非表示（一覧ボタン）
+        public bool VisibleList                         //表示・非表示（一覧ボタン）
         {
             get { return _VisibleList; }
             set { SetProperty(ref _VisibleList, value); }
         }
-        public bool VisibleInfo               //表示・非表示（登録ボタン）
+        public bool VisibleInfo                         //表示・非表示（登録ボタン）
         {
             get { return _VisibleInfo; }
             set { SetProperty(ref _VisibleInfo, value); }
         }
-        public bool VisibleDefect             //表示・非表示（不良ボタン）
+        public bool VisibleDefect                       //表示・非表示（不良ボタン）
         {
             get { return _VisibleDefect; }
             set { SetProperty(ref _VisibleDefect, value); }
         }
-        public bool VisibleArrow              //表示・非表示（矢印ボタン）
+        public bool VisibleArrow                        //表示・非表示（矢印ボタン）
         {
             get { return _VisibleArrow; }
             set { SetProperty(ref _VisibleArrow, value); }
         }
-        public bool VisiblePlan               //表示・非表示（予定ボタン）
+        public bool VisiblePlan                         //表示・非表示（予定ボタン）
         {
             get { return _VisiblePlan; }
             set { SetProperty(ref _VisiblePlan, value); }
         }
-        public string IconPlan                //アイコン（計画一覧）
+        public string IconPlan                          //アイコン（計画一覧）
         {
             get { return _IconPlan; }
             set { SetProperty(ref _IconPlan, value); }
         }
-        public string IconList                //アイコン（計画一覧）
+        public string IconList                          //アイコン（計画一覧）
         {
             get { return _IconList; }
             set { SetProperty(ref _IconList, value); }
         }
-        public int IconSize                   //アイコンサイズ
+        public int IconSize                             //アイコンサイズ
         {
             get { return _IconSize; }
             set { SetProperty(ref _IconSize, value); }
@@ -187,13 +185,8 @@ namespace Display
         //開始処理
         private void OnLoad()
         {
-            //設定
             WindowBehavior.Instance.iWindow = this;
-
-            //ページの表示（Iniファイルから最初のページを取得する）
             StartPage();
-
-            //ボタン設定
             VisiblePower = false;
             VisibleList = false;
             VisibleInfo = false;

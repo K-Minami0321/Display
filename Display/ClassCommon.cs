@@ -105,6 +105,13 @@ namespace Display
             ViewModelWindowMain.Instance.FramePage.Navigate(Activator.CreateInstance(type));
         }
 
+
+
+
+
+
+
+
         //ロット番号の取得・表示
         public string DisplayLotNumber(string value)
         {

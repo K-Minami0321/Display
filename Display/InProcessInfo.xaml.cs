@@ -52,42 +52,11 @@ namespace Display
         //プロパティ
         public static ViewModelInProcessInfo Instance   //インスタンス
         { get; set; } = new ViewModelInProcessInfo();
-        public string LotNumber                         //ロット番号（テキストボックス）
-        {
-            get { return _LotNumber; }
-            set 
-            { 
-                SetProperty(ref _LotNumber, value);
-            }
-        }
-        public bool RegFlg                              //新規・既存フラグ
-        {
-            get { return _RegFlg; }
-            set 
-            { 
-                SetProperty(ref _RegFlg, value);
-                VisibleCancel = value;
-                VisibleDelete = !value;
-
-                //データ取得
-                if (!value) 
-                { 
-                    DisplayData();
-                }
-                else
-                {
-                    //予定表からロット番号取得
-                    LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
-                    DisplayLot(inProcess.ProductName);
-                    SetGotFocus("Worker");
-                }
-            }
-        }
-        public string ProcessName                       //工程区分
+        public override string ProcessName              //工程区分
         {
             get { return _ProcessName; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _ProcessName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
@@ -129,13 +98,41 @@ namespace Display
                 }
             }
         }
-        public string InProcessCODE                     //仕掛在庫CODE
+        public override string InProcessCODE            //仕掛在庫CODE
         {
             get { return _InProcessCODE; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _InProcessCODE, value);
                 ButtonName = string.IsNullOrEmpty(value) ? "登　録" : "修　正";
+            }
+        }
+        public override string LotNumber                //ロット番号（テキストボックス）
+        {
+            get { return _LotNumber; }
+            set { SetProperty(ref _LotNumber, value); }
+        }
+        public bool RegFlg                              //新規・既存フラグ
+        {
+            get { return _RegFlg; }
+            set 
+            { 
+                SetProperty(ref _RegFlg, value);
+                VisibleCancel = value;
+                VisibleDelete = !value;
+
+                //データ取得
+                if (!value) 
+                { 
+                    DisplayData();
+                }
+                else
+                {
+                    //予定表からロット番号取得
+                    LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
+                    DisplayLot(inProcess.ProductName);
+                    SetGotFocus("Worker");
+                }
             }
         }
         public int LotNumberLength                      //文字数（ロット番号）

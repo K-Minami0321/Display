@@ -72,8 +72,7 @@
                     </Grid.ColumnDefinitions>
                     <Border CornerRadius="2" Background="{Binding ProcessName,Converter={StaticResource ProcessColorConverter},FallbackValue=#90A4AE}" 
                             MinWidth="240" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding FunctionColor}" >
-                        <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" 
-                                   Foreground="#FFFFFF" FontWeight="Medium" Padding="40,0,40,0"/>
+                        <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FFFFFF" FontWeight="Medium" Padding="40,0,40,0"/>
                     </Border>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Visibility="{Binding VisibleArrow,Converter={StaticResource CollapsedConverter}}">

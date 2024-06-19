@@ -29,17 +29,17 @@ namespace Display
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
         { get; set; } = new ViewModelTransportList();
-        public string ProcessName                       //工程区分
+        public override string ProcessName              //工程区分
         {
             get { return inProcess.ProcessName; }
             set 
-            { 
+            {
                 SetProperty(ref _ProcessName, value);
                 inProcess.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string InProcessCODE                     //仕掛在庫CODE
+        public override string InProcessCODE            //仕掛在庫CODE
         {
             get { return _InProcessCODE; }
             set { SetProperty(ref _InProcessCODE, value); }
@@ -83,9 +83,10 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleInfo = false;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = false;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconList = "refresh";
+            ViewModelWindowMain.Instance.IconPlan = "ListStatus";
         }
 
         //初期化
@@ -110,13 +111,19 @@ namespace Display
                     //仕掛在庫移動一覧
                     ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
+
+                case "DiaplayPlan":
+                    //仕掛在庫移動履歴
+
+                    break;
             }
         }
 
         //一覧表示
         private void DiaplayList()
         {
-            SelectTable = inProcess.SelectGetList();
+            SelectTable = inProcess.SelectListTransport();
+            ViewModelWindowMain.Instance.ProcessName = inProcess.ProcessName;
         }
 
         //選択処理

@@ -63,7 +63,51 @@ namespace Display
         //プロパティ
         public static ViewModelManufactureInfo Instance     //インスタンス
         { get; set; } = new ViewModelManufactureInfo();
-        public string EquipmentCODE                         //設備CODE
+        public override string ProcessName                  //工程区分
+        {
+            get { return _ProcessName; }
+            set
+            {
+                SetProperty(ref _ProcessName, value);
+                iProcess = ProcessCategory.SetProcess(value);
+                switch (value)
+                {
+                    case "合板":
+                    case "プレス":
+                    case "仕上":
+                        VisiblePackaging = true;
+                        break;
+
+                    default:
+                        VisiblePackaging = false;
+                        break;
+                }
+            }
+        }
+        public override string ManufactureCODE              //製造CODE
+        {
+            get { return manufacture.ManufactureCODE; }
+            set
+            {
+                SetProperty(ref _ManufactureCODE, value);
+                manufacture.ManufactureCODE = value;
+
+
+
+
+
+            }
+        }
+        public override string LotNumber                    //ロット番号
+        {
+            get { return manufacture.LotNumber; }
+            set
+            {
+                SetProperty(ref _LotNumber, value);
+                manufacture.LotNumber = value;
+            }
+        }
+        public override string EquipmentCODE                //設備CODE
         {
             get { return _EquipmentCODE; }
             set 
@@ -118,36 +162,6 @@ namespace Display
                 EditFlg = Status == "作業中" ? true : false;
             }
         }
-        public string ProcessName                           //工程区分
-        {
-            get { return _ProcessName; }
-            set 
-            { 
-                SetProperty(ref _ProcessName, value);
-                iProcess = ProcessCategory.SetProcess(value);
-                switch (value)
-                {
-                    case "合板":
-                    case "プレス":
-                    case "仕上":
-                        VisiblePackaging = true;
-                        break;
-
-                    default:
-                        VisiblePackaging = false;
-                        break;
-                }
-            }
-        }
-        public string ManufactureCODE                       //製造CODE
-        {
-            get { return manufacture.ManufactureCODE; }
-            set 
-            { 
-                SetProperty(ref _ManufactureCODE, value);
-                manufacture.ManufactureCODE = value;
-            }
-        }
         public string ManufactureDate                       //作業日
         {
             get { return manufacture.ManufactureDate; }
@@ -156,6 +170,15 @@ namespace Display
                 SetProperty(ref _ManufactureDate, value);
                 manufacture.ManufactureDate = value;
                 VisibleButton = value != STRING.ToDate(SetToDay(DateTime.Now)) ? false : true;
+            }
+        }
+        public string ProductName                           //品番
+        {
+            get { return manufacture.ProductName; }
+            set
+            {
+                SetProperty(ref _ProductName, value);
+                manufacture.ProductName = value;
             }
         }
         public string Equipment1                            //設備
@@ -185,24 +208,7 @@ namespace Display
                 manufacture.Team = value;
             }
         }
-        public string LotNumber                             //ロット番号
-        {
-            get { return manufacture.LotNumber; }
-            set 
-            { 
-                SetProperty(ref _LotNumber, value);
-                manufacture.LotNumber = value;
-            }
-        }
-        public string ProductName                           //品番
-        {
-            get { return manufacture.ProductName; }
-            set
-            {
-                SetProperty(ref _ProductName, value);
-                manufacture.ProductName = value;
-            }
-        }
+
         public string StartTime                             //開始時間
         {
             get { return manufacture.StartTime; }

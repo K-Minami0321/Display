@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -25,8 +26,8 @@ namespace Display
     //ViewModel
     public class ViewModelTransportInfo : Common, IKeyDown, ITenKey, IWorker
     {
-
         //プロパティ変数
+        string _InProcessCODE;
         string _LotNumber;
         string _ProcessName;
         int _AmountLength = 6;
@@ -36,20 +37,30 @@ namespace Display
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
-        public string LotNumber                             //ロット番号
-        {
-            get { return _LotNumber; }
-            set { SetProperty(ref _LotNumber, value); }
-        }
-        public string ProcessName                           //工程区分
+        public override string ProcessName                  //工程区分
         {
             get { return _ProcessName; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _ProcessName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
             }
+        }
+        public override string InProcessCODE                //仕掛コード
+        {
+            get { return _InProcessCODE; }
+            set 
+            {
+                SetProperty(ref _InProcessCODE, value);
+                if (value == null) { return; }
+                DisplayData();
+            }
+        }
+        public override string LotNumber                    //ロット番号
+        {
+            get { return _LotNumber; }
+            set { SetProperty(ref _LotNumber, value); }
         }
         public int AmountLength                             //文字数（数量）
         {
@@ -67,7 +78,6 @@ namespace Display
             set { SetProperty(ref _VisibleWorker, value); }
         }
 
-
         //イベント
         ActionCommand commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
@@ -77,7 +87,6 @@ namespace Display
         public ICommand GotFocus => gotFocus ??= new ActionCommand(SetGotFocus);
         ActionCommand lostFocus;
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
-
 
         //コンストラクター
         internal ViewModelTransportInfo()
@@ -96,7 +105,7 @@ namespace Display
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
             DisplayCapution();
-            DisplayData();
+            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
         }
 
         //キャプション・ボタン表示
@@ -114,9 +123,7 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = false;
             ViewModelWindowMain.Instance.InitializeIcon();
-
-            //編集モード
-            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
+            Initialize();
         }
 
         //初期化
@@ -134,9 +141,8 @@ namespace Display
         private void DisplayData()
         {
             //前工程の仕掛取得
-            Initialize();
-            inProcess.TransportSelect();
-            LotNumber = DisplayLotNumber(LotNumber);
+            inProcess.TransportSelect(InProcessCODE);
+            LotNumber = management.Display(inProcess.LotNumber);
             SetGotFocus("Amount");
         }
 
