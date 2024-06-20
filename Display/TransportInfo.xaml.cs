@@ -137,6 +137,17 @@ namespace Display
             inProcess.Worker = INI.GetString("Page", "Worker");
         }
 
+        //ロット番号処理
+        private void DisplayLot()
+        {
+            //データ表示
+            iShape = Shape.SetShape(management.ShapeName);
+            inProcess.LotNumber = LotNumber;
+
+            //サウンド再生
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+        }
+
         //データ表示
         private void DisplayData()
         {
@@ -351,7 +362,8 @@ namespace Display
         //フォーカス処理（LostFoucus）
         private void SetLostFocus()
         {
-            LotNumber = DisplayLotNumber(LotNumber);
+            LotNumber = management.Display(manufacture.LotNumber);
+            DisplayLot();
         }
 
         //スワイプ処理

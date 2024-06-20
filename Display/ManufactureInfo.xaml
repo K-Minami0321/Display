@@ -38,11 +38,11 @@
                                 <RowDefinition Height="70"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="作業日"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ManufactureDate,Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding manufacture.ManufactureDate,Converter={StaticResource DateTimeConverter}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProductName}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号" />
-                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="LotNumber" Text="{Binding LotNumber,Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
+                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="LotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" IsEnabled="{Binding EnabledControl1}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
@@ -81,13 +81,13 @@
                             </TextBox>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="作業時間"/>
                             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                                <TextBlock Text="{Binding StartTime}"/>
-                                <TextBlock Text="～" Visibility="{Binding VisibleTime,Converter={StaticResource CollapsedConverter}}" Margin="20,0,20,0"/>
-                                <TextBlock Text="{Binding EndTime}"/>
+                                <TextBlock Text="{Binding manufacture.StartTime}"/>
+                                <TextBlock Text="～" Visibility="{Binding manufacture.StartTime,Converter={StaticResource CollapsedValueConverter}}" Margin="20,0,20,0"/>
+                                <TextBlock Text="{Binding manufacture.EndTime}"/>
                             </StackPanel>
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                                <TextBox x:Name="Amount" Text="{Binding Amount}" Width="140" 
+                                <TextBox x:Name="Amount" Text="{Binding manufacture.Amount}" Width="140" 
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
                                          IsEnabled="{Binding EnabledControl2}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}">
                                     <i:Interaction.Triggers>
@@ -99,7 +99,7 @@
                                         <local:TextBoxMode Mode="Number"/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <CheckBox x:Name="Completed" Content="ロット完了" Style="{StaticResource Check}" IsChecked="{Binding IsCompleted}" FontSize="20" 
+                                <CheckBox x:Name="Completed" Content="ロット完了" Style="{StaticResource Check}" IsChecked="{Binding manufacture.IsCompleted}" FontSize="20" 
                                           Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
                                     <i:Interaction.Behaviors>
                                         <local:CheckBoxBehavior/>
@@ -110,7 +110,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </CheckBox>
-                                <CheckBox x:Name="Sales" Content="売 上" Style="{StaticResource Check}" IsChecked="{Binding IsSales}" FontSize="20"
+                                <CheckBox x:Name="Sales" Content="売 上" Style="{StaticResource Check}" IsChecked="{Binding manufacture.IsSales}" FontSize="20"
                                           Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
                                     <i:Interaction.Behaviors>
                                         <local:CheckBoxBehavior/>
@@ -152,17 +152,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkBreak" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}">
-                        <WrapPanel>
-                            <materialDesign:PackIcon Kind="TimerCancel" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="{Binding BreakName,FallbackValue=中　断}"/>
-                        </WrapPanel>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TouchDown">
-                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="WorkBreak"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Button>
+
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleButtonCancel,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -182,6 +172,17 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TouchDown">
                                 <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="WorkEnd"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkBreak" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="TimerCancel" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="{Binding BreakName,FallbackValue=中　断}"/>
+                        </WrapPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TouchDown">
+                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="WorkBreak"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>

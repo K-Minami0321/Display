@@ -36,6 +36,7 @@ namespace Display
         int _AmountLength = 6;
         int _WeightLength = 6;
         int _UnitLength = 6;
+        string _UnitLabel;
         string _WeightLabel;
         bool _VisibleItem1;
         bool _VisibleItem2;
@@ -130,7 +131,7 @@ namespace Display
                 {
                     //予定表からロット番号取得
                     LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
-                    DisplayLot(inProcess.ProductName);
+                    DisplayLot();
                     SetGotFocus("Worker");
                 }
             }
@@ -154,6 +155,11 @@ namespace Display
         {
             get { return _UnitLength; }
             set { SetProperty(ref _UnitLength, value); }
+        }
+        public string UnitLabel                         //ラベル（重量・数量）
+        {
+            get { return _UnitLabel; }
+            set { SetProperty(ref _UnitLabel, value); }
         }
         public string WeightLabel                       //ラベル（重量・焼結重量）
         {
@@ -295,7 +301,7 @@ namespace Display
             inProcess.ShirringUnit = string.Empty;
             inProcess.Comment = string.Empty;
             management.VisibleCoil = false;
-            AmountLabel = "枚 数";
+            management.AmountLabel = "枚 数";
             LotNumber = string.Empty;
             AmountWidth = 150;
             NextFocus = null;
@@ -310,23 +316,22 @@ namespace Display
         }
 
         //ロット番号処理
-        private void DisplayLot(string productname)
+        private void DisplayLot()
         {
             //データ表示
+            iShape = Shape.SetShape(management.ShapeName);
             inProcess.LotNumber = LotNumber;
             inProcess.ProductName = management.ProductName;
-            iShape = Shape.SetShape(management.ShapeName);
- 
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
-            inProcess.DisplayInProcessData(LotNumber);      //仕掛情報取得
-            inProcess.SetNextProcess();                     //製品によって次工程を設定
+            inProcess.DisplayInProcessData(LotNumber);              //仕掛情報取得
+            inProcess.SetNextProcess(management.ProductCODE);       //製品によって次工程を設定
 
             //コイル数取得
             inProcess.Coil = inProcess.InProcessCoil(LotNumber);
             if (string.IsNullOrEmpty(management.ShirringUnit)) { management.VisibleCoil = false; }
 
             //サウンド再生
-            if (!string.IsNullOrEmpty(inProcess.ProductName) && inProcess.ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
         }
 
         //データ表示
@@ -334,7 +339,7 @@ namespace Display
         {
             inProcess.Select(InProcessCODE);
             LotNumber = management.Display(inProcess.LotNumber);
-            DisplayLot(inProcess.ProductName);
+            DisplayLot();
             IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
             SetGotFocus("LotNumber");
         }
@@ -438,8 +443,6 @@ namespace Display
                 var inprocesscode = inProcess.GenerateCode(iProcess.Mark + inprocessdate);
                 InProcessCODE = inprocesscode;
             }
-
-            
 
             //登録処理
             inProcess.InsertLog(RegFlg);
@@ -715,23 +718,7 @@ namespace Display
         private void SetLostFocus()
         {
             LotNumber = management.Display(LotNumber);
-            DisplayLot(inProcess.ProductName);
-
-            //製品によって次の工程が変わる
-            if (!string.IsNullOrEmpty(inProcess.ProductName))
-            {
-                product.SelectProcess(management.ProductCODE);
-                switch (ProcessName)
-                {
-                    case "合板":
-                        inProcess.ProcessNext = (product.ProcessPress == "なし") ? "仕上" : iProcess.Next;
-                        break;
-
-                    case "プレス":
-                        inProcess.ProcessNext = (product.ProcessCompletion == "なし") ? "検査" : iProcess.Next;
-                        break;
-                }
-            }
+            DisplayLot();
         }
 
         //スワイプ処理

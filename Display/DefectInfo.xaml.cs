@@ -203,7 +203,7 @@ namespace Display
 
             //コード引継ぎ
             ManufactureCODE = ViewModelManufactureInfo.Instance.ManufactureCODE;
-            ManufactureDate = ViewModelManufactureInfo.Instance.ManufactureDate;
+            ManufactureDate = ViewModelManufactureInfo.Instance.manufacture.ManufactureDate;
             ProcessName = ViewModelWindowMain.Instance.ProcessName;
             management.LotNumber = ViewModelManufactureInfo.Instance.LotNumber;
             manufacture.WorkProcess = ViewModelManufactureInfo.Instance.manufacture.WorkProcess;

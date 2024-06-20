@@ -10,6 +10,7 @@
     <local:ProcessColorConverter x:Key="ProcessColorConverter" />
     <local:CompletedColorConverter x:Key="CompletedColorConverter"/>
     <local:CollapsedConverter x:Key="CollapsedConverter"/>
+    <local:CollapsedValueConverter x:Key="CollapsedValueConverter"/>
     <local:CheckColorConverter x:Key="CheckColorConverter"/>
     <local:CheckConverter x:Key="CheckConverter"/>
     <local:CoilConverter x:Key="CoilConverter"/>

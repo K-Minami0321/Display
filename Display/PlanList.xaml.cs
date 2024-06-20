@@ -205,7 +205,7 @@ namespace Display
         {
             if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
             LotNumber = SelectedItem.Row.ItemArray[1].ToString();
-            if (EnableSelect) { DiaplayPage(); }
+            if (EnableSelect) { StartPage(); }
         }
 
         //スワイプ処理
