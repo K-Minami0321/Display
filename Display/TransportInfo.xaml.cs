@@ -113,16 +113,17 @@ namespace Display
         {
             //キャプション表示
             ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬出";
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
 
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = false;
+            ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
+            ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
             Initialize();
         }
 
@@ -195,13 +196,18 @@ namespace Display
                     break;
 
                 case "DisplayInfo":
-                    //搬出登録画面
+                    //引取登録画面
                     Initialize();
                     SetGotFocus("LotNumber");
                     break;
 
                 case "DisplayList":
-                    //搬出一覧画面
+                    //引取履歴画面
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportHistory());
+                    break;
+
+                case "DisplayPlan":
+                    //仕掛置場
                     ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
             }

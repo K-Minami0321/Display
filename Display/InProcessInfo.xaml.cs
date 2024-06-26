@@ -327,7 +327,7 @@ namespace Display
             inProcess.SetNextProcess(management.ProductCODE);       //製品によって次工程を設定
 
             //コイル数取得
-            inProcess.Coil = inProcess.InProcessCoil(LotNumber);
+            inProcess.Coil = inProcess.InProcessCoil(LotNumber, InProcessCODE);
             if (string.IsNullOrEmpty(management.ShirringUnit)) { management.VisibleCoil = false; }
 
             //サウンド再生

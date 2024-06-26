@@ -81,13 +81,13 @@ namespace Display
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList = "refresh";
-            ViewModelWindowMain.Instance.IconPlan = "ListStatus";
+            ViewModelWindowMain.Instance.IconList = "ViewList";
+            ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
         }
 
         //初期化
@@ -104,18 +104,18 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
-                    //仕掛在庫移動登録
+                    //引取登録
                     ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
                     break;
 
                 case "DisplayList":
-                    //仕掛在庫移動一覧
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
+                    //引取履歴
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportHistory());
                     break;
 
                 case "DiaplayPlan":
-                    //仕掛在庫移動履歴
-
+                    //仕掛置場
+                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
                     break;
             }
         }

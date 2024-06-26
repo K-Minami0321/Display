@@ -35,6 +35,9 @@
     <Compile Update="DefectInfo.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="TransportHistory.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="TransportInfo.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

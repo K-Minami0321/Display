@@ -8,7 +8,7 @@
       xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelTransportInfo}"
       mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
       FontSize="35" FontFamily="Meiryo UI"
-      Title="仕掛移動">
+      Title="仕掛置場">
     <!-- イベント -->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
