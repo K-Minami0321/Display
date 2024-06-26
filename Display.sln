@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "..\ClassLib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Display", "Display\Display.csproj", "{60067861-2CAB-44A1-AF57-0DAC8AE53611}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{A828FEAE-FE6F-4025-93A2-D9F52BE31446}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Update", "Update\Update.csproj", "{A828FEAE-FE6F-4025-93A2-D9F52BE31446}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

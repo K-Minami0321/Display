@@ -215,7 +215,7 @@ namespace Display
         public async void SelectList()
         {
             if(SelectedItem == null) { return; }
-            InProcessCODE = SelectedItem.Row.ItemArray[0].ToString();
+            InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
             ViewModelPlanList.Instance.LotNumber = null;
             ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
         }

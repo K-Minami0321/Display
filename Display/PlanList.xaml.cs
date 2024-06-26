@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -204,7 +205,7 @@ namespace Display
         public void SelectList()
         {
             if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
-            LotNumber = SelectedItem.Row.ItemArray[1].ToString();
+            LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
             if (EnableSelect) { StartPage(); }
         }
 

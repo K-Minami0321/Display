@@ -183,7 +183,7 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            ManufactureCODE = SelectedItem.Row.ItemArray[0].ToString();
+            ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
             ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
         }
 

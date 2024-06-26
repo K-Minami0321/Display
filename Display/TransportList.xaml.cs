@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -130,7 +131,7 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            InProcessCODE = SelectedItem.Row.ItemArray[0].ToString();
+            InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
             ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
         }
 
