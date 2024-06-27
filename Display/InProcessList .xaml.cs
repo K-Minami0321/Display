@@ -82,7 +82,7 @@ namespace Display
         }
         public string InProcessDate                     //作業日
         {
-            get { return inProcess.InProcessDate; }
+            get { return _InProcessDate; }
             set 
             { 
                 SetProperty(ref _InProcessDate, value);
@@ -131,7 +131,6 @@ namespace Display
         internal ViewModelInProcessList()
         {
             inProcess = new InProcess();
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //ロード時
@@ -144,7 +143,7 @@ namespace Display
 
             //初期設定
             DisplayCapution();
-            DiaplayList();
+            Initialize();
         }
 
         //キャプション・ボタン表示
@@ -162,7 +161,12 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = true;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList = "refresh";
+        }
+        
+        //初期化
+        public void Initialize()
+        {
+            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //キーイベント

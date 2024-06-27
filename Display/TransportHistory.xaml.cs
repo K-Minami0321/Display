@@ -36,53 +36,28 @@ namespace Display
         string _HeaderAmount;
 
         //プロパティ
-        public static ViewModelTransportHistory Instance   //インスタンス
+        public static ViewModelTransportHistory Instance    //インスタンス
         { get; set; } = new ViewModelTransportHistory();
-        public string ProcessName                       //工程区分
+        public string ProcessName                           //工程区分
         {
-            get { return inProcess.ProcessName; }
+            get { return _ProcessName; }
             set 
             { 
                 SetProperty(ref _ProcessName, value);
+                ViewModelWindowMain.Instance.ProcessName = value;
                 inProcess.ProcessName = value;
-
-                if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
-                switch (value)
-                {
-                    case "合板":
-                        VisibleShape = true;
-                        VisibleUnit = true;
-                        VisibleWeight = false;
-                        HeaderUnit = "数量";
-                        HeaderAmount = "重量";
-                        break;
 
-                    case "プレス":
-                        VisibleShape = false;
-                        VisibleUnit = false;
-                        VisibleWeight = true;
-                        HeaderAmount = "数量";
-                        HeaderWeight = "単重";
-                        break;
-
-                    default:
-                        VisibleShape = false;
-                        VisibleUnit = false;
-                        VisibleWeight = false;
-                        HeaderAmount = "数量";
-                        break;
-                }
             }
         }
-        public string InProcessCODE                     //仕掛在庫CODE
+        public string InProcessCODE                         //仕掛在庫CODE
         {
             get { return _InProcessCODE; }
             set { SetProperty(ref _InProcessCODE, value); }
         }
-        public string InProcessDate                     //作業日
+        public string InProcessDate                         //作業日
         {
-            get { return inProcess.InProcessDate; }
+            get { return _InProcessDate; }
             set 
             { 
                 SetProperty(ref _InProcessDate, value);
@@ -90,32 +65,32 @@ namespace Display
                 DiaplayList();
             }
         }
-        public bool VisibleShape                        //表示・非表示（形状）
+        public bool VisibleShape                            //表示・非表示（形状）
         {
             get { return _VisibleShape; }
             set { SetProperty(ref _VisibleShape, value); }
         }
-        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
+        public bool VisibleUnit                             //表示・非表示（コイル・枚数）
         {
             get { return _VisibleUnit; }
             set { SetProperty(ref _VisibleUnit, value); }
         }
-        public bool VisibleWeight                       //表示・非表示（重量）
+        public bool VisibleWeight                           //表示・非表示（重量）
         {
             get { return _VisibleWeight; }
             set { SetProperty(ref _VisibleWeight, value); }
         }
-        public string HeaderUnit                        //コイル・枚数
+        public string HeaderUnit                            //コイル・枚数
         {
             get { return _HeaderUnit; }
             set { SetProperty(ref _HeaderUnit, value); }
         }
-        public string HeaderWeight                      //焼結重量・単重
+        public string HeaderWeight                          //焼結重量・単重
         {
             get { return _HeaderWeight; }
             set { SetProperty(ref _HeaderWeight, value); }
         }
-        public string HeaderAmount                      //ヘッダー（重量・数量）
+        public string HeaderAmount                          //ヘッダー（重量・数量）
         {
             get { return _HeaderAmount; }
             set { SetProperty(ref _HeaderAmount, value); }
@@ -131,7 +106,6 @@ namespace Display
         internal ViewModelTransportHistory()
         {
             inProcess = new InProcess();
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //ロード時
@@ -141,29 +115,33 @@ namespace Display
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-
-            //初期設定
             DisplayCapution();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ProcessName = INI.GetString("Page", "Process");
             ViewModelWindowMain.Instance.ProcessWork = "引取履歴";
 
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleInfo = false;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = true;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconList = "ViewList";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
+            Initialize();
+        }
+
+        //初期化
+        public void Initialize()
+        {
+            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //キーイベント
@@ -207,7 +185,7 @@ namespace Display
         private void DiaplayList()
         {
             SelectedIndex = -1;
-            SelectTable = inProcess.SelectList(null, null, InProcessDate);           
+            SelectTable = inProcess.SelectListTransportHistory(InProcessDate);           
         }
 
         //選択処理

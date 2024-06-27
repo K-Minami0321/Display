@@ -48,24 +48,24 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="形状" Visibility="{Binding Path=DataContext.VisibleShape, Source={StaticResource proxyElement},Converter={StaticResource CollapsedConverter}}" Width="90">
+                    <DataGridTemplateColumn Header="形状" Width="90">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding 形状}" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="単重" Width="180" >
+                    <DataGridTemplateColumn Header="重量" Width="180" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 重量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding 数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="担当者" Width="180">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 作業者}" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding 引取者}" HorizontalAlignment="Left"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

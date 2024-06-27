@@ -38,28 +38,20 @@
                                 <RowDefinition Height="70"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="搬出日"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.InProcessDate,Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.TransportDate,Converter={StaticResource DateTimeConverter}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding inProcess.LotNumber}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="重 量"/>
-                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal"  >
-                                <TextBox x:Name="Amount" Text="{Binding inProcess.Amount}" Width="150"
-                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Amount"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <i:Interaction.Behaviors>
-                                    <local:TextBoxMode Mode="Number"/>
-                                </i:Interaction.Behaviors>
-                            </TextBox>
-                            <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding management.LotNumber}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="形 状"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding management.ShapeName}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
+                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
+                                <TextBlock Text="{Binding inProcess.Amount,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
+                                <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
                             </StackPanel>
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="担当者"/>
-                            <TextBox Grid.Row="4" x:Name="Worker" Grid.Column="1" Text="{Binding inProcess.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
+                            <TextBox Grid.Row="5" x:Name="Worker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">

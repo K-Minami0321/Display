@@ -52,7 +52,7 @@
                     <DataGridTemplateColumn Header="重量" Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 数量}" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding 数量,Converter={StaticResource CurrencyConverter}}" HorizontalAlignment="Right"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

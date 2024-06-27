@@ -24,7 +24,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportInfo : Common, IKeyDown, ITenKey, IWorker
+    public class ViewModelTransportInfo : Common, IKeyDown, IWorker
     {
         //プロパティ変数
         string _InProcessCODE;
@@ -101,7 +101,6 @@ namespace Display
             //インスタンス
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
-            ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
             DisplayCapution();
@@ -118,7 +117,7 @@ namespace Display
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleInfo = false;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
@@ -131,11 +130,11 @@ namespace Display
         public void Initialize()
         {
             //入力データ初期化
-            inProcess.InProcessDate = SetToDay(DateTime.Now);
+            inProcess.TransportDate = SetToDay(DateTime.Now);
             inProcess.ProductName = string.Empty;
             inProcess.LotNumber = string.Empty;
             inProcess.Amount = string.Empty;
-            inProcess.Worker = INI.GetString("Page", "Worker");
+            inProcess.TransportWorker = INI.GetString("Page", "Worker");
         }
 
         //ロット番号処理
@@ -155,7 +154,7 @@ namespace Display
             //前工程の仕掛取得
             inProcess.TransportSelect(InProcessCODE);
             LotNumber = management.Display(inProcess.LotNumber);
-            SetGotFocus("Amount");
+            SetGotFocus("Worker");
         }
 
         //キーイベント
@@ -219,7 +218,7 @@ namespace Display
             switch (Focus)
             {
                 case "Worker":
-                    inProcess.Worker = value.ToString();
+                    inProcess.TransportWorker = value.ToString();
                     break;
             }
             NextFocus();
@@ -229,10 +228,10 @@ namespace Display
         private void RegistData()
         {
             //登録
-            inProcess.Status = "移動";
-            inProcess.Resist(InProcessCODE);
+            inProcess.Status = "引取";
+            inProcess.Place = ProcessName;
+            inProcess.TransportResist(InProcessCODE);
             ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
-
         }
 
         //必須チェック
@@ -244,20 +243,11 @@ namespace Display
             var messege2 = string.Empty;
             var messege3 = string.Empty;
 
-            if (string.IsNullOrEmpty(inProcess.Worker))
+            if (string.IsNullOrEmpty(inProcess.TransportWorker))
             {
                 focus = "Worker";
                 messege1 = "担当者を選択してください";
                 messege2 = "※担当者は必須項目です。";
-                messege3 = "確認";
-                result = false;
-            }
-
-            if (string.IsNullOrEmpty(inProcess.Amount))
-            {
-                focus = "Amount";
-                messege1 = "重量を入力してください";
-                messege2 = "※重量は必須項目です。";
                 messege3 = "確認";
                 result = false;
             }
@@ -276,13 +266,6 @@ namespace Display
         {
             switch (Focus)
             {
-                case "Amount":
-                    if (inProcess.Amount.Length < AmountLength)
-                    {
-                        inProcess.Amount += value.ToString();
-                        TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
-                    }
-                    break;
                 default:
                     break;
             }
@@ -293,11 +276,6 @@ namespace Display
         {
             switch (Focus)
             {
-                case "Amount":
-                    inProcess.Amount = string.Empty;
-                    TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
-                    break;
-
                 default:
                     break;
             }
@@ -308,14 +286,6 @@ namespace Display
         {
             switch (Focus)
             {
-                case "Amount":
-                    if (inProcess.Amount.Length > 0)
-                    {
-                        inProcess.Amount = inProcess.Amount[..^1];
-                        TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0);
-                    }
-                    break;
-
                 default:
                     break;
             }
@@ -326,10 +296,6 @@ namespace Display
         {
             switch (Focus)
             {
-                case "Amount":
-                    SetGotFocus("Worker");
-                    break;
-
                 case "Worker":
                     SetGotFocus("Amount");
                     break;
@@ -345,19 +311,11 @@ namespace Display
             Focus = value;
             switch (Focus)
             {
-                case "Amount":
-                    TransportInfo.Instance.Amount.Focus();
-                    VisibleTenKey = true;
-                    VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
-                    if (inProcess.Amount != null) { TransportInfo.Instance.Amount.Select(inProcess.Amount.Length, 0); }
-                    break;
-
                 case "Worker":
                     TransportInfo.Instance.Worker.Focus();
                     VisibleTenKey = false;
                     VisibleWorker = true;
-                    if (inProcess.Worker != null) { TransportInfo.Instance.Worker.Select(inProcess.Worker.Length, 0); }
+                    if (inProcess.TransportWorker != null) { TransportInfo.Instance.Worker.Select(inProcess.TransportWorker.Length, 0); }
                     break;
 
                 default:

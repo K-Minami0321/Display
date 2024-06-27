@@ -38,6 +38,7 @@ namespace Display
                 SetProperty(ref _ProcessName, value);
                 inProcess.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
+                ViewModelWindowMain.Instance.ProcessName = iProcess.Before;
             }
         }
         public override string InProcessCODE            //仕掛在庫CODE
@@ -63,7 +64,6 @@ namespace Display
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
 
             //初期設定
             DisplayCapution();
@@ -75,13 +75,13 @@ namespace Display
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            ProcessName = INI.GetString("Page", "Process"); ;
             ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
 
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
+            ViewModelWindowMain.Instance.VisibleInfo = false;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
@@ -124,7 +124,6 @@ namespace Display
         private void DiaplayList()
         {
             SelectTable = inProcess.SelectListTransport();
-            ViewModelWindowMain.Instance.ProcessName = inProcess.ProcessName;
         }
 
         //選択処理
