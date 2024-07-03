@@ -27,7 +27,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
-                <RowDefinition Height="580"/>
+                <RowDefinition Height="560"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter}}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"

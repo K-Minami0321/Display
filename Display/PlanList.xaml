@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="70"/>
                     <RowDefinition Height="580"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="0" Grid.Row="0" >
@@ -67,7 +67,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 日付,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding 日付,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -76,7 +76,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 開始日,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding 開始日,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -92,7 +92,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 品番}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding 品番}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -108,7 +108,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 計画数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding 計画数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -117,7 +117,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 実績数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding 実績数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -127,9 +127,9 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <Border CornerRadius="2" Background="{Binding 工程,Converter={StaticResource ProcessColorConverter},FallbackValue=#00FFFFFF}" 
-                                                MinWidth="70" Height="32" VerticalAlignment="Center" Margin="0,8,0,0">
+                                                MinWidth="70" Height="32" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding 工程}" Foreground="{Binding 工程,Converter={StaticResource CompletedColorConverter}}" 
-                                                FontWeight="Bold" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                       FontWeight="Bold" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </Border>
                                     </StackPanel>
                                 </DataTemplate>
