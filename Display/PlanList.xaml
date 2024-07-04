@@ -1,4 +1,4 @@
-﻿<Page x:Class="Display.PlanList"
+﻿<UserControl x:Class="Display.PlanList"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,8 +7,7 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelPlanList}"
       mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
-      FontSize="35" FontFamily="Meiryo UI"
-      Title="製造予定一覧">
+      FontSize="35" FontFamily="Meiryo UI">
     <!-- イベント -->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -143,4 +142,4 @@
             </Grid>
         </Grid>
     </Grid>
-</Page>
+</UserControl>

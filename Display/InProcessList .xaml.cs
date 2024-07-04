@@ -9,13 +9,10 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class InProcessList : Page
+    public partial class InProcessList : UserControl
     {
-        public static InProcessList Instance
-        { get; set; }
         public InProcessList()
         {
-            Instance = this;
             DataContext = ViewModelInProcessList.Instance;
             InitializeComponent();
         }
@@ -177,18 +174,18 @@ namespace Display
                 case "DisplayInfo":
                     //仕掛在庫登録画面
                     InProcessCODE = null;
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
+                    ViewModelWindowMain.Instance.FramePage = new InProcessInfo();
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
+                    ViewModelWindowMain.Instance.FramePage = new InProcessList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
 
                 case "PreviousDate":
@@ -221,7 +218,7 @@ namespace Display
             if(SelectedItem == null) { return; }
             InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
             ViewModelPlanList.Instance.LotNumber = null;
-            ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
+            ViewModelWindowMain.Instance.FramePage = new InProcessInfo();
         }
 
         //スワイプ処理

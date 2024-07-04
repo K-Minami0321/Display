@@ -5,18 +5,14 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-
 #pragma warning disable
 namespace Display
 {
     //画面クラス
-    public partial class ManufactureList : Page
+    public partial class ManufactureList : UserControl
     {
-        public static ManufactureList Instance
-        { get; set; }
         public ManufactureList()
         {
-            Instance = this;
             DataContext = ViewModelManufactureList.Instance;
             InitializeComponent();
         }
@@ -139,18 +135,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
+                    ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
                     break;
 
                 case "DisplayList":
                     //搬入一覧画面
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureList());
+                    ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
 
                 case "PreviousDate":
@@ -184,7 +180,7 @@ namespace Display
         {
             if (SelectedItem == null) { return; }
             ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
+            ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
         }
 
         //スワイプ処理

@@ -11,7 +11,7 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class TransportInfo : Page
+    public partial class TransportInfo : UserControl
     {
         public static TransportInfo Instance
         { get; set; }
@@ -172,7 +172,7 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage = new TransportList();
                     break;
 
                 case "Enter":
@@ -202,12 +202,12 @@ namespace Display
 
                 case "DisplayList":
                     //引取履歴画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportHistory());
+                    ViewModelWindowMain.Instance.FramePage = new TransportHistory();
                     break;
 
                 case "DisplayPlan":
                     //仕掛置場
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage = new TransportList();
                     break;
             }
         }
@@ -231,7 +231,7 @@ namespace Display
             inProcess.Status = "引取";
             inProcess.Place = ProcessName;
             inProcess.TransportResist(InProcessCODE);
-            ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
+            ViewModelWindowMain.Instance.FramePage = new TransportList();
         }
 
         //必須チェック

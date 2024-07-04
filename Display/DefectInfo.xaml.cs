@@ -10,7 +10,7 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class DefectInfo : Page
+    public partial class DefectInfo : UserControl
     {
         public static DefectInfo Instance
         { get; set; }
@@ -291,7 +291,7 @@ namespace Display
 
                 case "DisplayInfo":
                     //加工登録画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
+                    ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
                     break;
             }
         }

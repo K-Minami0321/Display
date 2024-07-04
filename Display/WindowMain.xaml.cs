@@ -1,9 +1,9 @@
 ﻿using ClassBase;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
-using System.Windows;
 using System.Windows.Media;
 
 #pragma warning disable
@@ -19,11 +19,8 @@ namespace Display
     //画面クラス
     public partial class WindowMain : Window
     {
-        public static WindowMain Instance
-        { get; set; }
         public WindowMain()
         {
-            Instance = this;
             DataContext = ViewModelWindowMain.Instance;
             InitializeComponent();
         }
@@ -33,7 +30,6 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //プロパティ変数
-        Frame _FramePage;
         WindowState _DisplayState;
         WindowStyle _DisplayStyle;
         double _WindowLeft;
@@ -58,12 +54,6 @@ namespace Display
         { get; set; } = new ViewModelWindowMain();
         public IKeyDown Ikeydown                        //インターフェース
         { get; set; }
-
-        public Frame FramePage                          //FramePage
-        {
-            get { return _FramePage; }
-            set { SetProperty(ref _FramePage, value); }
-        }
         public WindowState DisplayState                 //最大化・Window化
         {
             get { return _DisplayState; }
@@ -227,28 +217,28 @@ namespace Display
 
                 case "F1":
                     //計画一覧画面
-                    FramePage.Navigate(new PlanList());
+                    FramePage = new PlanList();
                     INI.WriteString("Page", "Initial", "PlanList");
                     break;
 
                 case "F2":
                     //搬入登録画面
                     ViewModelInProcessInfo.Instance.InProcessCODE = null;
-                    FramePage.Navigate(new InProcessInfo());
+                    FramePage = new InProcessInfo();
                     INI.WriteString("Page", "Initial", "InProcessInfo");
                     break;
 
                 case "F3":
                     //搬出登録画面
                     ViewModelTransportInfo.Instance.InProcessCODE = null;
-                    FramePage.Navigate(new TransportList());
+                    FramePage = new TransportList();
                     INI.WriteString("Page", "Initial", "TransportList");
                     break;
 
                 case "F4":
                     //実績登録画面
                     ViewModelManufactureList.Instance.ManufactureCODE = null;
-                    FramePage.Navigate(new ManufactureInfo());
+                    FramePage = new ManufactureInfo();
                     INI.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 
@@ -259,13 +249,13 @@ namespace Display
 
                 case "F11":
                     //不良登録画面（Debug）
-                    FramePage.Navigate(new DefectInfo());
+                    FramePage = new DefectInfo();
                     break;
 
                 case "F12":
                     //設定画面
                     ViewModelManufactureInfo.Instance.Status = null;
-                    FramePage.Navigate(new Setting());
+                    FramePage = new Setting();
                     break;
 
                 case "DisplayInfo":
@@ -325,17 +315,13 @@ namespace Display
             Properties.Settings.Default.Save();
         }
 
+
         //スワイプ処理
         public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
         {
-            var window = WindowMain.Instance;
-            var matrix = window.RenderTransform;
             var delta = e.DeltaManipulation;
-            var offsetFromParent = VisualTreeHelper.GetOffset(window);
-
             var offsetX = delta.Translation.X;
             var offsetY = delta.Translation.Y;
-            matrix.Value.Translate(offsetX, offsetY);
 
             //スワイプ処理
             if (offsetY > 80) { KeyDown("ESC"); }               //上から下（電源を切る）

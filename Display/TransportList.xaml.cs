@@ -8,13 +8,10 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class TransportList : Page
+    public partial class TransportList : UserControl
     {
-        public static TransportList Instance
-        { get; set; }
         public TransportList()
         {
-            Instance = this;
             DataContext = ViewModelTransportList.Instance;
             InitializeComponent();
         }
@@ -105,17 +102,17 @@ namespace Display
             {
                 case "DisplayInfo":
                     //引取登録
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
+                    ViewModelWindowMain.Instance.FramePage = new TransportInfo();
                     break;
 
                 case "DisplayList":
                     //引取履歴
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportHistory());
+                    ViewModelWindowMain.Instance.FramePage = new TransportHistory();
                     break;
 
                 case "DiaplayPlan":
                     //仕掛置場
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new TransportList());
+                    ViewModelWindowMain.Instance.FramePage = new TransportList();
                     break;
             }
         }
@@ -131,7 +128,7 @@ namespace Display
         {
             if (SelectedItem == null) { return; }
             InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            ViewModelWindowMain.Instance.FramePage.Navigate(new TransportInfo());
+            ViewModelWindowMain.Instance.FramePage = new TransportInfo();
         }
 
         //スワイプ処理

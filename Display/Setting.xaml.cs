@@ -12,7 +12,7 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class Setting : Page
+    public partial class Setting : UserControl
     {
         public static Setting Instance
         { get; set; }
@@ -303,7 +303,7 @@ namespace Display
                 case "DisplayPlan":
                     //計画一覧画面
                     ViewModelWindowMain.Instance.ProcessName = ProcessName;
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
             }
         }

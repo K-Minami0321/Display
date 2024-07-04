@@ -1,4 +1,4 @@
-﻿<Page x:Class="Display.InProcessList "
+﻿<UserControl x:Class="Display.InProcessList "
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,8 +7,7 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelInProcessList}"
       mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
-      FontSize="35" FontFamily="Meiryo UI" 
-      Title="搬入一覧">
+      FontSize="35" FontFamily="Meiryo UI">
     <!-- イベント -->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -97,4 +96,4 @@
             </DataGrid>
         </Grid>
     </Grid>
-</Page>
+</UserControl>

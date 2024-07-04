@@ -3,6 +3,8 @@ using ClassLibrary;
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Windows.Controls;
+
 
 #pragma warning disable
 namespace Display
@@ -15,6 +17,7 @@ namespace Display
         public Sound SOUND = new Sound();
 
         //プロパティ変数
+        ContentControl _FramePage;
         DataTable _SelectTable;
         DataRowView _SelectedItem;
         int _SelectedIndex;
@@ -27,8 +30,12 @@ namespace Display
         string _UnitLabel;
         bool _VisibleCoil;
 
-
         //プロパティ
+        public ContentControl FramePage     //画面ページ
+        {
+            get { return _FramePage; }
+            set { SetProperty(ref _FramePage, value); }
+        }
         public DataTable SelectTable        //一覧データ
         {
             get { return _SelectTable; }
@@ -70,8 +77,7 @@ namespace Display
         {
             //ページ移動
             Type type = Type.GetType("Display." + INI.GetString("Page", "Initial"));
-            ViewModelWindowMain.Instance.FramePage = WindowMain.Instance.FramePage;
-            ViewModelWindowMain.Instance.FramePage.Navigate(Activator.CreateInstance(type));
+            ViewModelWindowMain.Instance.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
     }
 

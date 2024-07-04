@@ -11,7 +11,7 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class InProcessInfo : Page
+    public partial class InProcessInfo : UserControl
     {
         public static InProcessInfo Instance
         { get; set; }
@@ -410,13 +410,13 @@ namespace Display
                 case "DisplayList":
                     //仕掛在庫一覧画面
                     Initialize(); SetGotFocus("LotNumber");
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
+                    ViewModelWindowMain.Instance.FramePage = new InProcessList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
                     Initialize(); SetGotFocus("LotNumber");
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
             }
         }

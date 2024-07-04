@@ -8,13 +8,10 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class PlanList : Page
+    public partial class PlanList : UserControl
     {
-        public static PlanList Instance
-        { get; set; }
         public PlanList()
         {
-            Instance = this;
             DataContext = ViewModelPlanList.Instance;
             InitializeComponent();
         }
@@ -162,12 +159,12 @@ namespace Display
                 case "DisplayInfo":
                     //作業登録画面
                     LotNumber = null;
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessInfo());
+                    ViewModelWindowMain.Instance.FramePage = new InProcessInfo();
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new InProcessList());
+                    ViewModelWindowMain.Instance.FramePage = new InProcessList();
                     break;
 
                 case "DisplayPlan":
@@ -204,6 +201,7 @@ namespace Display
         //選択処理
         public void SelectList()
         {
+            if (SelectedIndex == null) { return; }
             if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
             LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
             if (EnableSelect) { StartPage(); }

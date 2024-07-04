@@ -1,6 +1,5 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using DocumentFormat.OpenXml.Bibliography;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -13,7 +12,7 @@ using System.Windows.Input;
 namespace Display
 {
     //画面クラス
-    public partial class ManufactureInfo : Page
+    public partial class ManufactureInfo : UserControl
     {
         public static ManufactureInfo Instance
         { get; set; }
@@ -467,7 +466,7 @@ namespace Display
                     if (result) 
                     { 
                         RegistData();
-                        ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureList());
+                        ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     }
                     break;
 
@@ -478,7 +477,7 @@ namespace Display
                     if (result) 
                     { 
                         DeleteDate();
-                        ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureList());
+                        ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     }
                     break;
 
@@ -521,7 +520,7 @@ namespace Display
 
                 case "DisplayInfo":
                     //加工登録画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureInfo());
+                    ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
                     break;
 
                 case "DisplayList":
@@ -530,17 +529,17 @@ namespace Display
                     //編集モードの場合はデータクリア
                     if (!string.IsNullOrEmpty(ManufactureCODE)) { Initialize(); }
 
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new ManufactureList());
+                    ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new PlanList());
+                    ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
 
                 case "DefectInfo":
                     //不良登録画面
-                    ViewModelWindowMain.Instance.FramePage.Navigate(new DefectInfo());
+                    ViewModelWindowMain.Instance.FramePage = new DefectInfo();
                     break;
             }
         }
