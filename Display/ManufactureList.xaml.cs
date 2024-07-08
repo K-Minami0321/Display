@@ -52,7 +52,7 @@ namespace Display
                 ViewModelWindowMain.Instance.ProcessWork = name;
             }
         }
-        public string ProcessName     //工程区分
+        public string ProcessName                           //工程区分
         {
             get { return _ProcessName; }
             set 
@@ -61,12 +61,12 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string ManufactureCODE //加工CODE
+        public string ManufactureCODE                       //加工CODE
         {
             get { return _ManufactureCODE; }
             set { SetProperty(ref _ManufactureCODE, value); }
         }
-        public string ManufactureDate //作業日
+        public string ManufactureDate                       //作業日
         {
             get { return _ManufactureDate; }
             set 

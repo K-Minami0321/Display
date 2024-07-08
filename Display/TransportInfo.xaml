@@ -50,8 +50,17 @@
                                 <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
                             </StackPanel>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
-                            <TextBox Grid.Row="5" x:Name="Worker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                            <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Worker"/>

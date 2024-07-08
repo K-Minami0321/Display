@@ -45,7 +45,16 @@
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="工 程"/>
                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding manufacture.WorkProcess}" />
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="不良区分"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="Category" Text="{Binding defect.Category}" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextCategory" Text="{Binding defect.Category}" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusCategory}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextCategory}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Category"/>
@@ -56,7 +65,16 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="不良内容"/>
-                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="Contents" Text="{Binding defect.Contents}"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="TextContents" Text="{Binding defect.Contents}"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusContents}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextContents}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Contents"/>
@@ -68,8 +86,17 @@
                             </TextBox>
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="数 量"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" >
-                                <TextBox x:Name="Amount" Text="{Binding defect.Amount}" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                <TextBox x:Name="TextAmount" Text="{Binding defect.Amount}" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center"
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}">
+                                    <TextBox.Resources>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusAmount}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextAmount}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Amount"/>
@@ -83,6 +110,15 @@
                                 <TextBox x:Name="Weight" Text="{Binding defect.Weight}"  Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding WeightLength}"
                                          Visibility="{Binding VisibleWeight,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                                    <TextBox.Resources>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusWeight}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWeight}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Weight"/>

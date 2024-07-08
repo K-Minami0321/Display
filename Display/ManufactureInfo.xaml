@@ -41,8 +41,17 @@
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号" />
-                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="LotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
+                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" IsEnabled="{Binding EnabledControl1}">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusLotNumber}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumber}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="LotNumber"/>
@@ -56,7 +65,16 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="工 程"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="WorkProcess" Text="{Binding manufacture.WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,0,0" IsEnabled="{Binding EnabledControl1}">
+                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorkProcess" Text="{Binding manufacture.WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,0,0" IsEnabled="{Binding EnabledControl1}">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusWorkProcess}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorkProcess}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="WorkProcess"/>
@@ -67,8 +85,17 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="担当者"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="Worker" Text="{Binding manufacture.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextWorker" Text="{Binding manufacture.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                      IsEnabled="{Binding EnabledControl1}">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Worker"/>
@@ -86,9 +113,18 @@
                             </StackPanel>
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                                <TextBox x:Name="Amount" Text="{Binding manufacture.Amount}" Width="140" 
+                                <TextBox x:Name="TextAmount" Text="{Binding manufacture.Amount}" Width="140" 
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
                                          IsEnabled="{Binding EnabledControl2}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}">
+                                    <TextBox.Resources>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusAmount}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextAmount}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Amount"/>
@@ -98,8 +134,17 @@
                                         <local:TextBoxMode Mode="Number"/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <CheckBox x:Name="Completed" Content="ロット完了" Style="{StaticResource Check}" IsChecked="{Binding manufacture.IsCompleted}" FontSize="20" 
+                                <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding manufacture.IsCompleted}" FontSize="20" 
                                           Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                    <CheckBox.Resources>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusCompleted}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckCompleted}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Resources>
                                     <i:Interaction.Behaviors>
                                         <local:CheckBoxBehavior/>
                                     </i:Interaction.Behaviors>
@@ -109,8 +154,17 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </CheckBox>
-                                <CheckBox x:Name="Sales" Content="売 上" Style="{StaticResource Check}" IsChecked="{Binding manufacture.IsSales}" FontSize="20"
+                                <CheckBox x:Name="CheckSales" Content="売 上" IsChecked="{Binding manufacture.IsSales}" FontSize="20"
                                           Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                    <CheckBox.Resources>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusSales}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckSales}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Resources>
                                     <i:Interaction.Behaviors>
                                         <local:CheckBoxBehavior/>
                                     </i:Interaction.Behaviors>

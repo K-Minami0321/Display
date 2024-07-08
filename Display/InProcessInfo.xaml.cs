@@ -1,5 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
+using EnumsNET;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -13,11 +14,8 @@ namespace Display
     //画面クラス
     public partial class InProcessInfo : UserControl
     {
-        public static InProcessInfo Instance
-        { get; set; }
         public InProcessInfo()
         {
-            Instance = this;
             DataContext = ViewModelInProcessInfo.Instance;
             InitializeComponent();
         }
@@ -27,11 +25,16 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
     {
         //プロパティ変数
-        bool _RegFlg;
+        
         string _ProcessName;
         string _InProcessCODE;
         string _InProcessDate;
         string _LotNumber;
+        bool _RegFlg;
+        int _AmountWidth = 150;
+        int _AmountRow = 5;
+        string _Notice;
+        string _ButtonName;
         int _LotNumberLength = 10;
         int _AmountLength = 6;
         int _WeightLength = 6;
@@ -45,10 +48,12 @@ namespace Display
         bool _VisibleTenKey;
         bool _VisibleWorker;
         bool _IsEnable;
-        int _AmountWidth = 150;
-        int _AmountRow = 5;
-        string _Notice;
-        string _ButtonName;
+        bool _IsFocusLotNumber;
+        bool _IsFocusWorker;
+        bool _IsFocusWeight;
+        bool _IsFocusUnit;
+        bool _IsFocusCompleted;
+        bool _IsFocusAmount;
 
         //プロパティ
         public static ViewModelInProcessInfo Instance   //インスタンス
@@ -69,7 +74,7 @@ namespace Display
                 switch (value)
                 {
                     case "合板":
-                        if (NextFocus != null) { NextFocus = "Amount"; }
+                        NextFocus = "Amount";
                         VisibleItem1 = true;
                         VisibleItem2 = true;
                         WeightLabel = "焼結重量";
@@ -135,6 +140,26 @@ namespace Display
                     SetGotFocus("Worker");
                 }
             }
+        }
+        public int AmountWidth                          //コイル数テキストボックスのWidth
+        {
+            get { return _AmountWidth; }
+            set { SetProperty(ref _AmountWidth, value); }
+        }
+        public int AmountRow                            //数量・重量の位置
+        {
+            get { return _AmountRow; }
+            set { SetProperty(ref _AmountRow, value); }
+        }
+        public string Notice                            //注意文
+        {
+            get { return _Notice; }
+            set { SetProperty(ref _Notice, value); }
+        }
+        public string ButtonName                        //登録ボタン名
+        {
+            get { return _ButtonName; }
+            set { SetProperty(ref _ButtonName, value); }
         }
         public int LotNumberLength                      //文字数（ロット番号）
         {
@@ -208,25 +233,35 @@ namespace Display
                 inProcess.Amount = !management.VisibleCoil ? inProcess.Amount : CONVERT.ConvertCircleEnclosing(inProcess.Amount);
             }
         }
-        public int AmountWidth                          //コイル数テキストボックスのWidth
+        public bool IsFocusLotNumber                    //フォーカス（ロット番号）
         {
-            get { return _AmountWidth; }
-            set { SetProperty(ref _AmountWidth, value); }
+            get { return _IsFocusLotNumber; }
+            set { SetProperty(ref _IsFocusLotNumber, value); }
         }
-        public int AmountRow                            //数量・重量の位置
+        public bool IsFocusWorker                       //フォーカス（作業者）
         {
-            get { return _AmountRow; }
-            set { SetProperty(ref _AmountRow, value); }
+            get { return _IsFocusWorker; }
+            set { SetProperty(ref _IsFocusWorker, value); }
         }
-        public string Notice                            //注意文
+        public bool IsFocusWeight                       //フォーカス（重量）
         {
-            get { return _Notice; }
-            set { SetProperty(ref _Notice, value); }
+            get { return _IsFocusWeight; }
+            set { SetProperty(ref _IsFocusWeight, value); }
         }
-        public string ButtonName                        //登録ボタン名
+        public bool IsFocusUnit                         //フォーカス（単位）
         {
-            get { return _ButtonName; }
-            set { SetProperty(ref _ButtonName, value); }
+            get { return _IsFocusUnit; }
+            set { SetProperty(ref _IsFocusUnit, value); }
+        }
+        public bool IsFocusCompleted                    //フォーカス（完了）
+        {
+            get { return _IsFocusCompleted; }
+            set { SetProperty(ref _IsFocusCompleted, value); }
+        }
+        public bool IsFocusAmount                       //フォーカス（数量）
+        {
+            get { return _IsFocusAmount; }
+            set { SetProperty(ref _IsFocusAmount, value); }
         }
 
         //イベント
@@ -304,9 +339,14 @@ namespace Display
             management.AmountLabel = "枚 数";
             LotNumber = string.Empty;
             AmountWidth = 150;
-            NextFocus = null;
             RegFlg = false;
             IsEnable = true;
+            IsFocusLotNumber = false;
+            IsFocusWorker = false;
+            IsFocusWeight = false;
+            IsFocusUnit = false;
+            IsFocusCompleted = false;
+            IsFocusAmount = false;
 
             if (flg) 
             {
@@ -517,35 +557,19 @@ namespace Display
                 case "LotNumber":
                     
                     if (LotNumber == null) { LotNumber = string.Empty; }
-                    if (LotNumber.Length < LotNumberLength)
-                    {
-                        LotNumber += value.ToString();
-                        InProcessInfo.Instance.TextLotNumber.Select(LotNumber.Length, 0);
-                    }
+                    if (LotNumber.Length < LotNumberLength) { LotNumber += value.ToString(); }
                     break;
 
                 case "Unit":
-                    if (inProcess.Unit.Length < UnitLength)
-                    {
-                        inProcess.Unit += value.ToString();
-                        InProcessInfo.Instance.TextUnit.Select(inProcess.Unit.Length, 0);
-                    }
+                    if (inProcess.Unit.Length < UnitLength) { inProcess.Unit += value.ToString(); }
                     break;
 
                 case "Weight":
-                    if (inProcess.Weight.Length < WeightLength)
-                    {
-                        inProcess.Weight += value.ToString();
-                        InProcessInfo.Instance.TextWeight.Select(inProcess.Weight.Length, 0);
-                    }
+                    if (inProcess.Weight.Length < WeightLength) { inProcess.Weight += value.ToString(); }
                     break;
 
                 case "Amount":
-                    if (inProcess.Amount.Length < AmountLength)
-                    {
-                        inProcess.Amount += value.ToString();
-                        InProcessInfo.Instance.TextAmount.Select(inProcess.Amount.Length, 0);
-                    }
+                    if (inProcess.Amount.Length < AmountLength) { inProcess.Amount += value.ToString(); }
                     break;
 
                 default:
@@ -560,22 +584,18 @@ namespace Display
             {
                 case "LotNumber":
                     LotNumber = string.Empty;
-                    InProcessInfo.Instance.TextLotNumber.Select(LotNumber.Length, 0);
                     break;
 
                 case "Unit":
                     inProcess.Unit = string.Empty;
-                    InProcessInfo.Instance.TextUnit.Select(inProcess.Unit.Length, 0);
                     break;
 
                 case "Weight":
                     inProcess.Weight = string.Empty;
-                    InProcessInfo.Instance.TextWeight.Select(inProcess.Weight.Length, 0);
                     break;
 
                 case "Amount":
                     inProcess.Amount = string.Empty;
-                    InProcessInfo.Instance.TextAmount.Select(inProcess.Amount.Length, 0);
                     break;
 
                 default:
@@ -589,35 +609,19 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    if (LotNumber.Length > 0)
-                    {
-                        LotNumber = LotNumber[..^1];
-                        InProcessInfo.Instance.TextLotNumber.Select(LotNumber.Length, 0);
-                    }
+                    if (LotNumber.Length > 0) { LotNumber = LotNumber[..^1]; }
                     break;
 
                 case "Unit":
-                    if (inProcess.Unit.Length > 0)
-                    {
-                        inProcess.Unit = inProcess.Unit[..^1];
-                        InProcessInfo.Instance.TextUnit.Select(inProcess.Unit.Length, 0);
-                    }
+                    if (inProcess.Unit.Length > 0) { inProcess.Unit = inProcess.Unit[..^1]; }
                     break;
 
                 case "Weight":
-                    if (inProcess.Weight.Length > 0)
-                    {
-                        inProcess.Weight = inProcess.Weight[..^1];
-                        InProcessInfo.Instance.TextWeight.Select(inProcess.Weight.Length, 0);
-                    }
+                    if (inProcess.Weight.Length > 0) { inProcess.Weight = inProcess.Weight[..^1]; }
                     break;
 
                 case "Amount":
-                    if (inProcess.Amount.Length > 0)
-                    {
-                        inProcess.Amount = inProcess.Amount[..^1];
-                        InProcessInfo.Instance.TextAmount.Select(inProcess.Amount.Length, 0);
-                    }
+                    if (inProcess.Amount.Length > 0) { inProcess.Amount = inProcess.Amount[..^1]; }
                     break;
 
                 default:
@@ -665,48 +669,75 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    InProcessInfo.Instance.TextLotNumber.Focus();
+                    IsFocusLotNumber = true;
+                    IsFocusWorker = false;
+                    IsFocusWeight = false;
+                    IsFocusUnit = false;
+                    IsFocusCompleted = false;
+                    IsFocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     ViewModelControlTenKey.Instance.InputString = "-";
-                    if (LotNumber != null) { InProcessInfo.Instance.TextLotNumber.Select(LotNumber.Length, 0); }
                     break;
 
                 case "Worker":
-                    InProcessInfo.Instance.TextWorker.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = true;
+                    IsFocusWeight = false;
+                    IsFocusUnit = false;
+                    IsFocusCompleted = false;
+                    IsFocusAmount = false;
                     VisibleTenKey = false;
                     VisibleWorker = true;
-                    if (inProcess.Worker != null) { InProcessInfo.Instance.TextWorker.Select(inProcess.Worker.Length, 0); }
                     break;
 
                 case "Weight":
-                    InProcessInfo.Instance.TextWeight.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWeight = true;
+                    IsFocusUnit = false;
+                    IsFocusCompleted = false;
+                    IsFocusAmount = false;
+
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (inProcess.Weight != null) { InProcessInfo.Instance.TextWeight.Select(inProcess.Weight.Length, 0); }
                     break;
 
                 case "Unit":
-                    InProcessInfo.Instance.TextUnit.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWeight = false;
+                    IsFocusUnit = true;
+                    IsFocusCompleted = false;
+                    IsFocusAmount = false;
+
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (inProcess.Unit != null) { InProcessInfo.Instance.TextUnit.Select(inProcess.Unit.Length, 0); }
                     break;
 
                 case "Completed":
-                    InProcessInfo.Instance.CheckCompleted.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWeight = false;
+                    IsFocusUnit = false;
+                    IsFocusCompleted = true;
+                    IsFocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     break;
 
                 case "Amount":
-                    InProcessInfo.Instance.TextAmount.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWeight = false;
+                    IsFocusUnit = false;
+                    IsFocusCompleted = false;
+                    IsFocusAmount = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (inProcess.Amount != null) { InProcessInfo.Instance.TextAmount.Select(inProcess.Amount.Length, 0); }
                     break;
 
                 default:

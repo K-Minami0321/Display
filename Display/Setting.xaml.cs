@@ -14,12 +14,9 @@ namespace Display
     //画面クラス
     public partial class Setting : UserControl
     {
-        public static Setting Instance
-        { get; set; }
         public Setting()
         {
             DataContext = new ViewModelSetting();
-            Instance = this;
             InitializeComponent();
         }
     }
@@ -43,6 +40,7 @@ namespace Display
         bool _IsProcessOpen;
         bool _IsEquipmentOpen;
         bool _IsWorkerOpen;
+        bool _IsFocusServer;
         List<string> _ProcessNames;
         List<string> _Workers;
         List<string> _EquipmentCODES;
@@ -137,6 +135,11 @@ namespace Display
             get { return _IsWorkerOpen; }
             set { SetProperty(ref _IsWorkerOpen, value); }
         }
+        public bool IsFocusServer                   //フォーカス（サーバー設定）
+        {
+            get { return _IsFocusServer; }
+            set { SetProperty(ref _IsFocusServer, value); }
+        }
         public List<string> ProcessNames            //工程区分コンボボックス
         {
             get { return _ProcessNames; }
@@ -203,7 +206,7 @@ namespace Display
             //初期表示
             ProcessNames = ProcessCategory.ProcessList();       //コンボボックス設定
             Servers = Maintenance.SetServer();                  //サーバー設定
-            Setting.Instance.Server.Focus();                    //フォーカス
+            IsFocusServer = true;                               //フォーカス
         }
 
         //データ表示

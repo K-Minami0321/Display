@@ -12,11 +12,8 @@ namespace Display
     //画面クラス
     public partial class DefectInfo : UserControl
     {
-        public static DefectInfo Instance
-        { get; set; }
         public DefectInfo()
         {
-            Instance = this;
             DataContext = ViewModelDefectInfo.Instance;
             InitializeComponent();
         }
@@ -33,14 +30,18 @@ namespace Display
         string _ManufactureDate;
         string _LotNumber;
         string _WorkProcess;
+        int _AmountLength;
+        int _WeightLength;
+        string _ButtonName;
         bool _VisibleCategory;
         bool _VisibleDefect;
         bool _VisibleTenKey;
         bool _VisibleWeight;
         bool _VisibleDelete;
-        int _AmountLength;
-        int _WeightLength;
-        string _ButtonName;
+        bool _IsFocusCategory;
+        bool _IsFocusContents;
+        bool _IsFocusAmount;
+        bool _IsFocusWeight;
 
         //プロパティ
         public static ViewModelDefectInfo Instance      //インスタンス
@@ -112,6 +113,21 @@ namespace Display
             get { return _WorkProcess; }
             set { SetProperty(ref _WorkProcess, value); }
         }
+        public int AmountLength                         //文字数（数量）
+        {
+            get { return _AmountLength; }
+            set { SetProperty(ref _AmountLength, value); }
+        }
+        public int WeightLength                         //文字数（数量）
+        {
+            get { return _WeightLength; }
+            set { SetProperty(ref _WeightLength, value); }
+        }
+        public string ButtonName                        //登録ボタン名
+        {
+            get { return _ButtonName; }
+            set { SetProperty(ref _ButtonName, value); }
+        }
         public bool VisibleCategory                     //不良区分（表示・非表示）
         {
             get { return _VisibleCategory; }
@@ -137,20 +153,25 @@ namespace Display
             get { return _VisibleDelete; }
             set { SetProperty(ref _VisibleDelete, value); }
         }
-        public int AmountLength                         //文字数（数量）
+        public bool IsFocusCategory                     //フォーカス（不良区分）
         {
-            get { return _AmountLength; }
-            set { SetProperty(ref _AmountLength, value); }
+            get { return _IsFocusCategory; }
+            set { SetProperty(ref _IsFocusCategory, value); }
         }
-        public int WeightLength                         //文字数（数量）
+        public bool IsFocusContents                     //フォーカス（不良詳細）
         {
-            get { return _WeightLength; }
-            set { SetProperty(ref _WeightLength, value); }
+            get { return _IsFocusContents; }
+            set { SetProperty(ref _IsFocusContents, value); }
         }
-        public string ButtonName                        //登録ボタン名
+        public bool IsFocusAmount                       //フォーカス（数量）
         {
-            get { return _ButtonName; }
-            set { SetProperty(ref _ButtonName, value); }
+            get { return _IsFocusAmount; }
+            set { SetProperty(ref _IsFocusAmount, value); }
+        }
+        public bool IsFocusWeight                       //フォーカス（重量）
+        {
+            get { return _IsFocusWeight; }
+            set { SetProperty(ref _IsFocusWeight, value); }
         }
 
         //イベント
@@ -391,7 +412,6 @@ namespace Display
                     if (defect.Amount.Length < AmountLength)
                     {
                         defect.Amount += value.ToString();
-                        DefectInfo.Instance.Amount.Select(defect.Amount.Length, 0);
                     }
                     break;
 
@@ -399,7 +419,6 @@ namespace Display
                     if (defect.Weight.Length < WeightLength)
                     {
                         defect.Weight += value.ToString();
-                        DefectInfo.Instance.Weight.Select(defect.Weight.Length, 0);
                     }
                     break;
 
@@ -415,12 +434,10 @@ namespace Display
             {
                 case "Amount":
                     defect.Amount = string.Empty;
-                    DefectInfo.Instance.Amount.Select(defect.Amount.Length, 0);
                     break;
 
                 case "Weight":
                     defect.Weight = string.Empty;
-                    DefectInfo.Instance.Weight.Select(defect.Weight.Length, 0);
                     break;
 
                 default:
@@ -437,7 +454,6 @@ namespace Display
                     if (defect.Amount.Length > 0)
                     {
                         defect.Amount = defect.Amount[..^1];
-                        DefectInfo.Instance.Amount.Select(defect.Amount.Length, 0);
                     }
                     break;
 
@@ -445,7 +461,6 @@ namespace Display
                     if (defect.Weight.Length > 0)
                     {
                         defect.Weight = defect.Weight[..^1];
-                        DefectInfo.Instance.Weight.Select(defect.Weight.Length, 0);
                     }
                     break;
 
@@ -487,37 +502,45 @@ namespace Display
             switch (Focus)
             {
                 case "Category":
-                    DefectInfo.Instance.Category.Focus();
+                    IsFocusCategory = true;
+                    IsFocusContents = false;
+                    IsFocusAmount = false;
+                    IsFocusWeight = false;
                     VisibleCategory = true;
                     VisibleDefect = false;
                     VisibleTenKey = false;
-                    if (defect.Category != null) { DefectInfo.Instance.Category.Select(defect.Category.Length, 0); }
                     break;
 
                 case "Contents":
-                    DefectInfo.Instance.Contents.Focus();
+                    IsFocusCategory = false;
+                    IsFocusContents = true;
+                    IsFocusAmount = false;
+                    IsFocusWeight = false;
                     VisibleCategory = false;
                     VisibleDefect = true;
                     VisibleTenKey = false;
-                    if (defect.Contents != null) { DefectInfo.Instance.Contents.Select(defect.Contents.Length, 0); }
                     break;
 
                 case "Amount":
-                    DefectInfo.Instance.Amount.Focus();
+                    IsFocusCategory = false;
+                    IsFocusContents = false;
+                    IsFocusAmount = true;
+                    IsFocusWeight = false;
                     VisibleCategory = false;
                     VisibleDefect = false;
                     VisibleTenKey = true;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (defect.Amount != null) { DefectInfo.Instance.Amount.Select(defect.Amount.Length, 0); }
                     break;
 
                 case "Weight":
-                    DefectInfo.Instance.Weight.Focus();
+                    IsFocusCategory = false;
+                    IsFocusContents = false;
+                    IsFocusAmount = false;
+                    IsFocusWeight = true;
                     VisibleCategory = false;
                     VisibleDefect = false;
                     VisibleTenKey = true;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (defect.Weight != null) { DefectInfo.Instance.Weight.Select(defect.Weight.Length, 0); }
                     break;
             }
         }

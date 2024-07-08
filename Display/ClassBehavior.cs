@@ -90,9 +90,11 @@ namespace Display
             AssociatedObject.BorderBrush = CONVERT.ToSolidColorBrush("#FF90A4AE");
             AssociatedObject.PreviewKeyDown += PreviewKeyDown;
             AssociatedObject.PreviewTextInput += PreviewTextInput;
+            AssociatedObject.TextChanged += TextChanged;
             AssociatedObject.ManipulationBoundaryFeedback += ManipulationBoundaryFeedback;
             DataObject.AddPastingHandler(this.AssociatedObject, PastingHandler);
         }
+
 
         protected override void OnDetaching()
         {
@@ -104,6 +106,7 @@ namespace Display
             AssociatedObject.PreviewMouseLeftButtonDown -= MouseLeftButtonDown;
             AssociatedObject.PreviewKeyDown -= PreviewKeyDown;
             AssociatedObject.PreviewTextInput -= PreviewTextInput;
+            AssociatedObject.TextChanged -= TextChanged;
             AssociatedObject.ManipulationBoundaryFeedback -= ManipulationBoundaryFeedback;
             DataObject.RemovePastingHandler(this, PastingHandler);
         }
@@ -125,7 +128,14 @@ namespace Display
         private void GotFocus(object sender, RoutedEventArgs e)
         {
             if (!(sender is TextBox control)) { return; }
-            control.SelectAll();
+            control.Select(control.Text.Length, 0);
+        }
+
+        //値変更時
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!(sender is TextBox control)) { return; }
+            control.Select(control.Text.Length, 0);
         }
 
         //マウスクリック時
@@ -144,9 +154,9 @@ namespace Display
             {
                 // エンターキー押下でフォーカスを移動する
                 case Key.Enter:
-                    var control = e.OriginalSource as UIElement;
+                    var element = e.OriginalSource as UIElement;
                     var direction = Keyboard.Modifiers == ModifierKeys.Shift ? FocusNavigationDirection.Previous : FocusNavigationDirection.Next;
-                    control.MoveFocus(new TraversalRequest(direction));
+                    element.MoveFocus(new TraversalRequest(direction));
                     break;
 
                 default:

@@ -58,6 +58,12 @@ namespace Display
         bool _VisibleTenKey;
         bool _VisibleWorker;
         bool _VisibleWorkProcess;
+        bool _IsFocusLotNumber;
+        bool _IsFocusWorker;
+        bool _IsFocusWorkProcess;
+        bool _IsFocusAmount;
+        bool _IsFocusCompleted;
+        bool _IsFocusSales;
 
         //プロパティ
         public static ViewModelManufactureInfo Instance     //インスタンス
@@ -281,6 +287,36 @@ namespace Display
             get { return _VisibleWorkProcess; }
             set { SetProperty(ref _VisibleWorkProcess, value); }
         }
+        public bool IsFocusLotNumber                        //フォーカス（ロット番号）
+        {
+            get { return _IsFocusLotNumber; }
+            set { SetProperty(ref _IsFocusLotNumber, value); }
+        }
+        public bool IsFocusWorker                           //フォーカス（作業者）
+        {
+            get { return _IsFocusWorker; }
+            set { SetProperty(ref _IsFocusWorker, value); }
+        }
+        public bool IsFocusWorkProcess                      //フォーカス（工程）
+        {
+            get { return _IsFocusWorkProcess; }
+            set { SetProperty(ref _IsFocusWorkProcess, value); }
+        }
+        public bool IsFocusAmount                           //フォーカス（数量）
+        {
+            get { return _IsFocusAmount; }
+            set { SetProperty(ref _IsFocusAmount, value); }
+        }
+        public bool IsFocusCompleted                        //フォーカス（完了）
+        {
+            get { return _IsFocusCompleted; }
+            set { SetProperty(ref _IsFocusCompleted, value); }
+        }
+        public bool IsFocusSales                            //フォーカス（売上）
+        {
+            get { return _IsFocusSales; }
+            set { SetProperty(ref _IsFocusSales, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -339,11 +375,6 @@ namespace Display
             {
                 //予定表からロット番号取得
                 LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
-                if (LotNumber == null) { LotNumber = string.Empty; }
-
-
-
-
                 LotNumber = management.Display(manufacture.LotNumber);
                 DisplayLot();
                 SetGotFocus("Worker");
@@ -557,7 +588,7 @@ namespace Display
                     manufacture.WorkProcess = value.ToString();
                     break;
             }
-            //SetNextFocus();
+            SetNextFocus();
         }
 
         //状態により設定する
@@ -750,20 +781,11 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    //
-                    if (LotNumber.Length < LotNumberLength)
-                    {
-                        LotNumber += value.ToString();
-                        ManufactureInfo.Instance.LotNumber.Select(LotNumber.Length, 0);
-                    }
+                    if (LotNumber.Length < LotNumberLength) { LotNumber += value.ToString(); }
                     break;
 
                 case "Amount":
-                    if (manufacture.Amount.Length < AmountLength)
-                    {
-                        manufacture.Amount += value.ToString();
-                        ManufactureInfo.Instance.Amount.Select(manufacture.Amount.Length, 0);
-                    }
+                    if (manufacture.Amount.Length < AmountLength) { manufacture.Amount += value.ToString(); }
                     break;
 
                 default:
@@ -778,12 +800,10 @@ namespace Display
             {
                 case "LotNumber":
                     LotNumber = string.Empty;
-                    ManufactureInfo.Instance.LotNumber.Select(LotNumber.Length, 0);
                     break;
 
                 case "Amount":
                     manufacture.Amount = string.Empty;
-                    ManufactureInfo.Instance.Amount.Select(manufacture.Amount.Length, 0);
                     break;
 
                 default:
@@ -797,19 +817,11 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    if (LotNumber.Length > 0)
-                    {
-                        LotNumber = LotNumber[..^1];
-                        ManufactureInfo.Instance.LotNumber.Select(LotNumber.Length, 0);
-                    }
+                    if (LotNumber.Length > 0) { LotNumber = LotNumber[..^1]; }
                     break;
 
                 case "Amount":
-                    if (manufacture.Amount.Length > 0)
-                    {
-                        manufacture.Amount = manufacture.Amount[..^1];
-                        ManufactureInfo.Instance.Amount.Select(manufacture.Amount.Length, 0);
-                    }
+                    if (manufacture.Amount.Length > 0) { manufacture.Amount = manufacture.Amount[..^1]; }
                     break;
 
                 default:
@@ -867,43 +879,75 @@ namespace Display
         //フォーカス処理（GotForcus）
         private void SetGotFocus(object value)
         {
-            if (ManufactureInfo.Instance == null) { return; }
-
             Focus = value;
             switch (Focus)
             {
                 case "LotNumber":
-                    ManufactureInfo.Instance.LotNumber.Focus();
+                    IsFocusLotNumber = true;
+                    IsFocusWorker = false;
+                    IsFocusWorkProcess = false;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = false;
+                    IsFocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
                     ViewModelControlTenKey.Instance.InputString = "-";
-                    if (LotNumber != null) { ManufactureInfo.Instance.LotNumber.Select(LotNumber.Length, 0); }
+                    break;
+
+                case "Worker":
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = true;
+                    IsFocusWorkProcess = false;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = false;
+                    IsFocusSales = false;
+                    VisibleTenKey = false;
+                    VisibleWorker = true;
+                    VisibleWorkProcess = false;
+                    break;
+
+                case "WorkProcess":
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWorkProcess = true;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = false;
+                    IsFocusSales = false;
+                    VisibleTenKey = false;
+                    VisibleWorker = false;
+                    VisibleWorkProcess = true;
                     break;
 
                 case "Amount":
-                    ManufactureInfo.Instance.Amount.Focus();
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWorkProcess = false;
+                    IsFocusAmount = true;
+                    IsFocusCompleted = false;
+                    IsFocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
                     ViewModelControlTenKey.Instance.InputString = ".";
-                    if (manufacture.Amount != null) { ManufactureInfo.Instance.Amount.Select(manufacture.Amount.Length, 0); }
                     break;
 
-                case "Worker":
-                    ManufactureInfo.Instance.Worker.Focus();
-                    VisibleTenKey = false;
-                    VisibleWorker = true;
-                    VisibleWorkProcess = false;
-                    if (manufacture.Worker != null) { ManufactureInfo.Instance.Worker.Select(manufacture.Worker.Length, 0); }
+                case "Completed":
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWorkProcess = false;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = true;
+                    IsFocusSales = false;
                     break;
 
-                case "WorkProcess":
-                    ManufactureInfo.Instance.WorkProcess.Focus();
-                    VisibleTenKey = false;
-                    VisibleWorker = false;
-                    VisibleWorkProcess = true;
-                    if (manufacture.WorkProcess != null) { ManufactureInfo.Instance.WorkProcess.Select(manufacture.WorkProcess.Length, 0); }
+                case "Sales":
+                    IsFocusLotNumber = false;
+                    IsFocusWorker = false;
+                    IsFocusWorkProcess = false;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = false;
+                    IsFocusSales = true;
                     break;
 
                 default:

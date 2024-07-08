@@ -13,11 +13,8 @@ namespace Display
     //画面クラス
     public partial class TransportInfo : UserControl
     {
-        public static TransportInfo Instance
-        { get; set; }
         public TransportInfo()
         {
-            Instance = this;
             DataContext = ViewModelTransportInfo.Instance;
             InitializeComponent();
         }
@@ -33,6 +30,7 @@ namespace Display
         int _AmountLength = 6;
         bool _VisibleTenKey;
         bool _VisibleWorker;
+        bool _IsFocusWorker;
 
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
@@ -76,6 +74,11 @@ namespace Display
         {
             get { return _VisibleWorker; }
             set { SetProperty(ref _VisibleWorker, value); }
+        }
+        public bool IsFocusWorker                           //フォーカス（作業者）
+        {
+            get { return _IsFocusWorker; }
+            set { SetProperty(ref _IsFocusWorker, value); }
         }
 
         //イベント
@@ -135,6 +138,7 @@ namespace Display
             inProcess.LotNumber = string.Empty;
             inProcess.Amount = string.Empty;
             inProcess.TransportWorker = INI.GetString("Page", "Worker");
+            IsFocusWorker = true;
         }
 
         //ロット番号処理
@@ -180,24 +184,10 @@ namespace Display
                     NextFocus();
                     break;
 
-                case "BS":
-                    //バックスペース処理
-                    BackSpaceText();
-                    break;
-
-                case "CLEAR":
-                    //文字列消去
-                    ClearText();
-                    break;
-
-                case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case "0": case "-":
-                    DisplayText(value);
-                    break;
-
                 case "DisplayInfo":
                     //引取登録画面
                     Initialize();
-                    SetGotFocus("LotNumber");
+                    SetGotFocus("Worker");
                     break;
 
                 case "DisplayList":
@@ -219,6 +209,7 @@ namespace Display
             {
                 case "Worker":
                     inProcess.TransportWorker = value.ToString();
+                    IsFocusWorker = false;
                     break;
             }
             NextFocus();
@@ -261,43 +252,13 @@ namespace Display
             return result;
         }
 
-        //入力制御
-        private void DisplayText(object value)
-        {
-            switch (Focus)
-            {
-                default:
-                    break;
-            }
-        }
-
-        //文字列消去
-        private void ClearText()
-        {
-            switch (Focus)
-            {
-                default:
-                    break;
-            }
-        }
-
-        //バックスペース処理
-        private void BackSpaceText()
-        {
-            switch (Focus)
-            {
-                default:
-                    break;
-            }
-        }
-
         //次のフォーカスへ
         private void NextFocus()
         {
             switch (Focus)
             {
                 case "Worker":
-                    SetGotFocus("Amount");
+                    IsFocusWorker = true;
                     break;
 
                 default:
@@ -312,10 +273,9 @@ namespace Display
             switch (Focus)
             {
                 case "Worker":
-                    TransportInfo.Instance.Worker.Focus();
+                    IsFocusWorker = true;
                     VisibleTenKey = false;
                     VisibleWorker = true;
-                    if (inProcess.TransportWorker != null) { TransportInfo.Instance.Worker.Select(inProcess.TransportWorker.Length, 0); }
                     break;
 
                 default:

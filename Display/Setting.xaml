@@ -39,7 +39,16 @@
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Ver"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Version}" FontWeight="Bold"/>
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="接続先"/>
-                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="Server" Text="{Binding Server}" ItemsSource="{Binding Servers}" IsDropDownOpen="{Binding IsServer}" HorizontalAlignment="Stretch">
+                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="ComboBoxServer" Text="{Binding Server}" ItemsSource="{Binding Servers}" IsDropDownOpen="{Binding IsServer}" HorizontalAlignment="Stretch">
+                            <ComboBox.Resources>
+                                <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBox}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFocusServer}" Value="True">
+                                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=ComboBoxServer}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Resources>
                             <i:Interaction.Behaviors>
                                 <local:ComboBoxBehavior/>
                             </i:Interaction.Behaviors>
