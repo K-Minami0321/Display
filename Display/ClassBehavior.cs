@@ -618,9 +618,9 @@ namespace Display
     {
         //依存プロパティ
         public static readonly DependencyProperty IsMonthYearProperty =
-        DependencyProperty.Register("IsMonthYear", typeof(bool), typeof(DatePickerBehavior), new FrameworkPropertyMetadata(false));
+            DependencyProperty.Register("IsMonthYear", typeof(bool), typeof(DatePickerBehavior), new FrameworkPropertyMetadata(false));
         public static readonly DependencyProperty CustomDateFormatProperty =
-        DependencyProperty.Register("CustomDateFormat", typeof(string), typeof(DatePickerBehavior), new FrameworkPropertyMetadata(null));
+            DependencyProperty.Register("CustomDateFormat", typeof(string), typeof(DatePickerBehavior), new FrameworkPropertyMetadata(null));
 
         //変数
         System.Globalization.JapaneseCalendar jpCalendar;

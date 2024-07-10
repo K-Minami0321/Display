@@ -3,8 +3,6 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 #pragma warning disable
 namespace Display

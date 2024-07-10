@@ -1,6 +1,5 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using EnumsNET;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -339,7 +338,7 @@ namespace Display
             management.AmountLabel = "枚 数";
             LotNumber = string.Empty;
             AmountWidth = 150;
-            RegFlg = false;
+            RegFlg = true;
             IsEnable = true;
             IsFocusLotNumber = false;
             IsFocusWorker = false;

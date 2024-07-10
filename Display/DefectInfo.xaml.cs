@@ -239,6 +239,8 @@ namespace Display
             defect.Contents = string.Empty;
             defect.Amount = string.Empty;
             defect.Weight = string.Empty;
+            AmountLength = 5;
+            WeightLength = 5;
         }
 
         //データ表示
@@ -409,17 +411,11 @@ namespace Display
             switch (Focus)
             {
                 case "Amount":
-                    if (defect.Amount.Length < AmountLength)
-                    {
-                        defect.Amount += value.ToString();
-                    }
+                    if (defect.Amount.Length < AmountLength) { defect.Amount += value.ToString(); }
                     break;
 
                 case "Weight":
-                    if (defect.Weight.Length < WeightLength)
-                    {
-                        defect.Weight += value.ToString();
-                    }
+                    if (defect.Weight.Length < WeightLength) { defect.Weight += value.ToString(); }
                     break;
 
                 default:
@@ -451,17 +447,11 @@ namespace Display
             switch (Focus)
             {
                 case "Amount":
-                    if (defect.Amount.Length > 0)
-                    {
-                        defect.Amount = defect.Amount[..^1];
-                    }
+                    if (defect.Amount.Length > 0) { defect.Amount = defect.Amount[..^1]; }
                     break;
 
                 case "Weight":
-                    if (defect.Weight.Length > 0)
-                    {
-                        defect.Weight = defect.Weight[..^1];
-                    }
+                    if (defect.Weight.Length > 0) { defect.Weight = defect.Weight[..^1]; }
                     break;
 
                 default:
@@ -475,7 +465,7 @@ namespace Display
             switch (Focus)
             {
                 case "Category":
-                    SetGotFocus("Worker");
+                    SetGotFocus("Contents");
                     break;
 
                 case "Contents":
