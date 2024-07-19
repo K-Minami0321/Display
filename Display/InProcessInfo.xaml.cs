@@ -329,7 +329,7 @@ namespace Display
             inProcess.Status = "搬入";
             inProcess.UnitLabel = "重 量";
             inProcess.Worker = INI.GetString("Page", "Worker");
-            inProcess.IsCompleted = false;
+            inProcess.Completed = string.Empty;
             inProcess.Coil = string.Empty;
             inProcess.ShirringUnit = string.Empty;
             inProcess.Comment = string.Empty;
@@ -436,7 +436,12 @@ namespace Display
 
                 case "Completed":
                     //完了チェック
-                    inProcess.IsCompleted = !inProcess.IsCompleted;
+                    
+                    
+                    //inProcess.IsCompleted = !inProcess.IsCompleted;
+
+
+
                     break;
 
                 case "DisplayInfo":

@@ -1124,6 +1124,13 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => Equals(value, "*") ? true : false;
     }
 
+    //完了変換
+    public class CompletConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => Equals(value, true) ? "E" : string.Empty;
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => Equals(value, "E") ? true : false;
+    }
+
     //文字間に空白を入れる
     public class InsertConverter : IValueConverter
     {

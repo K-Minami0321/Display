@@ -131,7 +131,7 @@
                                         <local:TextBoxMode Mode="Number"/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding inProcess.IsCompleted}" FontSize="20" Width="150">
+                                <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding inProcess.Completed,Converter={StaticResource CompletConverter}}" FontSize="20" Width="150">
                                     <CheckBox.Resources>
                                         <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                             <Style.Triggers>

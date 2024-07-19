@@ -20,6 +20,8 @@
     <local:CurrencyConverter x:Key="CurrencyConverter"/>
     <local:DateTimeConverter x:Key="DateTimeConverter"/>
     <local:MonthDayConverter x:Key="MonthDayConverter"/>
+    <local:AsteriskConverter x:Key="AsteriskConverter"/>
+    <local:CompletConverter x:Key="CompletConverter"/>
 
     <!-- ScrollBar -->
     <sys:Double x:Key="ScrollBarSize">20</sys:Double>
