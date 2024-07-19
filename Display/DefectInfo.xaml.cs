@@ -22,36 +22,36 @@ namespace Display
     //ViewModel
     public class ViewModelDefectInfo : Common, IKeyDown, ITenKey, IDefectCategory ,IDefect
     {
-        //プロパティ変数
-        string _EquipmentCODE;
-        DataTable _DefectList;
-        string _ProcessName;
-        string _ManufactureCODE;
-        string _ManufactureDate;
-        string _LotNumber;
-        string _WorkProcess;
-        int _AmountLength;
-        int _WeightLength;
-        string _ButtonName;
-        bool _VisibleCategory;
-        bool _VisibleDefect;
-        bool _VisibleTenKey;
-        bool _VisibleWeight;
-        bool _VisibleDelete;
-        bool _IsFocusCategory;
-        bool _IsFocusContents;
-        bool _IsFocusAmount;
-        bool _IsFocusWeight;
+        //変数
+        string equipmentCODE;
+        DataTable defectList;
+        string processName;
+        string manufactureCODE;
+        string manufactureDate;
+        string lotNumber;
+        string workProcess;
+        int amountLength;
+        int weightLength;
+        string buttonName;
+        bool visibleCategory;
+        bool visibleDefect;
+        bool visibleTenKey;
+        bool visibleWeight;
+        bool visibleDelete;
+        bool isFocusCategory;
+        bool isFocusContents;
+        bool isFocusAmount;
+        bool isFocusWeight;
 
         //プロパティ
         public static ViewModelDefectInfo Instance      //インスタンス
         { get; set; } = new ViewModelDefectInfo();
         public string EquipmentCODE                     //設備CODE
         {
-            get { return _EquipmentCODE; }
+            get { return equipmentCODE; }
             set
             {
-                _EquipmentCODE = value;
+                equipmentCODE = value;
 
                 equipment.EquipmentCODE = value;
                 equipment.Select();
@@ -66,15 +66,15 @@ namespace Display
         }
         public DataTable DefectList                     //不良データ
         {
-            get { return _DefectList; }
-            set { SetProperty(ref _DefectList, value); }
+            get { return defectList; }
+            set { SetProperty(ref defectList, value); }
         }
         public string ProcessName                       //工程区分
         {
             get { return management.ProcessName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 management.ProcessName = value;
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
@@ -86,7 +86,7 @@ namespace Display
             get { return defect.ManufactureCODE; }
             set 
             { 
-                SetProperty(ref _ManufactureCODE, value);
+                SetProperty(ref manufactureCODE, value);
                 defect.ManufactureCODE = value;
 
                 ButtonName = string.IsNullOrEmpty(value) ? "登　録" : "修　正";
@@ -95,83 +95,83 @@ namespace Display
         }
         public string ManufactureDate                   //作業日
         {
-            get { return _ManufactureDate; }
-            set { SetProperty(ref _ManufactureDate, value); }
+            get { return manufactureDate; }
+            set { SetProperty(ref manufactureDate, value); }
         }
         public string LotNumber                         //ロット番号
         {
             get { return management.LotNumber; }
             set 
             { 
-                SetProperty(ref _LotNumber, value);
+                SetProperty(ref lotNumber, value);
                 management.LotNumber = value;
                 DisplayLotData();
             }
         }
         public string WorkProcess                       //工程
         {
-            get { return _WorkProcess; }
-            set { SetProperty(ref _WorkProcess, value); }
+            get { return workProcess; }
+            set { SetProperty(ref workProcess, value); }
         }
         public int AmountLength                         //文字数（数量）
         {
-            get { return _AmountLength; }
-            set { SetProperty(ref _AmountLength, value); }
+            get { return amountLength; }
+            set { SetProperty(ref amountLength, value); }
         }
         public int WeightLength                         //文字数（数量）
         {
-            get { return _WeightLength; }
-            set { SetProperty(ref _WeightLength, value); }
+            get { return weightLength; }
+            set { SetProperty(ref weightLength, value); }
         }
         public string ButtonName                        //登録ボタン名
         {
-            get { return _ButtonName; }
-            set { SetProperty(ref _ButtonName, value); }
+            get { return buttonName; }
+            set { SetProperty(ref buttonName, value); }
         }
         public bool VisibleCategory                     //不良区分（表示・非表示）
         {
-            get { return _VisibleCategory; }
-            set { SetProperty(ref _VisibleCategory, value); }
+            get { return visibleCategory; }
+            set { SetProperty(ref visibleCategory, value); }
         }
         public bool VisibleDefect                       //不良内容（表示・非表示）
         {
-            get { return _VisibleDefect; }
-            set { SetProperty(ref _VisibleDefect, value); }
+            get { return visibleDefect; }
+            set { SetProperty(ref visibleDefect, value); }
         }
         public bool VisibleTenKey                       //テンキー（表示・非表示）
         {
-            get { return _VisibleTenKey; }
-            set { SetProperty(ref _VisibleTenKey, value); }
+            get { return visibleTenKey; }
+            set { SetProperty(ref visibleTenKey, value); }
         }
         public bool VisibleWeight                       //重量（表示・非表示）
         {
-            get { return _VisibleWeight; }
-            set { SetProperty(ref _VisibleWeight, value); }
+            get { return visibleWeight; }
+            set { SetProperty(ref visibleWeight, value); }
         }
         public bool VisibleDelete                       //削除ボタン（表示・非表示）
         {
-            get { return _VisibleDelete; }
-            set { SetProperty(ref _VisibleDelete, value); }
+            get { return visibleDelete; }
+            set { SetProperty(ref visibleDelete, value); }
         }
         public bool IsFocusCategory                     //フォーカス（不良区分）
         {
-            get { return _IsFocusCategory; }
-            set { SetProperty(ref _IsFocusCategory, value); }
+            get { return isFocusCategory; }
+            set { SetProperty(ref isFocusCategory, value); }
         }
         public bool IsFocusContents                     //フォーカス（不良詳細）
         {
-            get { return _IsFocusContents; }
-            set { SetProperty(ref _IsFocusContents, value); }
+            get { return isFocusContents; }
+            set { SetProperty(ref isFocusContents, value); }
         }
         public bool IsFocusAmount                       //フォーカス（数量）
         {
-            get { return _IsFocusAmount; }
-            set { SetProperty(ref _IsFocusAmount, value); }
+            get { return isFocusAmount; }
+            set { SetProperty(ref isFocusAmount, value); }
         }
         public bool IsFocusWeight                       //フォーカス（重量）
         {
-            get { return _IsFocusWeight; }
-            set { SetProperty(ref _IsFocusWeight, value); }
+            get { return isFocusWeight; }
+            set { SetProperty(ref isFocusWeight, value); }
         }
 
         //イベント

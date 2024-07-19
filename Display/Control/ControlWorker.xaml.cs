@@ -29,12 +29,12 @@ namespace Display
     //ViewModel
     public class ViewModelControlWorker : Common, IWorker
     {
-        //プロパティ変数
-        public string _ProcessName;
-        public bool _VisivleProcess;
-        public bool _VisivleAll;
-        public string _Worker;
-        public List<string> _Workers;
+        //変数
+        public string processName;
+        public bool visivleProcess;
+        public bool visivleAll;
+        public string worker;
+        public List<string> workers;
 
         //プロパティ
         public static ViewModelControlWorker Instance       //インスタンス
@@ -43,33 +43,33 @@ namespace Display
         { get; set; }
         public string ProcessName                           //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
         public bool VisivleProcess                          //作業者
         {
-            get { return _VisivleProcess; }
-            set { SetProperty(ref _VisivleProcess, value);}
+            get { return visivleProcess; }
+            set { SetProperty(ref visivleProcess, value);}
         }
         public bool VisivleAll                              //すべて
         {
-            get { return _VisivleAll; }
-            set { SetProperty(ref _VisivleAll, value); }
+            get { return visivleAll; }
+            set { SetProperty(ref visivleAll, value); }
         }
         public string Worker                                //作業者
         {
-            get { return _Worker; }
-            set { SetProperty(ref _Worker, value); }
+            get { return worker; }
+            set { SetProperty(ref worker, value); }
         }
         public List<string> Workers                         //作業者リスト
         {
-            get { return _Workers; }
-            set { SetProperty(ref _Workers, value); }
+            get { return workers; }
+            set { SetProperty(ref workers, value); }
         }
 
         //イベント

@@ -27,53 +27,53 @@ namespace Display
     //ViewModel
     public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess
     {
-        //プロパティ変数
-        string _ProcessName;
-        string _ManufactureCODE;
-        string _LotNumber;
-        string _EquipmentCODE;
-        DataTable _DefectList;
-        bool _EditFlg;
-        bool _RegFlg;
-        string _Status;
-        string _ManufactureDate;
-        string _Equipment1;
-        string _Equipment2;
-        string _Team;
-        string _ProductName;
-        string _StartTime;
-        string _EndTime;
-        bool _EnabledControl1;
-        bool _EnabledControl2;
-        int _LotNumberLength = 10;
-        int _AmountLength = 5;
-        string _BreakName;
-        bool _VisiblePackaging;
-        bool _VisibleButton;
-        bool _VisibleButtonStart;
-        bool _VisibleButtonEnd;
-        bool _VisibleButtonCancel;
-        bool _VisibleButtonBreak;
-        bool _VisibleEdit;
-        bool _VisibleTenKey;
-        bool _VisibleWorker;
-        bool _VisibleWorkProcess;
-        bool _IsFocusLotNumber;
-        bool _IsFocusWorker;
-        bool _IsFocusWorkProcess;
-        bool _IsFocusAmount;
-        bool _IsFocusCompleted;
-        bool _IsFocusSales;
+        //変数
+        string processName;
+        string manufactureCODE;
+        string lotNumber;
+        string equipmentCODE;
+        DataTable defectList;
+        bool editFlg;
+        bool regFlg;
+        string status;
+        string manufactureDate;
+        string equipment1;
+        string equipment2;
+        string team;
+        string productName;
+        string startTime;
+        string endTime;
+        bool enabledControl1;
+        bool enabledControl2;
+        int lotNumberLength = 10;
+        int amountLength = 5;
+        string breakName;
+        bool visiblePackaging;
+        bool visibleButton;
+        bool visibleButtonStart;
+        bool visibleButtonEnd;
+        bool visibleButtonCancel;
+        bool visibleButtonBreak;
+        bool visibleEdit;
+        bool visibleTenKey;
+        bool visibleWorker;
+        bool visibleWorkProcess;
+        bool isFocusLotNumber;
+        bool isFocusWorker;
+        bool isFocusWorkProcess;
+        bool isFocusAmount;
+        bool isFocusCompleted;
+        bool isFocusSales;
 
         //プロパティ
         public static ViewModelManufactureInfo Instance     //インスタンス
         { get; set; } = new ViewModelManufactureInfo();
         public override string ProcessName                  //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set
             {
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
                 manufacture.ProcessName = ProcessName;
 
@@ -96,22 +96,22 @@ namespace Display
             get { return manufacture.ManufactureCODE; }
             set
             {
-                SetProperty(ref _ManufactureCODE, value);
+                SetProperty(ref manufactureCODE, value);
                 manufacture.ManufactureCODE = value;
                 RegFlg = string.IsNullOrEmpty(value);
             }
         }
         public override string LotNumber                    //ロット番号
         {
-            get { return _LotNumber; }
-            set { SetProperty(ref _LotNumber, value); }
+            get { return lotNumber; }
+            set { SetProperty(ref lotNumber, value); }
         }
         public override string EquipmentCODE                //設備CODE
         {
-            get { return _EquipmentCODE; }
+            get { return equipmentCODE; }
             set 
             { 
-                 _EquipmentCODE = value;
+                 equipmentCODE = value;
 
                 equipment.EquipmentCODE = value;
                 equipment.Select();
@@ -133,15 +133,15 @@ namespace Display
         }
         public DataTable DefectList                         //不良データ
         {
-            get { return _DefectList; }
-            set { SetProperty(ref _DefectList, value); }
+            get { return defectList; }
+            set { SetProperty(ref defectList, value); }
         }
         public bool EditFlg                                 //編集中モード（true:編集可能、編集不可）
         {
-            get { return _EditFlg; }
+            get { return editFlg; }
             set 
             { 
-                SetProperty(ref _EditFlg, value);
+                SetProperty(ref editFlg, value);
                 EnabledControl1 = value;
                 EnabledControl2 = value;
                 VisibleButtonStart = !value;
@@ -149,10 +149,10 @@ namespace Display
         }
         public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
         {
-            get { return _RegFlg; }
+            get { return regFlg; }
             set 
             { 
-                SetProperty(ref _RegFlg, value);
+                SetProperty(ref regFlg, value);
                 if (!value) 
                 { 
                     DisplayData();
@@ -165,10 +165,10 @@ namespace Display
         }
         public string Status                                //入力状況
         {
-            get { return _Status; }
+            get { return status; }
             set 
             { 
-                SetProperty(ref _Status, value);
+                SetProperty(ref status, value);
                 SetStatus();
             }
         }
@@ -177,145 +177,145 @@ namespace Display
             get { return manufacture.ProductName; }
             set
             {
-                SetProperty(ref _ProductName, value);
+                SetProperty(ref productName, value);
                 manufacture.ProductName = value;
             }
         }
         public string Equipment1                            //設備
         {
-            get { return _Equipment1; }
+            get { return equipment1; }
             set
             {
-                SetProperty(ref _Equipment1, value);
+                SetProperty(ref equipment1, value);
                 manufacture.Equipment1 = value;
             }
         }
         public string Equipment2                            //設備
         {
-            get { return _Equipment2; }
+            get { return equipment2; }
             set 
             { 
-                SetProperty(ref _Equipment2, value);
+                SetProperty(ref equipment2, value);
                 manufacture.Equipment2 = value;
             }
         }
         public string Team                                  //班名
         {
-            get { return _Team; }
+            get { return team; }
             set 
             { 
-                SetProperty(ref _Team, value);
+                SetProperty(ref team, value);
                 manufacture.Team = value;
             }
         }
         public bool EnabledControl1                         //コントロール使用可能
         {
-            get { return _EnabledControl1; }
+            get { return enabledControl1; }
             set 
             { 
-                SetProperty(ref _EnabledControl1, value);
+                SetProperty(ref enabledControl1, value);
                 VisibleButtonStart = value;
             }
         }
         public bool EnabledControl2                         //コントロール使用可能
         {
-            get { return _EnabledControl2; }
-            set { SetProperty(ref _EnabledControl2, value); }
+            get { return enabledControl2; }
+            set { SetProperty(ref enabledControl2, value); }
         }
         public int LotNumberLength                          //文字数（ロット番号）
         {
-            get { return _LotNumberLength; }
-            set { SetProperty(ref _LotNumberLength, value); }
+            get { return lotNumberLength; }
+            set { SetProperty(ref lotNumberLength, value); }
         }
         public int AmountLength                             //文字数（数量）
         {
-            get { return _AmountLength; }
-            set { SetProperty(ref _AmountLength, value); }
+            get { return amountLength; }
+            set { SetProperty(ref amountLength, value); }
         }
         public string BreakName                             //中断ボタン名
         {
-            get { return _BreakName; }
-            set { SetProperty(ref _BreakName, value); }
+            get { return breakName; }
+            set { SetProperty(ref breakName, value); }
         }
         public bool VisiblePackaging                        //表示・非表示（数量)
         {
-            get { return _VisiblePackaging; }
-            set { SetProperty(ref _VisiblePackaging, value); }
+            get { return visiblePackaging; }
+            set { SetProperty(ref visiblePackaging, value); }
         }
         public bool VisibleButton                           //表示・非表示（下部ボタン）
         {
-            get { return _VisibleButton; }
-            set { SetProperty(ref _VisibleButton, value); }
+            get { return visibleButton; }
+            set { SetProperty(ref visibleButton, value); }
         }
         public bool VisibleButtonStart                      //開始ボタン表示・非表示
         {
-            get { return _VisibleButtonStart; }
-            set { SetProperty(ref _VisibleButtonStart, value); }
+            get { return visibleButtonStart; }
+            set { SetProperty(ref visibleButtonStart, value); }
         }
         public bool VisibleButtonEnd                        //終了ボタン表示・非表示
         {
-            get { return _VisibleButtonEnd; }
-            set { SetProperty(ref _VisibleButtonEnd, value); }
+            get { return visibleButtonEnd; }
+            set { SetProperty(ref visibleButtonEnd, value); }
         }
         public bool VisibleButtonCancel                     //取消ボタン表示・非表示
         {
-            get { return _VisibleButtonCancel; }
-            set { SetProperty(ref _VisibleButtonCancel, value); }
+            get { return visibleButtonCancel; }
+            set { SetProperty(ref visibleButtonCancel, value); }
         }
         public bool VisibleButtonBreak                      //中断ボタン表示・非表示
         {
-            get { return _VisibleButtonBreak; }
-            set { SetProperty(ref _VisibleButtonBreak, value); }
+            get { return visibleButtonBreak; }
+            set { SetProperty(ref visibleButtonBreak, value); }
         }
         public bool VisibleEdit                             //表示・非表示（削除ボタン）
         {
-            get { return _VisibleEdit; }
-            set { SetProperty(ref _VisibleEdit, value); }
+            get { return visibleEdit; }
+            set { SetProperty(ref visibleEdit, value); }
         }
         public bool VisibleTenKey                           //表示・非表示（テンキー）
         {
-            get { return _VisibleTenKey; }
-            set { SetProperty(ref _VisibleTenKey, value); }
+            get { return visibleTenKey; }
+            set { SetProperty(ref visibleTenKey, value); }
         }
         public bool VisibleWorker                           //表示・非表示（作業者）
         {
-            get { return _VisibleWorker; }
-            set { SetProperty(ref _VisibleWorker, value); }
+            get { return visibleWorker; }
+            set { SetProperty(ref visibleWorker, value); }
         }
         public bool VisibleWorkProcess                      //表示・非表示（工程）
         {
-            get { return _VisibleWorkProcess; }
-            set { SetProperty(ref _VisibleWorkProcess, value); }
+            get { return visibleWorkProcess; }
+            set { SetProperty(ref visibleWorkProcess, value); }
         }
         public bool IsFocusLotNumber                        //フォーカス（ロット番号）
         {
-            get { return _IsFocusLotNumber; }
-            set { SetProperty(ref _IsFocusLotNumber, value); }
+            get { return isFocusLotNumber; }
+            set { SetProperty(ref isFocusLotNumber, value); }
         }
         public bool IsFocusWorker                           //フォーカス（作業者）
         {
-            get { return _IsFocusWorker; }
-            set { SetProperty(ref _IsFocusWorker, value); }
+            get { return isFocusWorker; }
+            set { SetProperty(ref isFocusWorker, value); }
         }
         public bool IsFocusWorkProcess                      //フォーカス（工程）
         {
-            get { return _IsFocusWorkProcess; }
-            set { SetProperty(ref _IsFocusWorkProcess, value); }
+            get { return isFocusWorkProcess; }
+            set { SetProperty(ref isFocusWorkProcess, value); }
         }
         public bool IsFocusAmount                           //フォーカス（数量）
         {
-            get { return _IsFocusAmount; }
-            set { SetProperty(ref _IsFocusAmount, value); }
+            get { return isFocusAmount; }
+            set { SetProperty(ref isFocusAmount, value); }
         }
         public bool IsFocusCompleted                        //フォーカス（完了）
         {
-            get { return _IsFocusCompleted; }
-            set { SetProperty(ref _IsFocusCompleted, value); }
+            get { return isFocusCompleted; }
+            set { SetProperty(ref isFocusCompleted, value); }
         }
         public bool IsFocusSales                            //フォーカス（売上）
         {
-            get { return _IsFocusSales; }
-            set { SetProperty(ref _IsFocusSales, value); }
+            get { return isFocusSales; }
+            set { SetProperty(ref isFocusSales, value); }
         }
 
         //イベント

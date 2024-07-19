@@ -1117,6 +1117,13 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => string.IsNullOrEmpty((string?)value) || (string?)value == "0" ? CONVERT.ToCollapsed((false)) : CONVERT.ToCollapsed((true));
     }
 
+    //アスタリスク変換
+    public class AsteriskConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => Equals(value, true) ? "*" : string.Empty;
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => Equals(value, "*") ? true : false;
+    }
+
     //文字間に空白を入れる
     public class InsertConverter : IValueConverter
     {

@@ -21,21 +21,21 @@ namespace Display
     //ViewModel
     public class ViewModelManufactureList : Common, IKeyDown, ISelect
     {
-        //プロパティ変数
-        string _EquipmentCODE;
-        string _ProcessName;
-        string _ManufactureCODE;
-        string _ManufactureDate;
+        //変数
+        string equipmentCODE;
+        string processName;
+        string manufactureCODE;
+        string manufactureDate;
 
         //プロパティ
         public static ViewModelManufactureList Instance     //インスタンス
         { get; set; } = new ViewModelManufactureList();
         public string EquipmentCODE                         //設備CODE
         {
-            get { return _EquipmentCODE; }
+            get { return equipmentCODE; }
             set
             {
-                _EquipmentCODE = value;
+                equipmentCODE = value;
 
                 equipment.EquipmentCODE = EquipmentCODE;
                 equipment.Select();
@@ -54,24 +54,24 @@ namespace Display
         }
         public string ProcessName                           //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
         public string ManufactureCODE                       //加工CODE
         {
-            get { return _ManufactureCODE; }
-            set { SetProperty(ref _ManufactureCODE, value); }
+            get { return manufactureCODE; }
+            set { SetProperty(ref manufactureCODE, value); }
         }
         public string ManufactureDate                       //作業日
         {
-            get { return _ManufactureDate; }
+            get { return manufactureDate; }
             set 
             { 
-                SetProperty(ref _ManufactureDate, value);
+                SetProperty(ref manufactureDate, value);
                 DiaplayList();
             }
         }

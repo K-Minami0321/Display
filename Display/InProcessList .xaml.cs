@@ -21,16 +21,16 @@ namespace Display
     //ViewModel
     public class ViewModelInProcessList : Common, IKeyDown, ISelect
     {
-        //プロパティ変数
-        string _ProcessName;
-        string _InProcessCODE;
-        string _InProcessDate;
-        bool _VisibleShape;
-        bool _VisibleUnit;
-        bool _VisibleWeight;
-        string _HeaderUnit;
-        string _HeaderWeight;
-        string _HeaderAmount;
+        //変数
+        string processName;
+        string inProcessCODE;
+        string inProcessDate;
+        bool visibleShape;
+        bool visibleUnit;
+        bool visibleWeight;
+        string headerUnit;
+        string headerWeight;
+        string headerAmount;
 
         //プロパティ
         public static ViewModelInProcessList Instance   //インスタンス
@@ -40,7 +40,7 @@ namespace Display
             get { return inProcess.ProcessName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 inProcess.ProcessName = value;
 
                 if (value == null) { return; }
@@ -74,48 +74,48 @@ namespace Display
         }
         public string InProcessCODE                     //仕掛在庫CODE
         {
-            get { return _InProcessCODE; }
-            set { SetProperty(ref _InProcessCODE, value); }
+            get { return inProcessCODE; }
+            set { SetProperty(ref inProcessCODE, value); }
         }
         public string InProcessDate                     //作業日
         {
-            get { return _InProcessDate; }
+            get { return inProcessDate; }
             set 
             { 
-                SetProperty(ref _InProcessDate, value);
+                SetProperty(ref inProcessDate, value);
                 inProcess.InProcessDate = value;
                 DiaplayList();
             }
         }
         public bool VisibleShape                        //表示・非表示（形状）
         {
-            get { return _VisibleShape; }
-            set { SetProperty(ref _VisibleShape, value); }
+            get { return visibleShape; }
+            set { SetProperty(ref visibleShape, value); }
         }
         public bool VisibleUnit                         //表示・非表示（コイル・枚数）
         {
-            get { return _VisibleUnit; }
-            set { SetProperty(ref _VisibleUnit, value); }
+            get { return visibleUnit; }
+            set { SetProperty(ref visibleUnit, value); }
         }
         public bool VisibleWeight                       //表示・非表示（重量）
         {
-            get { return _VisibleWeight; }
-            set { SetProperty(ref _VisibleWeight, value); }
+            get { return visibleWeight; }
+            set { SetProperty(ref visibleWeight, value); }
         }
         public string HeaderUnit                        //コイル・枚数
         {
-            get { return _HeaderUnit; }
-            set { SetProperty(ref _HeaderUnit, value); }
+            get { return headerUnit; }
+            set { SetProperty(ref headerUnit, value); }
         }
         public string HeaderWeight                      //焼結重量・単重
         {
-            get { return _HeaderWeight; }
-            set { SetProperty(ref _HeaderWeight, value); }
+            get { return headerWeight; }
+            set { SetProperty(ref headerWeight, value); }
         }
         public string HeaderAmount                      //ヘッダー（重量・数量）
         {
-            get { return _HeaderAmount; }
-            set { SetProperty(ref _HeaderAmount, value); }
+            get { return headerAmount; }
+            set { SetProperty(ref headerAmount, value); }
         }
 
         //イベント

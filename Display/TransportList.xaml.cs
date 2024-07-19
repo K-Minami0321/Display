@@ -21,8 +21,8 @@ namespace Display
     public class ViewModelTransportList : Common, IKeyDown, ISelect
     {
         //プロパティ変数
-        string _ProcessName;
-        string _InProcessCODE;
+        string processName;
+        string inProcessCODE;
 
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
@@ -32,7 +32,7 @@ namespace Display
             get { return inProcess.ProcessName; }
             set 
             {
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 inProcess.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
                 ViewModelWindowMain.Instance.ProcessName = iProcess.Before;
@@ -40,8 +40,8 @@ namespace Display
         }
         public override string InProcessCODE            //仕掛在庫CODE
         {
-            get { return _InProcessCODE; }
-            set { SetProperty(ref _InProcessCODE, value); }
+            get { return inProcessCODE; }
+            set { SetProperty(ref inProcessCODE, value); }
         }
 
         //イベント

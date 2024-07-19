@@ -16,60 +16,60 @@ namespace Display
         public IniFile INI = new IniFile(CONST.SETTING_INI);
         public Sound SOUND = new Sound();
 
-        //プロパティ変数
-        ContentControl _FramePage;
-        DataTable _SelectTable;
-        DataRowView _SelectedItem;
-        int _SelectedIndex;
-        double _ScrollIndex;
-        object _Focus;
-        string _NextFocus;
-        string _SoundFolder;
-        string _QuantityLabel;
-        string _AmountLabel;
-        string _UnitLabel;
-        bool _VisibleCoil;
+        //変数
+        ContentControl framePage;
+        DataTable selectTable;
+        DataRowView selectedItem;
+        int selectedIndex;
+        double scrollIndex;
+        object focus;
+        string nextFocus;
+        string soundFolder;
+        string quantityLabel;
+        string amountLabel;
+        string unitLabel;
+        bool visibleCoil;
 
         //プロパティ
         public ContentControl FramePage     //画面ページ
         {
-            get { return _FramePage; }
-            set { SetProperty(ref _FramePage, value); }
+            get { return framePage; }
+            set { SetProperty(ref framePage, value); }
         }
         public DataTable SelectTable        //一覧データ
         {
-            get { return _SelectTable; }
-            set { SetProperty(ref _SelectTable, value); }
+            get { return selectTable; }
+            set { SetProperty(ref selectTable, value); }
         }
         public DataRowView SelectedItem     //選択した行
         {
-            get { return _SelectedItem; }
-            set { SetProperty(ref _SelectedItem, value); }
+            get { return selectedItem; }
+            set { SetProperty(ref selectedItem, value); }
         }
         public int SelectedIndex            //行選択
         {
-            get { return _SelectedIndex; }
-            set { SetProperty(ref _SelectedIndex, value); }
+            get { return selectedIndex; }
+            set { SetProperty(ref selectedIndex, value); }
         }
         public double ScrollIndex           //スクロール位置
         {
-            get { return _ScrollIndex; }
-            set { SetProperty(ref _ScrollIndex, value); }
+            get { return scrollIndex; }
+            set { SetProperty(ref scrollIndex, value); }
         }
         public object Focus                 //フォーカス
         {
-            get { return _Focus; }
-            set { SetProperty(ref _Focus, value); }
+            get { return focus; }
+            set { SetProperty(ref focus, value); }
         }
         public string NextFocus             //次のフォーカス
         {
-            get { return _NextFocus; }
-            set { SetProperty(ref _NextFocus, value); }
+            get { return nextFocus; }
+            set { SetProperty(ref nextFocus, value); }
         }
         public string SoundFolder           //サウンドフォルダ
         {
-            get { return _SoundFolder; }
-            set { SetProperty(ref _SoundFolder, value); }
+            get { return soundFolder; }
+            set { SetProperty(ref soundFolder, value); }
         }
 
         //スタートページを表示

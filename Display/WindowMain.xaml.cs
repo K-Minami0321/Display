@@ -27,25 +27,25 @@ namespace Display
     //ViewModel
     public class ViewModelWindowMain : Common, IWindow
     {
-        //プロパティ変数
-        WindowState _DisplayState;
-        WindowStyle _DisplayStyle;
-        double _WindowLeft;
-        double _WindowTop;
-        double _WindowWidth;
-        double _WindowHeight;
-        string _ProcessName;
-        string _ProcessWork;
-        string _FunctionColor;
-        bool _VisiblePower;
-        bool _VisibleList;
-        bool _VisibleInfo;
-        bool _VisibleDefect;
-        bool _VisibleArrow;
-        bool _VisiblePlan;
-        string _IconPlan;
-        string _IconList;
-        int _IconSize;
+        //変数
+        WindowState displayState;
+        WindowStyle displayStyle;
+        double windowLeft;
+        double windowTop;
+        double windowWidth;
+        double windowHeight;
+        string processName;
+        string processWork;
+        string functionColor;
+        bool visiblePower;
+        bool visibleList;
+        bool visibleInfo;
+        bool visibleDefect;
+        bool visibleArrow;
+        bool visiblePlan;
+        string iconPlan;
+        string iconList;
+        int iconSize;
 
         //プロパティ
         public static ViewModelWindowMain Instance      //インスタンス
@@ -54,93 +54,93 @@ namespace Display
         { get; set; }
         public WindowState DisplayState                 //最大化・Window化
         {
-            get { return _DisplayState; }
-            set { SetProperty(ref _DisplayState, value); }
+            get { return displayState; }
+            set { SetProperty(ref displayState, value); }
         }
         public WindowStyle DisplayStyle                 //最大化・最小化・閉じるボタン
         {
-            get { return _DisplayStyle; }
-            set { SetProperty(ref _DisplayStyle, value); }
+            get { return displayStyle; }
+            set { SetProperty(ref displayStyle, value); }
         }
         public double WindowLeft                        //Windowの位置（Left）
         {
-            get { return _WindowLeft; }
-            set { SetProperty(ref _WindowLeft, value); }
+            get { return windowLeft; }
+            set { SetProperty(ref windowLeft, value); }
         }
         public double WindowTop                         //Windowの位置（Top）
         {
-            get { return _WindowTop; }
-            set { SetProperty(ref _WindowTop, value); }
+            get { return windowTop; }
+            set { SetProperty(ref windowTop, value); }
         }
         public double WindowWidth                       //Windowの大きさ（Width）
         {
-            get { return _WindowWidth; }
-            set { SetProperty(ref _WindowWidth, value); }
+            get { return windowWidth; }
+            set { SetProperty(ref windowWidth, value); }
         }
         public double WindowHeight                      //Windowの大きさ（Height）
         {
-            get { return _WindowHeight; }
-            set { SetProperty(ref _WindowHeight, value); }
+            get { return windowHeight; }
+            set { SetProperty(ref windowHeight, value); }
         }
         public string ProcessName                       //工程区分
         {
-            get { return _ProcessName; }
-            set { SetProperty(ref _ProcessName, value); }
+            get { return processName; }
+            set { SetProperty(ref processName, value); }
         }
         public string ProcessWork                       //工程区分表示
         {
-            get { return _ProcessWork; }
-            set { SetProperty(ref _ProcessWork, value); }
+            get { return processWork; }
+            set { SetProperty(ref processWork, value); }
         }
         public string FunctionColor                     //ページ名色
         {
-            get { return _FunctionColor; }
-            set { SetProperty(ref _FunctionColor, value); }
+            get { return functionColor; }
+            set { SetProperty(ref functionColor, value); }
         }
         public bool VisiblePower                        //表示・非表示（電源ボタン）
         {
-            get { return _VisiblePower; }
-            set { SetProperty(ref _VisiblePower, value); }
+            get { return visiblePower; }
+            set { SetProperty(ref visiblePower, value); }
         }
         public bool VisibleList                         //表示・非表示（一覧ボタン）
         {
-            get { return _VisibleList; }
-            set { SetProperty(ref _VisibleList, value); }
+            get { return visibleList; }
+            set { SetProperty(ref visibleList, value); }
         }
         public bool VisibleInfo                         //表示・非表示（登録ボタン）
         {
-            get { return _VisibleInfo; }
-            set { SetProperty(ref _VisibleInfo, value); }
+            get { return visibleInfo; }
+            set { SetProperty(ref visibleInfo, value); }
         }
         public bool VisibleDefect                       //表示・非表示（不良ボタン）
         {
-            get { return _VisibleDefect; }
-            set { SetProperty(ref _VisibleDefect, value); }
+            get { return visibleDefect; }
+            set { SetProperty(ref visibleDefect, value); }
         }
         public bool VisibleArrow                        //表示・非表示（矢印ボタン）
         {
-            get { return _VisibleArrow; }
-            set { SetProperty(ref _VisibleArrow, value); }
+            get { return visibleArrow; }
+            set { SetProperty(ref visibleArrow, value); }
         }
         public bool VisiblePlan                         //表示・非表示（予定ボタン）
         {
-            get { return _VisiblePlan; }
-            set { SetProperty(ref _VisiblePlan, value); }
+            get { return visiblePlan; }
+            set { SetProperty(ref visiblePlan, value); }
         }
         public string IconPlan                          //アイコン（計画一覧）
         {
-            get { return _IconPlan; }
-            set { SetProperty(ref _IconPlan, value); }
+            get { return iconPlan; }
+            set { SetProperty(ref iconPlan, value); }
         }
         public string IconList                          //アイコン（計画一覧）
         {
-            get { return _IconList; }
-            set { SetProperty(ref _IconList, value); }
+            get { return iconList; }
+            set { SetProperty(ref iconList, value); }
         }
         public int IconSize                             //アイコンサイズ
         {
-            get { return _IconSize; }
-            set { SetProperty(ref _IconSize, value); }
+            get { return iconSize; }
+            set { SetProperty(ref iconSize, value); }
         }
 
         //イベント

@@ -23,46 +23,45 @@ namespace Display
     //ViewModel
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
     {
-        //プロパティ変数
-        
-        string _ProcessName;
-        string _InProcessCODE;
-        string _InProcessDate;
-        string _LotNumber;
-        bool _RegFlg;
-        int _AmountWidth = 150;
-        int _AmountRow = 5;
-        string _Notice;
-        string _ButtonName;
-        int _LotNumberLength = 10;
-        int _AmountLength = 6;
-        int _WeightLength = 6;
-        int _UnitLength = 6;
-        string _UnitLabel;
-        string _WeightLabel;
-        bool _VisibleItem1;
-        bool _VisibleItem2;
-        bool _VisibleDelete;
-        bool _VisibleCancel;
-        bool _VisibleTenKey;
-        bool _VisibleWorker;
-        bool _IsEnable;
-        bool _IsFocusLotNumber;
-        bool _IsFocusWorker;
-        bool _IsFocusWeight;
-        bool _IsFocusUnit;
-        bool _IsFocusCompleted;
-        bool _IsFocusAmount;
+        //変数
+        string processName;
+        string inProcessCODE;
+        string inProcessDate;
+        string lotNumber;
+        bool regFlg;
+        int amountWidth = 150;
+        int amountRow = 5;
+        string notice;
+        string buttonName;
+        int lotNumberLength = 10;
+        int amountLength = 6;
+        int weightLength = 6;
+        int unitLength = 6;
+        string unitLabel;
+        string weightLabel;
+        bool visibleItem1;
+        bool visibleItem2;
+        bool visibleDelete;
+        bool visibleCancel;
+        bool visibleTenKey;
+        bool visibleWorker;
+        bool isEnable;
+        bool isFocusLotNumber;
+        bool isFocusWorker;
+        bool isFocusWeight;
+        bool isFocusUnit;
+        bool isFocusCompleted;
+        bool isFocusAmount;
 
         //プロパティ
         public static ViewModelInProcessInfo Instance   //インスタンス
         { get; set; } = new ViewModelInProcessInfo();
         public override string ProcessName              //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set
             {
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
 
@@ -105,24 +104,24 @@ namespace Display
         }
         public override string InProcessCODE            //仕掛在庫CODE
         {
-            get { return _InProcessCODE; }
+            get { return inProcessCODE; }
             set
             {
-                SetProperty(ref _InProcessCODE, value);
+                SetProperty(ref inProcessCODE, value);
                 ButtonName = string.IsNullOrEmpty(value) ? "登　録" : "修　正";
             }
         }
         public override string LotNumber                //ロット番号（テキストボックス）
         {
-            get { return _LotNumber; }
-            set { SetProperty(ref _LotNumber, value); }
+            get { return lotNumber; }
+            set { SetProperty(ref lotNumber, value); }
         }
         public bool RegFlg                              //新規・既存フラグ
         {
-            get { return _RegFlg; }
+            get { return regFlg; }
             set 
             { 
-                SetProperty(ref _RegFlg, value);
+                SetProperty(ref regFlg, value);
                 VisibleCancel = value;
                 VisibleDelete = !value;
 
@@ -142,90 +141,90 @@ namespace Display
         }
         public int AmountWidth                          //コイル数テキストボックスのWidth
         {
-            get { return _AmountWidth; }
-            set { SetProperty(ref _AmountWidth, value); }
+            get { return amountWidth; }
+            set { SetProperty(ref amountWidth, value); }
         }
         public int AmountRow                            //数量・重量の位置
         {
-            get { return _AmountRow; }
-            set { SetProperty(ref _AmountRow, value); }
+            get { return amountRow; }
+            set { SetProperty(ref amountRow, value); }
         }
         public string Notice                            //注意文
         {
-            get { return _Notice; }
-            set { SetProperty(ref _Notice, value); }
+            get { return notice; }
+            set { SetProperty(ref notice, value); }
         }
         public string ButtonName                        //登録ボタン名
         {
-            get { return _ButtonName; }
-            set { SetProperty(ref _ButtonName, value); }
+            get { return buttonName; }
+            set { SetProperty(ref buttonName, value); }
         }
         public int LotNumberLength                      //文字数（ロット番号）
         {
-            get { return _LotNumberLength; }
-            set { SetProperty(ref _LotNumberLength, value); }
+            get { return lotNumberLength; }
+            set { SetProperty(ref lotNumberLength, value); }
         }
         public int AmountLength                         //文字数（数量）
         {
-            get { return _AmountLength; }
-            set { SetProperty(ref _AmountLength, value); }
+            get { return amountLength; }
+            set { SetProperty(ref amountLength, value); }
         }
         public int WeightLength                         //文字数（重量・焼結重量）
         {
-            get { return _WeightLength; }
-            set { SetProperty(ref _WeightLength, value); }
+            get { return weightLength; }
+            set { SetProperty(ref weightLength, value); }
         }
         public int UnitLength                           //文字数（枚数・コイル数）
         {
-            get { return _UnitLength; }
-            set { SetProperty(ref _UnitLength, value); }
+            get { return unitLength; }
+            set { SetProperty(ref unitLength, value); }
         }
         public string UnitLabel                         //ラベル（重量・数量）
         {
-            get { return _UnitLabel; }
-            set { SetProperty(ref _UnitLabel, value); }
+            get { return unitLabel; }
+            set { SetProperty(ref unitLabel, value); }
         }
         public string WeightLabel                       //ラベル（重量・焼結重量）
         {
-            get { return _WeightLabel; }
-            set { SetProperty(ref _WeightLabel, value); }
+            get { return weightLabel; }
+            set { SetProperty(ref weightLabel, value); }
         }
         public bool VisibleItem1                        //表示・非表示（入力項目）
         {
-            get { return _VisibleItem1; }
-            set { SetProperty(ref _VisibleItem1, value); }
+            get { return visibleItem1; }
+            set { SetProperty(ref visibleItem1, value); }
         }
         public bool VisibleItem2                        //表示・非表示（入力項目）
         {
-            get { return _VisibleItem2; }
-            set { SetProperty(ref _VisibleItem2, value); }
+            get { return visibleItem2; }
+            set { SetProperty(ref visibleItem2, value); }
         }
         public bool VisibleDelete                       //表示・非表示（削除ボタン）
         {
-            get { return _VisibleDelete; }
-            set { SetProperty(ref _VisibleDelete, value); }
+            get { return visibleDelete; }
+            set { SetProperty(ref visibleDelete, value); }
         }
         public bool VisibleCancel                       //表示・非表示（取消ボタン）
         {
-            get { return _VisibleCancel; }
-            set { SetProperty(ref _VisibleCancel, value); }
+            get { return visibleCancel; }
+            set { SetProperty(ref visibleCancel, value); }
         }
         public bool VisibleTenKey                       //表示・非表示（テンキー）
         {
-            get { return _VisibleTenKey; }
-            set { SetProperty(ref _VisibleTenKey, value); }
+            get { return visibleTenKey; }
+            set { SetProperty(ref visibleTenKey, value); }
         }
         public bool VisibleWorker                       //表示・非表示（作業者）
         {
-            get { return _VisibleWorker; }
-            set { SetProperty(ref _VisibleWorker, value); }
+            get { return visibleWorker; }
+            set { SetProperty(ref visibleWorker, value); }
         }
         public bool IsEnable                            //表示・非表示（下部ボタン）
         {
-            get { return _IsEnable; }
+            get { return isEnable; }
             set 
             { 
-                SetProperty(ref _IsEnable, value);
+                SetProperty(ref isEnable, value);
                 if (value) { return; }
                 Notice = string.Empty;
                 AmountWidth = inProcess.Amount.Length * 50;
@@ -234,33 +233,33 @@ namespace Display
         }
         public bool IsFocusLotNumber                    //フォーカス（ロット番号）
         {
-            get { return _IsFocusLotNumber; }
-            set { SetProperty(ref _IsFocusLotNumber, value); }
+            get { return isFocusLotNumber; }
+            set { SetProperty(ref isFocusLotNumber, value); }
         }
         public bool IsFocusWorker                       //フォーカス（作業者）
         {
-            get { return _IsFocusWorker; }
-            set { SetProperty(ref _IsFocusWorker, value); }
+            get { return isFocusWorker; }
+            set { SetProperty(ref isFocusWorker, value); }
         }
         public bool IsFocusWeight                       //フォーカス（重量）
         {
-            get { return _IsFocusWeight; }
-            set { SetProperty(ref _IsFocusWeight, value); }
+            get { return isFocusWeight; }
+            set { SetProperty(ref isFocusWeight, value); }
         }
         public bool IsFocusUnit                         //フォーカス（単位）
         {
-            get { return _IsFocusUnit; }
-            set { SetProperty(ref _IsFocusUnit, value); }
+            get { return isFocusUnit; }
+            set { SetProperty(ref isFocusUnit, value); }
         }
         public bool IsFocusCompleted                    //フォーカス（完了）
         {
-            get { return _IsFocusCompleted; }
-            set { SetProperty(ref _IsFocusCompleted, value); }
+            get { return isFocusCompleted; }
+            set { SetProperty(ref isFocusCompleted, value); }
         }
         public bool IsFocusAmount                       //フォーカス（数量）
         {
-            get { return _IsFocusAmount; }
-            set { SetProperty(ref _IsFocusAmount, value); }
+            get { return isFocusAmount; }
+            set { SetProperty(ref isFocusAmount, value); }
         }
 
         //イベント

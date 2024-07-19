@@ -26,8 +26,8 @@ namespace Display
     public class ViewModelControlTenKey : Common, ITenKey
     {
 
-        //プロパティ変数
-        string _InputString;
+        //変数
+        string inputString;
 
         //プロパティ
         public static ViewModelControlTenKey Instance   //インスタンス
@@ -36,10 +36,9 @@ namespace Display
         { get; set; }
         public string InputString                       //入力文字
         {
-            get { return _InputString; }
-            set { SetProperty(ref _InputString, value); }
+            get { return inputString; }
+            set { SetProperty(ref inputString, value); }
         }
-
 
         //イベント
         ActionCommand commandButton;

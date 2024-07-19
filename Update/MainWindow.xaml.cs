@@ -23,14 +23,14 @@ namespace Update
 
     public class ViewModelMainWindow : INotifyPropertyChanged
     {
-        //プロパティ変数
-        string _version;
+        //変数
+        string version;
 
         //プロパティ
         public string Version                         //バージョン
         {
-            get { return _version; }
-            set { SetProperty(ref _version, value); }
+            get { return version; }
+            set { SetProperty(ref version, value); }
         }
 
         //イベント

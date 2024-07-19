@@ -23,62 +23,62 @@ namespace Display
     //ViewModel
     public class ViewModelTransportInfo : Common, IKeyDown, IWorker
     {
-        //プロパティ変数
-        string _InProcessCODE;
-        string _LotNumber;
-        string _ProcessName;
-        int _AmountLength = 6;
-        bool _VisibleTenKey;
-        bool _VisibleWorker;
-        bool _IsFocusWorker;
+        //変数
+        string inProcessCODE;
+        string lotNumber;
+        string processName;
+        int amountLength = 6;
+        bool visibleTenKey;
+        bool visibleWorker;
+        bool isFocusWorker;
 
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
         public override string ProcessName                  //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set
             {
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
         public override string InProcessCODE                //仕掛コード
         {
-            get { return _InProcessCODE; }
+            get { return inProcessCODE; }
             set 
             {
-                SetProperty(ref _InProcessCODE, value);
+                SetProperty(ref inProcessCODE, value);
                 if (value == null) { return; }
                 DisplayData();
             }
         }
         public override string LotNumber                    //ロット番号
         {
-            get { return _LotNumber; }
-            set { SetProperty(ref _LotNumber, value); }
+            get { return lotNumber; }
+            set { SetProperty(ref lotNumber, value); }
         }
         public int AmountLength                             //文字数（数量）
         {
-            get { return _AmountLength; }
-            set { SetProperty(ref _AmountLength, value); }
+            get { return amountLength; }
+            set { SetProperty(ref amountLength, value); }
         }
         public bool VisibleTenKey                           //表示・非表示（テンキー）
         {
-            get { return _VisibleTenKey; }
-            set { SetProperty(ref _VisibleTenKey, value); }
+            get { return visibleTenKey; }
+            set { SetProperty(ref visibleTenKey, value); }
         }
         public bool VisibleWorker                           //表示・非表示（作業者）
         {
-            get { return _VisibleWorker; }
-            set { SetProperty(ref _VisibleWorker, value); }
+            get { return visibleWorker; }
+            set { SetProperty(ref visibleWorker, value); }
         }
         public bool IsFocusWorker                           //フォーカス（作業者）
         {
-            get { return _IsFocusWorker; }
-            set { SetProperty(ref _IsFocusWorker, value); }
+            get { return isFocusWorker; }
+            set { SetProperty(ref isFocusWorker, value); }
         }
 
         //イベント

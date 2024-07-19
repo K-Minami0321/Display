@@ -30,40 +30,40 @@ namespace Display
     //ViewModel
     public class ViewModelControlMessage : Common
     {
-        //プロパティ変数
-        string _Message;
-        string _Contents;
-        string _Type;
-        string _ButtonOK;
-        bool _IsButtonCancel;
+        //変数
+        string message;
+        string contents;
+        string type;
+        string buttonOK;
+        bool isButtonCancel;
 
         //プロパティ
         public static ViewModelControlMessage Instance  //インスタンス
         { get; set; } = new ViewModelControlMessage();
         public string Message                           //処理メッセージ
         {
-            get { return _Message; }
-            set { SetProperty(ref _Message, value); }
+            get { return message; }
+            set { SetProperty(ref message, value); }
         }
         public string Contents                          //処理内容
         {
-            get { return _Contents; }
-            set { SetProperty(ref _Contents, value); }
+            get { return contents; }
+            set { SetProperty(ref contents, value); }
         }
         public string Type                              //メッセージボックスタイプ
         {
-            get { return _Type; }
-            set { SetProperty(ref _Type, value); }
+            get { return type; }
+            set { SetProperty(ref type, value); }
         }
         public string ButtonOK                          //ボタン表示名
         {
-            get { return _ButtonOK; }
-            set { SetProperty(ref _ButtonOK, value); }
+            get { return buttonOK; }
+            set { SetProperty(ref buttonOK, value); }
         }
         public bool IsButtonCancel                      //ボタン表示
         {
-            get { return _IsButtonCancel; }
-            set { SetProperty(ref _IsButtonCancel, value); }
+            get { return isButtonCancel; }
+            set { SetProperty(ref isButtonCancel, value); }
         }
 
         //イベント

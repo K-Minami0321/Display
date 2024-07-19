@@ -21,30 +21,30 @@ namespace Display
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
 
-        //プロパティ変数
-        string _LotNumber;
-        string _ProcessName;
-        string _InProcessCODE;
-        string _UpdateDate;
-        string _File;
-        bool _VisibleUnit;
-        bool _VisibleAmount;
-        bool _EnableSelect;
+        //変数
+        string lotNumber;
+        string processName;
+        string inProcessCODE;
+        string updateDate;
+        string file;
+        bool visibleUnit;
+        bool visibleAmount;
+        bool enableSelect;
 
         //プロパティ
         public static ViewModelPlanList Instance            //インスタンス
         { get; set; } = new ViewModelPlanList();
         public string LotNumber       //ロット番号
         {
-            get { return _LotNumber; }
-            set { SetProperty(ref _LotNumber, value); }
+            get { return lotNumber; }
+            set { SetProperty(ref lotNumber, value); }
         }
         public string ProcessName     //工程区分
         {
             get { return plan.ProcessName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 plan.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
             }
@@ -54,34 +54,34 @@ namespace Display
             get { return plan.InProcessCODE; }
             set 
             { 
-                SetProperty(ref _InProcessCODE, value);
+                SetProperty(ref inProcessCODE, value);
                 plan.InProcessCODE = value;
             }
         }
         public string UpdateDate      //更新表示
         {
-            get { return _UpdateDate; }
-            set { SetProperty(ref _UpdateDate, value); }
+            get { return updateDate; }
+            set { SetProperty(ref updateDate, value); }
         }
         public string File            //ファイル名
         {
-            get { return _File; }
-            set { SetProperty(ref _File, value); }
+            get { return file; }
+            set { SetProperty(ref file, value); }
         }
         public bool VisibleUnit       //表示・非表示（コイル・シート絞り込み）
         {
-            get { return _VisibleUnit; }
-            set { SetProperty(ref _VisibleUnit, value); }
+            get { return visibleUnit; }
+            set { SetProperty(ref visibleUnit, value); }
         }
         public bool VisibleAmount     //表示・非表示（完了数）
         {
-            get { return _VisibleAmount; }
-            set { SetProperty(ref _VisibleAmount, value); }
+            get { return visibleAmount; }
+            set { SetProperty(ref visibleAmount, value); }
         }
         public bool EnableSelect      //選択可能
         {
-            get { return _EnableSelect; }
-            set { SetProperty(ref _EnableSelect, value); }
+            get { return enableSelect; }
+            set { SetProperty(ref enableSelect, value); }
         }
 
         //イベント

@@ -24,52 +24,52 @@ namespace Display
     //ViewModel
     public class ViewModelSetting : Common, IKeyDown
     {
-        //プロパティ変数
-        string _Version;
-        string _Connection;
-        string _Server;
-        string _ProcessName;
-        string _Worker;
-        string _LogText;
-        string _Log = CONST.SQL_LOG;
-        bool _IsServer;
-        bool _IsProcessName;
-        bool _IsEquipment;
-        bool _IsWorker;
-        bool _IsServerOpen;
-        bool _IsProcessOpen;
-        bool _IsEquipmentOpen;
-        bool _IsWorkerOpen;
-        bool _IsFocusServer;
-        List<string> _ProcessNames;
-        List<string> _Workers;
-        List<string> _EquipmentCODES;
-        List<string> _Servers;
+        //変数
+        string version;
+        string connection;
+        string server;
+        string processName;
+        string worker;
+        string logText;
+        string log = CONST.SQL_LOG;
+        bool isServer;
+        bool isProcessName;
+        bool isEquipment;
+        bool isWorker;
+        bool isServerOpen;
+        bool isProcessOpen;
+        bool isEquipmentOpen;
+        bool isWorkerOpen;
+        bool isFocusServer;
+        List<string> processNames;
+        List<string> workers;
+        List<string> equipmentCODES;
+        List<string> servers;
 
         //プロパティ
         public static ViewModelSetting Instance     //インスタンス
         { get; set; } = new ViewModelSetting();
         public string Version                       //バージョン
         {
-            get { return _Version; }
-            set { SetProperty(ref _Version, value); }
+            get { return version; }
+            set { SetProperty(ref version, value); }
         }
         public string Connection                    //接続文字列
         {
-            get { return _Connection; }
-            set { SetProperty(ref _Connection, value); }
+            get { return connection; }
+            set { SetProperty(ref connection, value); }
         }
         public string Server                        //サーバーIP
         {
-            get { return _Server; }
-            set { SetProperty(ref _Server, value); }
+            get { return server; }
+            set { SetProperty(ref server, value); }
         }
         public string ProcessName                   //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
 
                 iProcess = ProcessCategory.SetProcess(value);
                 EquipmentCODES = iProcess.Equipments;
@@ -78,87 +78,87 @@ namespace Display
         }
         public string Worker                        //担当者
         {
-            get { return _Worker; }
-            set { SetProperty(ref _Worker, value); }
+            get { return worker; }
+            set { SetProperty(ref worker, value); }
         }
         public string LogText                       //表示ログ
         {
-            get { return _LogText; }
-            set { SetProperty(ref _LogText, value); }
+            get { return logText; }
+            set { SetProperty(ref logText, value); }
         }
         public string Log                           //ログファイル
         {
-            get { return _Log; }
+            get { return log; }
             set 
             { 
-                SetProperty(ref _Log, value);
+                SetProperty(ref log, value);
                 LogText = string.Empty; DisplayLog();
             }
         }
         public bool IsServer                        //サーバーコンボボックス
         {
-            get { return _IsServer; }
-            set { SetProperty(ref _IsServer, value); }
+            get { return isServer; }
+            set { SetProperty(ref isServer, value); }
         }
         public bool IsProcessName                   //工程区分コンボボックス
         {
-            get { return _IsProcessName; }
-            set { SetProperty(ref _IsProcessName, value); }
+            get { return isProcessName; }
+            set { SetProperty(ref isProcessName, value); }
         }
         public bool IsEquipment                     //設備コンボボックス
         {
-            get { return _IsEquipment; }
-            set { SetProperty(ref _IsEquipment, value); }
+            get { return isEquipment; }
+            set { SetProperty(ref isEquipment, value); }
         }
         public bool IsWorker                        //作業者コンボボックス
         {
-            get { return _IsWorker; }
-            set { SetProperty(ref _IsWorker, value); }
+            get { return isWorker; }
+            set { SetProperty(ref isWorker, value); }
         }
         public bool IsServerOpen                    //コンボボックスが開いているかどうか
         {
-            get { return _IsServerOpen; }
-            set { SetProperty(ref _IsServerOpen, value); }
+            get { return isServerOpen; }
+            set { SetProperty(ref isServerOpen, value); }
         }
         public bool IsProcessOpen                   //コンボボックスが開いているかどうか
         {
-            get { return _IsProcessOpen; }
-            set { SetProperty(ref _IsProcessOpen, value); }
+            get { return isProcessOpen; }
+            set { SetProperty(ref isProcessOpen, value); }
         }
         public bool IsEquipmentOpen                 //コンボボックスが開いているかどうか
         {
-            get { return _IsEquipmentOpen; }
-            set { SetProperty(ref _IsEquipmentOpen, value); }
+            get { return isEquipmentOpen; }
+            set { SetProperty(ref isEquipmentOpen, value); }
         }
         public bool IsWorkerOpen                    //コンボボックスが開いているかどうか
         {
-            get { return _IsWorkerOpen; }
-            set { SetProperty(ref _IsWorkerOpen, value); }
+            get { return isWorkerOpen; }
+            set { SetProperty(ref isWorkerOpen, value); }
         }
         public bool IsFocusServer                   //フォーカス（サーバー設定）
         {
-            get { return _IsFocusServer; }
-            set { SetProperty(ref _IsFocusServer, value); }
+            get { return isFocusServer; }
+            set { SetProperty(ref isFocusServer, value); }
         }
         public List<string> ProcessNames            //工程区分コンボボックス
         {
-            get { return _ProcessNames; }
-            set { SetProperty(ref _ProcessNames, value); }
+            get { return processNames; }
+            set { SetProperty(ref processNames, value); }
         }
         public List<string> Workers                 //作業者コンボボックス
         {
-            get { return _Workers; }
-            set { SetProperty(ref _Workers, value); }
+            get { return workers; }
+            set { SetProperty(ref workers, value); }
         }
         public List<string> EquipmentCODES          //設備コンボボックス
         {
-            get { return _EquipmentCODES; }
-            set { SetProperty(ref _EquipmentCODES, value); }
+            get { return equipmentCODES; }
+            set { SetProperty(ref equipmentCODES, value); }
         }
         public List<string> Servers                 //サーバーコンボックス
         {
-            get { return _Servers; }
-            set { SetProperty(ref _Servers, value); }
+            get { return servers; }
+            set { SetProperty(ref servers, value); }
         }
 
         //イベント

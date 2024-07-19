@@ -29,10 +29,10 @@ namespace Display
     //ViewModel
     public class ViewModelControlDefect : Common, IDefect
     {
-        //プロパティ変数
-        string _ProcessName;
-        string _Defect;
-        List<string> _Defects;
+        //変数
+        string processName;
+        string defect;
+        List<string> defects;
 
         //プロパティ
         public static ViewModelControlDefect Instance   //インスタンス
@@ -41,10 +41,10 @@ namespace Display
         { get; set; }
         public string ProcessName                       //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
                 if (ViewModelWindowMain.Instance.ProcessWork == "仕掛搬出")
@@ -56,13 +56,13 @@ namespace Display
         }
         public string Defect                            //不良内容
         {
-            get { return _Defect; }
-            set { SetProperty(ref _Defect, value); }
+            get { return defect; }
+            set { SetProperty(ref defect, value); }
         }
         public List<string> Defects                     //不良内容リスト
         {
-            get { return _Defects; }
-            set { SetProperty(ref _Defects, value); }
+            get { return defects; }
+            set { SetProperty(ref defects, value); }
         }
 
         //イベント

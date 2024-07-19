@@ -29,10 +29,10 @@ namespace Display
     //ViewModel
     public class ViewModelControlDefectCategory : Common, IDefectCategory
     {
-        //プロパティ変数
-        string _ProcessName;
-        string _DefectCategory;
-        List<string> _DefectCategorys;
+        //変数
+        string processName;
+        string defectCategory;
+        List<string> defectCategorys;
 
         //プロパティ
         public static ViewModelControlDefectCategory Instance       //インスタンス
@@ -41,23 +41,23 @@ namespace Display
         { get; set; }
         public string ProcessName                 //工程区分
         {
-            get { return _ProcessName; }
+            get { return processName; }
             set 
             { 
-                SetProperty(ref _ProcessName, value);
+                SetProperty(ref processName, value);
                 if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
         public string DefectCategory              //不良分類
         {
-            get { return _DefectCategory; }
-            set { SetProperty(ref _DefectCategory, value); }
+            get { return defectCategory; }
+            set { SetProperty(ref defectCategory, value); }
         }
         public List<string> DefectCategorys       //不良分類リスト
         {
-            get { return _DefectCategorys; }
-            set { SetProperty(ref _DefectCategorys, value); }
+            get { return defectCategorys; }
+            set { SetProperty(ref defectCategorys, value); }
         }
 
         //イベント
