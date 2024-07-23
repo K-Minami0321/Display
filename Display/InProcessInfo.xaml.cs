@@ -436,12 +436,7 @@ namespace Display
 
                 case "Completed":
                     //完了チェック
-                    
-                    
-                    //inProcess.IsCompleted = !inProcess.IsCompleted;
-
-
-
+                    inProcess.Completed = inProcess.Completed == "E" ? "" : "E";
                     break;
 
                 case "DisplayInfo":
@@ -485,6 +480,7 @@ namespace Display
                 var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
                 var inprocesscode = inProcess.GenerateCode(iProcess.Mark + inprocessdate);
                 InProcessCODE = inprocesscode;
+                inProcess.InProcessDate = SetToDay(DateTime.Now);       //強制的に本日にする
             }
 
             //登録処理
