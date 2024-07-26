@@ -73,12 +73,11 @@ namespace Display
         }
 
         //スタートページを表示
-        public void StartPage()
+        public void StartPage(string page)
         {
             //ページ移動
-            Type type = Type.GetType("Display." + INI.GetString("Page", "Initial"));
+            Type type = Type.GetType("Display." + page);
             ViewModelWindowMain.Instance.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
     }
-
 }

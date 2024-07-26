@@ -228,7 +228,6 @@ namespace Display
             ProcessName = ViewModelWindowMain.Instance.ProcessName;
             management.LotNumber = ViewModelManufactureInfo.Instance.LotNumber;
             manufacture.WorkProcess = ViewModelManufactureInfo.Instance.manufacture.WorkProcess;
-            DefectList = ViewModelManufactureInfo.Instance.DefectList;
         }
 
         //初期化

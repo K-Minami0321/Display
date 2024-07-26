@@ -174,7 +174,8 @@ namespace Display
         private void OnLoad()
         {
             WindowBehavior.Instance.iWindow = this;
-            StartPage();
+            StartPage(INI.GetString("Page", "Initial"));
+            ProcessName = INI.GetString("Page", "Process");
             VisiblePower = false;
             VisibleList = false;
             VisibleInfo = false;
@@ -214,9 +215,10 @@ namespace Display
                     break;
 
                 case "F1":
-                    //計画一覧画面
-                    FramePage = new PlanList();
-                    INI.WriteString("Page", "Initial", "PlanList");
+                    //実績登録画面
+                    ViewModelManufactureList.Instance.ManufactureCODE = null;
+                    FramePage = new ManufactureInfo();
+                    INI.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 
                 case "F2":
@@ -228,16 +230,16 @@ namespace Display
 
                 case "F3":
                     //搬出登録画面
+                    if (ProcessName != "プレス") { return; }
                     ViewModelTransportInfo.Instance.InProcessCODE = null;
                     FramePage = new TransportList();
                     INI.WriteString("Page", "Initial", "TransportList");
                     break;
 
                 case "F4":
-                    //実績登録画面
-                    ViewModelManufactureList.Instance.ManufactureCODE = null;
-                    FramePage = new ManufactureInfo();
-                    INI.WriteString("Page", "Initial", "ManufactureInfo");
+                    //計画一覧画面
+                    FramePage = new PlanList();
+                    INI.WriteString("Page", "Initial", "PlanList");
                     break;
 
                 case "F5":

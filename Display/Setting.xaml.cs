@@ -170,17 +170,13 @@ namespace Display
         //コンストラクター
         internal ViewModelSetting()
         {
-            manufacture = new Manufacture();
+            Instance = this;
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
-
-            //初期設定
             DisplayCapution();
             DisplayData();
             DisplayLog();
@@ -189,12 +185,8 @@ namespace Display
         //初期化
         private void DisplayCapution()
         {
-            //キャプション表示
-            ViewModelWindowMain.Instance.ProcessWork = "設定画面";
-            ViewModelWindowMain.Instance.ProcessName = "設定";
-            Version = CONST.DISPLAY_VERSION;
-
             //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.VisibleList = false;
@@ -202,8 +194,14 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.InitializeIcon();
+            ViewModelWindowMain.Instance.ProcessWork = "設定画面";
+            ViewModelWindowMain.Instance.ProcessName = "設定";
+            Version = CONST.DISPLAY_VERSION;
+        }
 
-            //初期表示
+        //初期化
+        public void Initialize()
+        {
             ProcessNames = ProcessCategory.ProcessList();       //コンボボックス設定
             Servers = Maintenance.SetServer();                  //サーバー設定
             IsFocusServer = true;                               //フォーカス
@@ -245,7 +243,7 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告"));
-                    if (result) { StartPage(); }
+                    if (result) { StartPage(INI.GetString("Page", "Initial")); }
                     break;
 
                 case "Server":
@@ -300,7 +298,7 @@ namespace Display
 
                 case "DisplayInfo":
                     //戻る
-                    StartPage();
+                    StartPage(INI.GetString("Page", "Initial"));
                     break;
 
                 case "DisplayPlan":
@@ -323,7 +321,8 @@ namespace Display
             INI.WriteString("Page", "Process", ProcessName);
             INI.WriteString("Page", "Equipment", EquipmentCODE);
             INI.WriteString("Page", "Worker", Worker);
-            StartPage();
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
+            StartPage(INI.GetString("Page", "Initial"));
         }
 
         //スワイプ処理
@@ -332,7 +331,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    StartPage();
+                    StartPage(INI.GetString("Page", "Initial"));
                     break;
             }
         }

@@ -39,11 +39,11 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="搬出日"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.TransportDate,Converter={StaticResource DateTimeConverter}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding management.LotNumber}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding inProcess.LotNumber}"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="形 状"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding management.ShapeName}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding inProcess.ShapeName}"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
                             <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
                                 <TextBlock Text="{Binding inProcess.Amount,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
@@ -73,9 +73,6 @@
                         </Grid>
                         <!-- 右領域 -->
                         <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
-                            <Grid  Visibility="{Binding VisibleTenKey,Converter={StaticResource CollapsedConverter}}">
-                                <local:ControlTenKey/>
-                            </Grid>
                             <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
                                 <local:ControlWorker/>
                             </Grid>

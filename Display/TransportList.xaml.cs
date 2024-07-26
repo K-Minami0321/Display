@@ -51,31 +51,26 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportList()
         {
+            Instance = this;
             inProcess = new InProcess();
+
+            //デフォルト値設定
+            SelectedIndex = -1;
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-
-            //初期設定
             DisplayCapution();
-            Initialize();
             DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = INI.GetString("Page", "Process"); ;
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
-
-            //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = false;
@@ -85,14 +80,15 @@ namespace Display
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconList = "ViewList";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
         }
 
         //初期化
         private void Initialize()
         {
             //初期設定
+            ProcessName = INI.GetString("Page", "Process");
             InProcessCODE = string.Empty;
-            SelectedIndex = -1;
         }
 
         //キーイベント

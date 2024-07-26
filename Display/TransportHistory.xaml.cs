@@ -24,7 +24,7 @@ namespace Display
         //プロパティ変数
         string processName;
         string inProcessCODE;
-        string inProcessDate;
+        string transportDate;
         bool visibleShape;
         bool visibleUnit;
         bool visibleWeight;
@@ -52,12 +52,12 @@ namespace Display
             get { return inProcessCODE; }
             set { SetProperty(ref inProcessCODE, value); }
         }
-        public string InProcessDate                         //作業日
+        public string TransportDate                         //作業日
         {
-            get { return inProcessDate; }
+            get { return transportDate; }
             set 
             { 
-                SetProperty(ref inProcessDate, value);
+                SetProperty(ref transportDate, value);
                 inProcess.InProcessDate = value;
                 DiaplayList();
             }
@@ -122,7 +122,7 @@ namespace Display
             ProcessName = INI.GetString("Page", "Process");
             ViewModelWindowMain.Instance.ProcessWork = "引取履歴";
 
-            //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = false;
@@ -132,13 +132,13 @@ namespace Display
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconList = "ViewList";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            Initialize();
+            
         }
 
         //初期化
         public void Initialize()
         {
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //キーイベント
@@ -163,17 +163,17 @@ namespace Display
 
                 case "PreviousDate":
                     //前日へ移動
-                    InProcessDate = DATETIME.AddDate(InProcessDate, -1).ToString("yyyyMMdd");
+                    TransportDate = DATETIME.AddDate(TransportDate, -1).ToString("yyyyMMdd");
                     break;
                 
                 case "NextDate":
                     //次の日へ移動
-                    InProcessDate = DATETIME.AddDate(InProcessDate, 1).ToString("yyyyMMdd");
+                    TransportDate = DATETIME.AddDate(TransportDate, 1).ToString("yyyyMMdd");
                     break;
 
                 case "Today":
                     //当日へ移動
-                    InProcessDate = DateTime.Now.ToString("yyyyMMdd");
+                    TransportDate = DateTime.Now.ToString("yyyyMMdd");
                     break;
             }
         }
@@ -181,8 +181,7 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            SelectedIndex = -1;
-            SelectTable = inProcess.SelectListTransportHistory(InProcessDate);           
+            SelectTable = inProcess.SelectListTransportHistory(TransportDate);           
         }
 
         //選択処理
@@ -191,7 +190,8 @@ namespace Display
             if(SelectedItem == null) { return; }
             InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
             ViewModelPlanList.Instance.LotNumber = null;
-            ViewModelWindowMain.Instance.FramePage = new InProcessInfo();
+            ViewModelTransportList.Instance.InProcessCODE = InProcessCODE;
+            ViewModelWindowMain.Instance.FramePage = new TransportInfo();
         }
 
         //スワイプ処理

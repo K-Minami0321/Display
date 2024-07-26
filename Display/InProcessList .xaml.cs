@@ -127,30 +127,25 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessList()
         {
+            Instance = this;
             inProcess = new InProcess();
+
+            //デフォルト値設定
+            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //ロード時
         private void OnLoad()
-        {
-            //インスタンス
-            Instance = this;
+        {           
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-
-            //初期設定
             DisplayCapution();
-            Initialize();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            ViewModelWindowMain.Instance.ProcessWork = "搬入履歴";
-
-            //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = true;
@@ -158,12 +153,14 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = true;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
+            ViewModelWindowMain.Instance.ProcessWork = "搬入履歴";
         }
         
         //初期化
         public void Initialize()
         {
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            ProcessName = INI.GetString("Page", "Process");
+            InProcessCODE = string.Empty;
         }
 
         //キーイベント
@@ -208,7 +205,6 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            SelectedIndex = -1;
             SelectTable = inProcess.SelectList(null, null, InProcessDate);           
         }
 

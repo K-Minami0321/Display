@@ -300,11 +300,8 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬入";
-
             //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = true;
@@ -312,15 +309,16 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            Initialize(false);
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬入";
         }
 
         //初期化
-        public void Initialize(bool flg = true)
+        public void Initialize()
         {
             //入力データ初期化
             inProcess.InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = string.Empty;
+            ProcessName = INI.GetString("Page", "Process");
             inProcess.ProductName = string.Empty;
             inProcess.LotNumber = string.Empty;
             inProcess.Amount = string.Empty;
@@ -345,12 +343,6 @@ namespace Display
             IsFocusUnit = false;
             IsFocusCompleted = false;
             IsFocusAmount = false;
-
-            if (flg) 
-            {
-                ViewModelInProcessList.Instance.InProcessCODE = null;
-                ViewModelPlanList.Instance.LotNumber = null;
-            }
         }
 
         //ロット番号処理
@@ -447,13 +439,15 @@ namespace Display
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    Initialize(); SetGotFocus("LotNumber");
+                    Initialize(); 
+                    SetGotFocus("LotNumber");
                     ViewModelWindowMain.Instance.FramePage = new InProcessList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    Initialize(); SetGotFocus("LotNumber");
+                    Initialize(); 
+                    SetGotFocus("LotNumber");
                     ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
             }

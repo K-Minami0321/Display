@@ -35,21 +35,9 @@ namespace Display
             get { return equipmentCODE; }
             set
             {
-                equipmentCODE = value;
-
-                equipment.EquipmentCODE = EquipmentCODE;
-                equipment.Select();
-
+                equipment = new Equipment(value);
                 var name = equipment.EquipmentName;
-                if (!string.IsNullOrEmpty(name))
-                {
-                    name = name + " - " + EquipmentCODE;
-                }
-                else
-                {
-                    name = iProcess.Name;
-                }
-                ViewModelWindowMain.Instance.ProcessWork = name;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name : name + " - " + value;
             }
         }
         public string ProcessName                           //工程区分
@@ -83,49 +71,41 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
-            equipment = new Equipment();
+            Instance = this;
             manufacture = new Manufacture();
-            ManufactureDate = SetToDay(DateTime.Now);
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+
+            //デフォルト値設定
+            ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
+            SelectedIndex = -1;
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-
-            //初期設定
             DisplayCapution();
-            Initialize();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            EquipmentCODE = INI.GetString("Page", "Equipment");
-
-            //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = true;
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList = "refresh";
+            DiaplayList();
         }
 
         //初期化
         private void Initialize()
         {
-            //初期設定
+            ProcessName = INI.GetString("Page", "Process");
+            EquipmentCODE = INI.GetString("Page", "Equipment");
             ManufactureCODE = string.Empty;
-            SelectedIndex = -1;
         }
 
         //キーイベント
@@ -169,10 +149,8 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            manufacture.ManufactureDate = ManufactureDate;
-            manufacture.Equipment1 = EquipmentCODE;
             if (iProcess == null) { return; }
-            SelectTable = manufacture.SelectHistoryListDate(iProcess.Name);
+            SelectTable = manufacture.SelectHistoryListDate(iProcess.Name, ManufactureDate);
         }
 
         //選択処理

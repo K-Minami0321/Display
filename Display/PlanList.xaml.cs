@@ -20,7 +20,6 @@ namespace Display
     //ViewModel
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
-
         //変数
         string lotNumber;
         string processName;
@@ -32,14 +31,14 @@ namespace Display
         bool enableSelect;
 
         //プロパティ
-        public static ViewModelPlanList Instance            //インスタンス
+        public static ViewModelPlanList Instance    //インスタンス
         { get; set; } = new ViewModelPlanList();
-        public string LotNumber       //ロット番号
+        public string LotNumber                     //ロット番号
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
         }
-        public string ProcessName     //工程区分
+        public string ProcessName                   //工程区分
         {
             get { return plan.ProcessName; }
             set 
@@ -49,7 +48,7 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string InProcessCODE   //搬入CODE
+        public string InProcessCODE                 //搬入CODE
         {
             get { return plan.InProcessCODE; }
             set 
@@ -58,27 +57,27 @@ namespace Display
                 plan.InProcessCODE = value;
             }
         }
-        public string UpdateDate      //更新表示
+        public string UpdateDate                    //更新表示
         {
             get { return updateDate; }
             set { SetProperty(ref updateDate, value); }
         }
-        public string File            //ファイル名
+        public string File                          //ファイル名
         {
             get { return file; }
             set { SetProperty(ref file, value); }
         }
-        public bool VisibleUnit       //表示・非表示（コイル・シート絞り込み）
+        public bool VisibleUnit                     //表示・非表示（コイル・シート絞り込み）
         {
             get { return visibleUnit; }
             set { SetProperty(ref visibleUnit, value); }
         }
-        public bool VisibleAmount     //表示・非表示（完了数）
+        public bool VisibleAmount                   //表示・非表示（完了数）
         {
             get { return visibleAmount; }
             set { SetProperty(ref visibleAmount, value); }
         }
-        public bool EnableSelect      //選択可能
+        public bool EnableSelect                    //選択可能
         {
             get { return enableSelect; }
             set { SetProperty(ref enableSelect, value); }
@@ -93,7 +92,10 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
+            Instance = this;
             plan = new Plan();
+
+            //デフォルト値設定
             SelectedIndex = -1;
             ScrollIndex = 0;
         }
@@ -101,26 +103,17 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
-
-            //初期設定
-            Initialize();
+            DisplayCapution();
             DiaplayList();
         }
 
-        //初期化
-        private void Initialize()
+        //キャプション・ボタン表示
+        private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
-            UpdateDate = plan.SelectFile() + "版";
-
             //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.VisibleDefect = false;
@@ -128,6 +121,20 @@ namespace Display
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconPlan = "refresh";
             ViewModelWindowMain.Instance.IconSize = 35;
+            ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
+        }
+
+        //初期化
+        private void Initialize()
+        {
+            //初期化
+            LotNumber = string.Empty;
+            ProcessName = INI.GetString("Page", "Process");
+            ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
+            ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
+            UpdateDate = plan.SelectFile() + "版";
+            VisibleUnit = ProcessName == "合板" ? true : false;
+            VisibleAmount = !VisibleUnit;
 
             //画面設定
             switch (INI.GetString("Page", "Initial"))
@@ -145,10 +152,6 @@ namespace Display
                     EnableSelect = true;
                     break;
             }
-
-            //表示・非表示
-            VisibleUnit = ProcessName == "合板" ? true : false;
-            VisibleAmount = !VisibleUnit;
         }
 
         //キーイベント
@@ -157,14 +160,13 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
-                    //作業登録画面
-                    LotNumber = null;
-                    ViewModelWindowMain.Instance.FramePage = new InProcessInfo();
+                    //登録画面
+                    StartPage(INI.GetString("Page", "Initial"));
                     break;
 
                 case "DisplayList":
-                    //仕掛在庫一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new InProcessList();
+                    //一覧画面
+                    StartPage(INI.GetString("Page", "Initial").Replace("Info", "List"));
                     break;
 
                 case "DisplayPlan":
@@ -201,10 +203,10 @@ namespace Display
         //選択処理
         public void SelectList()
         {
-            if (SelectedIndex == null) { return; }
+            if (SelectedItem == null) { return; }
             if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
             LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
-            if (EnableSelect) { StartPage(); }
+            if (EnableSelect) { StartPage(INI.GetString("Page", "Initial")); }
         }
 
         //スワイプ処理

@@ -15,7 +15,7 @@ namespace Display
     {
         public TransportInfo()
         {
-            DataContext = ViewModelTransportInfo.Instance;
+            DataContext = new ViewModelTransportInfo();
             InitializeComponent();
         }
     }
@@ -24,17 +24,20 @@ namespace Display
     public class ViewModelTransportInfo : Common, IKeyDown, IWorker
     {
         //変数
-        string inProcessCODE;
-        string lotNumber;
+        bool regFlg;
         string processName;
-        int amountLength = 6;
-        bool visibleTenKey;
+        string inProcessCODE;
         bool visibleWorker;
         bool isFocusWorker;
 
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
+        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return regFlg; }
+            set { SetProperty(ref regFlg, value); }
+        }
         public override string ProcessName                  //工程区分
         {
             get { return processName; }
@@ -48,27 +51,7 @@ namespace Display
         public override string InProcessCODE                //仕掛コード
         {
             get { return inProcessCODE; }
-            set 
-            {
-                SetProperty(ref inProcessCODE, value);
-                if (value == null) { return; }
-                DisplayData();
-            }
-        }
-        public override string LotNumber                    //ロット番号
-        {
-            get { return lotNumber; }
-            set { SetProperty(ref lotNumber, value); }
-        }
-        public int AmountLength                             //文字数（数量）
-        {
-            get { return amountLength; }
-            set { SetProperty(ref amountLength, value); }
-        }
-        public bool VisibleTenKey                           //表示・非表示（テンキー）
-        {
-            get { return visibleTenKey; }
-            set { SetProperty(ref visibleTenKey, value); }
+            set { SetProperty(ref inProcessCODE, value); }
         }
         public bool VisibleWorker                           //表示・非表示（作業者）
         {
@@ -94,30 +77,29 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportInfo()
         {
+            Instance = this;
+
+            //仕掛移動インスタンス
+            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
             inProcess = new InProcess();
-            management = new Management();
+            DisplayData();
+
+            //デフォルト値設定
+            ProcessName = INI.GetString("Page", "Process");
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
             DisplayCapution();
-            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //キャプション表示
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
-
-            //ボタン設定
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = false;
@@ -125,31 +107,17 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
+            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            Initialize();
+            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
         }
 
         //初期化
         public void Initialize()
         {
-            //入力データ初期化
-            inProcess.TransportDate = SetToDay(DateTime.Now);
-            inProcess.ProductName = string.Empty;
-            inProcess.LotNumber = string.Empty;
-            inProcess.Amount = string.Empty;
+            if (!regFlg) { return; }
             inProcess.TransportWorker = INI.GetString("Page", "Worker");
-            IsFocusWorker = true;
-        }
-
-        //ロット番号処理
-        private void DisplayLot()
-        {
-            //データ表示
-            iShape = Shape.SetShape(management.ShapeName);
-            inProcess.LotNumber = LotNumber;
-
-            //サウンド再生
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            inProcess.TransportDate = SetToDay(DateTime.Now);
         }
 
         //データ表示
@@ -157,15 +125,30 @@ namespace Display
         {
             //前工程の仕掛取得
             inProcess.TransportSelect(InProcessCODE);
-            LotNumber = management.Display(inProcess.LotNumber);
+            DisplayLot(inProcess.LotNumber);
+            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
             SetGotFocus("Worker");
+        }
+
+        //ロット番号処理
+        private void DisplayLot(string lotnumber)
+        {
+            //ロットインスタンス
+            management = new Management();
+            LotNumber = management.Display(lotnumber);
+
+            //データ表示
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            iShape = Shape.SetShape(management.ShapeName);
+            inProcess.LotNumber = management.LotNumber;
+            inProcess.ProductName = management.ProductName;
+            inProcess.ShapeName = management.ShapeName;
         }
 
         //キーイベント
         public async void KeyDown(object value)
         {
             var result = false;
-
             switch (value)
             {
                 case "Regist":
@@ -274,7 +257,6 @@ namespace Display
             {
                 case "Worker":
                     IsFocusWorker = true;
-                    VisibleTenKey = false;
                     VisibleWorker = true;
                     break;
 
@@ -284,10 +266,17 @@ namespace Display
         }
 
         //フォーカス処理（LostFoucus）
-        private void SetLostFocus()
+        private void SetLostFocus(object value)
         {
-            LotNumber = management.Display(manufacture.LotNumber);
-            DisplayLot();
+            switch (value)
+            {
+                case "LotNumber":
+                    DisplayLot(inProcess.LotNumber);
+                    break;
+
+                default :
+                    break;
+            }
         }
 
         //スワイプ処理

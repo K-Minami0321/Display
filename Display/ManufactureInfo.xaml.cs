@@ -14,12 +14,9 @@ namespace Display
     //画面クラス
     public partial class ManufactureInfo : UserControl
     {
-        public static ManufactureInfo Instance
-        { get; set; }
         public ManufactureInfo()
         {
-            Instance = this;
-            DataContext = ViewModelManufactureInfo.Instance;
+            DataContext = new ViewModelManufactureInfo();
             InitializeComponent();
         }
     }
@@ -28,18 +25,17 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess
     {
         //変数
+        bool regFlg;
+        string status;
         string processName;
         string manufactureCODE;
         string lotNumber;
         string equipmentCODE;
-        DataTable defectList;
-        bool editFlg;
-        bool regFlg;
-        string status;
         string manufactureDate;
         string equipment1;
         string equipment2;
         string team;
+        string amountLabel;
         string productName;
         int lotNumberLength = 10;
         int startTimeLength = 4;
@@ -71,6 +67,26 @@ namespace Display
         //プロパティ
         public static ViewModelManufactureInfo Instance     //インスタンス
         { get; set; } = new ViewModelManufactureInfo();
+        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return regFlg; }
+            set
+            {
+                SetProperty(ref regFlg, value);
+                EnabledControl1 = !value;
+                EnabledControl2 = !value;
+                VisibleButtonStart = value;
+            }
+        }
+        public string Status                                //入力状況
+        {
+            get { return status; }
+            set
+            {
+                SetProperty(ref status, value);
+                SetStatus();
+            }
+        }
         public override string ProcessName                  //工程区分
         {
             get { return processName; }
@@ -104,11 +120,10 @@ namespace Display
         }
         public override string ManufactureCODE              //製造CODE
         {
-            get { return manufacture.ManufactureCODE; }
+            get { return manufactureCODE; }
             set
             {
                 SetProperty(ref manufactureCODE, value);
-                manufacture.ManufactureCODE = value;
                 RegFlg = string.IsNullOrEmpty(value);
             }
         }
@@ -121,74 +136,11 @@ namespace Display
         {
             get { return equipmentCODE; }
             set 
-            { 
-                 equipmentCODE = value;
-
-                equipment.EquipmentCODE = value;
-                equipment.Select();
-
-                var name = equipment.EquipmentName;
-                if (!string.IsNullOrEmpty(equipment.EquipmentName))
-                {
-                    name = name + " - " + EquipmentCODE;
-                    Team = equipment.Team;
-                }
-                else
-                {
-                    if (iProcess == null) { return; }
-                    name = iProcess.Name;
-                }
-                ViewModelWindowMain.Instance.ProcessWork = name;
-                Equipment1 = value;
-            }
-        }
-        public DataTable DefectList                         //不良データ
-        {
-            get { return defectList; }
-            set { SetProperty(ref defectList, value); }
-        }
-        public bool EditFlg                                 //編集中モード（true:編集可能、編集不可）
-        {
-            get { return editFlg; }
-            set 
-            { 
-                SetProperty(ref editFlg, value);
-                EnabledControl1 = value;
-                EnabledControl2 = value;
-                VisibleButtonStart = !value;
-            }
-        }
-        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set 
-            { 
-                SetProperty(ref regFlg, value);
-                if (!value) 
-                { 
-                    DisplayData();
-                    //編集できるタイミング調整
-                    EditFlg = true;
-                }
-                //VisibleEdit = !value;
-            }
-        }
-        public string Status                                //入力状況
-        {
-            get { return status; }
-            set 
-            { 
-                SetProperty(ref status, value);
-                SetStatus();
-            }
-        }
-        public string ProductName                           //品番
-        {
-            get { return manufacture.ProductName; }
-            set
             {
-                SetProperty(ref productName, value);
-                manufacture.ProductName = value;
+                equipment = new Equipment(value);
+                var name = equipment.EquipmentName;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name : name + " - " + value;
+                Equipment1 = value;
             }
         }
         public string Equipment1                            //設備
@@ -217,6 +169,11 @@ namespace Display
                 SetProperty(ref team, value);
                 manufacture.Team = value;
             }
+        }
+        public string AmountLabel                           //数量ラベル
+        {
+            get { return management.AmountLabel; }
+            set { SetProperty(ref amountLabel, value); }
         }
         public int LotNumberLength                          //文字数（ロット番号）
         {
@@ -366,29 +323,33 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureInfo()
         {
+            Instance = this;
+
+            //実績データインスタンス
+            ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
             manufacture = new Manufacture();
-            management = new Management();
-            equipment = new Equipment();
+            DisplayData();
+
+            //デフォルト値設定
+            ProcessName = INI.GetString("Page", "Process");
+            Status = "登録";  
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelControlWorkProcess.Instance.IworkProcess = this;
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
             DisplayCapution();
             SetGotFocus("LotNumber");
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
-        {          
-            //ボタン設定
+        {
+            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = true;
@@ -396,71 +357,60 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            Initialize();           
-            
-            //一覧からデータ読み込み（修正）
-            ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
-            DefectList = ViewModelDefectInfo.Instance.DefectList;
-
-            if (RegFlg)
-            {
-                //予定表からロット番号取得
-                LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
-                LotNumber = management.Display(manufacture.LotNumber);
-                DisplayLot();
-                SetGotFocus("Worker");
-            }
             if (string.IsNullOrEmpty(ProductName)) { SetGotFocus("LotNumber"); }
         }
 
         //初期化
         public void Initialize()
         {
-            ManufactureCODE = string.Empty;
-            LotNumber = string.Empty;
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            EquipmentCODE = INI.GetString("Page", "Equipment");
+            if (!RegFlg) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
-            manufacture.ProductName = string.Empty;
+            EquipmentCODE = INI.GetString("Page", "Equipment");
             manufacture.Worker = INI.GetString("Page", "Worker");
+            LotNumber = string.Empty;
+            manufacture.ProductName = string.Empty;
             manufacture.StartTime = string.Empty;
             manufacture.EndTime = string.Empty;
             manufacture.WorkTime = string.Empty;
             manufacture.Amount = string.Empty;
             manufacture.Weight = string.Empty;
-            management.AmountLabel = "数 量";
-            Status = "登録";
-        }
+            manufacture.Completed = string.Empty;
+            manufacture.Sales = string.Empty;
+            AmountLabel = "数 量";
+            IsFocusLotNumber = false;
+            IsFocusWorker = false;
+            IsFocusWorkProcess = false;
+            IsFocusStartTime = false;
+            IsFocusEndTime = false;
+            IsFocusAmount = false;
+            IsFocusCompleted = false;
+            IsFocusSales = false;
 
-        //ロット情報
-        private void DisplayLot(string productname)
-        {
-            //データ表示
-            iShape = Shape.SetShape(management.ShapeName);
-            manufacture.LotNumber = LotNumber;
-            manufacture.ProductName = management.ProductName;
-
-            //サウンド再生
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != productname) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-        }
-
-        //ロット番号処理
-        private void DisplayLot()
-        {
-            //データ表示
-            iShape = Shape.SetShape(management.ShapeName);
-            manufacture.LotNumber = LotNumber;
-
-            //サウンド再生
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            //予定表からロット番号取得
+            LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
+            DisplayLot(LotNumber);
         }
 
         //データ表示
         private void DisplayData()
         {
             manufacture.Select(ManufactureCODE);
-            LotNumber = management.Display(manufacture.LotNumber);
-            DisplayLot();
+            DisplayLot(manufacture.LotNumber);
+        }
+
+        //ロット番号処理
+        private void DisplayLot(string lotnumber)
+        {
+            //ロットインスタンス
+            management = new Management();
+            LotNumber = management.Display(lotnumber);
+
+            //データ表示
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            iShape = Shape.SetShape(management.ShapeName);
+            manufacture.LotNumber = LotNumber;
+            manufacture.ProductName = management.ProductName;
+            AmountLabel = management.Amount;
         }
 
         //キーイベント
@@ -567,13 +517,6 @@ namespace Display
                 case "Sales":
                     //売上
                     manufacture.Sales = manufacture.Sales == "*" ? "" : "*";
-                    break;
-
-                case "DefectList":
-                    //不良一覧
-                    VisibleTenKey = false;
-                    VisibleWorker = false;
-                    VisibleWorkProcess = false;
                     break;
 
                 case "DisplayInfo":
@@ -725,6 +668,7 @@ namespace Display
             }
 
             //登録処理
+            manufacture.LotNumber = LotNumber;
             manufacture.InsertLog(RegFlg);
             manufacture.Resist(ManufactureCODE);
 
@@ -790,7 +734,6 @@ namespace Display
         {
             manufacture.DeleteLog();
             manufacture.Delete(ManufactureCODE);        //製造実績削除
-            defect.Delete(ManufactureCODE);             //製造不良削除
 
             //処理完了
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
@@ -1111,8 +1054,7 @@ namespace Display
             switch (value)
             {
                 case "LotNumber":
-                    LotNumber = management.Display(LotNumber);
-                    DisplayLot(ProductName);
+                    DisplayLot(LotNumber);
                     break;
 
                 case "StartTime":
