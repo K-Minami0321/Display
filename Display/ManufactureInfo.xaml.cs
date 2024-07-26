@@ -1108,7 +1108,7 @@ namespace Display
         //フォーカス処理（LostFoucus）
         private void SetLostFocus(object value)
         {
-            switch (Focus)
+            switch (value)
             {
                 case "LotNumber":
                     LotNumber = management.Display(LotNumber);
