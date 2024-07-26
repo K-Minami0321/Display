@@ -32,9 +32,6 @@
     <Compile Update="Control\ControlWorkProcess.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="DefectInfo.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="TransportHistory.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

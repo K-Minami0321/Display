@@ -247,11 +247,6 @@ namespace Display
 
                     break;
 
-                case "F11":
-                    //不良登録画面（Debug）
-                    //FramePage = new DefectInfo();
-                    break;
-
                 case "F12":
                     //設定画面
                     ViewModelManufactureInfo.Instance.Status = null;
