@@ -540,11 +540,6 @@ namespace Display
                     //計画一覧画面
                     ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
-
-                case "DefectInfo":
-                    //不良登録画面
-                    ViewModelWindowMain.Instance.FramePage = new DefectInfo();
-                    break;
             }
         }
 

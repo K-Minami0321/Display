@@ -24,11 +24,11 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
     {
         //変数
+        bool regFlg;
         string processName;
         string inProcessCODE;
         string inProcessDate;
         string lotNumber;
-        bool regFlg;
         int amountWidth = 150;
         int amountRow = 5;
         string notice;
@@ -56,6 +56,29 @@ namespace Display
         //プロパティ
         public static ViewModelInProcessInfo Instance   //インスタンス
         { get; set; } = new ViewModelInProcessInfo();
+        public bool RegFlg                              //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return regFlg; }
+            set
+            {
+                SetProperty(ref regFlg, value);
+                VisibleCancel = value;
+                VisibleDelete = !value;
+
+                //データ取得
+                if (!value)
+                {
+                    DisplayData();
+                }
+                else
+                {
+                    //予定表からロット番号取得
+                    LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
+                    DisplayLot();
+                    SetGotFocus("Worker");
+                }
+            }
+        }
         public override string ProcessName              //工程区分
         {
             get { return processName; }
@@ -115,29 +138,6 @@ namespace Display
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
-        }
-        public bool RegFlg                              //新規・既存フラグ
-        {
-            get { return regFlg; }
-            set 
-            { 
-                SetProperty(ref regFlg, value);
-                VisibleCancel = value;
-                VisibleDelete = !value;
-
-                //データ取得
-                if (!value) 
-                { 
-                    DisplayData();
-                }
-                else
-                {
-                    //予定表からロット番号取得
-                    LotNumber = management.Display(ViewModelPlanList.Instance.LotNumber);
-                    DisplayLot();
-                    SetGotFocus("Worker");
-                }
-            }
         }
         public int AmountWidth                          //コイル数テキストボックスのWidth
         {
@@ -275,16 +275,18 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo()
         {
+            Instance = this;
             inProcess = new InProcess();
+
+
+
+
             management = new Management();
-            product = new Product();
         }
 
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
@@ -300,7 +302,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //ボタン設定
             Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;

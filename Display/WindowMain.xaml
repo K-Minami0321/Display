@@ -107,16 +107,6 @@
                                 </i:Interaction.Triggers>
                             </Button>-->
                         </StackPanel>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DefectInfo" Visibility="{Binding VisibleDefect,Converter={StaticResource CollapsedConverter}}">
-                            <WrapPanel>
-                                <materialDesign:PackIcon Kind="ToyBrickRemove" Height="30" Width="30" HorizontalAlignment="Center"/>
-                            </WrapPanel>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TouchDown">
-                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DefectInfo"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList,Converter={StaticResource CollapsedConverter}}">
                             <WrapPanel>
                                 <materialDesign:PackIcon Kind="{Binding IconList,FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
