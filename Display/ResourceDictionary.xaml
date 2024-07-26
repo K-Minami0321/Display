@@ -229,7 +229,6 @@
         <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="InputMethod.IsInputMethodEnabled" Value="False"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Background" Value="#FFFFFF"/>

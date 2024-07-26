@@ -95,7 +95,6 @@ namespace Display
             DataObject.AddPastingHandler(this.AssociatedObject, PastingHandler);
         }
 
-
         protected override void OnDetaching()
         {
             base.OnDetaching();

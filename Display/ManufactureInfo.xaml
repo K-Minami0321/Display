@@ -42,7 +42,8 @@
                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号" />
                             <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
-                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" IsEnabled="{Binding EnabledControl1}">
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}"
+                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
@@ -65,7 +66,8 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="工 程"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorkProcess" Text="{Binding manufacture.WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,0,0" IsEnabled="{Binding EnabledControl1}">
+                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorkProcess" Text="{Binding manufacture.WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,-5,0" 
+                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="True">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
@@ -86,7 +88,7 @@
                             </TextBox>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="担当者"/>
                             <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextWorker" Text="{Binding manufacture.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
-                                     IsEnabled="{Binding EnabledControl1}">
+                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="True">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
@@ -107,15 +109,61 @@
                             </TextBox>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="作業時間"/>
                             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                                <TextBlock Text="{Binding manufacture.StartTime}"/>
-                                <TextBlock Text="～" Visibility="{Binding manufacture.StartTime,Converter={StaticResource CollapsedValueConverter}}" Margin="20,0,20,0"/>
-                                <TextBlock Text="{Binding manufacture.EndTime}"/>
+                                <TextBox x:Name="TextStartTime" Text="{Binding manufacture.StartTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                                         MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}">
+                                    <TextBox.Resources>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusStartTime}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextStartTime}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Resources>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="StartTime"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="StartTime"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <i:Interaction.Behaviors>
+                                        <local:TextBoxMode Mode="Number"/>
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBlock Text="{Binding manufacture.StartTime}" Visibility="Collapsed" />
+                                <TextBlock Text="～" Margin="10,0,10,0"/>
+                                <TextBox x:Name="TextEndTime" Text="{Binding manufacture.EndTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                                         MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}">
+                                    <TextBox.Resources>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFocusEndTime}" Value="True">
+                                                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextEndTime}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Resources>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="EndTime"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="EndTime"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <i:Interaction.Behaviors>
+                                        <local:TextBoxMode Mode="Number"/>
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                                <TextBlock Text="{Binding manufacture.EndTime}" Visibility="Collapsed"/>
                             </StackPanel>
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                                <TextBox x:Name="TextAmount" Text="{Binding manufacture.Amount}" Width="140" 
-                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
-                                         IsEnabled="{Binding EnabledControl2}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}">
+                                <TextBox x:Name="TextAmount" Text="{Binding manufacture.Amount}" Width="130" 
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 
+                                         IsEnabled="{Binding EnabledControl2}" InputMethod.IsInputMethodEnabled="False">
                                     <TextBox.Resources>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                             <Style.Triggers>
@@ -134,8 +182,8 @@
                                         <local:TextBoxMode Mode="Number"/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding manufacture.IsCompleted}" FontSize="20" 
-                                          Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding manufacture.Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
+                                          Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
                                     <CheckBox.Resources>
                                         <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                             <Style.Triggers>
@@ -154,8 +202,8 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </CheckBox>
-                                <CheckBox x:Name="CheckSales" Content="売 上" IsChecked="{Binding manufacture.IsSales}" FontSize="20"
-                                          Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                <CheckBox x:Name="CheckSales" Content="売 上" IsChecked="{Binding manufacture.Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
+                                          Visibility="{Binding VisibleSeal,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
                                     <CheckBox.Resources>
                                         <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                             <Style.Triggers>
@@ -205,7 +253,6 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleButtonCancel,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
