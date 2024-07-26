@@ -3,7 +3,6 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -139,7 +138,7 @@ namespace Display
             {
                 equipment = new Equipment(value);
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name : name + " - " + value;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
                 Equipment1 = value;
             }
         }
@@ -521,7 +520,11 @@ namespace Display
 
                 case "DisplayInfo":
                     //加工登録画面
-                    ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
+                    RegFlg = true;
+                    ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
+                    ViewModelPlanList.Instance.LotNumber = string.Empty;
+                    Initialize();
+                    Status = "登録";
                     break;
 
                 case "DisplayList":
@@ -651,7 +654,7 @@ namespace Display
 
             //ボタン設定
             ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
+            ViewModelWindowMain.Instance.VisibleInfo = true;
             ViewModelWindowMain.Instance.VisibleArrow = false;
         }
 

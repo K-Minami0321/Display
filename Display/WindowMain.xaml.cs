@@ -249,7 +249,7 @@ namespace Display
 
                 case "F11":
                     //不良登録画面（Debug）
-                    FramePage = new DefectInfo();
+                    //FramePage = new DefectInfo();
                     break;
 
                 case "F12":

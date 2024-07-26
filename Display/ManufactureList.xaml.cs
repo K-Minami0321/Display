@@ -37,7 +37,7 @@ namespace Display
             {
                 equipment = new Equipment(value);
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name : name + " - " + value;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name  + "実績": name + " - " + value;
             }
         }
         public string ProcessName                           //工程区分
