@@ -468,7 +468,6 @@ namespace Display
                     if (result) 
                     { 
                         RegistData();
-                        ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     }
                     break;
 
@@ -594,7 +593,6 @@ namespace Display
 
                     //一覧からデータ読み込み
                     ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
-                    RegFlg = string.IsNullOrEmpty(ManufactureCODE);
                     break;
 
                 case "中断":
@@ -659,6 +657,7 @@ namespace Display
             manufacture.Resist(ManufactureCODE);
 
             //初期設定
+            RegFlg = true;
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
             Initialize();
         }

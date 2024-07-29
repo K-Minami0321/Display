@@ -376,7 +376,11 @@ namespace Display
                     result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
-                    if (result) { DeleteDate(); SetGotFocus("LotNumber"); }
+                    if (result) 
+                    { 
+                        DeleteDate();
+                        ViewModelWindowMain.Instance.FramePage = new InProcessList();
+                    }
                     break;
 
                 case "Cancel":
@@ -459,6 +463,7 @@ namespace Display
             //登録処理
             inProcess.InsertLog(RegFlg);
             inProcess.Resist(InProcessCODE);
+            RegFlg = true;
 
             //処理完了
             Initialize();
@@ -517,6 +522,7 @@ namespace Display
             inProcess.DeleteHistory(InProcessCODE);
 
             //処理完了
+            ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
             Initialize();
         }
 
