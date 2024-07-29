@@ -46,12 +46,12 @@
                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding inProcess.ShapeName}"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
                             <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
-                                <TextBlock Text="{Binding inProcess.Amount,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
+                                <TextBlock Text="{Binding inProcess.Unit,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
                                 <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
                             </StackPanel>
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
                             <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
-                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.IsInputMethodEnabled="True">
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.IsInputMethodEnabled="True" IsEnabled="{Binding IsEnable}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
@@ -72,7 +72,7 @@
                             </TextBox>
                         </Grid>
                         <!-- 右領域 -->
-                        <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
+                        <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left" IsEnabled="{Binding IsEnable}">
                             <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
                                 <local:ControlWorker/>
                             </Grid>
@@ -81,7 +81,7 @@
                 </StackPanel>
             </Grid>
             <!-- 下領域 -->
-            <Grid>
+            <Grid Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
                         <WrapPanel>

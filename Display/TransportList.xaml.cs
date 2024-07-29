@@ -55,7 +55,6 @@ namespace Display
             inProcess = new InProcess();
 
             //デフォルト値設定
-            ProcessName = INI.GetString("Page", "Process");
             SelectedIndex = -1;
         }
 

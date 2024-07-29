@@ -27,7 +27,6 @@ namespace Display
         bool regFlg;
         string status;
         string processName;
-        string manufactureCODE;
         string lotNumber;
         string equipmentCODE;
         string manufactureDate;
@@ -95,6 +94,7 @@ namespace Display
             {
                 SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
+                ViewModelWindowMain.Instance.ProcessName = value;
                 manufacture.ProcessName = ProcessName;
                 
                 switch (value)
@@ -117,15 +117,6 @@ namespace Display
                         if (RegFlg) { manufacture.WorkProcess = ""; }
                         break;
                 }
-            }
-        }
-        public override string ManufactureCODE              //製造CODE
-        {
-            get { return manufactureCODE; }
-            set
-            {
-                SetProperty(ref manufactureCODE, value);
-                RegFlg = string.IsNullOrEmpty(value);
             }
         }
         public override string LotNumber                    //ロット番号
@@ -332,14 +323,14 @@ namespace Display
             Instance = this;
 
             //実績データインスタンス
-            ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
-            manufacture = new Manufacture(ManufactureCODE);
+            manufacture = new Manufacture();
+            manufacture.ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
             DisplayLot(manufacture.LotNumber);
-            IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
 
             //デフォルト値設定
+            RegFlg = string.IsNullOrEmpty(manufacture.ManufactureCODE);
+            IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
             ProcessName = INI.GetString("Page", "Process");
-
         }
 
         //ロード時
@@ -372,12 +363,13 @@ namespace Display
             Status = "登録";
 
             if (!RegFlg) { return; }
-            ProcessName = INI.GetString("Page", "Process");
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
             EquipmentCODE = INI.GetString("Page", "Equipment");
             manufacture.Worker = INI.GetString("Page", "Worker");
             LotNumber = string.Empty;
+            manufacture.LotNumber = string.Empty;
             manufacture.ProductName = string.Empty;
+            manufacture.WorkProcess = string.Empty;
             manufacture.StartTime = string.Empty;
             manufacture.EndTime = string.Empty;
             manufacture.WorkTime = string.Empty;
@@ -592,7 +584,7 @@ namespace Display
                     SetGotFocus("Amount");
 
                     //一覧からデータ読み込み
-                    ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
+                    manufacture.ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
                     break;
 
                 case "中断":
@@ -648,13 +640,13 @@ namespace Display
             {
                 var date = STRING.ToDateDB(manufacture.ManufactureDate);
                 var code = manufacture.GenerateCode(mark + date);
-                ManufactureCODE = code;
+                manufacture.ManufactureCODE = code;
             }
 
             //登録処理
             manufacture.LotNumber = LotNumber;
             manufacture.InsertLog(RegFlg);
-            manufacture.Resist(ManufactureCODE);
+            manufacture.Resist(manufacture.ManufactureCODE);
 
             //初期設定
             RegFlg = true;
@@ -718,7 +710,7 @@ namespace Display
         private void DeleteDate()
         {
             manufacture.DeleteLog();
-            manufacture.Delete(ManufactureCODE);        //製造実績削除
+            manufacture.Delete(manufacture.ManufactureCODE);        //製造実績削除
 
             //処理完了
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;

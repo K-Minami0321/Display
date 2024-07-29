@@ -1,10 +1,12 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 #pragma warning disable
 namespace Display
@@ -24,19 +26,14 @@ namespace Display
     {
         //変数
         bool regFlg;
+        bool isEnable;
         string processName;
-        string inProcessCODE;
         bool visibleWorker;
         bool isFocusWorker;
 
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
-        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set { SetProperty(ref regFlg, value); }
-        }
         public override string ProcessName                  //工程区分
         {
             get { return processName; }
@@ -47,10 +44,15 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public override string InProcessCODE                //仕掛コード
+        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
         {
-            get { return inProcessCODE; }
-            set { SetProperty(ref inProcessCODE, value); }
+            get { return regFlg; }
+            set { SetProperty(ref regFlg, value); }
+        }
+        public bool IsEnable                                //表示・非表示（下部ボタン）
+        {
+            get { return isEnable; }
+            set { SetProperty(ref isEnable, value); }
         }
         public bool VisibleWorker                           //表示・非表示（作業者）
         {
@@ -79,12 +81,13 @@ namespace Display
             Instance = this;
 
             //仕掛移動インスタンス
-            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
-            inProcess = new InProcess(InProcessCODE);
+            inProcess = new InProcess();
+            inProcess.InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
             DisplayLot(inProcess.LotNumber);
-            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
 
             //デフォルト値設定
+            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
+            IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
             ProcessName = INI.GetString("Page", "Process");
         }
 
@@ -148,9 +151,16 @@ namespace Display
                     break;
 
                 case "Cancel":
-                    //取消
+                    //取消（合板に戻す）
                     result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
-                    ViewModelWindowMain.Instance.FramePage = new TransportList();
+                    await System.Threading.Tasks.Task.Delay(100);
+                    CancelData();
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        CancelData();
+                        ViewModelWindowMain.Instance.FramePage = new TransportList();
+                    }
                     break;
 
                 case "Enter":
@@ -195,7 +205,7 @@ namespace Display
             //登録
             inProcess.Status = "引取";
             inProcess.Place = ProcessName;
-            inProcess.TransportResist(InProcessCODE);
+            inProcess.TransportResist(inProcess.InProcessCODE);
             ViewModelWindowMain.Instance.FramePage = new TransportList();
         }
 
@@ -224,6 +234,17 @@ namespace Display
                 if (messege) { SetGotFocus(focus); }
             }
             return result;
+        }
+
+        //移動処理を元に戻す
+        private void CancelData()
+        {
+            inProcess.DeleteLog();
+            inProcess.Place = "合板";
+            inProcess.Status = "搬入";
+            inProcess.TransportDate = string.Empty;
+            inProcess.TransportWorker = string.Empty;
+            inProcess.TransportResist(inProcess.InProcessCODE);
         }
 
         //次のフォーカスへ

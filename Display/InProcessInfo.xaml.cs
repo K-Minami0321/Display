@@ -26,7 +26,6 @@ namespace Display
         //変数
         bool regFlg;
         string processName;
-        string inProcessCODE;
         string inProcessDate;
         string lotNumber;
         string amountLabel;
@@ -75,6 +74,7 @@ namespace Display
             {
                 SetProperty(ref processName, value);
                 if (value == null) { return; }
+                ViewModelWindowMain.Instance.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
                 inProcess.ProcessName = ProcessName;
                 inProcess.Place = iProcess.Name;                //保管場所
@@ -100,6 +100,7 @@ namespace Display
                         inProcess.UnitLabel = "数 量";
                         AmountRow = 5;
                         Notice = string.Empty;
+                        VisibleCoil = false;
                         break;
 
                     default:
@@ -109,17 +110,9 @@ namespace Display
                         inProcess.UnitLabel = "数 量";
                         AmountRow = 4;
                         Notice = string.Empty;
+                        VisibleCoil = false;
                         break;
                 }
-            }
-        }
-        public override string InProcessCODE            //仕掛在庫CODE
-        {
-            get { return inProcessCODE; }
-            set 
-            { 
-                SetProperty(ref inProcessCODE, value);
-                RegFlg = string.IsNullOrEmpty(InProcessCODE);
             }
         }
         public override string LotNumber                //ロット番号
@@ -271,12 +264,14 @@ namespace Display
             Instance = this;
 
             //履歴から仕掛データ読み込み
-            InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
-            inProcess = new InProcess(InProcessCODE);
+            inProcess = new InProcess();
+            inProcess.InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
             DisplayLot(inProcess.LotNumber);
-            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
 
             //デフォルト値設定
+            VisibleCoil = iShape != null ? iShape.Name == "コイル" : false;
+            RegFlg = string.IsNullOrEmpty(inProcess.InProcessCODE);
+            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
             ProcessName = INI.GetString("Page", "Process");
         }
 
@@ -286,7 +281,7 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
+            
             DisplayCapution();
             SetFocus();
         }
@@ -311,7 +306,6 @@ namespace Display
             if (!RegFlg) { return; }
             ProcessName = INI.GetString("Page", "Process");
             inProcess.InProcessDate = SetToDay(DateTime.Now);
-            InProcessCODE = string.Empty;
             inProcess.LotNumber = string.Empty;
             inProcess.ProductName = string.Empty;
             inProcess.Amount = string.Empty;
@@ -346,12 +340,12 @@ namespace Display
             inProcess.LotNumber = LotNumber;
             inProcess.ProductName = management.ProductName;
             inProcess.ShirringUnit = management.ShirringUnit;
-            inProcess.Coil = inProcess.InProcessCoil(LotNumber, InProcessCODE);     //コイル数取得
-            inProcess.DisplayInProcessData(LotNumber);                              //仕掛情報取得
-            inProcess.SetNextProcess(management.ProductCODE);                       //製品によって次工程を設定
+            inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
+            inProcess.DisplayInProcessData(LotNumber);                                      //仕掛情報取得
+            inProcess.SetNextProcess(management.ProductCODE);                               //製品によって次工程を設定
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             AmountLabel = management.AmountLabel;
-            VisibleCoil = iShape != null ? iShape.Name == "コイル" : false ;
+            
         }
 
         //キーイベント
@@ -456,13 +450,13 @@ namespace Display
             {
                 var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
                 var inprocesscode = inProcess.GenerateCode(iProcess.Mark + inprocessdate);
-                InProcessCODE = inprocesscode;
+                inProcess.InProcessCODE = inprocesscode;
                 inProcess.InProcessDate = SetToDay(DateTime.Now);       //強制的に本日にする
             }
 
             //登録処理
             inProcess.InsertLog(RegFlg);
-            inProcess.Resist(InProcessCODE);
+            inProcess.Resist(inProcess.InProcessCODE);
             RegFlg = true;
 
             //処理完了
@@ -519,7 +513,7 @@ namespace Display
         {
             //削除処理
             inProcess.DeleteLog();
-            inProcess.DeleteHistory(InProcessCODE);
+            inProcess.DeleteHistory(inProcess.InProcessCODE);
 
             //処理完了
             ViewModelInProcessList.Instance.InProcessCODE = string.Empty;

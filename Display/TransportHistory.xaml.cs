@@ -44,7 +44,6 @@ namespace Display
                 ViewModelWindowMain.Instance.ProcessName = value;
                 inProcess.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
-
             }
         }
         public string InProcessCODE                         //仕掛在庫CODE
@@ -56,9 +55,9 @@ namespace Display
         {
             get { return transportDate; }
             set 
-            { 
+            {
                 SetProperty(ref transportDate, value);
-                inProcess.InProcessDate = value;
+                inProcess.TransportDate = value;
                 DiaplayList();
             }
         }
@@ -103,6 +102,11 @@ namespace Display
         internal ViewModelTransportHistory()
         {
             inProcess = new InProcess();
+
+            //デフォルト値設定
+            ProcessName = INI.GetString("Page", "Process");
+            TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            SelectedIndex = -1;
         }
 
         //ロード時
@@ -113,16 +117,15 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
+            DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
             //キャプション表示
-            ProcessName = INI.GetString("Page", "Process");
-            ViewModelWindowMain.Instance.ProcessWork = "引取履歴";
-
             Initialize();
+            ViewModelWindowMain.Instance.ProcessWork = "引取履歴";           
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = false;
@@ -132,13 +135,13 @@ namespace Display
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.IconList = "ViewList";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            
         }
 
         //初期化
         public void Initialize()
         {
-            TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            ProcessName = INI.GetString("Page", "Process");
+            InProcessCODE = string.Empty;
         }
 
         //キーイベント
@@ -153,6 +156,7 @@ namespace Display
 
                 case "DisplayList":
                     //引取履歴
+                    TransportDate = DateTime.Now.ToString("yyyyMMdd");
                     ViewModelWindowMain.Instance.FramePage = new TransportHistory();
                     break;
 
@@ -169,11 +173,6 @@ namespace Display
                 case "NextDate":
                     //次の日へ移動
                     TransportDate = DATETIME.AddDate(TransportDate, 1).ToString("yyyyMMdd");
-                    break;
-
-                case "Today":
-                    //当日へ移動
-                    TransportDate = DateTime.Now.ToString("yyyyMMdd");
                     break;
             }
         }

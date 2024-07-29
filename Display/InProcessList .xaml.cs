@@ -131,7 +131,6 @@ namespace Display
             inProcess = new InProcess();
 
             //デフォルト値設定
-            ProcessName = INI.GetString("Page", "Process");
             InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
@@ -141,6 +140,7 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
+            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -155,12 +155,12 @@ namespace Display
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.ProcessWork = "搬入履歴";
-            DiaplayList();
         }
         
         //初期化
         public void Initialize()
         {
+            ProcessName = INI.GetString("Page", "Process");
             InProcessCODE = string.Empty;
         }
 

@@ -75,7 +75,6 @@ namespace Display
             manufacture = new Manufacture();
 
             //デフォルト値設定
-            ProcessName = INI.GetString("Page", "Process");
             ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
             SelectedIndex = -1;
         }
@@ -86,6 +85,7 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
+            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -104,6 +104,7 @@ namespace Display
         //初期化
         private void Initialize()
         {
+            ProcessName = INI.GetString("Page", "Process");
             EquipmentCODE = INI.GetString("Page", "Equipment");
             ManufactureCODE = string.Empty;
         }
