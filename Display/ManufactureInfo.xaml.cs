@@ -2,7 +2,6 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using NAudio;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -35,6 +34,7 @@ namespace Display
         string equipment1;
         string equipment2;
         string team;
+        string buttonName;
         string amountLabel;
         string productName;
         int lotNumberLength = 10;
@@ -76,6 +76,7 @@ namespace Display
                 EnabledControl1 = !value;
                 EnabledControl2 = !value;
                 VisibleButtonStart = value;
+                ButtonName = value ? "登　録" : "修　正";
             }
         }
         public string Status                                //入力状況
@@ -169,6 +170,11 @@ namespace Display
                 SetProperty(ref team, value);
                 manufacture.Team = value;
             }
+        }
+        public string ButtonName                            //登録ボタン名
+        {
+            get { return buttonName; }
+            set { SetProperty(ref buttonName, value); }
         }
         public string AmountLabel                           //数量ラベル
         {
@@ -327,11 +333,13 @@ namespace Display
 
             //実績データインスタンス
             ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
-            manufacture = new Manufacture();
-            DisplayData();
+            manufacture = new Manufacture(ManufactureCODE);
+            DisplayLot(manufacture.LotNumber);
+            IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
 
             //デフォルト値設定
             ProcessName = INI.GetString("Page", "Process");
+
         }
 
         //ロード時
@@ -361,6 +369,8 @@ namespace Display
         //初期化
         public void Initialize()
         {
+            Status = "登録";
+
             if (!RegFlg) { return; }
             ProcessName = INI.GetString("Page", "Process");
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
@@ -377,26 +387,17 @@ namespace Display
             manufacture.Sales = string.Empty;
             AmountLabel = "数 量";
             IsEnable = true;
-            Status = "登録";
 
             //予定表からロット番号取得
             DisplayLot(ViewModelPlanList.Instance.LotNumber);
-        }
-
-        //データ表示
-        private void DisplayData()
-        {
-            manufacture.Select(ManufactureCODE);
-            DisplayLot(manufacture.LotNumber);
-            IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロット番号処理
         private void DisplayLot(string lotnumber)
         {
             //ロットインスタンス
-            management = new Management();
-            LotNumber = management.Display(lotnumber);
+            management = new Management(lotnumber);
+            LotNumber = management.LotNumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
@@ -611,6 +612,7 @@ namespace Display
                 case "編集":
                     EnabledControl1 = true;
                     EnabledControl2 = true;
+                    VisibleEdit = true;
                     VisibleButtonStart = false;
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;

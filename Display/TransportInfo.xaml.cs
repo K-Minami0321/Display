@@ -1,5 +1,4 @@
 ﻿using ClassBase;
-using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
@@ -81,8 +80,9 @@ namespace Display
 
             //仕掛移動インスタンス
             InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
-            inProcess = new InProcess();
-            DisplayData();
+            inProcess = new InProcess(InProcessCODE);
+            DisplayLot(inProcess.LotNumber);
+            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
 
             //デフォルト値設定
             ProcessName = INI.GetString("Page", "Process");
@@ -94,6 +94,7 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlWorker.Instance.Iworker = this;
             DisplayCapution();
+            SetGotFocus("Worker");
         }
 
         //キャプション・ボタン表示
@@ -120,27 +121,17 @@ namespace Display
             inProcess.TransportDate = SetToDay(DateTime.Now);
         }
 
-        //データ表示
-        private void DisplayData()
-        {
-            //前工程の仕掛取得
-            inProcess.TransportSelect(InProcessCODE);
-            DisplayLot(inProcess.LotNumber);
-            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
-            SetGotFocus("Worker");
-        }
-
         //ロット番号処理
         private void DisplayLot(string lotnumber)
         {
             //ロットインスタンス
-            management = new Management();
-            LotNumber = management.Display(lotnumber);
+            management = new Management(lotnumber);
+            LotNumber = management.LotNumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             iShape = Shape.SetShape(management.ShapeName);
-            inProcess.LotNumber = management.LotNumber;
+            inProcess.LotNumber = LotNumber;
             inProcess.ProductName = management.ProductName;
             inProcess.ShapeName = management.ShapeName;
         }

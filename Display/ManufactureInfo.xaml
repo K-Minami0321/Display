@@ -289,7 +289,7 @@
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist" Visibility="{Binding VisibleEdit,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Pen" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="登　録"/>
+                            <TextBlock Text="{Binding ButtonName}"/>
                         </WrapPanel>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TouchDown">

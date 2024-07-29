@@ -3,7 +3,6 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -273,8 +272,9 @@ namespace Display
 
             //履歴から仕掛データ読み込み
             InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
-            inProcess = new InProcess();
-            DisplayData();
+            inProcess = new InProcess(InProcessCODE);
+            DisplayLot(inProcess.LotNumber);
+            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
 
             //デフォルト値設定
             ProcessName = INI.GetString("Page", "Process");
@@ -337,8 +337,8 @@ namespace Display
         private void DisplayLot(string lotnumber)
         {
             //ロット番号変換
-            management = new Management();
-            LotNumber = management.Display(lotnumber);
+            management = new Management(lotnumber);
+            LotNumber = management.LotNumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
@@ -352,14 +352,6 @@ namespace Display
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             AmountLabel = management.AmountLabel;
             VisibleCoil = iShape != null ? iShape.Name == "コイル" : false ;
-        }
-
-        //データ表示
-        private void DisplayData()
-        {
-            inProcess.Select(InProcessCODE);
-            DisplayLot(inProcess.LotNumber);
-            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //キーイベント
