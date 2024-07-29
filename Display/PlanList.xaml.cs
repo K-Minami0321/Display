@@ -21,9 +21,8 @@ namespace Display
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
         //変数
-        string lotNumber;
         string processName;
-        string inProcessCODE;
+        string lotNumber;
         string updateDate;
         string file;
         bool visibleUnit;
@@ -33,29 +32,20 @@ namespace Display
         //プロパティ
         public static ViewModelPlanList Instance    //インスタンス
         { get; set; } = new ViewModelPlanList();
-        public string LotNumber                     //ロット番号
-        {
-            get { return lotNumber; }
-            set { SetProperty(ref lotNumber, value); }
-        }
         public string ProcessName                   //工程区分
         {
             get { return plan.ProcessName; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref processName, value);
                 plan.ProcessName = value;
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string InProcessCODE                 //搬入CODE
+        public string LotNumber                     //ロット番号
         {
-            get { return plan.InProcessCODE; }
-            set 
-            { 
-                SetProperty(ref inProcessCODE, value);
-                plan.InProcessCODE = value;
-            }
+            get { return lotNumber; }
+            set { SetProperty(ref lotNumber, value); }
         }
         public string UpdateDate                    //更新表示
         {

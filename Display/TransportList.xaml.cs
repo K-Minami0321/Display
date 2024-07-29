@@ -38,7 +38,7 @@ namespace Display
                 ViewModelWindowMain.Instance.ProcessName = iProcess.Before;
             }
         }
-        public override string InProcessCODE            //仕掛在庫CODE
+        public string InProcessCODE                     //仕掛在庫CODE
         {
             get { return inProcessCODE; }
             set { SetProperty(ref inProcessCODE, value); }

@@ -22,29 +22,19 @@ namespace Display
     public class ViewModelManufactureList : Common, IKeyDown, ISelect
     {
         //変数
-        string equipmentCODE;
         string processName;
         string manufactureCODE;
         string manufactureDate;
+        string equipmentCODE;
 
         //プロパティ
         public static ViewModelManufactureList Instance     //インスタンス
         { get; set; } = new ViewModelManufactureList();
-        public string EquipmentCODE                         //設備CODE
-        {
-            get { return equipmentCODE; }
-            set
-            {
-                equipment = new Equipment(value);
-                var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name  + "実績": name + " - " + value;
-            }
-        }
         public string ProcessName                           //工程区分
         {
             get { return processName; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
             }
@@ -61,6 +51,16 @@ namespace Display
             { 
                 SetProperty(ref manufactureDate, value);
                 DiaplayList();
+            }
+        }
+        public string EquipmentCODE                         //設備CODE
+        {
+            get { return equipmentCODE; }
+            set
+            {
+                equipment = new Equipment(value);
+                var name = equipment.EquipmentName;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
             }
         }
 

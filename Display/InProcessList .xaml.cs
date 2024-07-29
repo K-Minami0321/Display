@@ -132,6 +132,7 @@ namespace Display
 
             //デフォルト値設定
             InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            SelectedIndex = -1;
         }
 
         //ロード時

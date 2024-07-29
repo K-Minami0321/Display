@@ -223,7 +223,6 @@ namespace Display
 
                 case "F2":
                     //搬入登録画面
-                    ViewModelInProcessInfo.Instance.InProcessCODE = null;
                     FramePage = new InProcessInfo();
                     INI.WriteString("Page", "Initial", "InProcessInfo");
                     break;
@@ -231,7 +230,6 @@ namespace Display
                 case "F3":
                     //搬出登録画面
                     if (ProcessName != "プレス") { return; }
-                    ViewModelTransportInfo.Instance.InProcessCODE = null;
                     FramePage = new TransportList();
                     INI.WriteString("Page", "Initial", "TransportList");
                     break;
