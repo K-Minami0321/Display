@@ -18,7 +18,7 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <!-- 上領域 -->
-            <Grid Background="#D7DCDE" Margin="0,10,0,20" Height="560" IsEnabled="{Binding VisibleButton}">
+            <Grid Background="#D7DCDE" Margin="0,10,0,20" Height="560" IsEnabled="{Binding IsEnable}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                         <!-- 左領域 -->
@@ -240,7 +240,7 @@
                 </StackPanel>
             </Grid>
             <!-- 下領域 -->
-            <Grid  Visibility="{Binding VisibleButton,Converter={StaticResource CollapsedConverter}}">
+            <Grid  Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkStart" Visibility="{Binding VisibleButtonStart,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>

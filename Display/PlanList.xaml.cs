@@ -106,7 +106,6 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -122,6 +121,7 @@ namespace Display
             ViewModelWindowMain.Instance.IconPlan = "refresh";
             ViewModelWindowMain.Instance.IconSize = 35;
             ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
+            DiaplayList();
         }
 
         //初期化
@@ -204,7 +204,7 @@ namespace Display
         public void SelectList()
         {
             if (SelectedItem == null) { return; }
-            if (SelectedItem.Row.ItemArray[14].ToString() == "完了") { return; }
+            if (SelectedItem.Row.ItemArray[15].ToString() == "完了") { return; }
             LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
             if (EnableSelect) { StartPage(INI.GetString("Page", "Initial")); }
         }

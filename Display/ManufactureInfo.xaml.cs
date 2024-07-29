@@ -2,6 +2,7 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
+using NAudio;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -44,7 +45,6 @@ namespace Display
         bool enabledControl1;
         bool enabledControl2;
         bool visiblePackaging;
-        bool visibleButton;
         bool visibleButtonStart;
         bool visibleButtonEnd;
         bool visibleButtonCancel;
@@ -54,6 +54,7 @@ namespace Display
         bool visibleWorker;
         bool visibleWorkProcess;
         bool visibleSeal;
+        bool isEnable;
         bool isFocusLotNumber;
         bool isFocusWorker;
         bool isFocusWorkProcess;
@@ -94,25 +95,25 @@ namespace Display
                 SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
                 manufacture.ProcessName = ProcessName;
-
+                
                 switch (value)
                 {
                     case "検査":
-                        manufacture.WorkProcess = "検査";
                         VisibleSeal = false;
                         VisiblePackaging = true;
+                        if (RegFlg) { manufacture.WorkProcess = "検査"; }
                         break;
 
                     case "梱包":
-                        manufacture.WorkProcess = "梱包";
                         VisibleSeal = false;
                         VisiblePackaging = false;
+                        if (RegFlg) { manufacture.WorkProcess = "梱包"; }
                         break;
 
                     default:
-                        manufacture.WorkProcess = string.Empty;
                         VisibleSeal = true;
                         VisiblePackaging = true;
+                        if (RegFlg) { manufacture.WorkProcess = ""; }
                         break;
                 }
             }
@@ -218,11 +219,6 @@ namespace Display
             get { return visiblePackaging; }
             set { SetProperty(ref visiblePackaging, value); }
         }
-        public bool VisibleButton                           //表示・非表示（下部ボタン）
-        {
-            get { return visibleButton; }
-            set { SetProperty(ref visibleButton, value); }
-        }
         public bool VisibleButtonStart                      //開始ボタン表示・非表示
         {
             get { return visibleButtonStart; }
@@ -267,6 +263,11 @@ namespace Display
         {
             get { return visibleSeal; }
             set { SetProperty(ref visibleSeal, value); }
+        }
+        public bool IsEnable                                //表示・非表示（下部ボタン）
+        {
+            get { return isEnable; }
+            set { SetProperty(ref isEnable, value); }
         }
         public bool IsFocusLotNumber                        //フォーカス（ロット番号）
         {
@@ -331,7 +332,6 @@ namespace Display
 
             //デフォルト値設定
             ProcessName = INI.GetString("Page", "Process");
-            Status = "登録";  
         }
 
         //ロード時
@@ -342,7 +342,7 @@ namespace Display
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelControlWorkProcess.Instance.IworkProcess = this;
             DisplayCapution();
-            SetGotFocus("LotNumber");
+            SetFocus();
         }
 
         //キャプション・ボタン表示
@@ -356,13 +356,13 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
-            if (string.IsNullOrEmpty(ProductName)) { SetGotFocus("LotNumber"); }
         }
 
         //初期化
         public void Initialize()
         {
             if (!RegFlg) { return; }
+            ProcessName = INI.GetString("Page", "Process");
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
             EquipmentCODE = INI.GetString("Page", "Equipment");
             manufacture.Worker = INI.GetString("Page", "Worker");
@@ -376,18 +376,11 @@ namespace Display
             manufacture.Completed = string.Empty;
             manufacture.Sales = string.Empty;
             AmountLabel = "数 量";
-            IsFocusLotNumber = false;
-            IsFocusWorker = false;
-            IsFocusWorkProcess = false;
-            IsFocusStartTime = false;
-            IsFocusEndTime = false;
-            IsFocusAmount = false;
-            IsFocusCompleted = false;
-            IsFocusSales = false;
+            IsEnable = true;
+            Status = "登録";
 
             //予定表からロット番号取得
-            LotNumber = ViewModelPlanList.Instance.LotNumber;     //データ取得
-            DisplayLot(LotNumber);
+            DisplayLot(ViewModelPlanList.Instance.LotNumber);
         }
 
         //データ表示
@@ -395,6 +388,7 @@ namespace Display
         {
             manufacture.Select(ManufactureCODE);
             DisplayLot(manufacture.LotNumber);
+            IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロット番号処理
@@ -524,15 +518,11 @@ namespace Display
                     ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
                     ViewModelPlanList.Instance.LotNumber = string.Empty;
                     Initialize();
-                    Status = "登録";
+                    SetFocus();
                     break;
 
                 case "DisplayList":
                     //加工一覧画面
-
-                    //編集モードの場合はデータクリア
-                    if (!string.IsNullOrEmpty(ManufactureCODE)) { Initialize(); }
-
                     ViewModelWindowMain.Instance.FramePage = new ManufactureList();
                     break;
 
@@ -572,11 +562,9 @@ namespace Display
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
                     VisibleEdit = true;
-                    VisibleButton = true;
                     ViewModelWindowMain.Instance.VisibleList = true;
                     ViewModelWindowMain.Instance.VisibleDefect = false;
                     ViewModelWindowMain.Instance.VisibleArrow = false;
-                    SetGotFocus("LotNumber");
                     break;
 
                 case "準備":
@@ -586,11 +574,9 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    VisibleButton = manufacture.ManufactureDate != STRING.ToDateDB(SetToDay(DateTime.Now)) ? false : true;
                     ViewModelWindowMain.Instance.VisibleList = true;
                     ViewModelWindowMain.Instance.VisibleDefect = false;
                     ViewModelWindowMain.Instance.VisibleArrow = false;
-                    SetGotFocus("LotNumber");
                     break;
 
                 case "作業中":
@@ -925,8 +911,8 @@ namespace Display
             {
                 case "LotNumber":
                     IsFocusLotNumber = true;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = false;
                     IsFocusAmount = false;
@@ -938,24 +924,10 @@ namespace Display
                     ViewModelControlTenKey.Instance.InputString = "-";
                     break;
 
-                case "Worker":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = true;
-                    IsFocusWorkProcess = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
-                    VisibleTenKey = false;
-                    VisibleWorker = true;
-                    VisibleWorkProcess = false;
-                    break;
-
                 case "WorkProcess":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = true;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = false;
                     IsFocusAmount = false;
@@ -966,10 +938,24 @@ namespace Display
                     VisibleWorkProcess = true;
                     break;
 
+                case "Worker":
+                    IsFocusLotNumber = false;
+                    IsFocusWorkProcess = false;
+                    IsFocusWorker = true;
+                    IsFocusStartTime = false;
+                    IsFocusEndTime = false;
+                    IsFocusAmount = false;
+                    IsFocusCompleted = false;
+                    IsFocusSales = false;
+                    VisibleTenKey = false;
+                    VisibleWorker = true;
+                    VisibleWorkProcess = false;
+                    break;
+
                 case "StartTime":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = true;
                     IsFocusEndTime = false;
                     IsFocusAmount = false;
@@ -983,8 +969,8 @@ namespace Display
 
                 case "EndTime":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = true;
                     IsFocusAmount = false;
@@ -998,8 +984,8 @@ namespace Display
 
                 case "Amount":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = false;
                     IsFocusAmount = true;
@@ -1013,8 +999,8 @@ namespace Display
 
                 case "Completed":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = false;
                     IsFocusAmount = false;
@@ -1028,8 +1014,8 @@ namespace Display
 
                 case "Sales":
                     IsFocusLotNumber = false;
-                    IsFocusWorker = false;
                     IsFocusWorkProcess = false;
+                    IsFocusWorker = false;
                     IsFocusStartTime = false;
                     IsFocusEndTime = false;
                     IsFocusAmount = false;
@@ -1065,6 +1051,14 @@ namespace Display
                     manufacture.EndTime = manufacture.EndTime.Replace(":", "");
                     break;
             }
+        }
+
+        //フォーカス設定
+        private void SetFocus()
+        {
+            if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
+            if (string.IsNullOrEmpty(manufacture.WorkProcess)) { SetGotFocus("WorkProcess"); return; }
+            SetGotFocus("LotNumber");
         }
 
         //スワイプ処理

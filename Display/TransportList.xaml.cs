@@ -55,6 +55,7 @@ namespace Display
             inProcess = new InProcess();
 
             //デフォルト値設定
+            ProcessName = INI.GetString("Page", "Process");
             SelectedIndex = -1;
         }
 
@@ -64,7 +65,6 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -81,6 +81,7 @@ namespace Display
             ViewModelWindowMain.Instance.IconList = "ViewList";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
             ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
+            DiaplayList();
         }
 
         //初期化
