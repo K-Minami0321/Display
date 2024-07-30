@@ -389,10 +389,11 @@ namespace Display
         {
             //ロットインスタンス
             management = new Management(lotnumber);
-            LotNumber = management.LotNumber;
+            management.LotNumber = lotnumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            LotNumber = management.LotNumber;
             iShape = Shape.SetShape(management.ShapeName);
             manufacture.LotNumber = LotNumber;
             manufacture.ProductName = management.ProductName;

@@ -331,11 +331,12 @@ namespace Display
         private void DisplayLot(string lotnumber)
         {
             //ロット番号変換
-            management = new Management(lotnumber);
-            LotNumber = management.LotNumber;
+            management = new Management();
+            management.LotNumber = lotnumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            LotNumber = management.LotNumber;
             iShape = Shape.SetShape(management.ShapeName);
             inProcess.LotNumber = LotNumber;
             inProcess.ProductName = management.ProductName;
@@ -345,7 +346,6 @@ namespace Display
             inProcess.SetNextProcess(management.ProductCODE);                               //製品によって次工程を設定
             inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
             AmountLabel = management.AmountLabel;
-            
         }
 
         //キーイベント

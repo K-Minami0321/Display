@@ -116,6 +116,7 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
+                    ViewModelPlanList.Instance.LotNumber = string.Empty;
                     ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
                     break;
 

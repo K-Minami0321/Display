@@ -83,7 +83,8 @@ namespace Display
             //仕掛移動インスタンス
             inProcess = new InProcess();
             inProcess.InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
-            DisplayLot(inProcess.LotNumber);
+            LotNumber = inProcess.LotNumber;
+            DisplayLot(LotNumber);
 
             //デフォルト値設定
             RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
@@ -128,13 +129,12 @@ namespace Display
         private void DisplayLot(string lotnumber)
         {
             //ロットインスタンス
-            management = new Management(lotnumber);
-            LotNumber = management.LotNumber;
+            management = new Management();
+            management.LotNumber = lotnumber;
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             iShape = Shape.SetShape(management.ShapeName);
-            inProcess.LotNumber = LotNumber;
             inProcess.ProductName = management.ProductName;
             inProcess.ShapeName = management.ShapeName;
         }
