@@ -58,7 +58,7 @@ namespace Display
             get { return equipmentCODE; }
             set
             {
-                equipment = new Equipment(value);
+                equipment = new Equipment();
                 var name = equipment.EquipmentName;
                 ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
             }

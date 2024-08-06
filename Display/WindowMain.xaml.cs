@@ -1,8 +1,10 @@
 ﻿using ClassBase;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
+using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 #pragma warning disable
 namespace Display
@@ -223,6 +225,7 @@ namespace Display
 
                 case "F2":
                     //搬入登録画面
+                    if (ProcessName == "検査" || ProcessName == "梱包") { return; }
                     FramePage = new InProcessInfo();
                     INI.WriteString("Page", "Initial", "InProcessInfo");
                     break;
@@ -330,5 +333,6 @@ namespace Display
             IconPlan = "FileClockOutline";
             IconSize = 30;
         }
+
     }
 }

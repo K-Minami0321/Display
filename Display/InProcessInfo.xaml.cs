@@ -67,7 +67,7 @@ namespace Display
                 ButtonName = value ? "登　録" : "修　正";
             }
         }
-        public override string ProcessName              //工程区分
+        public string ProcessName                       //工程区分
         {
             get { return processName; }
             set
@@ -115,7 +115,7 @@ namespace Display
                 }
             }
         }
-        public override string LotNumber                //ロット番号
+        public string LotNumber                         //ロット番号
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }

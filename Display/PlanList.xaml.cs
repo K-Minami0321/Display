@@ -108,8 +108,6 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleDefect = false;
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconPlan = "refresh";
-            ViewModelWindowMain.Instance.IconSize = 35;
             ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
             DiaplayList();
         }

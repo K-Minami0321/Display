@@ -27,6 +27,7 @@ namespace Display
         bool regFlg;
         string status;
         string processName;
+        string manufactureCODE;
         string lotNumber;
         string equipmentCODE;
         string manufactureDate;
@@ -65,7 +66,7 @@ namespace Display
 
         //プロパティ
         public static ViewModelManufactureInfo Instance     //インスタンス
-        { get; set; } = new ViewModelManufactureInfo();
+        { get; set; }
         public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
@@ -87,7 +88,7 @@ namespace Display
                 SetStatus();
             }
         }
-        public override string ProcessName                  //工程区分
+        public string ProcessName                           //工程区分
         {
             get { return processName; }
             set
@@ -119,17 +120,27 @@ namespace Display
                 }
             }
         }
-        public override string LotNumber                    //ロット番号
+        public string ManufactureCODE                       //製造CODE
+        {
+            get { return manufactureCODE; }
+            set 
+            { 
+                SetProperty(ref manufactureCODE, value);
+                PropertyCopy(new Manufacture(ManufactureCODE), manufacture);
+                DisplayLot(manufacture.LotNumber);
+            }
+        }
+        public string LotNumber                             //ロット番号
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
         }
-        public override string EquipmentCODE                //設備CODE
+        public string EquipmentCODE                         //設備CODE
         {
             get { return equipmentCODE; }
             set 
             {
-                equipment = new Equipment(value);
+                equipment = new Equipment();
                 var name = equipment.EquipmentName;
                 ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
                 Equipment1 = value;
@@ -324,8 +335,7 @@ namespace Display
 
             //実績データインスタンス
             manufacture = new Manufacture();
-            manufacture.ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
-            DisplayLot(manufacture.LotNumber);
+            ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
 
             //デフォルト値設定
             RegFlg = string.IsNullOrEmpty(manufacture.ManufactureCODE);
@@ -382,22 +392,6 @@ namespace Display
 
             //予定表からロット番号取得
             DisplayLot(ViewModelPlanList.Instance.LotNumber);
-        }
-
-        //ロット番号処理
-        private void DisplayLot(string lotnumber)
-        {
-            //ロットインスタンス
-            management = new Management(lotnumber);
-            management.LotNumber = lotnumber;
-
-            //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            LotNumber = management.LotNumber;
-            iShape = Shape.SetShape(management.ShapeName);
-            manufacture.LotNumber = LotNumber;
-            manufacture.ProductName = management.ProductName;
-            AmountLabel = management.Amount;
         }
 
         //キーイベント
@@ -524,6 +518,22 @@ namespace Display
                     ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
             }
+        }
+
+        //ロット番号処理
+        private void DisplayLot(string lotnumber)
+        {
+            //ロットインスタンス
+            management = new Management();
+            management.LotNumber = lotnumber;
+
+            //データ表示
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            LotNumber = management.LotNumber;
+            iShape = Shape.SetShape(management.ShapeName);
+            manufacture.LotNumber = LotNumber;
+            manufacture.ProductName = management.ProductName;
+            AmountLabel = management.Amount;
         }
 
         //選択処理

@@ -76,6 +76,8 @@ namespace Display
                 Workers = iProcess.Workers;
             }
         }
+        public string EquipmentCODE                 //設備CODE
+        { get; set; }
         public string Worker                        //担当者
         {
             get { return worker; }

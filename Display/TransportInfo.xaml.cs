@@ -6,7 +6,6 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 #pragma warning disable
 namespace Display
@@ -34,7 +33,7 @@ namespace Display
         //プロパティ
         public static ViewModelTransportInfo Instance       //インスタンス
         { get; set; } = new ViewModelTransportInfo();
-        public override string ProcessName                  //工程区分
+        public string ProcessName                           //工程区分
         {
             get { return processName; }
             set
@@ -44,6 +43,8 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
+        public string LotNumber                             //ロット番号
+        { get; set; }
         public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }

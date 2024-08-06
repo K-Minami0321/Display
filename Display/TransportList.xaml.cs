@@ -27,7 +27,7 @@ namespace Display
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
         { get; set; } = new ViewModelTransportList();
-        public override string ProcessName              //工程区分
+        public string ProcessName                       //工程区分
         {
             get { return inProcess.ProcessName; }
             set 
