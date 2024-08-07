@@ -43,7 +43,7 @@
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
                             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding inProcess.LotNumber}"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="形 状"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding inProcess.ShapeName}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding management.ShapeName}"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
                             <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
                                 <TextBlock Text="{Binding inProcess.Unit,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>

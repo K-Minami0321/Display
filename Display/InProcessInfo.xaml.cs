@@ -26,10 +26,10 @@ namespace Display
         //変数
         bool regFlg;
         string processName;
+        string inProcessCODE;
         string inProcessDate;
         string lotNumber;
         string amountLabel;
-        bool visibleCoil;
         string notice;
         int amountWidth = 150;
         int amountRow = 5;
@@ -39,6 +39,7 @@ namespace Display
         int unitLength = 6;
         string buttonName;
         string weightLabel;
+        bool visibleCoil;
         bool visibleItem1;
         bool visibleItem2;
         bool visibleDelete;
@@ -54,9 +55,8 @@ namespace Display
         bool isFocusAmount;
 
         //プロパティ
-        public static ViewModelInProcessInfo Instance   //インスタンス
-        { get; set; } = new ViewModelInProcessInfo();
-        public bool RegFlg                              //新規・既存フラグ（true:新規、false:既存）
+
+        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
             set
@@ -67,19 +67,13 @@ namespace Display
                 ButtonName = value ? "登　録" : "修　正";
             }
         }
-        public string ProcessName                       //工程区分
+        public string ProcessName           //工程区分
         {
             get { return processName; }
             set
             {
-                SetProperty(ref processName, value);
-                if (value == null) { return; }
-                ViewModelWindowMain.Instance.ProcessName = value;
+                SetProperty(ref processName, value);              
                 iProcess = ProcessCategory.SetProcess(value);
-                inProcess.ProcessName = ProcessName;
-                inProcess.Place = iProcess.Name;                //保管場所
-                inProcess.ProcessNext = iProcess.Next;          //次の工程設定
-
                 switch (value)
                 {
                     case "合板":
@@ -113,99 +107,113 @@ namespace Display
                         VisibleCoil = false;
                         break;
                 }
+
+                inProcess.ProcessName = ProcessName;
+                inProcess.Place = iProcess.Name;                //保管場所
+                inProcess.ProcessNext = iProcess.Next;          //次の工程設定
             }
         }
-        public string LotNumber                         //ロット番号
+        public string InProcessCODE         //仕掛CODE
+        {
+            get { return inProcessCODE; }
+            set 
+            { 
+                SetProperty(ref inProcessCODE, value);
+                CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
+                DisplayLot(inProcess.LotNumber);
+            }
+        }
+        public string LotNumber             //ロット番号
         {
             get { return lotNumber; }
-            set { SetProperty(ref lotNumber, value); }
+            set  { SetProperty(ref lotNumber, value); }
         }
-        public string Notice                            //注意文
+        public string Notice                //注意文
         {
             get { return notice; }
             set { SetProperty(ref notice, value); }
         }
-        public int AmountWidth                          //コイル数テキストボックスのWidth
+        public int AmountWidth              //コイル数テキストボックスのWidth
         {
             get { return amountWidth; }
             set { SetProperty(ref amountWidth, value); }
         }
-        public int AmountRow                            //数量・重量の位置
+        public int AmountRow                //数量・重量の位置
         {
             get { return amountRow; }
             set { SetProperty(ref amountRow, value); }
         }
-        public int LotNumberLength                      //文字数（ロット番号）
+        public int LotNumberLength          //文字数（ロット番号）
         {
             get { return lotNumberLength; }
             set { SetProperty(ref lotNumberLength, value); }
         }
-        public int AmountLength                         //文字数（数量）
+        public int AmountLength             //文字数（数量）
         {
             get { return amountLength; }
             set { SetProperty(ref amountLength, value); }
         }
-        public int WeightLength                         //文字数（重量・焼結重量）
+        public int WeightLength             //文字数（重量・焼結重量）
         {
             get { return weightLength; }
             set { SetProperty(ref weightLength, value); }
         }
-        public int UnitLength                           //文字数（枚数・コイル数）
+        public int UnitLength               //文字数（枚数・コイル数）
         {
             get { return unitLength; }
             set { SetProperty(ref unitLength, value); }
         }
-        public string ButtonName                        //登録ボタン名
+        public string ButtonName            //登録ボタン名
         {
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
         }
-        public string AmountLabel                       //ラベル（数量）
+        public string AmountLabel           //ラベル（数量）
         {
             get { return amountLabel; }
             set { SetProperty(ref amountLabel, value); }
         }
-        public string WeightLabel                       //ラベル（重量・焼結重量）
+        public string WeightLabel           //ラベル（重量・焼結重量）
         {
             get { return weightLabel; }
             set { SetProperty(ref weightLabel, value); }
         }
-        public bool VisibleCoil                         //表示・非表示（コイル数）
+        public bool VisibleCoil             //表示・非表示（コイル数）
         {
             get { return visibleCoil; }
             set { SetProperty(ref visibleCoil, value); }
         }
-        public bool VisibleItem1                        //表示・非表示（入力項目）
+        public bool VisibleItem1            //表示・非表示（入力項目）
         {
             get { return visibleItem1; }
             set { SetProperty(ref visibleItem1, value); }
         }
-        public bool VisibleItem2                        //表示・非表示（入力項目）
+        public bool VisibleItem2            //表示・非表示（入力項目）
         {
             get { return visibleItem2; }
             set { SetProperty(ref visibleItem2, value); }
         }
-        public bool VisibleDelete                       //表示・非表示（削除ボタン）
+        public bool VisibleDelete           //表示・非表示（削除ボタン）
         {
             get { return visibleDelete; }
             set { SetProperty(ref visibleDelete, value); }
         }
-        public bool VisibleCancel                       //表示・非表示（取消ボタン）
+        public bool VisibleCancel           //表示・非表示（取消ボタン）
         {
             get { return visibleCancel; }
             set { SetProperty(ref visibleCancel, value); }
         }
-        public bool VisibleTenKey                       //表示・非表示（テンキー）
+        public bool VisibleTenKey           //表示・非表示（テンキー）
         {
             get { return visibleTenKey; }
             set { SetProperty(ref visibleTenKey, value); }
         }
-        public bool VisibleWorker                       //表示・非表示（作業者）
+        public bool VisibleWorker           //表示・非表示（作業者）
         {
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
         }
-        public bool IsEnable                            //表示・非表示（下部ボタン）
+        public bool IsEnable                //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
             set 
@@ -217,32 +225,32 @@ namespace Display
                 inProcess.Amount = !management.VisibleCoil ? inProcess.Amount : CONVERT.ConvertCircleEnclosing(inProcess.Amount);
             }
         }
-        public bool IsFocusLotNumber                    //フォーカス（ロット番号）
+        public bool IsFocusLotNumber        //フォーカス（ロット番号）
         {
             get { return isFocusLotNumber; }
             set { SetProperty(ref isFocusLotNumber, value); }
         }
-        public bool IsFocusWorker                       //フォーカス（作業者）
+        public bool IsFocusWorker           //フォーカス（作業者）
         {
             get { return isFocusWorker; }
             set { SetProperty(ref isFocusWorker, value); }
         }
-        public bool IsFocusWeight                       //フォーカス（重量）
+        public bool IsFocusWeight           //フォーカス（重量）
         {
             get { return isFocusWeight; }
             set { SetProperty(ref isFocusWeight, value); }
         }
-        public bool IsFocusUnit                         //フォーカス（単位）
+        public bool IsFocusUnit             //フォーカス（単位）
         {
             get { return isFocusUnit; }
             set { SetProperty(ref isFocusUnit, value); }
         }
-        public bool IsFocusCompleted                    //フォーカス（完了）
+        public bool IsFocusCompleted        //フォーカス（完了）
         {
             get { return isFocusCompleted; }
             set { SetProperty(ref isFocusCompleted, value); }
         }
-        public bool IsFocusAmount                       //フォーカス（数量）
+        public bool IsFocusAmount           //フォーカス（数量）
         {
             get { return isFocusAmount; }
             set { SetProperty(ref isFocusAmount, value); }
@@ -261,18 +269,16 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo()
         {
-            Instance = this;
-
-            //履歴から仕掛データ読み込み
             inProcess = new InProcess();
-            inProcess.InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
-            DisplayLot(inProcess.LotNumber);
+            management = new Management();
+
+            //データ取得
+            ProcessName = INI.GetString("Page", "Process");
+            InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
 
             //デフォルト値設定
-            VisibleCoil = iShape != null ? iShape.Name == "コイル" : false;
             RegFlg = string.IsNullOrEmpty(inProcess.InProcessCODE);
             IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
-            ProcessName = INI.GetString("Page", "Process");
         }
 
         //ロード時
@@ -281,7 +287,6 @@ namespace Display
             ViewModelWindowMain.Instance.Ikeydown = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
-            
             DisplayCapution();
             SetFocus();
         }
@@ -298,6 +303,7 @@ namespace Display
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.ProcessWork = "仕掛搬入";
+            ViewModelWindowMain.Instance.ProcessName = ProcessName;
         }
 
         //初期化
@@ -305,6 +311,7 @@ namespace Display
         {
             if (!RegFlg) { return; }
             ProcessName = INI.GetString("Page", "Process");
+            inProcess.Worker = INI.GetString("Page", "Worker");
             inProcess.InProcessDate = SetToDay(DateTime.Now);
             inProcess.LotNumber = string.Empty;
             inProcess.ProductName = string.Empty;
@@ -312,13 +319,13 @@ namespace Display
             inProcess.Weight = string.Empty;
             inProcess.Unit = string.Empty;
             inProcess.Status = "搬入";
-            inProcess.Worker = INI.GetString("Page", "Worker");
             inProcess.Completed = string.Empty;
             inProcess.Coil = string.Empty;
             inProcess.ShirringUnit = string.Empty;
             inProcess.Comment = string.Empty;
-            LotNumber = string.Empty;
+
             iShape = Shape.SetShape("シート");
+            LotNumber = string.Empty;           
             AmountWidth = 150;
             RegFlg = true;
             IsEnable = true;
@@ -330,22 +337,14 @@ namespace Display
         //ロット番号処理
         private void DisplayLot(string lotnumber)
         {
-            //ロット番号変換
-            management = new Management();
-            management.LotNumber = lotnumber;
+            //データ取得
+            CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            LotNumber = management.LotNumber;
             iShape = Shape.SetShape(management.ShapeName);
-            inProcess.LotNumber = LotNumber;
-            inProcess.ProductName = management.ProductName;
-            inProcess.ShirringUnit = management.ShirringUnit;
+            LotNumber = management.LotNumber;
             inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
-            inProcess.DisplayInProcessData(LotNumber);                                      //仕掛情報取得
-            inProcess.SetNextProcess(management.ProductCODE);                               //製品によって次工程を設定
-            inProcess.UnitLabel = (ProcessName == "合板") ? "重 量" : "数 量";
-            AmountLabel = management.AmountLabel;
         }
 
         //キーイベント

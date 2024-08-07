@@ -250,7 +250,6 @@ namespace Display
 
                 case "F12":
                     //設定画面
-                    ViewModelManufactureInfo.Instance.Status = null;
                     FramePage = new Setting();
                     break;
 

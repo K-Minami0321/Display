@@ -111,7 +111,7 @@ namespace Display
                     break;
 
                 case "All":
-                    Workers = Employee.SetWorker();
+                    Workers = SetComboBox.SetWorker();
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;

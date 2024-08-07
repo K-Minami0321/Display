@@ -35,7 +35,6 @@ namespace Display
         string equipment2;
         string team;
         string buttonName;
-        string amountLabel;
         string productName;
         int lotNumberLength = 10;
         int startTimeLength = 4;
@@ -65,9 +64,7 @@ namespace Display
         bool isFocusSales;
 
         //プロパティ
-        public static ViewModelManufactureInfo Instance     //インスタンス
-        { get; set; }
-        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
+        public bool RegFlg                      //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
             set
@@ -79,7 +76,7 @@ namespace Display
                 ButtonName = value ? "登　録" : "修　正";
             }
         }
-        public string Status                                //入力状況
+        public string Status                    //入力状況
         {
             get { return status; }
             set
@@ -88,15 +85,13 @@ namespace Display
                 SetStatus();
             }
         }
-        public string ProcessName                           //工程区分
+        public string ProcessName               //工程区分
         {
             get { return processName; }
             set
             {
                 SetProperty(ref processName, value);
                 iProcess = ProcessCategory.SetProcess(value);
-                ViewModelWindowMain.Instance.ProcessName = value;
-                manufacture.ProcessName = ProcessName;
                 
                 switch (value)
                 {
@@ -120,22 +115,22 @@ namespace Display
                 }
             }
         }
-        public string ManufactureCODE                       //製造CODE
+        public string ManufactureCODE           //製造CODE
         {
             get { return manufactureCODE; }
             set 
             { 
                 SetProperty(ref manufactureCODE, value);
-                PropertyCopy(new Manufacture(ManufactureCODE), manufacture);
+                CopyProperty(new Manufacture(ManufactureCODE, ProcessName), manufacture);
                 DisplayLot(manufacture.LotNumber);
             }
         }
-        public string LotNumber                             //ロット番号
+        public string LotNumber                 //ロット番号（テキストボックス）
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
         }
-        public string EquipmentCODE                         //設備CODE
+        public string EquipmentCODE             //設備CODE
         {
             get { return equipmentCODE; }
             set 
@@ -146,7 +141,7 @@ namespace Display
                 Equipment1 = value;
             }
         }
-        public string Equipment1                            //設備
+        public string Equipment1                //設備
         {
             get { return equipment1; }
             set
@@ -155,7 +150,7 @@ namespace Display
                 manufacture.Equipment1 = value;
             }
         }
-        public string Equipment2                            //設備
+        public string Equipment2                //設備
         {
             get { return equipment2; }
             set 
@@ -164,7 +159,7 @@ namespace Display
                 manufacture.Equipment2 = value;
             }
         }
-        public string Team                                  //班名
+        public string Team                      //班名
         {
             get { return team; }
             set 
@@ -173,42 +168,37 @@ namespace Display
                 manufacture.Team = value;
             }
         }
-        public string ButtonName                            //登録ボタン名
+        public string ButtonName                //登録ボタン名
         {
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
         }
-        public string AmountLabel                           //数量ラベル
-        {
-            get { return management.AmountLabel; }
-            set { SetProperty(ref amountLabel, value); }
-        }
-        public int LotNumberLength                          //文字数（ロット番号）
+        public int LotNumberLength              //文字数（ロット番号）
         {
             get { return lotNumberLength; }
             set { SetProperty(ref lotNumberLength, value); }
         }
-        public int StartTimeLength                          //文字数（開始時間）
+        public int StartTimeLength              //文字数（開始時間）
         {
             get { return startTimeLength; }
             set { SetProperty(ref startTimeLength, value); }
         }
-        public int EndTimeLength                            //文字数（終了時間）
+        public int EndTimeLength                //文字数（終了時間）
         {
             get { return endTimeLength; }
             set { SetProperty(ref endTimeLength, value); }
         }
-        public int AmountLength                             //文字数（数量）
+        public int AmountLength                 //文字数（数量）
         {
             get { return amountLength; }
             set { SetProperty(ref amountLength, value); }
         }
-        public string BreakName                             //中断ボタン名
+        public string BreakName                 //中断ボタン名
         {
             get { return breakName; }
             set { SetProperty(ref breakName, value); }
         }
-        public bool EnabledControl1                         //コントロール使用可能
+        public bool EnabledControl1             //コントロール使用可能
         {
             get { return enabledControl1; }
             set
@@ -217,102 +207,102 @@ namespace Display
                 VisibleButtonStart = value;
             }
         }
-        public bool EnabledControl2                         //コントロール使用可能
+        public bool EnabledControl2             //コントロール使用可能
         {
             get { return enabledControl2; }
             set { SetProperty(ref enabledControl2, value); }
         }
-        public bool VisiblePackaging                        //表示・非表示（数量)
+        public bool VisiblePackaging            //表示・非表示（数量)
         {
             get { return visiblePackaging; }
             set { SetProperty(ref visiblePackaging, value); }
         }
-        public bool VisibleButtonStart                      //開始ボタン表示・非表示
+        public bool VisibleButtonStart          //開始ボタン表示・非表示
         {
             get { return visibleButtonStart; }
             set { SetProperty(ref visibleButtonStart, value); }
         }
-        public bool VisibleButtonEnd                        //終了ボタン表示・非表示
+        public bool VisibleButtonEnd            //終了ボタン表示・非表示
         {
             get { return visibleButtonEnd; }
             set { SetProperty(ref visibleButtonEnd, value); }
         }
-        public bool VisibleButtonCancel                     //取消ボタン表示・非表示
+        public bool VisibleButtonCancel         //取消ボタン表示・非表示
         {
             get { return visibleButtonCancel; }
             set { SetProperty(ref visibleButtonCancel, value); }
         }
-        public bool VisibleButtonBreak                      //中断ボタン表示・非表示
+        public bool VisibleButtonBreak          //中断ボタン表示・非表示
         {
             get { return visibleButtonBreak; }
             set { SetProperty(ref visibleButtonBreak, value); }
         }
-        public bool VisibleEdit                             //表示・非表示（削除ボタン）
+        public bool VisibleEdit                 //表示・非表示（削除ボタン）
         {
             get { return visibleEdit; }
             set { SetProperty(ref visibleEdit, value); }
         }
-        public bool VisibleTenKey                           //表示・非表示（テンキー）
+        public bool VisibleTenKey               //表示・非表示（テンキー）
         {
             get { return visibleTenKey; }
             set { SetProperty(ref visibleTenKey, value); }
         }
-        public bool VisibleWorker                           //表示・非表示（作業者）
+        public bool VisibleWorker               //表示・非表示（作業者）
         {
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
         }
-        public bool VisibleWorkProcess                      //表示・非表示（工程）
+        public bool VisibleWorkProcess          //表示・非表示（工程）
         {
             get { return visibleWorkProcess; }
             set { SetProperty(ref visibleWorkProcess, value); }
         }
-        public bool VisibleSeal                             //表示・非表示（売上）
+        public bool VisibleSeal                 //表示・非表示（売上）
         {
             get { return visibleSeal; }
             set { SetProperty(ref visibleSeal, value); }
         }
-        public bool IsEnable                                //表示・非表示（下部ボタン）
+        public bool IsEnable                    //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
             set { SetProperty(ref isEnable, value); }
         }
-        public bool IsFocusLotNumber                        //フォーカス（ロット番号）
+        public bool IsFocusLotNumber            //フォーカス（ロット番号）
         {
             get { return isFocusLotNumber; }
             set { SetProperty(ref isFocusLotNumber, value); }
         }
-        public bool IsFocusWorker                           //フォーカス（作業者）
+        public bool IsFocusWorker               //フォーカス（作業者）
         {
             get { return isFocusWorker; }
             set { SetProperty(ref isFocusWorker, value); }
         }
-        public bool IsFocusWorkProcess                      //フォーカス（工程）
+        public bool IsFocusWorkProcess          //フォーカス（工程）
         {
             get { return isFocusWorkProcess; }
             set { SetProperty(ref isFocusWorkProcess, value); }
         }
-        public bool IsFocusStartTime                        //フォーカス（開始時間）
+        public bool IsFocusStartTime            //フォーカス（開始時間）
         {
             get { return isFocusStartTime; }
             set { SetProperty(ref isFocusStartTime, value); }
         }
-        public bool IsFocusEndTime                          //フォーカス（終了時間）
+        public bool IsFocusEndTime              //フォーカス（終了時間）
         {
             get { return isFocusEndTime; }
             set { SetProperty(ref isFocusEndTime, value); }
         }
-        public bool IsFocusAmount                           //フォーカス（数量）
+        public bool IsFocusAmount               //フォーカス（数量）
         {
             get { return isFocusAmount; }
             set { SetProperty(ref isFocusAmount, value); }
         }
-        public bool IsFocusCompleted                        //フォーカス（完了）
+        public bool IsFocusCompleted            //フォーカス（完了）
         {
             get { return isFocusCompleted; }
             set { SetProperty(ref isFocusCompleted, value); }
         }
-        public bool IsFocusSales                            //フォーカス（売上）
+        public bool IsFocusSales                //フォーカス（売上）
         {
             get { return isFocusSales; }
             set { SetProperty(ref isFocusSales, value); }
@@ -331,16 +321,16 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureInfo()
         {
-            Instance = this;
-
-            //実績データインスタンス
             manufacture = new Manufacture();
+            management = new Management();
+
+            //データ取得
+            ProcessName = INI.GetString("Page", "Process");
             ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
 
             //デフォルト値設定
             RegFlg = string.IsNullOrEmpty(manufacture.ManufactureCODE);
             IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
-            ProcessName = INI.GetString("Page", "Process");
         }
 
         //ロード時
@@ -365,6 +355,7 @@ namespace Display
             ViewModelWindowMain.Instance.VisibleArrow = false;
             ViewModelWindowMain.Instance.VisiblePlan = true;
             ViewModelWindowMain.Instance.InitializeIcon();
+            ViewModelWindowMain.Instance.ProcessName = ProcessName;
         }
 
         //初期化
@@ -374,9 +365,7 @@ namespace Display
 
             if (!RegFlg) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
-            EquipmentCODE = INI.GetString("Page", "Equipment");
             manufacture.Worker = INI.GetString("Page", "Worker");
-            LotNumber = string.Empty;
             manufacture.LotNumber = string.Empty;
             manufacture.ProductName = string.Empty;
             manufacture.WorkProcess = string.Empty;
@@ -387,11 +376,26 @@ namespace Display
             manufacture.Weight = string.Empty;
             manufacture.Completed = string.Empty;
             manufacture.Sales = string.Empty;
-            AmountLabel = "数 量";
-            IsEnable = true;
 
-            //予定表からロット番号取得
-            DisplayLot(ViewModelPlanList.Instance.LotNumber);
+            EquipmentCODE = INI.GetString("Page", "Equipment");
+            ManufactureCODE = string.Empty;
+            LotNumber = string.Empty;
+            IsEnable = true;
+            DisplayLot(ViewModelPlanList.Instance.LotNumber);           //予定表からロット番号取得
+        }
+
+        //ロット番号処理
+        private void DisplayLot(string lotnumber)
+        {
+            //データ取得
+            CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
+
+            //データ表示
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            iShape = Shape.SetShape(management.ShapeName);
+            LotNumber = management.LotNumber;
+            manufacture.LotNumber = LotNumber;
+            manufacture.ProductName = management.ProductName;
         }
 
         //キーイベント
@@ -518,22 +522,6 @@ namespace Display
                     ViewModelWindowMain.Instance.FramePage = new PlanList();
                     break;
             }
-        }
-
-        //ロット番号処理
-        private void DisplayLot(string lotnumber)
-        {
-            //ロットインスタンス
-            management = new Management();
-            management.LotNumber = lotnumber;
-
-            //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            LotNumber = management.LotNumber;
-            iShape = Shape.SetShape(management.ShapeName);
-            manufacture.LotNumber = LotNumber;
-            manufacture.ProductName = management.ProductName;
-            AmountLabel = management.Amount;
         }
 
         //選択処理

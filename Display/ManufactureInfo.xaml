@@ -159,7 +159,7 @@
                                 </TextBox>
                                 <TextBlock Text="{Binding manufacture.EndTime}" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}"/>
                             </StackPanel>
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="TextAmount" Text="{Binding manufacture.Amount}" Width="130" 
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 

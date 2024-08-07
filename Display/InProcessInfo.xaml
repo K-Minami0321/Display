@@ -39,7 +39,7 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="搬入日"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.InProcessDate,Converter={StaticResource DateTimeConverter}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
                             <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" InputMethod.IsInputMethodEnabled="False">
@@ -158,9 +158,7 @@
                                     </i:Interaction.Behaviors>
                                 </CheckBox>
                             </StackPanel>
-                            
-                            
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
                             <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="TextAmount" Text="{Binding inProcess.Amount}" Width="{Binding AmountWidth,FallbackValue=150}"
                                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
@@ -183,10 +181,10 @@
                                         <local:TextBoxMode Mode="Number"/>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
-                                <StackPanel Orientation="Horizontal" Visibility="{Binding VisibleCoil,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,0" >
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,0" >
                                     <TextBlock Text="{Binding inProcess.Coil,Converter={StaticResource CircleEnclosingConverter},FallbackValue=①}" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}" FontSize="35" TextAlignment="Center" Width="55"/>
-                                    <TextBlock Text="／" FontSize="35" TextAlignment="Center" Visibility="{Binding VisibleCoil,Converter={StaticResource CollapsedConverter}}"/>
-                                    <TextBlock Text="{Binding inProcess.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="35" TextAlignment="Center" Width="55"/>
+                                    <TextBlock Text="／" FontSize="35" TextAlignment="Center" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}"/>
+                                    <TextBlock Text="{Binding management.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="35" TextAlignment="Center" Width="55"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

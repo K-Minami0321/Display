@@ -207,7 +207,7 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            SelectTable = inProcess.SelectList(null, null, InProcessDate);           
+            SelectTable = inProcess.SelectList(ProcessName, null, null, InProcessDate);           
         }
 
         //選択処理

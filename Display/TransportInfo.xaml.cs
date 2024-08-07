@@ -24,43 +24,49 @@ namespace Display
     public class ViewModelTransportInfo : Common, IKeyDown, IWorker
     {
         //変数
+        string processName;
+        string inProcessCODE;
         bool regFlg;
         bool isEnable;
-        string processName;
         bool visibleWorker;
         bool isFocusWorker;
 
         //プロパティ
-        public static ViewModelTransportInfo Instance       //インスタンス
-        { get; set; } = new ViewModelTransportInfo();
-        public string ProcessName                           //工程区分
+        public string ProcessName           //工程区分
         {
             get { return processName; }
             set
             {
                 SetProperty(ref processName, value);
-                if (value == null) { return; }
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string LotNumber                             //ロット番号
-        { get; set; }
-        public bool RegFlg                                  //新規・既存フラグ（true:新規、false:既存）
+        public string InProcessCODE
+        {
+            get { return inProcessCODE; }
+            set
+            {
+                SetProperty(ref inProcessCODE, value);
+                CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
+                DisplayLot(inProcess.LotNumber);
+            }
+        }
+        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
             set { SetProperty(ref regFlg, value); }
         }
-        public bool IsEnable                                //表示・非表示（下部ボタン）
+        public bool IsEnable                //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
             set { SetProperty(ref isEnable, value); }
         }
-        public bool VisibleWorker                           //表示・非表示（作業者）
+        public bool VisibleWorker           //表示・非表示（作業者）
         {
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
         }
-        public bool IsFocusWorker                           //フォーカス（作業者）
+        public bool IsFocusWorker           //フォーカス（作業者）
         {
             get { return isFocusWorker; }
             set { SetProperty(ref isFocusWorker, value); }
@@ -79,18 +85,16 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportInfo()
         {
-            Instance = this;
-
-            //仕掛移動インスタンス
             inProcess = new InProcess();
-            inProcess.InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
-            LotNumber = inProcess.LotNumber;
-            DisplayLot(LotNumber);
+            management = new Management();
+
+            //仕掛移動データ取得
+            ProcessName = INI.GetString("Page", "Process");
+            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
 
             //デフォルト値設定
             RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
             IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
-            ProcessName = INI.GetString("Page", "Process");
         }
 
         //ロード時
@@ -115,7 +119,7 @@ namespace Display
             ViewModelWindowMain.Instance.InitializeIcon();
             ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
             ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = ProcessName;
         }
 
         //初期化
@@ -129,15 +133,12 @@ namespace Display
         //ロット番号処理
         private void DisplayLot(string lotnumber)
         {
-            //ロットインスタンス
-            management = new Management();
-            management.LotNumber = lotnumber;
+            //データ取得
+            CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             iShape = Shape.SetShape(management.ShapeName);
-            inProcess.ProductName = management.ProductName;
-            inProcess.ShapeName = management.ShapeName;
         }
 
         //キーイベント

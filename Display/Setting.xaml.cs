@@ -204,9 +204,9 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            ProcessNames = ProcessCategory.ProcessList();       //コンボボックス設定
-            Servers = Maintenance.SetServer();                  //サーバー設定
-            IsFocusServer = true;                               //フォーカス
+            ProcessNames = SetComboBox.ProcessList();       //コンボボックス設定
+            Servers = SetComboBox.SetServer();              //サーバー設定
+            IsFocusServer = true;                           //フォーカス
         }
 
         //データ表示
