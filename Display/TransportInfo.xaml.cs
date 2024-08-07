@@ -26,7 +26,6 @@ namespace Display
         //変数
         string processName;
         string inProcessCODE;
-        bool regFlg = true;
         bool isEnable;
         bool visibleWorker;
         bool isFocusWorker;
@@ -50,11 +49,6 @@ namespace Display
                 CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
                 DisplayLot(inProcess.LotNumber);
             }
-        }
-        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set { SetProperty(ref regFlg, value); }
         }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
@@ -93,7 +87,6 @@ namespace Display
             InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
 
             //デフォルト値設定
-            RegFlg = string.IsNullOrEmpty(inProcess.TransportDate);
             IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
@@ -124,7 +117,6 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            if (!regFlg) { return; }
             ProcessName = INI.GetString("Page", "Process");
             inProcess.TransportWorker = INI.GetString("Page", "Worker");
             inProcess.TransportDate = SetToDay(DateTime.Now);
@@ -205,8 +197,8 @@ namespace Display
         private void RegistData()
         {
             //登録
+            inProcess.Place = "プレス";
             inProcess.Status = "引取";
-            inProcess.Place = ProcessName;
             inProcess.TransportResist(inProcess.InProcessCODE);
             ViewModelWindowMain.Instance.FramePage = new TransportList();
         }
