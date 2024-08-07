@@ -26,7 +26,7 @@ namespace Display
         //変数
         string processName;
         string inProcessCODE;
-        bool regFlg;
+        bool regFlg = true;
         bool isEnable;
         bool visibleWorker;
         bool isFocusWorker;
@@ -41,7 +41,7 @@ namespace Display
                 iProcess = ProcessCategory.SetProcess(value);
             }
         }
-        public string InProcessCODE
+        public string InProcessCODE         //仕掛CODE
         {
             get { return inProcessCODE; }
             set
@@ -89,7 +89,7 @@ namespace Display
             management = new Management();
 
             //仕掛移動データ取得
-            ProcessName = INI.GetString("Page", "Process");
+            Initialize();
             InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
 
             //デフォルト値設定
@@ -109,7 +109,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = false;
@@ -126,6 +125,7 @@ namespace Display
         public void Initialize()
         {
             if (!regFlg) { return; }
+            ProcessName = INI.GetString("Page", "Process");
             inProcess.TransportWorker = INI.GetString("Page", "Worker");
             inProcess.TransportDate = SetToDay(DateTime.Now);
         }

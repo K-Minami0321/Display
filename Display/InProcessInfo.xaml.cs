@@ -3,6 +3,7 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,7 +25,7 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
     {
         //変数
-        bool regFlg;
+        bool regFlg = true;
         string processName;
         string inProcessCODE;
         string inProcessDate;
@@ -273,8 +274,13 @@ namespace Display
             management = new Management();
 
             //データ取得
-            ProcessName = INI.GetString("Page", "Process");
+            Initialize();
             InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
+            if (string.IsNullOrEmpty(InProcessCODE)) 
+            { 
+                DisplayLot(ViewModelPlanList.Instance.LotNumber);
+                LotNumber = ViewModelPlanList.Instance.LotNumber;
+            }
 
             //デフォルト値設定
             RegFlg = string.IsNullOrEmpty(inProcess.InProcessCODE);
@@ -294,7 +300,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
             ViewModelWindowMain.Instance.VisiblePower = true;
             ViewModelWindowMain.Instance.VisibleList = true;
             ViewModelWindowMain.Instance.VisibleInfo = true;
@@ -313,25 +318,12 @@ namespace Display
             ProcessName = INI.GetString("Page", "Process");
             inProcess.Worker = INI.GetString("Page", "Worker");
             inProcess.InProcessDate = SetToDay(DateTime.Now);
-            inProcess.LotNumber = string.Empty;
-            inProcess.ProductName = string.Empty;
-            inProcess.Amount = string.Empty;
-            inProcess.Weight = string.Empty;
-            inProcess.Unit = string.Empty;
-            inProcess.Status = "搬入";
-            inProcess.Completed = string.Empty;
-            inProcess.Coil = string.Empty;
-            inProcess.ShirringUnit = string.Empty;
-            inProcess.Comment = string.Empty;
+            InProcessCODE = string.Empty;
+            DisplayLot(string.Empty);
 
-            iShape = Shape.SetShape("シート");
-            LotNumber = string.Empty;           
             AmountWidth = 150;
             RegFlg = true;
             IsEnable = true;
-
-            //予定表からロット番号取得
-            DisplayLot(ViewModelPlanList.Instance.LotNumber);
         }
 
         //ロット番号処理
@@ -344,6 +336,7 @@ namespace Display
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             iShape = Shape.SetShape(management.ShapeName);
             LotNumber = management.LotNumber;
+            inProcess.LotNumber = LotNumber;
             inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
         }
 
@@ -454,6 +447,7 @@ namespace Display
             }
 
             //登録処理
+            inProcess.Status = "搬入";
             inProcess.InsertLog(RegFlg);
             inProcess.Resist(inProcess.InProcessCODE);
             RegFlg = true;
