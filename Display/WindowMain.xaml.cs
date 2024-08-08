@@ -308,12 +308,12 @@ namespace Display
             DisplayStyle = WindowStyle.None;
 
             //マルチモニタ対応
-            foreach (var scr in System.Windows.Forms.Screen.AllScreens)
+            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
             {
-                if (!scr.Primary)
+                if (!screen.Primary)
                 {
-                    WindowLeft = scr.Bounds.Left;
-                    WindowTop = scr.Bounds.Top;
+                    WindowLeft = screen.Bounds.Left;
+                    WindowTop = screen.Bounds.Top;
                     DisplayStyle = WindowStyle.None;
                     DisplayState = WindowState.Maximized;
                 }
@@ -323,7 +323,7 @@ namespace Display
         //Windowのサイズ・位置を記憶
         private void SaveWindowProperty()
         {
-            //if (DisplayState == WindowState.Maximized) { return; }
+            if (DisplayState == WindowState.Maximized) { return; }
             Properties.Settings.Default.WindowLeft = WindowLeft;
             Properties.Settings.Default.WindowTop = WindowTop;
             Properties.Settings.Default.WindowWidth = WindowWidth;
