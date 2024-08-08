@@ -7,7 +7,6 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Diagnostics;
 
 #pragma warning disable
 namespace Display

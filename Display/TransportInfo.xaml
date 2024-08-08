@@ -6,7 +6,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelTransportInfo}"
-      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="680" 
+      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="640" 
       FontSize="35" FontFamily="Meiryo UI">
     <!-- イベント -->
     <i:Interaction.Triggers>
@@ -16,97 +16,99 @@
     </i:Interaction.Triggers>
     <!-- 画面表示 -->
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <!-- 上領域 -->
-            <Grid Background="#D7DCDE" Margin="0,10,0,20" Height="560">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                        <!-- 左領域 -->
-                        <Grid Margin="40,40,0,40" HorizontalAlignment="Left">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="380"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                                <RowDefinition Height="70"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="搬出日"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.TransportDate,Converter={StaticResource DateTimeConverter}}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName}" FontWeight="Bold"/>
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding inProcess.LotNumber}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="形 状"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding management.ShapeName}"/>
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
-                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
-                                <TextBlock Text="{Binding inProcess.Unit,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
-                                <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
-                            </StackPanel>
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
-                            <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
-                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.IsInputMethodEnabled="True" IsEnabled="{Binding IsEnable}">
-                                <TextBox.Resources>
-                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
-                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Resources>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Worker"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <i:Interaction.Behaviors>
-                                    <local:TextBoxMode/>
-                                </i:Interaction.Behaviors>
-                            </TextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="570"/>
+            <RowDefinition Height="60*"/>
+        </Grid.RowDefinitions>
+        <!-- 上領域 -->
+        <Grid Grid.Row="0" Background="#D7DCDE" Height="560">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                    <!-- 左領域 -->
+                    <Grid Margin="40,40,0,40" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="380"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="搬出日"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.TransportDate,Converter={StaticResource DateTimeConverter}}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName}" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding inProcess.LotNumber}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="形 状"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding management.ShapeName}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="重 量"/>
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal"  >
+                            <TextBlock Text="{Binding inProcess.Unit,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
+                            <TextBlock Text="kg" FontSize="40" TextAlignment="Center" Margin="20,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="担当者"/>
+                        <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.IsInputMethodEnabled="True" IsEnabled="{Binding IsEnable}">
+                            <TextBox.Resources>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
+                                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Resources>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Worker"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <i:Interaction.Behaviors>
+                                <local:TextBoxMode/>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                    </Grid>
+                    <!-- 右領域 -->
+                    <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left" IsEnabled="{Binding IsEnable}">
+                        <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                            <local:ControlWorker/>
                         </Grid>
-                        <!-- 右領域 -->
-                        <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left" IsEnabled="{Binding IsEnable}">
-                            <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
-                                <local:ControlWorker/>
-                            </Grid>
-                        </Grid>
-                    </StackPanel>
+                    </Grid>
                 </StackPanel>
-            </Grid>
-            <!-- 下領域 -->
-            <Grid Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
-                        <WrapPanel>
-                            <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="{Binding ButtonName}"/>
-                        </WrapPanel>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TouchDown">
-                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Regist"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Button>
-                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleCancel,Converter={StaticResource CollapsedConverter}}">
-                        <WrapPanel>
-                            <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="取　消"/>
-                        </WrapPanel>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TouchDown">
-                                <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Cancel"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
+            </StackPanel>
+        </Grid>
+        <!-- 下領域 -->
+        <Grid Grid.Row="2" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
+                    <WrapPanel>
+                        <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
+                        <TextBlock Text="{Binding ButtonName}"/>
+                    </WrapPanel>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TouchDown">
+                            <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Regist"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleCancel,Converter={StaticResource CollapsedConverter}}">
+                    <WrapPanel>
+                        <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
+                        <TextBlock Text="取　消"/>
+                    </WrapPanel>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TouchDown">
+                            <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Cancel"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

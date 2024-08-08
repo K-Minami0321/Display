@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Display.Manual"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:local="clr-namespace:Display" d:DataContext="{d:DesignInstance Type=local:ViewModelManual}"
+      mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="640" 
+      FontSize="35" FontFamily="Meiryo UI">
+    <!-- イベント -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CommandLoad}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <!-- 画面表示 -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="570"/>
+            <RowDefinition Height="60*"/>
+        </Grid.RowDefinitions>
+        <!-- 上領域 -->
+        <Grid Grid.Row="0" Background="#D7DCDE" Height="560">
+
+            
+            
+            
+        </Grid>
+        <!-- 下領域 -->
+        <Grid Grid.Row="1">
+
+            
+            
+            
+            
+            
+        </Grid>
+    </Grid>
+</UserControl>

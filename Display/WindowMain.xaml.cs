@@ -169,7 +169,6 @@ namespace Display
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
             DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
-            DisplayStyle = WindowStyle.None;
 
             //データベース接続文字列
             SQL.DB = INI.GetString("Database", "Database");
@@ -282,6 +281,8 @@ namespace Display
         //Windowサイズ・位置復元
         private void LoadWindowProperty()
         {
+            WindowMain windowMain = new WindowMain();
+
             if (DisplayStyle == WindowStyle.None)
             {
                 WindowLeft = 0;
@@ -298,20 +299,31 @@ namespace Display
                 WindowHeight = Properties.Settings.Default.WindowHeight;
             }
 
-            WindowLeft = 0;
-            WindowTop = 0;
-            WindowWidth = 0;
-            WindowHeight = 0;
-
             //Width・Heightのデフォルト値
-            if (WindowWidth <= 0) { WindowWidth = 1280; }
-            if (WindowHeight <= 0) { WindowHeight = 880; }
+            //if (WindowWidth <= 0) { WindowWidth = 1280; }
+            //if (WindowHeight <= 0) { WindowHeight = 800; }
+
+            //最大化設定
+            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            DisplayStyle = WindowStyle.None;
+
+            //マルチモニタ対応
+            foreach (var scr in System.Windows.Forms.Screen.AllScreens)
+            {
+                if (!scr.Primary)
+                {
+                    WindowLeft = scr.Bounds.Left;
+                    WindowTop = scr.Bounds.Top;
+                    DisplayStyle = WindowStyle.None;
+                    DisplayState = WindowState.Maximized;
+                }
+            }
         }
 
         //Windowのサイズ・位置を記憶
         private void SaveWindowProperty()
         {
-            if (DisplayState == WindowState.Maximized) { return; }
+            //if (DisplayState == WindowState.Maximized) { return; }
             Properties.Settings.Default.WindowLeft = WindowLeft;
             Properties.Settings.Default.WindowTop = WindowTop;
             Properties.Settings.Default.WindowWidth = WindowWidth;
@@ -354,6 +366,5 @@ namespace Display
             IconPlan = "FileClockOutline";
             IconSize = 30;
         }
-
     }
 }
