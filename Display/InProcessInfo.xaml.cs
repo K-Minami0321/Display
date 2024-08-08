@@ -7,6 +7,7 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Diagnostics;
 
 #pragma warning disable
 namespace Display
@@ -329,7 +330,7 @@ namespace Display
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            inProcess.InProcessDate = SetToDay(DateTime.Now);
+            if (RegFlg) { inProcess.InProcessDate = SetToDay(DateTime.Now); }
         }
 
         //ロット番号処理
@@ -452,7 +453,9 @@ namespace Display
             }
 
             //登録処理
+            inProcess.ProductName = management.ProductName;
             inProcess.Status = "搬入";
+            inProcess.TransportDate = string.Empty;
             inProcess.InsertLog(RegFlg);
             inProcess.Resist(inProcess.InProcessCODE);
             RegFlg = true;

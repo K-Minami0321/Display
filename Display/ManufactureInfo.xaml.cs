@@ -389,7 +389,7 @@ namespace Display
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            manufacture.ManufactureDate = SetToDay(DateTime.Now);
+            if (RegFlg) { manufacture.ManufactureDate = SetToDay(DateTime.Now); }
         }
 
         //ロット番号処理

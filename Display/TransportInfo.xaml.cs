@@ -4,6 +4,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -21,9 +22,10 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportInfo : Common, IKeyDown, IWorker
+    public class ViewModelTransportInfo : Common, IKeyDown, IWorker, ITimer
     {
         //変数
+        bool regFlg;
         string processName;
         string inProcessCODE;
         bool isEnable;
@@ -31,6 +33,11 @@ namespace Display
         bool isFocusWorker;
 
         //プロパティ
+        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return regFlg; }
+            set { SetProperty(ref regFlg, value); }
+        }
         public string ProcessName           //工程区分
         {
             get { return processName; }
@@ -87,6 +94,7 @@ namespace Display
             InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
 
             //デフォルト値設定
+            RegFlg = (inProcess.Status == "搬入");
             IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
@@ -94,6 +102,7 @@ namespace Display
         private void OnLoad()
         {
             ViewModelWindowMain.Instance.Ikeydown = this;
+            ViewModelWindowMain.Instance.Itimer = this;
             ViewModelControlWorker.Instance.Iworker = this;
             DisplayCapution();
             SetGotFocus("Worker");
@@ -178,6 +187,12 @@ namespace Display
                     ViewModelWindowMain.Instance.FramePage = new TransportList();
                     break;
             }
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (RegFlg) { inProcess.TransportDate = SetToDay(DateTime.Now); }
         }
 
         //選択処理
