@@ -86,7 +86,7 @@
                     <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="登　録"/>
+                            <TextBlock Text="{Binding ButtonName}"/>
                         </WrapPanel>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TouchDown">
@@ -94,7 +94,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" >
+                    <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleCancel,Converter={StaticResource CollapsedConverter}}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
                             <TextBlock Text="取　消"/>

@@ -28,15 +28,22 @@ namespace Display
         bool regFlg;
         string processName;
         string inProcessCODE;
+        string buttonName;
         bool isEnable;
         bool visibleWorker;
+        bool visibleCancel;
         bool isFocusWorker;
 
         //プロパティ
         public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
-            set { SetProperty(ref regFlg, value); }
+            set 
+            { 
+                SetProperty(ref regFlg, value);
+                VisibleCancel = !value;
+                ButtonName = value ? "登　録" : "修　正";
+            }
         }
         public string ProcessName           //工程区分
         {
@@ -57,6 +64,11 @@ namespace Display
                 DisplayLot(inProcess.LotNumber);
             }
         }
+        public string ButtonName            //登録ボタン名
+        {
+            get { return buttonName; }
+            set { SetProperty(ref buttonName, value); }
+        }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
@@ -66,6 +78,11 @@ namespace Display
         {
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
+        }
+        public bool VisibleCancel           //表示・非表示（取消ボタン）
+        {
+            get { return visibleCancel; }
+            set { SetProperty(ref visibleCancel, value); }
         }
         public bool IsFocusWorker           //フォーカス（作業者）
         {
