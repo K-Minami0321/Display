@@ -4,6 +4,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -21,7 +22,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess
+    public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
         bool regFlg;
@@ -337,6 +338,7 @@ namespace Display
         private void OnLoad()
         {
             ViewModelWindowMain.Instance.Ikeydown = this;
+            ViewModelWindowMain.Instance.Itimer = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelControlWorkProcess.Instance.IworkProcess = this;
@@ -382,6 +384,12 @@ namespace Display
             LotNumber = string.Empty;
             IsEnable = true;
             DisplayLot(ViewModelPlanList.Instance.LotNumber);           //予定表からロット番号取得
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            manufacture.ManufactureDate = SetToDay(DateTime.Now);
         }
 
         //ロット番号処理

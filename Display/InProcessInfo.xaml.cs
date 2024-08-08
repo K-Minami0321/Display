@@ -3,7 +3,7 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Diagnostics;
+using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,7 +22,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker
+    public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker, ITimer
     {
         //変数
         bool regFlg = true;
@@ -56,7 +56,6 @@ namespace Display
         bool isFocusAmount;
 
         //プロパティ
-
         public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
         {
             get { return regFlg; }
@@ -291,6 +290,7 @@ namespace Display
         private void OnLoad()
         {
             ViewModelWindowMain.Instance.Ikeydown = this;
+            ViewModelWindowMain.Instance.Itimer = this;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             DisplayCapution();
@@ -324,6 +324,12 @@ namespace Display
             AmountWidth = 150;
             RegFlg = true;
             IsEnable = true;
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            inProcess.InProcessDate = SetToDay(DateTime.Now);
         }
 
         //ロット番号処理
@@ -443,7 +449,6 @@ namespace Display
                 var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
                 var inprocesscode = inProcess.GenerateCode(iProcess.Mark + inprocessdate);
                 inProcess.InProcessCODE = inprocesscode;
-                inProcess.InProcessDate = SetToDay(DateTime.Now);       //強制的に本日にする
             }
 
             //登録処理

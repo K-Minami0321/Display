@@ -1,10 +1,9 @@
 ﻿using ClassBase;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using System;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 #pragma warning disable
 namespace Display
@@ -14,6 +13,11 @@ namespace Display
     {
         void KeyDown(object value);    //キー押下処理
         void Swipe(object value);
+    }
+
+    public interface ITimer
+    {
+        void OnTimerElapsed(object sender, ElapsedEventArgs e);
     }
 
     //画面クラス
@@ -53,6 +57,8 @@ namespace Display
         public static ViewModelWindowMain Instance      //インスタンス
         { get; set; } = new ViewModelWindowMain();
         public IKeyDown Ikeydown                        //インターフェース
+        { get; set; }
+        public ITimer Itimer                            //インターフェース
         { get; set; }
         public WindowState DisplayState                 //最大化・Window化
         {
@@ -170,6 +176,9 @@ namespace Display
             SQL.ConnectString = INI.GetString("Database", "ConnectString");
             SQL.DatabaseOpen();
             FunctionColor = (SQL.ConnectString.Contains("DEV")) ? "0.5" : "1";
+
+            //タイマーを設定
+            StartTimer();
         }
 
         //開始処理
@@ -310,6 +319,19 @@ namespace Display
             Properties.Settings.Default.Save();
         }
 
+        //1秒間隔でタイマーを設定
+        private void StartTimer()
+        {
+            Timer timer = new Timer(1000);
+            timer.Elapsed += OnTimerElapsed;
+            timer.Start();
+        }
+
+        //タイマー処理
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (Itimer != null) { Itimer.OnTimerElapsed(sender,e); }
+        }
 
         //スワイプ処理
         public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)

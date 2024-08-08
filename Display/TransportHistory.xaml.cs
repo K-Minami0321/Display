@@ -2,6 +2,7 @@
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
+using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -19,7 +20,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportHistory : Common, IKeyDown, ISelect
+    public class ViewModelTransportHistory : Common, IKeyDown, ISelect, ITimer
     {
         //プロパティ変数
         string processName;
@@ -115,6 +116,7 @@ namespace Display
             //インスタンス
             Instance = this;
             ViewModelWindowMain.Instance.Ikeydown = this;
+            ViewModelWindowMain.Instance.Itimer = this;
             DataGridBehavior.Instance.Iselect = this;
             DisplayCapution();
             DiaplayList();
@@ -142,6 +144,12 @@ namespace Display
         {
             ProcessName = INI.GetString("Page", "Process");
             InProcessCODE = string.Empty;
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            TransportDate = SetToDay(DateTime.Now);
         }
 
         //キーイベント
