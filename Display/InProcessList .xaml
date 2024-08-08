@@ -25,10 +25,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="560"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="580"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter}}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter}}" Style="{StaticResource TextDate}"/>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->
