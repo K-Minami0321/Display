@@ -19,19 +19,23 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="30,30,0,30" >
             <materialDesign:PackIcon Width="50" Height="50" Foreground="#607D8B" Kind="AlertCircleOutline"/>
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Message}" Width="500" FontSize="35" Foreground="DarkSlateGray" TextWrapping="Wrap" Margin="10,3,10,0"/>
-                <TextBlock Text="{Binding Contents}" Width="500" FontSize="25" Foreground="DarkGray" TextWrapping="Wrap" Margin="0,10,0,0"/>
+                <TextBlock Text="{Binding Message,FallbackValue=作業を完了します。}" Width="500" FontSize="35" Foreground="DarkSlateGray" TextWrapping="Wrap" Margin="10,3,10,0"/>
+                <TextBlock Text="{Binding Contents,FallbackValue=※登録後、次の作業の準備をしてください。}" Width="500" FontSize="25" Foreground="DarkGray" TextWrapping="Wrap" Margin="0,10,0,0"/>
             </StackPanel>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="20,40,40,40">
-            <Button x:Name="ButtonOK" Content="{Binding ButtonOK,FallbackValue=はい}" Style="{StaticResource Bottom}"
-                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True">
+            <Button x:Name="ButtonOK" Style="{StaticResource Bottom}" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True">
+                <Viewbox Stretch="Uniform" Margin="8,8,8,8">
+                    <TextBlock Text="{Binding ButtonOK,FallbackValue=はい}" />
+                </Viewbox>
                 <Button.CommandParameter>
                     <system:Boolean>True</system:Boolean>
                 </Button.CommandParameter>
             </Button>
-            <Button x:Name="ButtonCancel" Content="いいえ" Style="{StaticResource Bottom}" IsCancel="True" 
-                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Visibility="{Binding IsButtonCancel,Converter={StaticResource CollapsedConverter}}">
+            <Button x:Name="ButtonCancel" Style="{StaticResource Bottom}" IsCancel="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Visibility="{Binding IsButtonCancel,Converter={StaticResource CollapsedConverter}}">
+                <Viewbox Stretch="Uniform" Margin="8,8,8,8">
+                    <TextBlock Text="いいえ" />
+                </Viewbox>
                 <Button.CommandParameter>
                     <system:Boolean>False</system:Boolean>
                 </Button.CommandParameter>

@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Timers;
@@ -8,13 +9,14 @@ using System.Windows.Input;
 #pragma warning disable
 namespace Display
 {
-    //インターフェース
+    //インターフェース（キー押下処理）
     public interface IKeyDown
     {
-        void KeyDown(object value);    //キー押下処理
+        void KeyDown(object value);                                 
         void Swipe(object value);
     }
 
+    //インターフェース（タイマー処理）
     public interface ITimer
     {
         void OnTimerElapsed(object sender, ElapsedEventArgs e);
@@ -168,7 +170,7 @@ namespace Display
 
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
-            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            //DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
 
             //データベース接続文字列
             SQL.DB = INI.GetString("Database", "Database");
@@ -281,14 +283,16 @@ namespace Display
         //Windowサイズ・位置復元
         private void LoadWindowProperty()
         {
-            WindowMain windowMain = new WindowMain();
+            //最大化設定
+            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            DisplayStyle = WindowStyle.None;
 
             if (DisplayStyle == WindowStyle.None)
             {
                 WindowLeft = 0;
                 WindowTop = 0;
-                WindowWidth = 0;
-                WindowHeight = 0;
+                if (WindowWidth <= 0) { WindowWidth = 1280; }
+                if (WindowHeight <= 0) { WindowHeight = 740; }
             }
             else
             {
@@ -299,14 +303,6 @@ namespace Display
                 WindowHeight = Properties.Settings.Default.WindowHeight;
             }
 
-            //Width・Heightのデフォルト値
-            //if (WindowWidth <= 0) { WindowWidth = 1280; }
-            //if (WindowHeight <= 0) { WindowHeight = 800; }
-
-            //最大化設定
-            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
-            DisplayStyle = WindowStyle.None;
-
             //マルチモニタ対応
             foreach (var screen in System.Windows.Forms.Screen.AllScreens)
             {
@@ -314,8 +310,6 @@ namespace Display
                 {
                     WindowLeft = screen.Bounds.Left;
                     WindowTop = screen.Bounds.Top;
-                    DisplayStyle = WindowStyle.None;
-                    DisplayState = WindowState.Maximized;
                 }
             }
         }

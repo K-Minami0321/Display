@@ -68,8 +68,7 @@ namespace Display
         }
         public string SoundFolder           //サウンドフォルダ
         {
-            get { return soundFolder; }
-            set { SetProperty(ref soundFolder, value); }
+            get { return STRING.Empty(FOLDER.ApplicationPath()) + @"Sound\"; }
         }
 
         //スタートページを表示

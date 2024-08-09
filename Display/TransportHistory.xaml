@@ -28,7 +28,11 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="580"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding TransportDate,Converter={StaticResource DateTimeConverter}}" Style="{StaticResource TextDate}"/>
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Viewbox Stretch="Uniform">
+                    <TextBlock Text="{Binding TransportDate,Converter={StaticResource DateTimeConverter},FallbackValue=2024年7月21日}" Style="{StaticResource TextDate}"/>
+                </Viewbox>
+            </StackPanel>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->

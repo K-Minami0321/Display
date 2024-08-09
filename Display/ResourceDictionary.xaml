@@ -230,6 +230,10 @@
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
     </Style>
+   <Style x:Key="TenKeyString" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Margin" Value="20,20,20,20"/>
+    </Style>
     
     <!-- テキストボックス -->
     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
@@ -318,16 +322,28 @@
 
 
     <Style TargetType="ComboBoxItem">
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     </Style>
 
     <!-- リストボックス -->
     <Style TargetType="ListBox" BasedOn="{StaticResource MaterialDesignListBox}">
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="SelectionMode" Value="Single"/>
     </Style>
     
+    <!-- ViewBox-->
+    <Style x:Key="Label" TargetType="Viewbox" >
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Margin" Value="0,13,13,13"/>
+    </Style>
+    <Style x:Key="Button" TargetType="Viewbox" >
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Margin" Value="0,8,8,8"/>
+    </Style>
+
     <!-- DataGrid -->
     <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGrid}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>

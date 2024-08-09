@@ -7,8 +7,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Display"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:ViewModelWindowMain}"
-        d:DesignWidth="1280" d:DesignHeight="768"
-        MinWidth="1280" MinHeight="768"
+        d:DesignWidth="1280" d:DesignHeight="750"
+        MinWidth="1280" MinHeight="750"
         Left="{Binding WindowLeft,Mode=TwoWay}"
         Top="{Binding WindowTop,Mode=TwoWay}"
         Width="{Binding WindowWidth,Mode=TwoWay}"
@@ -64,9 +64,8 @@
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="5*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="720*"/>
-                <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                 <!-- 上領域 -->
@@ -77,14 +76,16 @@
                     </Grid.ColumnDefinitions>
                     <Border CornerRadius="2" Background="{Binding ProcessName,Converter={StaticResource ProcessColorConverter},FallbackValue=#90A4AE}" 
                             MinWidth="240" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding FunctionColor}" >
-                        <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FFFFFF" FontWeight="Medium" Padding="40,0,40,0"/>
+                        <Viewbox Stretch="Uniform">
+                            <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Medium" Foreground="#FFFFFF" Padding="40,0,40,0" Margin="10,10,10,10"/>
+                        </Viewbox>
                     </Border>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Visibility="{Binding VisibleArrow,Converter={StaticResource CollapsedConverter}}">
                             <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="PreviousDate">
-                                <WrapPanel>
+                                <Viewbox Stretch="Uniform" Margin="-3">
                                     <materialDesign:PackIcon Kind="ArrowLeftBold" Height="35" Width="35" HorizontalAlignment="Center"/>
-                                </WrapPanel>
+                                </Viewbox>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TouchDown">
                                         <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="PreviousDate"/>
@@ -92,9 +93,9 @@
                                 </i:Interaction.Triggers>
                             </Button>
                             <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="NextDate">
-                                <WrapPanel>
+                                <Viewbox Stretch="Uniform" Margin="-3">
                                     <materialDesign:PackIcon Kind="ArrowRightBold" Height="35" Width="35" HorizontalAlignment="Center"/>
-                                </WrapPanel>
+                                </Viewbox>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TouchDown">
                                         <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="NextDate"/>
@@ -103,9 +104,9 @@
                             </Button>
                         </StackPanel>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList,Converter={StaticResource CollapsedConverter}}">
-                            <WrapPanel>
+                            <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="{Binding IconList,FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
-                            </WrapPanel>
+                            </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DisplayList"/>
@@ -113,9 +114,9 @@
                             </i:Interaction.Triggers>
                         </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan,Converter={StaticResource CollapsedConverter}}">
-                            <WrapPanel>
+                            <Viewbox Stretch="Uniform" Margin="-2">
                                 <materialDesign:PackIcon Kind="{Binding IconPlan,FallbackValue=FileClockOutline}" Height="{Binding IconSize,FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
-                            </WrapPanel>
+                            </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DisplayPlan"/>
@@ -123,9 +124,9 @@
                             </i:Interaction.Triggers>
                         </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayInfo" Visibility="{Binding VisibleInfo,Converter={StaticResource CollapsedConverter}}">
-                            <WrapPanel>
+                            <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="Pen" Height="30" Width="30" HorizontalAlignment="Center"/>
-                            </WrapPanel>
+                            </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DisplayInfo"/>
@@ -133,9 +134,9 @@
                             </i:Interaction.Triggers>
                         </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="Manual" Visibility="Collapsed">
-                            <WrapPanel>
+                            <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="MovieOpen" Height="35" Width="35" HorizontalAlignment="Center"/>
-                            </WrapPanel>
+                            </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Manual"/>
@@ -143,9 +144,9 @@
                             </i:Interaction.Triggers>
                         </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower,Converter={StaticResource CollapsedConverter}}">
-                            <WrapPanel>
+                            <Viewbox Stretch="Uniform" Margin="-4">
                                 <materialDesign:PackIcon Kind="Power" Height="35" Width="35" HorizontalAlignment="Center" />
-                            </WrapPanel>
+                            </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ESC"/>
