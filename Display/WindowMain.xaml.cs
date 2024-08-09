@@ -255,7 +255,7 @@ namespace Display
 
                 case "F5":
                     //作業マニュアル画面
-
+                    FramePage = new Manual();
                     break;
 
                 case "F12":

@@ -359,7 +359,11 @@ namespace Display
                         result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
                         await System.Threading.Tasks.Task.Delay(100);
                         SetGotFocus(Focus);
-                        if (result) { RegistData(); SetGotFocus("LotNumber"); }
+                        if (result) 
+                        { 
+                            RegistData(); 
+                            SetGotFocus("LotNumber"); 
+                        }
                     }
                     break;
 
@@ -380,7 +384,11 @@ namespace Display
                     result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
-                    if (result)  { Initialize(); SetGotFocus("LotNumber"); }
+                    if (result)  
+                    { 
+                        Initialize(); 
+                        SetGotFocus("LotNumber"); 
+                    }
                     break;
 
                 case "Enter":
@@ -523,7 +531,6 @@ namespace Display
         //入力制御
         private void DisplayText(object value)
         {
-
             switch (Focus)
             {
                 case "LotNumber":

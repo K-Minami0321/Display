@@ -16,25 +16,36 @@
     </i:Interaction.Triggers>
     <!-- 画面表示 -->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="570"/>
-            <RowDefinition Height="60*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="550"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <!-- 上領域 -->
-        <Grid Grid.Row="0" Background="#D7DCDE" Height="560">
+        <!-- 左領域 -->
+        <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
 
             
             
             
         </Grid>
-        <!-- 下領域 -->
-        <Grid Grid.Row="1">
-
-            
-            
-            
-            
-            
+        <!-- 右領域 -->
+        <Grid Grid.Column="1" Grid.Row="1" Background="#000000">
+            <MediaElement x:Name="mediaElement" LoadedBehavior="Manual" Stretch="Uniform"/>
         </Grid>
+        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Background="#000000">
+            <Button Content="▶" Margin="5" Background="{x:Null}" BorderThickness="0" />
+            <Button Content="■" Margin="5" Background="{x:Null}" BorderThickness="0"/>
+            <Button Content="⏸" Margin="5" Background="{x:Null}" BorderThickness="0"/>
+            <Slider x:Name="TimeSlider" Value="0" Width="300" Height="20" Margin="5"/>
+            <TextBlock x:Name="Time" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Slider x:Name="VolumeSlider" Minimum="0" Maximum="1" Value="0.5" Width="100" Height="20"  Margin="5"/>
+            <TextBlock x:Name="Volume" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Slider x:Name="SpeedSlider" Value="1" Width="80" Height="20"  Margin="5"></Slider>
+            <TextBlock x:Name="uxSpeed" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </StackPanel>
     </Grid>
 </UserControl>

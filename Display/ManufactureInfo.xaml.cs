@@ -383,7 +383,6 @@ namespace Display
             ManufactureCODE = string.Empty;
             LotNumber = string.Empty;
             IsEnable = true;
-            SetGotFocus("LotNumber");
             DisplayLot(ViewModelPlanList.Instance.LotNumber);           //予定表からロット番号取得
         }
 
@@ -468,6 +467,7 @@ namespace Display
                     if (result) 
                     { 
                         RegistData();
+                        SetGotFocus("LotNumber");
                     }
                     break;
 
