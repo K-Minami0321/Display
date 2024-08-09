@@ -319,8 +319,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
-
     <Style TargetType="ComboBoxItem">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     </Style>
@@ -341,7 +339,7 @@
     <Style x:Key="Button" TargetType="Viewbox" >
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Stretch" Value="Uniform"/>
-        <Setter Property="Margin" Value="0,8,8,8"/>
+        <Setter Property="Margin" Value="0,10,10,10"/>
     </Style>
 
     <!-- DataGrid -->

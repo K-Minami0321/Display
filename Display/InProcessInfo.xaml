@@ -39,11 +39,21 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="70"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="搬入日"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.InProcessDate,Converter={StaticResource DateTimeConverter}}"/>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName}" FontWeight="Bold"/>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="ロット番号"/>
+                        <Viewbox Grid.Row="0" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="搬入日"/>
+                        </Viewbox>
+                        <Viewbox Grid.Row="0" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.InProcessDate,Converter={StaticResource DateTimeConverter},FallbackValue=2024年7月21日}"/>
+                        </Viewbox>
+                        <Viewbox Grid.Row="1" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
+                        </Viewbox>
+                        <Viewbox Grid.Row="1" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding management.ProductName,FallbackValue=MH024000}" FontWeight="Bold"/>
+                        </Viewbox>
+                        <Viewbox Grid.Row="2" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="ロット番号"/>
+                        </Viewbox>
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0"
                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" InputMethod.IsInputMethodEnabled="False">
                             <TextBox.Resources>
@@ -67,7 +77,9 @@
                                 <local:TextBoxMode Mode="Hyphen"/>
                             </i:Interaction.Behaviors>
                         </TextBox>
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="担当者"/>
+                        <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="担当者"/>
+                        </Viewbox>
                         <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorker" Text="{Binding inProcess.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.PreferredImeConversionMode="FullShape,Native" InputMethod.IsInputMethodEnabled="True">
                             <TextBox.Resources>
@@ -88,9 +100,9 @@
                                 <local:TextBoxMode/>
                             </i:Interaction.Behaviors>
                         </TextBox>
-                            
-                            
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding WeightLabel ,FallbackValue=重 量}" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}"/>
+                        <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="{Binding WeightLabel ,FallbackValue=重 量}" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}"/>
+                        </Viewbox>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}">
                             <TextBox x:Name="TextWeight" Text="{Binding inProcess.Weight}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
                                         MaxLength="{Binding AmountLength}" InputMethod.IsInputMethodEnabled="False">
@@ -112,11 +124,14 @@
                                     <local:TextBoxMode Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <TextBlock Text="{Binding Notice}" FontSize="22" VerticalAlignment="Bottom" Foreground="#FF0000" FontWeight="Bold" Margin="10,0,0,5" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}"/>
+                            <Viewbox Grid.Row="2" Grid.Column="1" Style="{StaticResource Label}" Margin="10,40,0,5">
+                                <TextBlock Text="{Binding Notice}" VerticalAlignment="Bottom" Foreground="#FF0000" FontWeight="Bold" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}"/>
+                            </Viewbox>
                         </StackPanel>
-                            
-                            
-                        <TextBlock Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="0" Text="{Binding inProcess.UnitLabel,FallbackValue=数 量}"/>
+
+                        <Viewbox Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="{Binding inProcess.UnitLabel,FallbackValue=数 量}"/>
+                        </Viewbox>
                         <StackPanel Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextUnit" Text="{Binding inProcess.Unit}" Width="150" InputMethod.IsInputMethodEnabled="False"
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding UnitLength}">
@@ -138,7 +153,10 @@
                                     <local:TextBoxMode Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <CheckBox x:Name="CheckCompleted" Content="ロット完了" IsChecked="{Binding inProcess.Completed,Converter={StaticResource CompletConverter}}" FontSize="20" Width="150">
+                            <CheckBox x:Name="CheckCompleted" IsChecked="{Binding inProcess.Completed,Converter={StaticResource CompletConverter}}" FontSize="20" Width="150">
+                                <Viewbox Stretch="Uniform" Margin="10,10,10,10">
+                                    <TextBlock Text="ロット完了"/>
+                                </Viewbox>
                                 <CheckBox.Resources>
                                     <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                         <Style.Triggers>
@@ -161,7 +179,9 @@
                                 </i:Interaction.Behaviors>
                             </CheckBox>
                         </StackPanel>
-                        <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding management.AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
+                        <Viewbox Grid.Row="6" Grid.Column="0" Style="{StaticResource Label}">
+                            <TextBlock Text="{Binding management.AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
+                        </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextAmount" Text="{Binding inProcess.Amount}" Width="{Binding AmountWidth,FallbackValue=150}"
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
@@ -184,11 +204,13 @@
                                     <local:TextBoxMode Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <StackPanel Orientation="Horizontal" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}" Margin="10,0,0,0" >
-                                <TextBlock Text="{Binding inProcess.Coil,Converter={StaticResource CircleEnclosingConverter},FallbackValue=①}" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}" FontSize="35" TextAlignment="Center" Width="55"/>
-                                <TextBlock Text="／" FontSize="35" TextAlignment="Center" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}"/>
-                                <TextBlock Text="{Binding management.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="35" TextAlignment="Center" Width="55"/>
-                            </StackPanel>
+                            <Viewbox Stretch="Uniform" Margin="0,12,12,12">
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}">
+                                    <TextBlock Text="{Binding inProcess.Coil,Converter={StaticResource CircleEnclosingConverter},FallbackValue=①}" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}" FontSize="35" TextAlignment="Center" Width="55"/>
+                                    <TextBlock Text="／" FontSize="35" TextAlignment="Center" Visibility="{Binding management.VisibleCoil,Converter={StaticResource CollapsedConverter}}"/>
+                                    <TextBlock Text="{Binding management.ShirringUnit,Converter={StaticResource CircleEnclosingConverter},FallbackValue=②}" FontSize="35" TextAlignment="Center" Width="55"/>
+                                </StackPanel>
+                            </Viewbox>
                         </StackPanel>
                     </Grid>
                     <!-- 右領域 -->
@@ -207,10 +229,12 @@
         <Grid Grid.Row="1" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist">
-                    <WrapPanel>
-                        <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
-                        <TextBlock Text="{Binding ButtonName}"/>
-                    </WrapPanel>
+                    <Viewbox Style="{StaticResource Button}">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="{Binding ButtonName,FallbackValue=登　録}"/>
+                        </WrapPanel>
+                    </Viewbox>
                     <i:Interaction.Behaviors>
                         <local:ButtonBehavior/>
                     </i:Interaction.Behaviors>
@@ -221,10 +245,12 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleDelete,Converter={StaticResource CollapsedConverter}}">
-                    <WrapPanel>
-                        <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>
-                        <TextBlock Text="削　除"/>
-                    </WrapPanel>
+                    <Viewbox Style="{StaticResource Button}">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="削　除"/>
+                        </WrapPanel>
+                    </Viewbox>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TouchDown">
                             <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Delete"/>
@@ -232,10 +258,12 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleCancel,Converter={StaticResource CollapsedConverter}}">
-                    <WrapPanel>
-                        <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
-                        <TextBlock Text="取　消"/>
-                    </WrapPanel>
+                    <Viewbox Style="{StaticResource Button}">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
+                            <TextBlock Text="取　消"/>
+                        </WrapPanel>
+                    </Viewbox>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TouchDown">
                             <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Cancel"/>

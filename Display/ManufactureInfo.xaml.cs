@@ -25,7 +25,6 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
-        bool regFlg;
         string status;
         string processName;
         string manufactureCODE;
@@ -42,6 +41,7 @@ namespace Display
         int endTimeLength = 4;
         int amountLength = 5;
         string breakName;
+        bool isRegist;
         bool enabledControl1;
         bool enabledControl2;
         bool visiblePackaging;
@@ -65,18 +65,6 @@ namespace Display
         bool isFocusSales;
 
         //プロパティ
-        public bool RegFlg                      //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set
-            {
-                SetProperty(ref regFlg, value);
-                EnabledControl1 = !value;
-                EnabledControl2 = !value;
-                VisibleButtonStart = value;
-                ButtonName = value ? "登　録" : "修　正";
-            }
-        }
         public string Status                    //入力状況
         {
             get { return status; }
@@ -99,19 +87,19 @@ namespace Display
                     case "検査":
                         VisibleSeal = false;
                         VisiblePackaging = true;
-                        if (RegFlg) { manufacture.WorkProcess = "検査"; }
+                        if (IsRegist) { manufacture.WorkProcess = "検査"; }
                         break;
 
                     case "梱包":
                         VisibleSeal = false;
                         VisiblePackaging = false;
-                        if (RegFlg) { manufacture.WorkProcess = "梱包"; }
+                        if (IsRegist) { manufacture.WorkProcess = "梱包"; }
                         break;
 
                     default:
                         VisibleSeal = true;
                         VisiblePackaging = true;
-                        if (RegFlg) { manufacture.WorkProcess = ""; }
+                        if (IsRegist) { manufacture.WorkProcess = ""; }
                         break;
                 }
             }
@@ -263,6 +251,18 @@ namespace Display
             get { return visibleSeal; }
             set { SetProperty(ref visibleSeal, value); }
         }
+        public bool IsRegist                    //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return isRegist; }
+            set
+            {
+                SetProperty(ref isRegist, value);
+                EnabledControl1 = !value;
+                EnabledControl2 = !value;
+                VisibleButtonStart = value;
+                ButtonName = value ? "登　録" : "修　正";
+            }
+        }
         public bool IsEnable                    //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
@@ -330,7 +330,7 @@ namespace Display
             ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
 
             //デフォルト値設定
-            RegFlg = string.IsNullOrEmpty(manufacture.ManufactureCODE);
+            IsRegist = string.IsNullOrEmpty(manufacture.ManufactureCODE);
             IsEnable = DATETIME.ToStringDate(manufacture.ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
@@ -365,7 +365,7 @@ namespace Display
         {
             Status = "登録";
 
-            if (!RegFlg) { return; }
+            if (!IsRegist) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
             manufacture.Worker = INI.GetString("Page", "Worker");
             manufacture.LotNumber = string.Empty;
@@ -383,13 +383,14 @@ namespace Display
             ManufactureCODE = string.Empty;
             LotNumber = string.Empty;
             IsEnable = true;
+            SetGotFocus("LotNumber");
             DisplayLot(ViewModelPlanList.Instance.LotNumber);           //予定表からロット番号取得
         }
 
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (RegFlg) { manufacture.ManufactureDate = SetToDay(DateTime.Now); }
+            if (IsRegist) { manufacture.ManufactureDate = SetToDay(DateTime.Now); }
         }
 
         //ロット番号処理
@@ -513,7 +514,7 @@ namespace Display
 
                 case "DisplayInfo":
                     //加工登録画面
-                    RegFlg = true;
+                    IsRegist = true;
                     ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
                     ViewModelPlanList.Instance.LotNumber = string.Empty;
                     Initialize();
@@ -643,7 +644,7 @@ namespace Display
         {
             //コード確定
             var mark = iProcess.Mark;
-            if (RegFlg)
+            if (IsRegist)
             {
                 var date = STRING.ToDateDB(manufacture.ManufactureDate);
                 var code = manufacture.GenerateCode(mark + date);
@@ -652,11 +653,11 @@ namespace Display
 
             //登録処理
             manufacture.LotNumber = LotNumber;
-            manufacture.InsertLog(RegFlg);
+            manufacture.InsertLog(IsRegist);
             manufacture.Resist(manufacture.ManufactureCODE);
 
             //初期設定
-            RegFlg = true;
+            IsRegist = true;
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
             Initialize();
         }

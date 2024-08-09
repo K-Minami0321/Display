@@ -22,7 +22,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="580"/>
+                <RowDefinition Height="560"/>
             </Grid.RowDefinitions>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
