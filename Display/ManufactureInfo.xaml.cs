@@ -363,7 +363,7 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            Status = "登録";
+            Status = INI.GetString("Manufacture", "Mode");
 
             if (!IsRegist) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
