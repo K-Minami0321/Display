@@ -9,19 +9,6 @@ using System.Windows.Input;
 #pragma warning disable
 namespace Display
 {
-    //インターフェース（キー押下処理）
-    public interface IKeyDown
-    {
-        void KeyDown(object value);                                 
-        void Swipe(object value);
-    }
-
-    //インターフェース（タイマー処理）
-    public interface ITimer
-    {
-        void OnTimerElapsed(object sender, ElapsedEventArgs e);
-    }
-
     //画面クラス
     public partial class WindowMain : Window
     {
@@ -360,5 +347,20 @@ namespace Display
             IconPlan = "FileClockOutline";
             IconSize = 30;
         }
+    }
+
+    //インターフェース
+    public interface IKeyDown
+    {
+        //キー押下処理
+        void KeyDown(object value);
+        void Swipe(object value);
+    }
+
+    //インターフェース
+    public interface ITimer
+    {
+        //タイマー処理
+        void OnTimerElapsed(object sender, ElapsedEventArgs e);
     }
 }
