@@ -36,7 +36,7 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public string ManufactureCODE                       //加工CODE
@@ -60,7 +60,7 @@ namespace Display
             {
                 equipment = new Equipment();
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
             }
         }
 
@@ -151,8 +151,8 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            if (iProcess == null) { return; }
-            SelectTable = manufacture.SelectHistoryListDate(iProcess.Name, ManufactureDate);
+            if (process == null) { return; }
+            SelectTable = manufacture.SelectHistoryListDate(process.Name, ManufactureDate);
         }
 
         //選択処理

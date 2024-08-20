@@ -46,11 +46,11 @@ namespace Display
             { 
                 SetProperty(ref processName, value);
                 if (value == null) { return; }
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
                 if (ViewModelWindowMain.Instance.ProcessWork == "仕掛搬出")
                 {
-                    value = iProcess.Next;
-                    iProcess = ProcessCategory.SetProcess(value);
+                    value = process.Next;
+                    process = new ProcessCategory(value);
                 }
             }
         }

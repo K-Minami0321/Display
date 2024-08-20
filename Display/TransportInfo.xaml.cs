@@ -51,7 +51,7 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public string InProcessCODE         //仕掛CODE
@@ -156,7 +156,7 @@ namespace Display
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            iShape = Shape.SetShape(management.ShapeName);
+            shape = new ProductShape(management.ShapeName);
         }
 
         //キーイベント

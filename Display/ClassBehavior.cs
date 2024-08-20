@@ -1214,8 +1214,8 @@ namespace Display
                     break;
 
                 default:
-                    var iProcess = ProcessCategory.SetProcess(ret);
-                    color = iProcess.Color;
+                    var process = new ProcessCategory(ret);
+                    color = process.Color;
                     break;
             }
             return color;

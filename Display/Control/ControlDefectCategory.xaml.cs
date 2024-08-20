@@ -46,7 +46,7 @@ namespace Display
             { 
                 SetProperty(ref processName, value);
                 if (value == null) { return; }
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public string DefectCategory              //不良分類
@@ -71,7 +71,7 @@ namespace Display
         {
             Instance = this;
             ProcessName = ViewModelWindowMain.Instance.ProcessName;
-            DefectCategorys = iProcess.DefectClasses;
+            DefectCategorys = process.DefectClasses;
         }
 
         //選択処理

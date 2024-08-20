@@ -71,9 +71,9 @@ namespace Display
             { 
                 SetProperty(ref processName, value);
 
-                iProcess = ProcessCategory.SetProcess(value);
-                EquipmentCODES = iProcess.Equipments;
-                Workers = iProcess.Workers;
+                process = new ProcessCategory(value);
+                EquipmentCODES = process.Equipments;
+                Workers = process.Workers;
             }
         }
         public string EquipmentCODE                 //設備CODE

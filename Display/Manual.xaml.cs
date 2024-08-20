@@ -36,7 +36,7 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public string File          //再生ファイル

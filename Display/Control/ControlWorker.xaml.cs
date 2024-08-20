@@ -48,7 +48,7 @@ namespace Display
             { 
                 SetProperty(ref processName, value);
                 if (value == null) { return; }
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public bool VisivleProcess                          //作業者
@@ -105,7 +105,7 @@ namespace Display
             switch (value)
             {
                 case "Process":
-                    Workers = iProcess.Workers;
+                    Workers = process.Workers;
                     VisivleProcess = false;
                     VisivleAll = true;
                     break;

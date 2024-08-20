@@ -44,7 +44,7 @@ namespace Display
                 inProcess.ProcessName = value;
 
                 if (value == null) { return; }
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
                 switch (value)
                 {
                     case "合板":

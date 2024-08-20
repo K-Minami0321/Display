@@ -34,8 +34,8 @@ namespace Display
             {
                 SetProperty(ref processName, value);
                 inProcess.ProcessName = value;
-                iProcess = ProcessCategory.SetProcess(value);
-                ViewModelWindowMain.Instance.ProcessName = iProcess.Before;
+                process = new ProcessCategory(value);
+                ViewModelWindowMain.Instance.ProcessName = process.Before;
             }
         }
         public string InProcessCODE                     //仕掛在庫CODE

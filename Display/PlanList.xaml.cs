@@ -39,7 +39,7 @@ namespace Display
             {
                 SetProperty(ref processName, value);
                 plan.ProcessName = value;
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
             }
         }
         public string LotNumber                     //ロット番号

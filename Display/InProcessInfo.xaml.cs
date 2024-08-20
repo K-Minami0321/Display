@@ -73,7 +73,7 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);              
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
                 switch (value)
                 {
                     case "合板":
@@ -109,8 +109,8 @@ namespace Display
                 }
 
                 inProcess.ProcessName = ProcessName;
-                inProcess.Place = iProcess.Name;                //保管場所
-                inProcess.ProcessNext = iProcess.Next;          //次の工程設定
+                inProcess.Place = process.Name;                //保管場所
+                inProcess.ProcessNext = process.Next;          //次の工程設定
             }
         }
         public string InProcessCODE         //仕掛CODE
@@ -340,7 +340,7 @@ namespace Display
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            iShape = Shape.SetShape(management.ShapeName);
+            shape = new ProductShape(management.ShapeName);
             LotNumber = management.LotNumber;
             inProcess.LotNumber = LotNumber;
             inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
@@ -455,7 +455,7 @@ namespace Display
             if (RegFlg)
             {
                 var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
-                var inprocesscode = inProcess.GenerateCode(iProcess.Mark + inprocessdate);
+                var inprocesscode = inProcess.GenerateCode(process.Mark + inprocessdate);
                 inProcess.InProcessCODE = inprocesscode;
             }
 

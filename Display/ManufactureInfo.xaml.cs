@@ -80,7 +80,7 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                iProcess = ProcessCategory.SetProcess(value);
+                process = new ProcessCategory(value);
                 
                 switch (value)
                 {
@@ -126,7 +126,7 @@ namespace Display
             {
                 equipment = new Equipment();
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? iProcess.Name + "実績" : name + " - " + value;
+                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
                 Equipment1 = value;
             }
         }
@@ -400,7 +400,7 @@ namespace Display
 
             //データ表示
             if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            iShape = Shape.SetShape(management.ShapeName);
+            shape = new ProductShape(management.ShapeName);
             LotNumber = management.LotNumber;
             manufacture.LotNumber = LotNumber;
             manufacture.ProductName = management.ProductName;
@@ -643,7 +643,7 @@ namespace Display
         private void RegistData()
         {
             //コード確定
-            var mark = iProcess.Mark;
+            var mark = process.Mark;
             if (IsRegist)
             {
                 var date = STRING.ToDateDB(manufacture.ManufactureDate);
