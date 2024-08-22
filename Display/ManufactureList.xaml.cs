@@ -104,8 +104,8 @@ namespace Display
         //初期化
         private void Initialize()
         {
-            ProcessName = INI.GetString("Page", "Process");
-            EquipmentCODE = INI.GetString("Page", "Equipment");
+            ProcessName = IniFile.GetString("Page", "Process");
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
             ManufactureCODE = string.Empty;
         }
 

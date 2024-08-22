@@ -87,7 +87,7 @@ namespace Display
         private void Initialize()
         {
             //初期設定
-            ProcessName = INI.GetString("Page", "Process");
+            ProcessName = IniFile.GetString("Page", "Process");
             InProcessCODE = string.Empty;
         }
 

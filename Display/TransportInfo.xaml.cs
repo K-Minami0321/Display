@@ -143,8 +143,8 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            ProcessName = INI.GetString("Page", "Process");
-            inProcess.TransportWorker = INI.GetString("Page", "Worker");
+            ProcessName = IniFile.GetString("Page", "Process");
+            inProcess.TransportWorker = IniFile.GetString("Page", "Worker");
             inProcess.TransportDate = SetToDay(DateTime.Now);
         }
 
@@ -155,7 +155,7 @@ namespace Display
             CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             shape = new ProductShape(management.ShapeName);
         }
 

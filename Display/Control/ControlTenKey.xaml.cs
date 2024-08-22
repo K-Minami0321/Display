@@ -49,7 +49,7 @@ namespace Display
         {
             //呼び出し元で実行
             if (Itenkey == null) { return; }
-            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
+            Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Itenkey.KeyDown(value); 
         }
     }

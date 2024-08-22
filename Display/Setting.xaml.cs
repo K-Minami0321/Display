@@ -173,6 +173,7 @@ namespace Display
         internal ViewModelSetting()
         {
             Instance = this;
+            
         }
 
         //ロード時
@@ -204,19 +205,20 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            ProcessNames = SetComboBox.ProcessList();       //コンボボックス設定
-            Servers = SetComboBox.SetServer();              //サーバー設定
-            IsFocusServer = true;                           //フォーカス
+            listSource = new ListSource();
+            ProcessNames = listSource.Processes;        //コンボボックス設定
+            Servers = listSource.Servers;               //サーバー設定
+            IsFocusServer = true;                       //フォーカス
         }
 
         //データ表示
         private void DisplayData()
         {
-            Connection = INI.GetString("Database", "ConnectString");
-            Server = SQL.GetServerIP(Connection);
-            ProcessName = INI.GetString("Page", "Process");
-            EquipmentCODE = INI.GetString("Page", "Equipment");
-            Worker = INI.GetString("Page", "Worker");
+            Connection = IniFile.GetString("Database", "ConnectString");
+            Server = GetServerIP(Connection);
+            ProcessName = IniFile.GetString("Page", "Process");
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
+            Worker = IniFile.GetString("Page", "Worker");
         }
 
         //ログ表示
@@ -245,7 +247,7 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告"));
-                    if (result) { StartPage(INI.GetString("Page", "Initial")); }
+                    if (result) { StartPage(IniFile.GetString("Page", "Initial")); }
                     break;
 
                 case "Server":
@@ -300,7 +302,7 @@ namespace Display
 
                 case "DisplayInfo":
                     //戻る
-                    StartPage(INI.GetString("Page", "Initial"));
+                    StartPage(IniFile.GetString("Page", "Initial"));
                     break;
 
                 case "DisplayPlan":
@@ -315,16 +317,16 @@ namespace Display
         public void RegistData()
         {
             //サーバー情報取得
-            var server = SQL.GetServerIP(Connection);
+            var server = GetServerIP(Connection);
             var connection = Connection.Replace(server, Server);
 
             //INIファイル書き込み
-            INI.WriteString("Database", "ConnectString", connection);
-            INI.WriteString("Page", "Process", ProcessName);
-            INI.WriteString("Page", "Equipment", EquipmentCODE);
-            INI.WriteString("Page", "Worker", Worker);
-            ViewModelWindowMain.Instance.ProcessName = INI.GetString("Page", "Process");
-            StartPage(INI.GetString("Page", "Initial"));
+            IniFile.WriteString("Database", "ConnectString", connection);
+            IniFile.WriteString("Page", "Process", ProcessName);
+            IniFile.WriteString("Page", "Equipment", EquipmentCODE);
+            IniFile.WriteString("Page", "Worker", Worker);
+            ViewModelWindowMain.Instance.ProcessName = IniFile.GetString("Page", "Process");
+            StartPage(IniFile.GetString("Page", "Initial"));
         }
 
         //スワイプ処理
@@ -333,7 +335,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    StartPage(INI.GetString("Page", "Initial"));
+                    StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
         }

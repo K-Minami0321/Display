@@ -105,7 +105,7 @@ namespace Display
             inProcess = new InProcess();
 
             //デフォルト値設定
-            ProcessName = INI.GetString("Page", "Process");
+            ProcessName = IniFile.GetString("Page", "Process");
             TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
             SelectedIndex = -1;
         }
@@ -141,7 +141,7 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            ProcessName = INI.GetString("Page", "Process");
+            ProcessName = IniFile.GetString("Page", "Process");
             InProcessCODE = string.Empty;
         }
 

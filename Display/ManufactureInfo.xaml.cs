@@ -326,7 +326,7 @@ namespace Display
             management = new Management();
 
             //データ取得
-            ProcessName = INI.GetString("Page", "Process");
+            ProcessName = IniFile.GetString("Page", "Process");
             ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
 
             //デフォルト値設定
@@ -363,11 +363,11 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            Status = INI.GetString("Manufacture", "Mode");
+            Status = IniFile.GetString("Manufacture", "Mode");
 
             if (!IsRegist) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
-            manufacture.Worker = INI.GetString("Page", "Worker");
+            manufacture.Worker = IniFile.GetString("Page", "Worker");
             manufacture.LotNumber = string.Empty;
             manufacture.ProductName = string.Empty;
             manufacture.WorkProcess = string.Empty;
@@ -379,7 +379,7 @@ namespace Display
             manufacture.Completed = string.Empty;
             manufacture.Sales = string.Empty;
 
-            EquipmentCODE = INI.GetString("Page", "Equipment");
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
             ManufactureCODE = string.Empty;
             LotNumber = string.Empty;
             IsEnable = true;
@@ -399,7 +399,7 @@ namespace Display
             CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             shape = new ProductShape(management.ShapeName);
             LotNumber = management.LotNumber;
             manufacture.LotNumber = LotNumber;

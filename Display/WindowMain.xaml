@@ -19,9 +19,6 @@
         IsManipulationEnabled="True">
     <!-- イベント設定 -->
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding CommandLoad}"/>
-        </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding CommandClosing}"/>
         </i:EventTrigger>
@@ -45,16 +42,6 @@
         <KeyBinding Gesture="F11" Command="{Binding CommandKey}" CommandParameter="F11"/>
         <KeyBinding Gesture="F12" Command="{Binding CommandKey}" CommandParameter="F12"/>
     </Window.InputBindings>
-    <!-- アニメーション設定 -->
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <DoubleAnimation Storyboard.TargetName="Main" Storyboard.TargetProperty ="Opacity" From="0" To="1" Duration="0:0:0.8"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </Window.Triggers>
     <!-- 画面 -->
     <materialDesign:DialogHost>
         <Grid x:Name="Main">

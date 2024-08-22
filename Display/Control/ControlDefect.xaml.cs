@@ -92,7 +92,7 @@ namespace Display
             value = Defect.ToString();
             if (Idefect == null) { return; }
 
-            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
+            Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Idefect.SelectionItem(value);
         }
     }

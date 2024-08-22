@@ -80,6 +80,12 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
+        //コンストラクター
+        ViewModelControlWorker()
+        {
+            listSource = new ListSource();
+        }
+        
         //ロード時
         private void OnLoad()
         {
@@ -95,7 +101,7 @@ namespace Display
             value = Worker != null ? Worker.ToString() : string.Empty;
             if (Iworker == null) { return; }
 
-            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
+            Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Iworker.SelectionItem(value);
         }
 
@@ -111,7 +117,7 @@ namespace Display
                     break;
 
                 case "All":
-                    Workers = SetComboBox.SetWorker();
+                    Workers = listSource.Workers;
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;

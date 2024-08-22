@@ -12,10 +12,6 @@ namespace Display
     //共通クラス
     public class Common : Shared, INotifyPropertyChanged
     {
-        //インスタンス
-        public IniFile INI = new IniFile(CONST.SETTING_INI);
-        public Sound SOUND = new Sound();
-
         //変数
         ContentControl framePage;
         DataTable selectTable;
@@ -31,6 +27,10 @@ namespace Display
         bool visibleCoil;
 
         //プロパティ
+        public INIFile IniFile              //iniファイル
+        { get; set; } = new INIFile(CONST.SETTING_INI);
+        public SoundPlay Sound              //WAVE再生処理
+        { get; set; } = new SoundPlay();
         public ContentControl FramePage     //画面ページ
         {
             get { return framePage; }

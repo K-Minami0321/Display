@@ -117,7 +117,7 @@ namespace Display
         {
             //初期化
             LotNumber = string.Empty;
-            ProcessName = INI.GetString("Page", "Process");
+            ProcessName = IniFile.GetString("Page", "Process");
             ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
             ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
             UpdateDate = plan.SelectFile() + "版";
@@ -125,7 +125,7 @@ namespace Display
             VisibleAmount = !VisibleUnit;
 
             //画面設定
-            switch (INI.GetString("Page", "Initial"))
+            switch (IniFile.GetString("Page", "Initial"))
             {
                 case "PlanList":
                     //計画一覧
@@ -149,12 +149,12 @@ namespace Display
             {
                 case "DisplayInfo":
                     //登録画面
-                    StartPage(INI.GetString("Page", "Initial"));
+                    StartPage(IniFile.GetString("Page", "Initial"));
                     break;
 
                 case "DisplayList":
                     //一覧画面
-                    StartPage(INI.GetString("Page", "Initial").Replace("Info", "List"));
+                    StartPage(IniFile.GetString("Page", "Initial").Replace("Info", "List"));
                     break;
 
                 case "DisplayPlan":
@@ -194,7 +194,7 @@ namespace Display
             if (SelectedItem == null) { return; }
             if (SelectedItem.Row.ItemArray[15].ToString() == "完了") { return; }
             LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
-            if (EnableSelect) { StartPage(INI.GetString("Page", "Initial")); }
+            if (EnableSelect) { StartPage(IniFile.GetString("Page", "Initial")); }
         }
 
         //スワイプ処理

@@ -94,8 +94,8 @@ namespace Display
             //呼び出し元で実行
             value = WorkProcess != null ? WorkProcess.ToString() : string.Empty;
             if (IworkProcess == null) { return; }
- 
-            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
+
+            Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             IworkProcess.SelectionItem(value);
         }
 

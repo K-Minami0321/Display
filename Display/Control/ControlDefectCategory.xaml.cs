@@ -81,7 +81,7 @@ namespace Display
             value = DefectCategory.ToString();
             if (IdefectCategory == null) { return; }
 
-            SOUND.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
+            Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             IdefectCategory.SelectionItem(value);
 
         }

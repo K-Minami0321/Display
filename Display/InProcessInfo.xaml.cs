@@ -315,8 +315,8 @@ namespace Display
         public void Initialize()
         {
             if (!RegFlg) { return; }
-            ProcessName = INI.GetString("Page", "Process");
-            inProcess.Worker = INI.GetString("Page", "Worker");
+            ProcessName = IniFile.GetString("Page", "Process");
+            inProcess.Worker = IniFile.GetString("Page", "Worker");
             inProcess.InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = string.Empty;
             DisplayLot(string.Empty);
@@ -339,7 +339,7 @@ namespace Display
             CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { SOUND.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             shape = new ProductShape(management.ShapeName);
             LotNumber = management.LotNumber;
             inProcess.LotNumber = LotNumber;

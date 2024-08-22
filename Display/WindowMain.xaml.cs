@@ -23,6 +23,7 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //変数
+        SQL sql;
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft;
@@ -141,8 +142,6 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
-        public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandClosing;
         public ICommand CommandClosing => commandClosing ??= new ActionCommand(OnClosing);
         ActionCommand commandButton;
@@ -154,39 +153,34 @@ namespace Display
         internal ViewModelWindowMain()
         {
             Instance = this;
+            WindowBehavior.Instance.iWindow = this;
 
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
             //DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
 
-            //データベース接続文字列
-            SQL.DB = INI.GetString("Database", "Database");
-            SQL.ConnectString = INI.GetString("Database", "ConnectString");
-            SQL.DatabaseOpen();
+            //データベース接続
+            var db = IniFile.GetString("Database", "Database");
+            var connect = IniFile.GetString("Database", "ConnectString");
+            sql = new SQL(db, connect);
+
+            //初期設定
             FunctionColor = (SQL.ConnectString.Contains("DEV")) ? "0.5" : "1";
-
-            //タイマーを設定
-            StartTimer();
-        }
-
-        //開始処理
-        private void OnLoad()
-        {
-            WindowBehavior.Instance.iWindow = this;
-            StartPage(INI.GetString("Page", "Initial"));
-            ProcessName = INI.GetString("Page", "Process");
+            StartPage(IniFile.GetString("Page", "Initial"));
+            ProcessName = IniFile.GetString("Page", "Process");
             VisiblePower = false;
             VisibleList = false;
             VisibleInfo = false;
             VisibleDefect = false;
             VisibleArrow = false;
+            StartTimer();
         }
 
         //終了処理
         private void OnClosing()
         {
-            //Windowのサイズ・位置を記憶
-            SaveWindowProperty();
+            SaveWindowProperty();   //Windowのサイズ・位置を記憶
+            sql.DatabaseClose();
         }
 
         //シャットダウン
@@ -217,27 +211,27 @@ namespace Display
                     //実績登録画面
                     ViewModelManufactureList.Instance.ManufactureCODE = null;
                     FramePage = new ManufactureInfo();
-                    INI.WriteString("Page", "Initial", "ManufactureInfo");
+                    IniFile.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 
                 case "F2":
                     //搬入登録画面
                     if (ProcessName == "検査" || ProcessName == "梱包") { return; }
                     FramePage = new InProcessInfo();
-                    INI.WriteString("Page", "Initial", "InProcessInfo");
+                    IniFile.WriteString("Page", "Initial", "InProcessInfo");
                     break;
 
                 case "F3":
                     //搬出登録画面
                     if (ProcessName != "プレス") { return; }
                     FramePage = new TransportList();
-                    INI.WriteString("Page", "Initial", "TransportList");
+                    IniFile.WriteString("Page", "Initial", "TransportList");
                     break;
 
                 case "F4":
                     //計画一覧画面
                     FramePage = new PlanList();
-                    INI.WriteString("Page", "Initial", "PlanList");
+                    IniFile.WriteString("Page", "Initial", "PlanList");
                     break;
 
                 case "F5":
@@ -271,7 +265,7 @@ namespace Display
         private void LoadWindowProperty()
         {
             //最大化設定
-            DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            DisplayState = IniFile.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
             DisplayStyle = WindowStyle.None;
 
             if (DisplayStyle == WindowStyle.None)

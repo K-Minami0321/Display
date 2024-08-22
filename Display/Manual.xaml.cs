@@ -90,7 +90,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    StartPage(INI.GetString("Page", "Initial"));
+                    StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
         }

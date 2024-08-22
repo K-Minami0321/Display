@@ -78,13 +78,13 @@ namespace Display
                 case "警告":
                     ButtonOK = "はい";
                     IsButtonCancel = true;
-                    SOUND.PlayAsync(SoundFolder + CONST.SOUND_WARNING);
+                    Sound.PlayAsync(SoundFolder + CONST.SOUND_WARNING);
                     break;
 
                 case "確認":
                     ButtonOK = "OK";
                     IsButtonCancel = false;
-                    SOUND.PlayAsync(SoundFolder + CONST.SOUND_NOTICE);
+                    Sound.PlayAsync(SoundFolder + CONST.SOUND_NOTICE);
                     break;
             }
         }
