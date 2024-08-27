@@ -21,6 +21,8 @@ namespace Display
     public class ViewModelTransportList : Common, IKeyDown, ISelect
     {
         //プロパティ変数
+        ViewModelWindowMain windowMain;
+        DataGridBehavior dataGridBehavior;
         string processName;
         string inProcessCODE;
 
@@ -35,7 +37,7 @@ namespace Display
                 SetProperty(ref processName, value);
                 inProcess.ProcessName = value;
                 process = new ProcessCategory(value);
-                ViewModelWindowMain.Instance.ProcessName = process.Before;
+                windowMain.ProcessName = process.Before;
             }
         }
         public string InProcessCODE                     //仕掛在庫CODE
@@ -51,35 +53,42 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportList()
         {
-            Instance = this;
             inProcess = new InProcess();
-
-            //デフォルト値設定
             SelectedIndex = -1;
         }
 
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            DataGridBehavior.Instance.Iselect = this;
+            SetInterface();
             DisplayCapution();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            dataGridBehavior = DataGridBehavior.Instance;
+
+            windowMain.Ikeydown = this;
+            dataGridBehavior.Iselect = this;
+            Instance = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
             Initialize();
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList = "ViewList";
-            ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = false;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.VisiblePlan = true;
+            windowMain.InitializeIcon();
+            windowMain.IconList = "ViewList";
+            windowMain.IconPlan = "FileDocumentArrowRightOutline";
+            windowMain.ProcessWork = "仕掛引取";
             DiaplayList();
         }
 
@@ -98,17 +107,17 @@ namespace Display
             {
                 case "DisplayInfo":
                     //引取登録
-                    ViewModelWindowMain.Instance.FramePage = new TransportInfo();
+                    windowMain.FramePage = new TransportInfo();
                     break;
 
                 case "DisplayList":
                     //引取履歴
-                    ViewModelWindowMain.Instance.FramePage = new TransportHistory();
+                    windowMain.FramePage = new TransportHistory();
                     break;
 
                 case "DiaplayPlan":
                     //仕掛置場
-                    ViewModelWindowMain.Instance.FramePage = new TransportList();
+                    windowMain.FramePage = new TransportList();
                     break;
             }
         }
@@ -123,8 +132,8 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            ViewModelWindowMain.Instance.FramePage = new TransportInfo();
+            TransportInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            windowMain.FramePage = new TransportInfo();
         }
 
         //スワイプ処理

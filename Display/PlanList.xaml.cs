@@ -21,6 +21,9 @@ namespace Display
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
         //変数
+        ViewModelWindowMain windowMain;
+        DataGridBehavior dataGridBehavior;
+        string page;
         string processName;
         string lotNumber;
         string updateDate;
@@ -82,7 +85,6 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
-            Instance = this;
             plan = new Plan();
 
             //デフォルト値設定
@@ -93,8 +95,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            DataGridBehavior.Instance.Iselect = this;
+            SetInterface();
             DisplayCapution();
         }
 
@@ -103,43 +104,96 @@ namespace Display
         {
             //ボタン設定
             Initialize();
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessWork = ProcessName + "計画一覧";
+            windowMain.VisiblePower = true;
+            windowMain.VisiblePlan = true;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.InitializeIcon();
+            windowMain.ProcessWork = ProcessName + "計画一覧";
             DiaplayList();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            dataGridBehavior = DataGridBehavior.Instance;
+
+            windowMain.Ikeydown = this;
+            dataGridBehavior.Iselect = this;
+            Instance = this;
         }
 
         //初期化
         private void Initialize()
         {
             //初期化
+            page = IniFile.GetString("Page", "Initial");
             LotNumber = string.Empty;
             ProcessName = IniFile.GetString("Page", "Process");
-            ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
-            ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
             UpdateDate = plan.SelectFile() + "版";
             VisibleUnit = ProcessName == "合板" ? true : false;
             VisibleAmount = !VisibleUnit;
+            InProcessInfo.InProcessCODE = null;
+            InProcessInfo.LotNumber = null;
+            ManufactureInfo.ManufactureCODE = null;
+            ManufactureInfo.LotNumber = null;
 
             //画面設定
-            switch (IniFile.GetString("Page", "Initial"))
+            switch (page)
             {
                 case "PlanList":
                     //計画一覧
-                    ViewModelWindowMain.Instance.VisibleList = false;
-                    ViewModelWindowMain.Instance.VisibleInfo = false;
+                    windowMain.VisibleList = false;
+                    windowMain.VisibleInfo = false;
                     EnableSelect = false;
                     break;
 
                 default:
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleInfo = true;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleInfo = true;
                     EnableSelect = true;
                     break;
             }
+        }
+
+        //一覧表示
+        private void DiaplayList(string where = "")
+        {
+            var selectIndex = SelectedIndex;
+            plan.SelectFile();
+            SelectTable = plan.SelectPlanList(where, true);
+
+            //行選択・スクロール設定
+            dataGridBehavior.SetScrollViewer();
+            dataGridBehavior.Scroll.ScrollToVerticalOffset(ScrollIndex);
+            SelectedIndex = selectIndex;
+        }
+
+        //選択処理
+        public void SelectList()
+        {
+            if (SelectedItem == null) { return; }
+            if (SelectedItem.Row.ItemArray[15].ToString() == "完了") { return; }
+
+            //ロット番号設定
+            LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
+            switch (page)
+            {
+                case "InProcessInfo":
+                    InProcessInfo.LotNumber = LotNumber;
+                    InProcessInfo.InProcessCODE = null;
+                    break;
+
+                case "ManufactureInfo":
+                    ManufactureInfo.LotNumber = lotNumber;
+                    ManufactureInfo.ManufactureCODE = null;
+                    break;
+
+                default:
+                    break;
+            }          
+            if (EnableSelect) { StartPage(page); }
         }
 
         //キーイベント
@@ -149,12 +203,12 @@ namespace Display
             {
                 case "DisplayInfo":
                     //登録画面
-                    StartPage(IniFile.GetString("Page", "Initial"));
+                    StartPage(page);
                     break;
 
                 case "DisplayList":
                     //一覧画面
-                    StartPage(IniFile.GetString("Page", "Initial").Replace("Info", "List"));
+                    StartPage(page.Replace("Info", "List"));
                     break;
 
                 case "DisplayPlan":
@@ -173,28 +227,6 @@ namespace Display
                     DiaplayList("コイル");
                     break;
             }
-        }
-
-        //一覧表示
-        private void DiaplayList(string where = "")
-        {
-            var selectIndex = SelectedIndex;
-            plan.SelectFile();
-            SelectTable = plan.SelectPlanList(where, true);
-
-            //行選択・スクロール設定
-            DataGridBehavior.Instance.SetScrollViewer();
-            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
-            SelectedIndex = selectIndex;
-        }
-
-        //選択処理
-        public void SelectList()
-        {
-            if (SelectedItem == null) { return; }
-            if (SelectedItem.Row.ItemArray[15].ToString() == "完了") { return; }
-            LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
-            if (EnableSelect) { StartPage(IniFile.GetString("Page", "Initial")); }
         }
 
         //スワイプ処理

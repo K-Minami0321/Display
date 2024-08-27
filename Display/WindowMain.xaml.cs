@@ -9,6 +9,21 @@ using System.Windows.Input;
 #pragma warning disable
 namespace Display
 {
+    //インターフェース
+    public interface IKeyDown
+    {
+        //キー押下処理
+        void KeyDown(object value);
+        void Swipe(object value);
+    }
+
+    //インターフェース
+    public interface ITimer
+    {
+        //タイマー処理
+        void OnTimerElapsed(object sender, ElapsedEventArgs e);
+    }
+
     //画面クラス
     public partial class WindowMain : Window
     {
@@ -23,6 +38,7 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //変数
+        WindowBehavior windowBehavior;
         SQL sql;
         WindowState displayState;
         WindowStyle displayStyle;
@@ -152,8 +168,9 @@ namespace Display
         //コンストラクター
         internal ViewModelWindowMain()
         {
+            windowBehavior = WindowBehavior.Instance;
+            windowBehavior.iWindow = this;
             Instance = this;
-            WindowBehavior.Instance.iWindow = this;
 
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
@@ -165,7 +182,7 @@ namespace Display
             sql = new SQL(db, connect);
 
             //初期設定
-            FunctionColor = (SQL.ConnectString.Contains("DEV")) ? "0.5" : "1";
+            FunctionColor = IsServer ? "1" : "0.5";
             StartPage(IniFile.GetString("Page", "Initial"));
             ProcessName = IniFile.GetString("Page", "Process");
             VisiblePower = false;
@@ -180,7 +197,6 @@ namespace Display
         private void OnClosing()
         {
             SaveWindowProperty();   //Windowのサイズ・位置を記憶
-            sql.DatabaseClose();
         }
 
         //シャットダウン
@@ -197,6 +213,73 @@ namespace Display
             }
         }
 
+        //Windowサイズ・位置復元
+        private void LoadWindowProperty()
+        {
+            //最大化設定
+            DisplayState = IniFile.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
+            DisplayStyle = WindowStyle.None;
+
+            if (DisplayStyle == WindowStyle.None)
+            {
+                WindowLeft = 0;
+                WindowTop = 0;
+                if (WindowWidth <= 0) { WindowWidth = 1280; }
+                if (WindowHeight <= 0) { WindowHeight = 740; }
+            }
+            else
+            {
+                //Windowのサイズ・位置を復元 
+                WindowLeft = Properties.Settings.Default.WindowLeft;
+                WindowTop = Properties.Settings.Default.WindowTop;
+                WindowWidth = Properties.Settings.Default.WindowWidth;
+                WindowHeight = Properties.Settings.Default.WindowHeight;
+            }
+
+            //マルチモニタ対応
+            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                if (!screen.Primary)
+                {
+                    WindowLeft = screen.Bounds.Left;
+                    WindowTop = screen.Bounds.Top;
+                }
+            }
+        }
+
+        //Windowのサイズ・位置を記憶
+        private void SaveWindowProperty()
+        {
+            if (DisplayState == WindowState.Maximized) { return; }
+            Properties.Settings.Default.WindowLeft = WindowLeft;
+            Properties.Settings.Default.WindowTop = WindowTop;
+            Properties.Settings.Default.WindowWidth = WindowWidth;
+            Properties.Settings.Default.WindowHeight = WindowHeight;
+            Properties.Settings.Default.Save();
+        }
+
+        //アイコン初期化
+        public void InitializeIcon()
+        {
+            IconList = "ViewList";
+            IconPlan = "FileClockOutline";
+            IconSize = 30;
+        }
+
+        //1秒間隔でタイマーを設定
+        private void StartTimer()
+        {
+            Timer timer = new Timer(1000);
+            timer.Elapsed += OnTimerElapsed;
+            timer.Start();
+        }
+
+        //タイマー処理
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (Itimer != null) { Itimer.OnTimerElapsed(sender,e); }
+        }
+
         //キー処理
         private void KeyDown(object value)
         {
@@ -209,7 +292,6 @@ namespace Display
 
                 case "F1":
                     //実績登録画面
-                    ViewModelManufactureList.Instance.ManufactureCODE = null;
                     FramePage = new ManufactureInfo();
                     IniFile.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
@@ -261,65 +343,6 @@ namespace Display
             }
         }
 
-        //Windowサイズ・位置復元
-        private void LoadWindowProperty()
-        {
-            //最大化設定
-            DisplayState = IniFile.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
-            DisplayStyle = WindowStyle.None;
-
-            if (DisplayStyle == WindowStyle.None)
-            {
-                WindowLeft = 0;
-                WindowTop = 0;
-                if (WindowWidth <= 0) { WindowWidth = 1280; }
-                if (WindowHeight <= 0) { WindowHeight = 740; }
-            }
-            else
-            {
-                //Windowのサイズ・位置を復元 
-                WindowLeft = Properties.Settings.Default.WindowLeft;
-                WindowTop = Properties.Settings.Default.WindowTop;
-                WindowWidth = Properties.Settings.Default.WindowWidth;
-                WindowHeight = Properties.Settings.Default.WindowHeight;
-            }
-
-            //マルチモニタ対応
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-            {
-                if (!screen.Primary)
-                {
-                    WindowLeft = screen.Bounds.Left;
-                    WindowTop = screen.Bounds.Top;
-                }
-            }
-        }
-
-        //Windowのサイズ・位置を記憶
-        private void SaveWindowProperty()
-        {
-            if (DisplayState == WindowState.Maximized) { return; }
-            Properties.Settings.Default.WindowLeft = WindowLeft;
-            Properties.Settings.Default.WindowTop = WindowTop;
-            Properties.Settings.Default.WindowWidth = WindowWidth;
-            Properties.Settings.Default.WindowHeight = WindowHeight;
-            Properties.Settings.Default.Save();
-        }
-
-        //1秒間隔でタイマーを設定
-        private void StartTimer()
-        {
-            Timer timer = new Timer(1000);
-            timer.Elapsed += OnTimerElapsed;
-            timer.Start();
-        }
-
-        //タイマー処理
-        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (Itimer != null) { Itimer.OnTimerElapsed(sender,e); }
-        }
-
         //スワイプ処理
         public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
         {
@@ -333,28 +356,5 @@ namespace Display
             if (offsetX > 80) { Ikeydown.Swipe("Left"); }       //左から右（一覧画面表示）
             if (offsetX < -80) { Ikeydown.Swipe("Right"); }     //右から左（入力画面表示）
         }
-
-        //アイコン初期化
-        public void InitializeIcon()
-        {
-            IconList = "ViewList";
-            IconPlan = "FileClockOutline";
-            IconSize = 30;
-        }
-    }
-
-    //インターフェース
-    public interface IKeyDown
-    {
-        //キー押下処理
-        void KeyDown(object value);
-        void Swipe(object value);
-    }
-
-    //インターフェース
-    public interface ITimer
-    {
-        //タイマー処理
-        void OnTimerElapsed(object sender, ElapsedEventArgs e);
     }
 }

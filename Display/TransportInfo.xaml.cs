@@ -14,9 +14,13 @@ namespace Display
     //画面クラス
     public partial class TransportInfo : UserControl
     {
+        public static string InProcessCODE     //仕掛CODE
+        { get; set; }
+
+        //コンストラクター
         public TransportInfo()
         {
-            DataContext = new ViewModelTransportInfo();
+            DataContext = new ViewModelTransportInfo(InProcessCODE);
             InitializeComponent();
         }
     }
@@ -25,26 +29,18 @@ namespace Display
     public class ViewModelTransportInfo : Common, IKeyDown, IWorker, ITimer
     {
         //変数
-        bool regFlg;
+        ViewModelWindowMain windowMain;
+        ViewModelControlWorker controlWorker;
         string processName;
         string inProcessCODE;
         string buttonName;
+        bool regFlg;
         bool isEnable;
         bool visibleWorker;
         bool visibleCancel;
         bool isFocusWorker;
 
         //プロパティ
-        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set 
-            { 
-                SetProperty(ref regFlg, value);
-                VisibleCancel = !value;
-                ButtonName = value ? "登　録" : "修　正";
-            }
-        }
         public string ProcessName           //工程区分
         {
             get { return processName; }
@@ -68,6 +64,16 @@ namespace Display
         {
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
+        }
+        public bool IsRegist                //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return regFlg; }
+            set
+            {
+                SetProperty(ref regFlg, value);
+                VisibleCancel = !value;
+                ButtonName = value ? "登　録" : "修　正";
+            }
         }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
@@ -101,43 +107,52 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelTransportInfo()
+        internal ViewModelTransportInfo(string code)
         {
             inProcess = new InProcess();
             management = new Management();
 
             //仕掛移動データ取得
             Initialize();
-            InProcessCODE = ViewModelTransportList.Instance.InProcessCODE;
+            InProcessCODE = code;
 
             //デフォルト値設定
-            RegFlg = (inProcess.Status == "搬入");
+            IsRegist = (inProcess.Status == "搬入");
             IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            ViewModelWindowMain.Instance.Itimer = this;
-            ViewModelControlWorker.Instance.Iworker = this;
+            SetInterface();
             DisplayCapution();
             SetGotFocus("Worker");
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            controlWorker = ViewModelControlWorker.Instance;
+
+            windowMain.Ikeydown = this;
+            windowMain.Itimer = this;
+            controlWorker.Iworker = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛引取";
-            ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
-            ViewModelWindowMain.Instance.ProcessName = ProcessName;
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = false;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.VisiblePlan = true;
+            windowMain.InitializeIcon();
+            windowMain.ProcessWork = "仕掛引取";
+            windowMain.IconPlan = "FileDocumentArrowRightOutline";
+            windowMain.ProcessName = ProcessName;
         }
 
         //初期化
@@ -179,7 +194,7 @@ namespace Display
                     if (result)
                     {
                         CancelData();
-                        ViewModelWindowMain.Instance.FramePage = new TransportList();
+                        windowMain.FramePage = new TransportList();
                     }
                     break;
 
@@ -196,20 +211,14 @@ namespace Display
 
                 case "DisplayList":
                     //引取履歴画面
-                    ViewModelWindowMain.Instance.FramePage = new TransportHistory();
+                    windowMain.FramePage = new TransportHistory();
                     break;
 
                 case "DisplayPlan":
                     //仕掛置場
-                    ViewModelWindowMain.Instance.FramePage = new TransportList();
+                    windowMain.FramePage = new TransportList();
                     break;
             }
-        }
-
-        //現在の日付設定
-        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (RegFlg) { inProcess.TransportDate = SetToDay(DateTime.Now); }
         }
 
         //選択処理
@@ -232,7 +241,7 @@ namespace Display
             inProcess.Place = "プレス";
             inProcess.Status = "引取";
             inProcess.TransportResist(inProcess.InProcessCODE);
-            ViewModelWindowMain.Instance.FramePage = new TransportList();
+            windowMain.FramePage = new TransportList();
         }
 
         //必須チェック
@@ -315,6 +324,12 @@ namespace Display
                 default :
                     break;
             }
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (IsRegist) { inProcess.TransportDate = SetToDay(DateTime.Now); }
         }
 
         //スワイプ処理

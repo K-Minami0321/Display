@@ -30,6 +30,7 @@ namespace Display
     public class ViewModelControlWorkProcess : Common, IWorkProcess
     {
         //変数
+        ViewModelWindowMain windowMain;
         string processName;
         bool visivleProcess;
         bool visivleAll;
@@ -83,8 +84,10 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            windowMain = ViewModelWindowMain.Instance;
             Instance = this;
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+
+            ProcessName = windowMain.ProcessName;
             KeyDown("Process");
         }
 

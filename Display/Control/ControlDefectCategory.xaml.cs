@@ -30,6 +30,7 @@ namespace Display
     public class ViewModelControlDefectCategory : Common, IDefectCategory
     {
         //変数
+        ViewModelWindowMain windowMain;
         string processName;
         string defectCategory;
         List<string> defectCategorys;
@@ -39,7 +40,7 @@ namespace Display
         { get; set; } = new ViewModelControlDefectCategory();
         public IDefectCategory IdefectCategory                      //インターフェース
         { get; set; }
-        public string ProcessName                 //工程区分
+        public string ProcessName                                   //工程区分
         {
             get { return processName; }
             set 
@@ -49,12 +50,12 @@ namespace Display
                 process = new ProcessCategory(value);
             }
         }
-        public string DefectCategory              //不良分類
+        public string DefectCategory                                //不良分類
         {
             get { return defectCategory; }
             set { SetProperty(ref defectCategory, value); }
         }
-        public List<string> DefectCategorys       //不良分類リスト
+        public List<string> DefectCategorys                         //不良分類リスト
         {
             get { return defectCategorys; }
             set { SetProperty(ref defectCategorys, value); }
@@ -69,8 +70,10 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            windowMain = ViewModelWindowMain.Instance;
             Instance = this;
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+
+            ProcessName = windowMain.ProcessName;
             DefectCategorys = process.DefectClasses;
         }
 

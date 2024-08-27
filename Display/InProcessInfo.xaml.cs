@@ -14,9 +14,15 @@ namespace Display
     //画面クラス
     public partial class InProcessInfo : UserControl
     {
+        public static string InProcessCODE     //仕掛CODE
+        { get; set; }
+        public static string LotNumber         //ロット番号
+        { get; set; }
+
+        //コンストラクター
         public InProcessInfo()
         {
-            DataContext = new ViewModelInProcessInfo();
+            DataContext = new ViewModelInProcessInfo(InProcessCODE, LotNumber);
             InitializeComponent();
         }
     }
@@ -25,8 +31,10 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker, ITimer
     {
         //変数
-        bool regFlg = true;
-        string processName;
+        ViewModelWindowMain windowMain;
+        ViewModelControlTenKey controlTenKey;
+        ViewModelControlWorker controlWorker;
+       string processName;
         string inProcessCODE;
         string inProcessDate;
         string lotNumber;
@@ -47,6 +55,7 @@ namespace Display
         bool visibleCancel;
         bool visibleTenKey;
         bool visibleWorker;
+        bool isRegist = true;
         bool isEnable;
         bool isFocusLotNumber;
         bool isFocusWorker;
@@ -56,17 +65,6 @@ namespace Display
         bool isFocusAmount;
 
         //プロパティ
-        public bool RegFlg                  //新規・既存フラグ（true:新規、false:既存）
-        {
-            get { return regFlg; }
-            set
-            {
-                SetProperty(ref regFlg, value);
-                VisibleCancel = value;
-                VisibleDelete = !value;
-                ButtonName = value ? "登　録" : "修　正";
-            }
-        }
         public string ProcessName           //工程区分
         {
             get { return processName; }
@@ -126,7 +124,7 @@ namespace Display
         public string LotNumber             //ロット番号
         {
             get { return lotNumber; }
-            set  { SetProperty(ref lotNumber, value); }
+            set { SetProperty(ref lotNumber, value); }
         }
         public string Notice                //注意文
         {
@@ -213,6 +211,17 @@ namespace Display
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
         }
+        public bool IsRegist                //新規・既存フラグ（true:新規、false:既存）
+        {
+            get { return isRegist; }
+            set
+            {
+                SetProperty(ref isRegist, value);
+                VisibleCancel = value;
+                VisibleDelete = !value;
+                ButtonName = value ? "登　録" : "修　正";
+            }
+        }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
@@ -267,69 +276,68 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelInProcessInfo()
+        internal ViewModelInProcessInfo(string code,string number)
         {
             inProcess = new InProcess();
             management = new Management();
 
             //データ取得
             Initialize();
-            InProcessCODE = ViewModelInProcessList.Instance.InProcessCODE;
-            if (string.IsNullOrEmpty(InProcessCODE)) 
-            { 
-                DisplayLot(ViewModelPlanList.Instance.LotNumber);
-                LotNumber = ViewModelPlanList.Instance.LotNumber;
-            }
+            InProcessCODE = code;
+            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }     //予定表からロット番号取得
 
             //デフォルト値設定
-            RegFlg = string.IsNullOrEmpty(inProcess.InProcessCODE);
+            IsRegist = string.IsNullOrEmpty(inProcess.InProcessCODE);
             IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            ViewModelWindowMain.Instance.Itimer = this;
-            ViewModelControlTenKey.Instance.Itenkey = this;
-            ViewModelControlWorker.Instance.Iworker = this;
+            SetInterface();
             DisplayCapution();
             SetFocus();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            controlTenKey = ViewModelControlTenKey.Instance;
+            controlWorker = ViewModelControlWorker.Instance;
+
+            windowMain.Ikeydown = this;
+            windowMain.Itimer = this;
+            controlTenKey.Itenkey = this;
+            controlWorker.Iworker = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessWork = "仕掛搬入";
-            ViewModelWindowMain.Instance.ProcessName = ProcessName;
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = true;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.VisiblePlan = true;
+            windowMain.InitializeIcon();
+            windowMain.ProcessWork = "仕掛搬入";
+            windowMain.ProcessName = ProcessName;
         }
 
         //初期化
         public void Initialize()
         {
-            if (!RegFlg) { return; }
             ProcessName = IniFile.GetString("Page", "Process");
+            InProcessCODE = string.Empty;
+            LotNumber = string.Empty;
+
             inProcess.Worker = IniFile.GetString("Page", "Worker");
             inProcess.InProcessDate = SetToDay(DateTime.Now);
-            InProcessCODE = string.Empty;
-            DisplayLot(string.Empty);
-
             AmountWidth = 150;
-            RegFlg = true;
+            IsRegist = true;
             IsEnable = true;
-        }
-
-        //現在の日付設定
-        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (RegFlg) { inProcess.InProcessDate = SetToDay(DateTime.Now); }
         }
 
         //ロット番号処理
@@ -344,96 +352,6 @@ namespace Display
             LotNumber = management.LotNumber;
             inProcess.LotNumber = LotNumber;
             inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
-        }
-
-        //キーイベント
-        public async void KeyDown(object value)
-        {
-            var result = false;
-            switch (value)
-            {
-                case "Regist":
-                    //登録
-                    if (await IsRequiredRegist())
-                    {
-                        result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
-                        await System.Threading.Tasks.Task.Delay(100);
-                        SetGotFocus(Focus);
-                        if (result) 
-                        { 
-                            RegistData(); 
-                            SetGotFocus("LotNumber"); 
-                        }
-                    }
-                    break;
-
-                case "Delete":
-                    //削除
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result) 
-                    { 
-                        DeleteDate();
-                        ViewModelWindowMain.Instance.FramePage = new InProcessList();
-                    }
-                    break;
-
-                case "Cancel":
-                    //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)  
-                    { 
-                        Initialize(); 
-                        SetGotFocus("LotNumber"); 
-                    }
-                    break;
-
-                case "Enter":
-                    //フォーカス移動
-                    SetNextFocus();
-                    break;
-
-                case "BS":
-                    //バックスペース処理
-                    BackSpaceText();
-                    break;
-
-                case "CLEAR":
-                    //文字列消去
-                    ClearText();
-                    break;
-
-                case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case "0": case "-":
-                    DisplayText(value);
-                    break;
-
-                case "Completed":
-                    //完了チェック
-                    inProcess.Completed = inProcess.Completed == "E" ? "" : "E";
-                    break;
-
-                case "DisplayInfo":
-                    //搬入登録画面
-                    RegFlg = true;
-                    ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
-                    ViewModelPlanList.Instance.LotNumber = string.Empty;
-                    Initialize();
-                    SetFocus();
-                    break;
-
-                case "DisplayList":
-                    //仕掛在庫一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new InProcessList();
-                    break;
-
-                case "DisplayPlan":
-                    //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new PlanList();
-                    break;
-            }
         }
 
         //選択処理
@@ -452,7 +370,7 @@ namespace Display
         private void RegistData()
         {
             //コード確定
-            if (RegFlg)
+            if (IsRegist)
             {
                 var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
                 var inprocesscode = inProcess.GenerateCode(process.Mark + inprocessdate);
@@ -463,11 +381,9 @@ namespace Display
             inProcess.ProductName = management.ProductName;
             inProcess.Status = "搬入";
             inProcess.TransportDate = string.Empty;
-            inProcess.InsertLog(RegFlg);
+            inProcess.InsertLog(IsRegist);
             inProcess.Resist(inProcess.InProcessCODE);
-            RegFlg = true;
-
-            //処理完了
+            IsRegist = true;
             Initialize();
         }
 
@@ -519,13 +435,106 @@ namespace Display
         //削除処理
         private void DeleteDate()
         {
-            //削除処理
             inProcess.DeleteLog();
             inProcess.DeleteHistory(inProcess.InProcessCODE);
-
-            //処理完了
-            ViewModelInProcessList.Instance.InProcessCODE = string.Empty;
             Initialize();
+        }
+
+        //キーイベント
+        public async void KeyDown(object value)
+        {
+            var result = false;
+            switch (value)
+            {
+                case "Regist":
+                    //登録
+                    if (await IsRequiredRegist())
+                    {
+                        result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
+                        await System.Threading.Tasks.Task.Delay(100);
+                        SetGotFocus(Focus);
+                        if (result)
+                        {
+                            RegistData();
+                            SetGotFocus("LotNumber");
+                        }
+                    }
+                    break;
+
+                case "Delete":
+                    //削除
+                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        DeleteDate();
+                        windowMain.FramePage = new InProcessList();
+                    }
+                    break;
+
+                case "Cancel":
+                    //取消
+                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        Initialize();
+                        SetGotFocus("LotNumber");
+                    }
+                    break;
+
+                case "Enter":
+                    //フォーカス移動
+                    SetNextFocus();
+                    break;
+
+                case "BS":
+                    //バックスペース処理
+                    BackSpaceText();
+                    break;
+
+                case "CLEAR":
+                    //文字列消去
+                    ClearText();
+                    break;
+
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                case "-":
+                    DisplayText(value);
+                    break;
+
+                case "Completed":
+                    //完了チェック
+                    inProcess.Completed = inProcess.Completed == "E" ? "" : "E";
+                    break;
+
+                case "DisplayInfo":
+                    //搬入登録画面
+                    Initialize();
+                    SetFocus();
+                    break;
+
+                case "DisplayList":
+                    //仕掛在庫一覧画面
+                    windowMain.FramePage = new InProcessList();
+                    break;
+
+                case "DisplayPlan":
+                    //計画一覧画面
+                    windowMain.FramePage = new PlanList();
+                    break;
+            }
         }
 
         //入力制御
@@ -656,7 +665,7 @@ namespace Display
                     IsFocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString = "-";
+                    controlTenKey.InputString = "-";
                     break;
 
                 case "Worker":
@@ -679,7 +688,7 @@ namespace Display
                     IsFocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "Unit":
@@ -691,7 +700,7 @@ namespace Display
                     IsFocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "Completed":
@@ -714,7 +723,7 @@ namespace Display
                     IsFocusAmount = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 default:
@@ -734,6 +743,12 @@ namespace Display
             if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
             if (string.IsNullOrEmpty(inProcess.Worker)) { SetGotFocus("Worker"); return; }
             SetGotFocus("LotNumber");
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (IsRegist) { inProcess.InProcessDate = SetToDay(DateTime.Now); }
         }
 
         //スワイプ処理

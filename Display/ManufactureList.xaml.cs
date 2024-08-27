@@ -22,6 +22,8 @@ namespace Display
     public class ViewModelManufactureList : Common, IKeyDown, ISelect
     {
         //変数
+        ViewModelWindowMain windowMain;
+        DataGridBehavior dataGridBehavior;
         string processName;
         string manufactureCODE;
         string manufactureDate;
@@ -60,7 +62,7 @@ namespace Display
             {
                 equipment = new Equipment();
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
+                windowMain.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
             }
         }
 
@@ -71,7 +73,6 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
-            Instance = this;
             manufacture = new Manufacture();
 
             //デフォルト値設定
@@ -82,22 +83,32 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            DataGridBehavior.Instance.Iselect = this;
+            SetInterface();
             DisplayCapution();
             DiaplayList();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            dataGridBehavior = DataGridBehavior.Instance;
+
+            windowMain.Ikeydown = this;
+            dataGridBehavior.Iselect = this;
+            Instance = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
             Initialize();
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = true;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = true;
+            windowMain.InitializeIcon();
             DiaplayList();
         }
 
@@ -107,6 +118,9 @@ namespace Display
             ProcessName = IniFile.GetString("Page", "Process");
             EquipmentCODE = IniFile.GetString("Page", "Equipment");
             ManufactureCODE = string.Empty;
+
+            ManufactureInfo.ManufactureCODE = null;
+            ManufactureInfo.LotNumber = null;
         }
 
         //キーイベント
@@ -116,19 +130,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
-                    ViewModelPlanList.Instance.LotNumber = string.Empty;
-                    ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
+                    windowMain.FramePage = new ManufactureInfo();
                     break;
 
                 case "DisplayList":
                     //搬入一覧画面
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage = new ManufactureList();
+                    windowMain.FramePage = new ManufactureList();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new PlanList();
+                    windowMain.FramePage = new PlanList();
                     break;
 
                 case "PreviousDate":
@@ -159,8 +172,8 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            ViewModelWindowMain.Instance.FramePage = new ManufactureInfo();
+            ManufactureInfo.ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
+            windowMain.FramePage = new ManufactureInfo();
         }
 
         //スワイプ処理

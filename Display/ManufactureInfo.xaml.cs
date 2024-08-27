@@ -14,9 +14,15 @@ namespace Display
     //画面クラス
     public partial class ManufactureInfo : UserControl
     {
+        public static string ManufactureCODE    //製造CODE
+        { get; set; }
+        public static string LotNumber          //ロット番号
+        { get; set; }
+
+        //コンストラクター
         public ManufactureInfo()
         {
-            DataContext = new ViewModelManufactureInfo();
+            DataContext = new ViewModelManufactureInfo(ManufactureCODE, LotNumber);
             InitializeComponent();
         }
     }
@@ -25,6 +31,10 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
+        ViewModelWindowMain windowMain;
+        ViewModelControlTenKey controlTenKey;
+        ViewModelControlWorker controlWorker;
+        ViewModelControlWorkProcess controlWorkProcess;
         string status;
         string processName;
         string manufactureCODE;
@@ -124,9 +134,9 @@ namespace Display
             get { return equipmentCODE; }
             set 
             {
-                equipment = new Equipment();
+                equipment = new Equipment(value);
                 var name = equipment.EquipmentName;
-                ViewModelWindowMain.Instance.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
+                windowMain.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
                 Equipment1 = value;
             }
         }
@@ -320,14 +330,15 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelManufactureInfo()
+        internal ViewModelManufactureInfo(string code, string number)
         {
             manufacture = new Manufacture();
             management = new Management();
 
             //データ取得
-            ProcessName = IniFile.GetString("Page", "Process");
-            ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
+            Initialize();
+            ManufactureCODE = code;
+            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }
 
             //デフォルト値設定
             IsRegist = string.IsNullOrEmpty(manufacture.ManufactureCODE);
@@ -337,35 +348,48 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            ViewModelWindowMain.Instance.Itimer = this;
-            ViewModelControlTenKey.Instance.Itenkey = this;
-            ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelControlWorkProcess.Instance.IworkProcess = this;
+            SetInterface();
             DisplayCapution();
             SetFocus();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            controlTenKey = ViewModelControlTenKey.Instance;
+            controlWorker = ViewModelControlWorker.Instance;
+            controlWorkProcess = ViewModelControlWorkProcess.Instance;
+
+            windowMain.Ikeydown = this;
+            windowMain.Itimer = this;
+            controlTenKey.Itenkey = this;
+            controlWorker.Iworker = this;
+            controlWorkProcess.IworkProcess = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessName = ProcessName;
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = true;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.VisiblePlan = true;
+            windowMain.InitializeIcon();
+            windowMain.ProcessName = ProcessName;
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
+            Status = IniFile.GetString("Manufacture", "Mode");
         }
 
         //初期化
         public void Initialize()
         {
-            Status = IniFile.GetString("Manufacture", "Mode");
+            ProcessName = IniFile.GetString("Page", "Process");
+            ManufactureCODE = string.Empty;
+            LotNumber = string.Empty;
 
-            if (!IsRegist) { return; }
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
             manufacture.Worker = IniFile.GetString("Page", "Worker");
             manufacture.LotNumber = string.Empty;
@@ -378,18 +402,8 @@ namespace Display
             manufacture.Weight = string.Empty;
             manufacture.Completed = string.Empty;
             manufacture.Sales = string.Empty;
-
-            EquipmentCODE = IniFile.GetString("Page", "Equipment");
-            ManufactureCODE = string.Empty;
-            LotNumber = string.Empty;
+            IsRegist = true;
             IsEnable = true;
-            DisplayLot(ViewModelPlanList.Instance.LotNumber);           //予定表からロット番号取得
-        }
-
-        //現在の日付設定
-        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (IsRegist) { manufacture.ManufactureDate = SetToDay(DateTime.Now); }
         }
 
         //ロット番号処理
@@ -404,133 +418,6 @@ namespace Display
             LotNumber = management.LotNumber;
             manufacture.LotNumber = LotNumber;
             manufacture.ProductName = management.ProductName;
-        }
-
-        //キーイベント
-        public async void KeyDown(object value)
-        {
-            var result = false;
-            switch (value)
-            {
-                case "WorkStart":
-                    //作業開始
-                    if (await IsRequiredRegist())
-                    {
-                        result = (bool)await DialogHost.Show(new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告"));
-                        await System.Threading.Tasks.Task.Delay(100);
-                        if (result)
-                        {
-                            //ボタン処理
-                            Status = "作業中";
-                            SetGotFocus("Amount");
-                            manufacture.StartTime = DateTime.Now.ToString("HH:mm");
-                        }
-                    }
-                    break;
-
-                case "WorkEnd":
-                    //作業終了処理
-                    manufacture.EndTime = DateTime.Now.ToString("HH:mm");
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        RegistData();
-                        Status = "準備";
-                    }
-                    else
-                    {
-                        manufacture.EndTime = string.Empty;
-                        manufacture.WorkTime = string.Empty;
-                    }
-                    break;
-
-                case "WorkBreak":
-                    //中断処理・再開処理
-                    Status = (Status == "中断") ? "作業中" : "中断";
-                    break;
-
-                case "Cancel":
-                    //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result) { 
-                        Initialize();
-                        Status = "準備"; 
-                    }
-                    break;
-
-                case "Regist":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを修正します。", "※「はい」ボタンを押して作業データを修正します。", "警告"));
-                    if (result) 
-                    { 
-                        RegistData();
-                        SetGotFocus("LotNumber");
-                    }
-                    break;
-
-                case "Delete":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result) 
-                    { 
-                        DeleteDate();
-                        ViewModelWindowMain.Instance.FramePage = new ManufactureList();
-                    }
-                    break;
-
-                case "Enter":
-                    //フォーカス移動
-                    SetNextFocus();
-                    break;
-
-                case "BS":
-                    //バックスペース処理
-                    BackSpaceText();
-                    break;
-
-                case "CLEAR":
-                    //文字列消去
-                    ClearText();
-                    break;
-
-                case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case "0": case "-":
-                    //テンキー処理
-                    DisplayText(value);
-                    break;
-
-                case "Completed":
-                    //完了
-                    manufacture.Completed = manufacture.Completed == "E" ? "" : "E";
-                    break;
-
-                case "Sales":
-                    //売上
-                    manufacture.Sales = manufacture.Sales == "*" ? "" : "*";
-                    break;
-
-                case "DisplayInfo":
-                    //加工登録画面
-                    IsRegist = true;
-                    ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
-                    ViewModelPlanList.Instance.LotNumber = string.Empty;
-                    Initialize();
-                    SetFocus();
-                    break;
-
-                case "DisplayList":
-                    //加工一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new ManufactureList();
-                    break;
-
-                case "DisplayPlan":
-                    //計画一覧画面
-                    ViewModelWindowMain.Instance.FramePage = new PlanList();
-                    break;
-            }
         }
 
         //選択処理
@@ -562,9 +449,9 @@ namespace Display
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
                     VisibleEdit = true;
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
-                    ViewModelWindowMain.Instance.VisibleArrow = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
+                    windowMain.VisibleArrow = false;
                     break;
 
                 case "準備":
@@ -574,9 +461,9 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
-                    ViewModelWindowMain.Instance.VisibleArrow = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
+                    windowMain.VisibleArrow = false;
                     break;
 
                 case "作業中":
@@ -587,12 +474,12 @@ namespace Display
                     VisibleButtonBreak = true;
                     VisibleButtonCancel = false;
                     BreakName = "中　断";
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
                     SetGotFocus("Amount");
 
                     //一覧からデータ読み込み
-                    manufacture.ManufactureCODE = ViewModelManufactureList.Instance.ManufactureCODE;
+                    manufacture.ManufactureCODE = ManufactureCODE;
                     break;
 
                 case "中断":
@@ -603,8 +490,8 @@ namespace Display
                     VisibleButtonBreak = true;
                     VisibleButtonCancel = true;
                     BreakName = "再　開";
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
                     break;
 
                 case "編集":
@@ -615,8 +502,8 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
                     break;
 
                 default:
@@ -627,16 +514,16 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    ViewModelWindowMain.Instance.VisibleList = true;
-                    ViewModelWindowMain.Instance.VisibleDefect = false;
-                    ViewModelWindowMain.Instance.VisibleArrow = false;
+                    windowMain.VisibleList = true;
+                    windowMain.VisibleDefect = false;
+                    windowMain.VisibleArrow = false;
                     break;
             }
 
             //ボタン設定
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
+            windowMain.VisiblePower = true;
+            windowMain.VisibleInfo = true;
+            windowMain.VisibleArrow = false;
         }
 
         //登録処理
@@ -656,10 +543,8 @@ namespace Display
             manufacture.InsertLog(IsRegist);
             manufacture.Resist(manufacture.ManufactureCODE);
 
-            //初期設定
-            IsRegist = true;
-            ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
             Initialize();
+            Status = IniFile.GetString("Manufacture", "Mode");
         }
 
         //必須チェック
@@ -720,9 +605,144 @@ namespace Display
             manufacture.DeleteLog();
             manufacture.Delete(manufacture.ManufactureCODE);        //製造実績削除
 
-            //処理完了
-            ViewModelManufactureList.Instance.ManufactureCODE = string.Empty;
             Initialize();
+            Status = IniFile.GetString("Manufacture", "Mode");
+        }
+
+        //キーイベント
+        public async void KeyDown(object value)
+        {
+            var result = false;
+            switch (value)
+            {
+                case "WorkStart":
+                    //作業開始
+                    if (await IsRequiredRegist())
+                    {
+                        result = (bool)await DialogHost.Show(new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告"));
+                        await System.Threading.Tasks.Task.Delay(100);
+                        if (result)
+                        {
+                            //ボタン処理
+                            Status = "作業中";
+                            SetGotFocus("Amount");
+                            manufacture.StartTime = DateTime.Now.ToString("HH:mm");
+                        }
+                    }
+                    break;
+
+                case "WorkEnd":
+                    //作業終了処理
+                    manufacture.EndTime = DateTime.Now.ToString("HH:mm");
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        RegistData();
+                        Status = "準備";
+                    }
+                    else
+                    {
+                        manufacture.EndTime = string.Empty;
+                        manufacture.WorkTime = string.Empty;
+                    }
+                    break;
+
+                case "WorkBreak":
+                    //中断処理・再開処理
+                    Status = (Status == "中断") ? "作業中" : "中断";
+                    break;
+
+                case "Cancel":
+                    //取消
+                    result = (bool)await DialogHost.Show(new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        Initialize();
+                        Status = "準備";
+                    }
+                    break;
+
+                case "Regist":
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを修正します。", "※「はい」ボタンを押して作業データを修正します。", "警告"));
+                    if (result)
+                    {
+                        RegistData();
+                        SetGotFocus("LotNumber");
+                    }
+                    break;
+
+                case "Delete":
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        DeleteDate();
+                        windowMain.FramePage = new ManufactureList();
+                    }
+                    break;
+
+                case "Enter":
+                    //フォーカス移動
+                    SetNextFocus();
+                    break;
+
+                case "BS":
+                    //バックスペース処理
+                    BackSpaceText();
+                    break;
+
+                case "CLEAR":
+                    //文字列消去
+                    ClearText();
+                    break;
+
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                case "-":
+                    //テンキー処理
+                    DisplayText(value);
+                    break;
+
+                case "Completed":
+                    //完了
+                    manufacture.Completed = manufacture.Completed == "E" ? "" : "E";
+                    break;
+
+                case "Sales":
+                    //売上
+                    manufacture.Sales = manufacture.Sales == "*" ? "" : "*";
+                    break;
+
+                case "DisplayInfo":
+                    //加工登録画面
+                    Initialize();
+                    Status = IniFile.GetString("Manufacture", "Mode");
+                    SetFocus();
+                    break;
+
+                case "DisplayList":
+                    //加工一覧画面
+                    windowMain.FramePage = new ManufactureList();
+                    break;
+
+                case "DisplayPlan":
+                    //計画一覧画面
+                    windowMain.FramePage = new PlanList();
+                    break;
+            }
         }
 
         //入力制御
@@ -922,7 +942,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = "-";
+                    controlTenKey.InputString = "-";
                     break;
 
                 case "WorkProcess":
@@ -965,7 +985,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "EndTime":
@@ -980,7 +1000,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "Amount":
@@ -995,7 +1015,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "Completed":
@@ -1010,7 +1030,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 case "Sales":
@@ -1025,7 +1045,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    ViewModelControlTenKey.Instance.InputString = ".";
+                    controlTenKey.InputString = ".";
                     break;
 
                 default:
@@ -1060,6 +1080,12 @@ namespace Display
             if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
             if (string.IsNullOrEmpty(manufacture.WorkProcess)) { SetGotFocus("WorkProcess"); return; }
             SetGotFocus("LotNumber");
+        }
+
+        //現在の日付設定
+        public void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (IsRegist) { manufacture.ManufactureDate = SetToDay(DateTime.Now); }
         }
 
         //スワイプ処理

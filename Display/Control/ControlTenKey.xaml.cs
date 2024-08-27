@@ -25,7 +25,6 @@ namespace Display
     //ViewModel
     public class ViewModelControlTenKey : Common, ITenKey
     {
-
         //変数
         string inputString;
 

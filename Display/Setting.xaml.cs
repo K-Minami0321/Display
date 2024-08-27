@@ -25,10 +25,12 @@ namespace Display
     public class ViewModelSetting : Common, IKeyDown
     {
         //変数
+        ViewModelWindowMain windowMain;
         string version;
         string connection;
         string server;
         string processName;
+        string equipmentCODE;
         string worker;
         string logText;
         string log = CONST.SQL_LOG;
@@ -77,7 +79,10 @@ namespace Display
             }
         }
         public string EquipmentCODE                 //設備CODE
-        { get; set; }
+        {
+            get { return equipmentCODE; }
+            set { SetProperty(ref equipmentCODE, value); }
+        }
         public string Worker                        //担当者
         {
             get { return worker; }
@@ -169,17 +174,14 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //コンストラクター
-        internal ViewModelSetting()
-        {
-            Instance = this;
-            
-        }
-
         //ロード時
         private void OnLoad()
         {
-            ViewModelWindowMain.Instance.Ikeydown = this;
+            listSource = new ListSource();
+            windowMain = ViewModelWindowMain.Instance;
+            windowMain.Ikeydown = this;
+            Instance = this;
+
             DisplayCapution();
             DisplayData();
             DisplayLog();
@@ -190,22 +192,21 @@ namespace Display
         {
             //ボタン設定
             Initialize();
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.VisibleList = false;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessWork = "設定画面";
-            ViewModelWindowMain.Instance.ProcessName = "設定";
+            windowMain.VisiblePower = true;
+            windowMain.VisiblePlan = true;
+            windowMain.VisibleList = false;
+            windowMain.VisibleInfo = true;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = false;
+            windowMain.InitializeIcon();
+            windowMain.ProcessWork = "設定画面";
+            windowMain.ProcessName = "設定";
             Version = CONST.DISPLAY_VERSION;
         }
 
         //初期化
         public void Initialize()
         {
-            listSource = new ListSource();
             ProcessNames = listSource.Processes;        //コンボボックス設定
             Servers = listSource.Servers;               //サーバー設定
             IsFocusServer = true;                       //フォーカス
@@ -230,6 +231,22 @@ namespace Display
                 StreamReader reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
                 if (reader != null) { LogText = reader.ReadToEnd(); }
             }  
+        }
+
+        //登録処理
+        public void RegistData()
+        {
+            //サーバー情報取得
+            var server = GetServerIP(Connection);
+            var connection = Connection.Replace(server, Server);
+
+            //INIファイル書き込み
+            IniFile.WriteString("Database", "ConnectString", connection);
+            IniFile.WriteString("Page", "Process", ProcessName);
+            IniFile.WriteString("Page", "Equipment", EquipmentCODE);
+            IniFile.WriteString("Page", "Worker", Worker);
+            windowMain.ProcessName = IniFile.GetString("Page", "Process");
+            StartPage(IniFile.GetString("Page", "Initial"));
         }
 
         //キーイベント
@@ -307,26 +324,10 @@ namespace Display
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    ViewModelWindowMain.Instance.ProcessName = ProcessName;
-                    ViewModelWindowMain.Instance.FramePage = new PlanList();
+                    windowMain.ProcessName = ProcessName;
+                    windowMain.FramePage = new PlanList();
                     break;
             }
-        }
-
-        //登録処理
-        public void RegistData()
-        {
-            //サーバー情報取得
-            var server = GetServerIP(Connection);
-            var connection = Connection.Replace(server, Server);
-
-            //INIファイル書き込み
-            IniFile.WriteString("Database", "ConnectString", connection);
-            IniFile.WriteString("Page", "Process", ProcessName);
-            IniFile.WriteString("Page", "Equipment", EquipmentCODE);
-            IniFile.WriteString("Page", "Worker", Worker);
-            ViewModelWindowMain.Instance.ProcessName = IniFile.GetString("Page", "Process");
-            StartPage(IniFile.GetString("Page", "Initial"));
         }
 
         //スワイプ処理

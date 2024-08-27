@@ -12,6 +12,7 @@ namespace Display
     //画面クラス
     public partial class TransportHistory : UserControl
     {
+        //コンストラクター
         public TransportHistory()
         {
             DataContext = ViewModelTransportHistory.Instance;
@@ -22,7 +23,9 @@ namespace Display
     //ViewModel
     public class ViewModelTransportHistory : Common, IKeyDown, ISelect
     {
-        //プロパティ変数
+        //変数
+        ViewModelWindowMain windowMain;
+        DataGridBehavior dataGridBehavior;
         string processName;
         string inProcessCODE;
         string transportDate;
@@ -42,7 +45,7 @@ namespace Display
             set 
             { 
                 SetProperty(ref processName, value);
-                ViewModelWindowMain.Instance.ProcessName = value;
+                windowMain.ProcessName = value;
                 inProcess.ProcessName = value;
                 process = new ProcessCategory(value);
             }
@@ -105,7 +108,6 @@ namespace Display
             inProcess = new InProcess();
 
             //デフォルト値設定
-            ProcessName = IniFile.GetString("Page", "Process");
             TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
             SelectedIndex = -1;
         }
@@ -113,12 +115,20 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            //インスタンス
-            Instance = this;
-            ViewModelWindowMain.Instance.Ikeydown = this;
-            DataGridBehavior.Instance.Iselect = this;
+            SetInterface();
             DisplayCapution();
             DiaplayList();
+        }
+
+        //インターフェース設定
+        private void SetInterface()
+        {
+            windowMain = ViewModelWindowMain.Instance;
+            dataGridBehavior = DataGridBehavior.Instance;
+
+            windowMain.Ikeydown = this;
+            dataGridBehavior.Iselect = this;
+            Instance = this;
         }
 
         //キャプション・ボタン表示
@@ -126,16 +136,16 @@ namespace Display
         {
             //キャプション表示
             Initialize();
-            ViewModelWindowMain.Instance.ProcessWork = "引取履歴";           
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = false;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = true;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.IconList = "ViewList";
-            ViewModelWindowMain.Instance.IconPlan = "FileDocumentArrowRightOutline";
+            windowMain.ProcessWork = "引取履歴";
+            windowMain.VisiblePower = true;
+            windowMain.VisibleList = true;
+            windowMain.VisibleInfo = false;
+            windowMain.VisibleDefect = false;
+            windowMain.VisibleArrow = true;
+            windowMain.VisiblePlan = true;
+            windowMain.InitializeIcon();
+            windowMain.IconList = "ViewList";
+            windowMain.IconPlan = "FileDocumentArrowRightOutline";
         }
 
         //初期化
@@ -152,18 +162,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //引取登録
-                    ViewModelWindowMain.Instance.FramePage = new TransportInfo();
+                    windowMain.FramePage = new TransportInfo();
                     break;
 
                 case "DisplayList":
                     //引取履歴
                     TransportDate = DateTime.Now.ToString("yyyyMMdd");
-                    ViewModelWindowMain.Instance.FramePage = new TransportHistory();
+                    windowMain.FramePage = new TransportHistory();
                     break;
 
                 case "DisplayPlan":
                     //仕掛置場
-                    ViewModelWindowMain.Instance.FramePage = new TransportList();
+                    windowMain.FramePage = new TransportList();
                     break;
 
                 case "PreviousDate":
@@ -189,9 +199,8 @@ namespace Display
         {
             if(SelectedItem == null) { return; }
             InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            ViewModelPlanList.Instance.LotNumber = null;
-            ViewModelTransportList.Instance.InProcessCODE = InProcessCODE;
-            ViewModelWindowMain.Instance.FramePage = new TransportInfo();
+            TransportInfo.InProcessCODE = InProcessCODE;
+            windowMain.FramePage = new TransportInfo();
         }
 
         //スワイプ処理
