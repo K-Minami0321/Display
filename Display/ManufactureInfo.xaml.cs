@@ -452,6 +452,7 @@ namespace Display
                     windowMain.VisibleList = true;
                     windowMain.VisibleDefect = false;
                     windowMain.VisibleArrow = false;
+                    SetGotFocus("LotNumber");
                     break;
 
                 case "準備":
@@ -667,7 +668,9 @@ namespace Display
                     break;
 
                 case "Regist":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを修正します。", "※「はい」ボタンを押して作業データを修正します。", "警告"));
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを" + ButtonName.Replace("　", "") +"します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
                     if (result)
                     {
                         RegistData();
