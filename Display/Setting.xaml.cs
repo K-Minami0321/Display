@@ -325,7 +325,7 @@ namespace Display
                 case "DisplayPlan":
                     //計画一覧画面
                     windowMain.ProcessName = ProcessName;
-                    windowMain.FramePage = new PlanList();
+                    DisplayFramePage(new PlanList());
                     break;
             }
         }

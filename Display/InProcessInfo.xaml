@@ -130,7 +130,7 @@
                         </StackPanel>
 
                         <Viewbox Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding inProcess.UnitLabel,FallbackValue=数 量}"/>
+                            <TextBlock Text="{Binding inProcess.LabelUnit,FallbackValue=数 量}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextUnit" Text="{Binding inProcess.Unit}" Width="150" InputMethod.IsInputMethodEnabled="False"
@@ -180,7 +180,7 @@
                             </CheckBox>
                         </StackPanel>
                         <Viewbox Grid.Row="6" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding management.AmountLabel,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Text="{Binding management.LabelAmount,FallbackValue=枚 数}" Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextAmount" Text="{Binding inProcess.Amount}" Width="{Binding AmountWidth,FallbackValue=150}"

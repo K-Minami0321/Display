@@ -39,13 +39,13 @@ namespace Display
         string processName;
         string manufactureCODE;
         string lotNumber;
+        string productName;
         string equipmentCODE;
         string manufactureDate;
         string equipment1;
         string equipment2;
         string team;
         string buttonName;
-        string productName;
         int lotNumberLength = 10;
         int startTimeLength = 4;
         int endTimeLength = 4;
@@ -120,7 +120,7 @@ namespace Display
             set 
             { 
                 SetProperty(ref manufactureCODE, value);
-                CopyProperty(new Manufacture(ManufactureCODE, ProcessName), manufacture);
+                CopyProperty(new Manufacture(ManufactureCODE), manufacture);
                 DisplayLot(manufacture.LotNumber);
             }
         }
@@ -128,6 +128,11 @@ namespace Display
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
+        }
+        public string ProductName               //工程区分
+        {
+            get { return productName; }
+            set { SetProperty(ref productName, value); }
         }
         public string EquipmentCODE             //設備CODE
         {
@@ -393,7 +398,7 @@ namespace Display
             manufacture.ManufactureDate = SetToDay(DateTime.Now);
             manufacture.Worker = IniFile.GetString("Page", "Worker");
             manufacture.LotNumber = string.Empty;
-            manufacture.ProductName = string.Empty;
+            ProductName = string.Empty;
             manufacture.WorkProcess = string.Empty;
             manufacture.StartTime = string.Empty;
             manufacture.EndTime = string.Empty;
@@ -413,11 +418,11 @@ namespace Display
             CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
 
             //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != manufacture.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
             shape = new ProductShape(management.ShapeName);
             LotNumber = management.LotNumber;
             manufacture.LotNumber = LotNumber;
-            manufacture.ProductName = management.ProductName;
+            ProductName = management.ProductName;
         }
 
         //選択処理
@@ -685,7 +690,7 @@ namespace Display
                     if (result)
                     {
                         DeleteDate();
-                        windowMain.FramePage = new ManufactureList();
+                        DisplayFramePage(new ManufactureList());
                     }
                     break;
 
@@ -738,12 +743,12 @@ namespace Display
 
                 case "DisplayList":
                     //加工一覧画面
-                    windowMain.FramePage = new ManufactureList();
+                    DisplayFramePage(new ManufactureList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    windowMain.FramePage = new PlanList();
+                    DisplayFramePage(new PlanList());
                     break;
             }
         }

@@ -130,18 +130,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
-                    windowMain.FramePage = new ManufactureInfo();
+                    DisplayFramePage(new ManufactureInfo());
                     break;
 
                 case "DisplayList":
                     //搬入一覧画面
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-                    windowMain.FramePage = new ManufactureList();
+                    DisplayFramePage(new ManufactureList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    windowMain.FramePage = new PlanList();
+                    DisplayFramePage(new PlanList());
                     break;
 
                 case "PreviousDate":
@@ -173,7 +173,7 @@ namespace Display
         {
             if (SelectedItem == null) { return; }
             ManufactureInfo.ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            windowMain.FramePage = new ManufactureInfo();
+            DisplayFramePage(new ManufactureInfo());
         }
 
         //スワイプ処理

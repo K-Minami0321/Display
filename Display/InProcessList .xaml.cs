@@ -180,18 +180,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //仕掛在庫登録画面
-                    windowMain.FramePage = new InProcessInfo();
+                    DisplayFramePage(new InProcessInfo());
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
-                    windowMain.FramePage = new InProcessList();
+                    DisplayFramePage(new InProcessList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    windowMain.FramePage = new PlanList();
+                    DisplayFramePage(new PlanList());
                     break;
 
                 case "PreviousDate":
@@ -223,7 +223,7 @@ namespace Display
             if(SelectedItem == null) { return; }
             InProcessInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
             InProcessInfo.LotNumber = null;
-            windowMain.FramePage = new InProcessInfo();
+            DisplayFramePage(new InProcessInfo());
         }
 
         //スワイプ処理

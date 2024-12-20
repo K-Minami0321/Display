@@ -60,6 +60,16 @@ namespace Display
                 DisplayLot(inProcess.LotNumber);
             }
         }
+
+
+
+
+
+
+
+
+
+
         public string ButtonName            //登録ボタン名
         {
             get { return buttonName; }
@@ -194,7 +204,7 @@ namespace Display
                     if (result)
                     {
                         CancelData();
-                        windowMain.FramePage = new TransportList();
+                        DisplayFramePage(new TransportList());
                     }
                     break;
 
@@ -211,12 +221,12 @@ namespace Display
 
                 case "DisplayList":
                     //引取履歴画面
-                    windowMain.FramePage = new TransportHistory();
+                    DisplayFramePage(new TransportHistory());
                     break;
 
                 case "DisplayPlan":
                     //仕掛置場
-                    windowMain.FramePage = new TransportList();
+                    DisplayFramePage(new TransportList());
                     break;
             }
         }
@@ -241,7 +251,7 @@ namespace Display
             inProcess.Place = "プレス";
             inProcess.Status = "引取";
             inProcess.TransportResist(inProcess.InProcessCODE);
-            windowMain.FramePage = new TransportList();
+            DisplayFramePage(new TransportList());
         }
 
         //必須チェック

@@ -21,8 +21,6 @@ namespace Display
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
         //変数
-        ViewModelWindowMain windowMain;
-        DataGridBehavior dataGridBehavior;
         string page;
         string processName;
         string lotNumber;
@@ -37,11 +35,10 @@ namespace Display
         { get; set; } = new ViewModelPlanList();
         public string ProcessName                   //工程区分
         {
-            get { return plan.ProcessName; }
+            get { return processName;  }
             set
             {
                 SetProperty(ref processName, value);
-                plan.ProcessName = value;
                 process = new ProcessCategory(value);
             }
         }
@@ -85,8 +82,6 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
-            plan = new Plan();
-
             //デフォルト値設定
             SelectedIndex = -1;
             ScrollIndex = 0;
@@ -103,24 +98,24 @@ namespace Display
         private void DisplayCapution()
         {
             //ボタン設定
-            Initialize();
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
             windowMain.InitializeIcon();
+            ProcessName = windowMain.ProcessName;
             windowMain.ProcessWork = ProcessName + "計画一覧";
+
+            Initialize();
             DiaplayList();
         }
 
         //インターフェース設定
         private void SetInterface()
         {
-            windowMain = ViewModelWindowMain.Instance;
-            dataGridBehavior = DataGridBehavior.Instance;
-
-            windowMain.Ikeydown = this;
-            dataGridBehavior.Iselect = this;
+            ViewModelWindowMain.Instance.Ikeydown = this;
+            DataGridBehavior.Instance.Iselect = this;
             Instance = this;
         }
 
@@ -131,7 +126,6 @@ namespace Display
             page = IniFile.GetString("Page", "Initial");
             LotNumber = string.Empty;
             ProcessName = IniFile.GetString("Page", "Process");
-            UpdateDate = plan.SelectFile() + "版";
             VisibleUnit = ProcessName == "合板" ? true : false;
             VisibleAmount = !VisibleUnit;
             InProcessInfo.InProcessCODE = null;
@@ -140,6 +134,7 @@ namespace Display
             ManufactureInfo.LotNumber = null;
 
             //画面設定
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             switch (page)
             {
                 case "PlanList":
@@ -161,12 +156,14 @@ namespace Display
         private void DiaplayList(string where = "")
         {
             var selectIndex = SelectedIndex;
-            plan.SelectFile();
-            SelectTable = plan.SelectPlanList(where, true);
+
+            Plan plan = new Plan();
+            UpdateDate = plan.SelectFile(ProcessName) + "版";
+            SelectTable = plan.SelectPlanList(ProcessName, where, true);
 
             //行選択・スクロール設定
-            dataGridBehavior.SetScrollViewer();
-            dataGridBehavior.Scroll.ScrollToVerticalOffset(ScrollIndex);
+            DataGridBehavior.Instance.SetScrollViewer();
+            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
             SelectedIndex = selectIndex;
         }
 
@@ -215,7 +212,6 @@ namespace Display
                     //計画一覧画面
                     SelectedIndex = -1;
                     ScrollIndex = 0;
-                    plan.SelectFile();
                     DiaplayList();
                     break;
 

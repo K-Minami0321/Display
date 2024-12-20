@@ -38,8 +38,8 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //変数
-        WindowBehavior windowBehavior;
         SQL sql;
+        WindowBehavior windowBehavior;
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft;

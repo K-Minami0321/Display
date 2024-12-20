@@ -75,8 +75,16 @@ namespace Display
         public void StartPage(string page)
         {
             //ページ移動
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             Type type = Type.GetType("Display." + page);
-            ViewModelWindowMain.Instance.FramePage = (ContentControl)Activator.CreateInstance(type);
+            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
+        }
+
+        //ページ移動
+        public void DisplayFramePage(object framepage, object page = null)
+        {
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            windowMain.FramePage = (ContentControl)framepage;
         }
     }
 }

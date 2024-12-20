@@ -63,6 +63,7 @@ namespace Display
         bool isFocusUnit;
         bool isFocusCompleted;
         bool isFocusAmount;
+        string unitLabel;
 
         //プロパティ
         public string ProcessName           //工程区分
@@ -79,7 +80,7 @@ namespace Display
                         VisibleItem1 = true;
                         VisibleItem2 = true;
                         WeightLabel = "焼結重量";
-                        inProcess.UnitLabel = "重 量";
+                        inProcess.LabelUnit = "重 量";
                         AmountRow = 5;
                         Notice = "※スリッター時のみ記入";
                         break;
@@ -89,7 +90,7 @@ namespace Display
                         VisibleItem1 = true;
                         VisibleItem2 = false;
                         WeightLabel = "単 重";
-                        inProcess.UnitLabel = "数 量";
+                        inProcess.LabelUnit = "数 量";
                         AmountRow = 5;
                         Notice = string.Empty;
                         VisibleCoil = false;
@@ -99,7 +100,7 @@ namespace Display
                         if (NextFocus != null) { NextFocus = "LotNumber"; }
                         VisibleItem1 = false;
                         VisibleItem2 = false;
-                        inProcess.UnitLabel = "数 量";
+                        inProcess.LabelUnit = "数 量";
                         AmountRow = 4;
                         Notice = string.Empty;
                         VisibleCoil = false;
@@ -263,6 +264,11 @@ namespace Display
         {
             get { return isFocusAmount; }
             set { SetProperty(ref isFocusAmount, value); }
+        }
+        public string UnitLabel
+        {
+            get { return unitLabel; }
+            set { SetProperty(ref unitLabel, value); }
         }
 
         //イベント
@@ -469,7 +475,7 @@ namespace Display
                     if (result)
                     {
                         DeleteDate();
-                        windowMain.FramePage = new InProcessList();
+                        DisplayFramePage(new InProcessList());
                     }
                     break;
 
@@ -527,12 +533,12 @@ namespace Display
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    windowMain.FramePage = new InProcessList();
+                    DisplayFramePage(new InProcessList());
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    windowMain.FramePage = new PlanList();
+                    DisplayFramePage(new PlanList());
                     break;
             }
         }
@@ -585,9 +591,6 @@ namespace Display
                 case "Amount":
                     inProcess.Amount = string.Empty;
                     break;
-
-                default:
-                    break;
             }
         }
 
@@ -610,9 +613,6 @@ namespace Display
 
                 case "Amount":
                     if (inProcess.Amount.Length > 0) { inProcess.Amount = inProcess.Amount[..^1]; }
-                    break;
-
-                default:
                     break;
             }
         }
@@ -644,8 +644,6 @@ namespace Display
 
                 case "Amount":
                     SetGotFocus("LotNumber");
-                    break;
-                default:
                     break;
             }
         }
@@ -724,9 +722,6 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     controlTenKey.InputString = ".";
-                    break;
-
-                default:
                     break;
             }
         }

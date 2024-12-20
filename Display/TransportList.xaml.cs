@@ -107,17 +107,17 @@ namespace Display
             {
                 case "DisplayInfo":
                     //引取登録
-                    windowMain.FramePage = new TransportInfo();
+                    DisplayFramePage(new TransportInfo()); 
                     break;
 
                 case "DisplayList":
                     //引取履歴
-                    windowMain.FramePage = new TransportHistory();
+                    DisplayFramePage(new TransportHistory());
                     break;
 
                 case "DiaplayPlan":
                     //仕掛置場
-                    windowMain.FramePage = new TransportList();
+                    DisplayFramePage(new TransportList());
                     break;
             }
         }
