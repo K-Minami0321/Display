@@ -39,7 +39,6 @@ namespace Display
     {
         //変数
         SQL sql;
-        WindowBehavior windowBehavior;
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft;
@@ -168,8 +167,7 @@ namespace Display
         //コンストラクター
         internal ViewModelWindowMain()
         {
-            windowBehavior = WindowBehavior.Instance;
-            windowBehavior.iWindow = this;
+            WindowBehavior.Instance.iWindow = this;
             Instance = this;
 
             //Windowのサイズ・位置を復元
@@ -280,6 +278,20 @@ namespace Display
             if (Itimer != null) { Itimer.OnTimerElapsed(sender,e); }
         }
 
+        //スワイプ処理
+        public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
+        {
+            var delta = e.DeltaManipulation;
+            var offsetX = delta.Translation.X;
+            var offsetY = delta.Translation.Y;
+
+            //スワイプ処理
+            if (offsetY > 80) { KeyDown("ESC"); }               //上から下（電源を切る）
+            if (offsetY < -80) { KeyDown("F12"); }              //下から上（設定画面表示）
+            if (offsetX > 80) { Ikeydown.Swipe("Left"); }       //左から右（一覧画面表示）
+            if (offsetX < -80) { Ikeydown.Swipe("Right"); }     //右から左（入力画面表示）
+        }
+
         //キー処理
         private void KeyDown(object value)
         {
@@ -341,20 +353,6 @@ namespace Display
                     if (Ikeydown != null) { Ikeydown.KeyDown(value); }
                     break;
             }
-        }
-
-        //スワイプ処理
-        public void ManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
-        {
-            var delta = e.DeltaManipulation;
-            var offsetX = delta.Translation.X;
-            var offsetY = delta.Translation.Y;
-
-            //スワイプ処理
-            if (offsetY > 80) { KeyDown("ESC"); }               //上から下（電源を切る）
-            if (offsetY < -80) { KeyDown("F12"); }              //下から上（設定画面表示）
-            if (offsetX > 80) { Ikeydown.Swipe("Left"); }       //左から右（一覧画面表示）
-            if (offsetX < -80) { Ikeydown.Swipe("Right"); }     //右から左（入力画面表示）
         }
     }
 }

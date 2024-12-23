@@ -84,7 +84,7 @@ namespace Display
         //コンストラクター
         ViewModelControlWorker()
         {
-            listSource = new ListSource();
+            
         }
         
         //ロード時
@@ -111,6 +111,8 @@ namespace Display
         //キー処理
         private void KeyDown(object value)
         {
+            ListSource listSource = new ListSource();
+
             switch (value)
             {
                 case "Process":

@@ -25,7 +25,6 @@ namespace Display
     public class ViewModelSetting : Common, IKeyDown
     {
         //変数
-        ViewModelWindowMain windowMain;
         string version;
         string connection;
         string server;
@@ -49,8 +48,6 @@ namespace Display
         List<string> servers;
 
         //プロパティ
-        public static ViewModelSetting Instance     //インスタンス
-        { get; set; } = new ViewModelSetting();
         public string Version                       //バージョン
         {
             get { return version; }
@@ -177,11 +174,6 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            listSource = new ListSource();
-            windowMain = ViewModelWindowMain.Instance;
-            windowMain.Ikeydown = this;
-            Instance = this;
-
             DisplayCapution();
             DisplayData();
             DisplayLog();
@@ -191,22 +183,25 @@ namespace Display
         private void DisplayCapution()
         {
             //ボタン設定
-            Initialize();
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleList = false;
             windowMain.VisibleInfo = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
+            windowMain.Ikeydown = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "設定画面";
             windowMain.ProcessName = "設定";
             Version = CONST.DISPLAY_VERSION;
+            Initialize();
         }
 
         //初期化
         public void Initialize()
         {
+            ListSource listSource = new ListSource();
             ProcessNames = listSource.Processes;        //コンボボックス設定
             Servers = listSource.Servers;               //サーバー設定
             IsFocusServer = true;                       //フォーカス
@@ -245,8 +240,26 @@ namespace Display
             IniFile.WriteString("Page", "Process", ProcessName);
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
-            windowMain.ProcessName = IniFile.GetString("Page", "Process");
+            SetProcess();
             StartPage(IniFile.GetString("Page", "Initial"));
+        }
+
+        //工程区分設定
+        public void SetProcess()
+        {
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            windowMain.ProcessName = IniFile.GetString("Page", "Process");
+        }
+
+        //スワイプ処理
+        public void Swipe(object value)
+        {
+            switch (value)
+            {
+                case "Right":
+                    StartPage(IniFile.GetString("Page", "Initial"));
+                    break;
+            }
         }
 
         //キーイベント
@@ -324,19 +337,8 @@ namespace Display
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    windowMain.ProcessName = ProcessName;
+                    SetProcess();
                     DisplayFramePage(new PlanList());
-                    break;
-            }
-        }
-
-        //スワイプ処理
-        public void Swipe(object value)
-        {
-            switch (value)
-            {
-                case "Right":
-                    StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
         }

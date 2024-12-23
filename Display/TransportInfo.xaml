@@ -43,38 +43,38 @@
                             <TextBlock Text="搬出日"/>
                         </Viewbox>
                         <Viewbox Grid.Row="0" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding inProcess.TransportDate,Converter={StaticResource DateTimeConverter},FallbackValue=2024年12月19日}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TransportDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年12月19日}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="1" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="品 番"/>
                         </Viewbox>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding inProcess.ProductName,FallbackValue=MH024000}" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProductName, FallbackValue=MH024000}" FontWeight="Bold"/>
 
                         <Viewbox Grid.Row="2" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
                         <Viewbox Grid.Row="2" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding inProcess.LotNumber,FallbackValue=202408-001}"/>
+                            <TextBlock Text="{Binding LotNumber, FallbackValue=202408-001}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="形 状"/>
                         </Viewbox>
                         <Viewbox Grid.Row="3" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding management.ShapeName,FallbackValue=シート}"/>
+                            <TextBlock Text="{Binding ShapeName,FallbackValue=シート}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="重 量"/>
                         </Viewbox>
                         <Viewbox Grid.Row="4" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
                             <StackPanel  Orientation="Horizontal"  >
-                                <TextBlock Text="{Binding inProcess.Unit,Converter={StaticResource CurrencyConverter},FallbackValue=200}"/>
+                                <TextBlock Text="{Binding Unit, Converter={StaticResource CurrencyConverter}, FallbackValue=200}"/>
                                 <TextBlock Text="kg" TextAlignment="Center" Margin="20,0,0,0"/>
                             </StackPanel>
                         </Viewbox>
                         <Viewbox Grid.Row="5" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="担当者"/>
                         </Viewbox>
-                        <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding inProcess.TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                        <TextBox Grid.Row="5" x:Name="TextWorker" Grid.Column="1" Text="{Binding TransportWorker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" InputMethod.IsInputMethodEnabled="True" IsEnabled="{Binding IsEnable}">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -97,7 +97,7 @@
                     </Grid>
                     <!-- 右領域 -->
                     <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left" IsEnabled="{Binding IsEnable}">
-                        <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                        <Grid Visibility="{Binding VisibleWorker, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}">
                             <local:ControlWorker/>
                         </Grid>
                     </Grid>

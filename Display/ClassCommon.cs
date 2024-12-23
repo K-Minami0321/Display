@@ -86,5 +86,12 @@ namespace Display
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.FramePage = (ContentControl)framepage;
         }
+
+        //ロット番号取得
+        public string GetLotNumber(string code)
+        {
+            Management management = new Management();
+            return management.GetLotNumber(code);
+        }
     }
 }

@@ -3,6 +3,7 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
@@ -29,10 +30,16 @@ namespace Display
     public class ViewModelTransportInfo : Common, IKeyDown, IWorker, ITimer
     {
         //変数
-        ViewModelWindowMain windowMain;
-        ViewModelControlWorker controlWorker;
         string processName;
         string inProcessCODE;
+        string lotNumber;
+        string productName;
+        string shapeName;
+        string transportDate;
+        string transportWorker;
+        string unit;
+        string place;
+        string status;
         string buttonName;
         bool regFlg;
         bool isEnable;
@@ -55,21 +62,57 @@ namespace Display
             get { return inProcessCODE; }
             set
             {
+                InProcess inProcess = new InProcess(value, ProcessName);
+                CopyProperty(inProcess, this, "InProcessCODE");
                 SetProperty(ref inProcessCODE, value);
-                CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
-                DisplayLot(inProcess.LotNumber);
             }
         }
-
-
-
-
-
-
-
-
-
-
+        public string LotNumber             //ロット番号
+        {
+            get { return lotNumber; }
+            set 
+            {
+                Management management = new Management(GetLotNumber(value), ProcessName);
+                CopyProperty(management, this, "LotNumber");
+                if (!string.IsNullOrEmpty(ProductName) && management.ProductName != ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+                SetProperty(ref lotNumber, value);
+            }
+        }
+        public string ProductName           //品番
+        {
+            get { return productName; }
+            set { SetProperty(ref productName, value); }
+        }
+        public string ShapeName             //形状
+        {
+            get { return shapeName; }
+            set { SetProperty(ref shapeName, value); }
+        }
+        public string TransportDate         //搬出日
+        {
+            get { return transportDate; }
+            set { SetProperty(ref transportDate, value); }
+        }
+        public string TransportWorker       //作業者
+        {
+            get { return transportWorker; }
+            set { SetProperty(ref transportWorker, value); }
+        }
+        public string Unit                  //重量
+        {
+            get { return unit; }
+            set { SetProperty(ref unit, value); }
+        }
+        public string Place                 //場所
+        {
+            get { return place; }
+            set { SetProperty(ref place, value); }
+        }
+        public string Status                //ステータス
+        {
+            get { return status; }
+            set { SetProperty(ref status, value); }
+        }
         public string ButtonName            //登録ボタン名
         {
             get { return buttonName; }
@@ -113,122 +156,54 @@ namespace Display
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
         ActionCommand gotFocus;
         public ICommand GotFocus => gotFocus ??= new ActionCommand(SetGotFocus);
-        ActionCommand lostFocus;
-        public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
         internal ViewModelTransportInfo(string code)
         {
-            inProcess = new InProcess();
-            management = new Management();
-
             //仕掛移動データ取得
-            Initialize();
             InProcessCODE = code;
+            Initialize();
+
 
             //デフォルト値設定
-            IsRegist = (inProcess.Status == "搬入");
-            IsEnable = DATETIME.ToStringDate(inProcess.TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
+            IsRegist = (Status == "搬入");
+            IsEnable = DATETIME.ToStringDate(TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
             DisplayCapution();
             SetGotFocus("Worker");
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            windowMain = ViewModelWindowMain.Instance;
-            controlWorker = ViewModelControlWorker.Instance;
-
-            windowMain.Ikeydown = this;
-            windowMain.Itimer = this;
-            controlWorker.Iworker = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = false;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
             windowMain.VisiblePlan = true;
+            windowMain.Ikeydown = this;
+            windowMain.Itimer = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "仕掛引取";
             windowMain.IconPlan = "FileDocumentArrowRightOutline";
             windowMain.ProcessName = ProcessName;
+
+            ViewModelControlWorker controlWorker = ViewModelControlWorker.Instance;
+            controlWorker.Iworker = this;
         }
 
         //初期化
         public void Initialize()
         {
             ProcessName = IniFile.GetString("Page", "Process");
-            inProcess.TransportWorker = IniFile.GetString("Page", "Worker");
-            inProcess.TransportDate = SetToDay(DateTime.Now);
-        }
-
-        //ロット番号処理
-        private void DisplayLot(string lotnumber)
-        {
-            //データ取得
-            CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
-
-            //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            shape = new ProductShape(management.ShapeName);
-        }
-
-        //キーイベント
-        public async void KeyDown(object value)
-        {
-            var result = false;
-            switch (value)
-            {
-                case "Regist":
-                    //登録
-                    if (await IsRequiredRegist()) { RegistData(); } 
-                    break;
-
-                case "Cancel":
-                    //取消（合板に戻す）
-                    result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    CancelData();
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        CancelData();
-                        DisplayFramePage(new TransportList());
-                    }
-                    break;
-
-                case "Enter":
-                    //フォーカス移動
-                    NextFocus();
-                    break;
-
-                case "DisplayInfo":
-                    //引取登録画面
-                    Initialize();
-                    SetGotFocus("Worker");
-                    break;
-
-                case "DisplayList":
-                    //引取履歴画面
-                    DisplayFramePage(new TransportHistory());
-                    break;
-
-                case "DisplayPlan":
-                    //仕掛置場
-                    DisplayFramePage(new TransportList());
-                    break;
-            }
+            TransportWorker = IniFile.GetString("Page", "Worker");
+            TransportDate = SetToDay(DateTime.Now);
         }
 
         //選択処理
@@ -237,21 +212,11 @@ namespace Display
             switch (Focus)
             {
                 case "Worker":
-                    inProcess.TransportWorker = value.ToString();
+                    TransportWorker = value.ToString();
                     IsFocusWorker = false;
                     break;
             }
             NextFocus();
-        }
-
-        //登録処理
-        private void RegistData()
-        {
-            //登録
-            inProcess.Place = "プレス";
-            inProcess.Status = "引取";
-            inProcess.TransportResist(inProcess.InProcessCODE);
-            DisplayFramePage(new TransportList());
         }
 
         //必須チェック
@@ -263,7 +228,7 @@ namespace Display
             var messege2 = string.Empty;
             var messege3 = string.Empty;
 
-            if (string.IsNullOrEmpty(inProcess.TransportWorker))
+            if (string.IsNullOrEmpty(TransportWorker))
             {
                 focus = "Worker";
                 messege1 = "担当者を選択してください";
@@ -272,7 +237,7 @@ namespace Display
                 result = false;
             }
 
-            if (!result) 
+            if (!result)
             {
                 var messege = (bool)await DialogHost.Show(new ControlMessage(messege1, messege2, messege3));
                 await System.Threading.Tasks.Task.Delay(100);
@@ -281,15 +246,35 @@ namespace Display
             return result;
         }
 
-        //移動処理を元に戻す
-        private void CancelData()
+        //データ処理
+        private void ProcessData(string function)
         {
-            inProcess.DeleteLog();
-            inProcess.Place = "合板";
-            inProcess.Status = "搬入";
-            inProcess.TransportDate = string.Empty;
-            inProcess.TransportWorker = string.Empty;
-            inProcess.TransportResist(inProcess.InProcessCODE);
+            InProcess inProcess = new InProcess();
+
+            var flg = false;
+            switch (function)
+            {
+                case "Regist":
+                    //登録
+                    Place = "プレス";
+                    Status = "引取";
+                    CopyProperty(this, inProcess);
+                    inProcess.TransportRegist(InProcessCODE);
+                    DisplayFramePage(new TransportList());
+
+                    break;
+
+                case "Cancel":
+                    //キャンセル
+                    inProcess.DeleteLog();
+                    Place = "合板";
+                    Status = "搬入";
+                    CopyProperty(this, inProcess);
+                    TransportDate = string.Empty;
+                    TransportWorker = string.Empty;
+                    inProcess.TransportRegist(InProcessCODE);
+                    break;
+            }
         }
 
         //次のフォーカスへ
@@ -322,24 +307,10 @@ namespace Display
             }
         }
 
-        //フォーカス処理（LostFoucus）
-        private void SetLostFocus(object value)
-        {
-            switch (value)
-            {
-                case "LotNumber":
-                    DisplayLot(inProcess.LotNumber);
-                    break;
-
-                default :
-                    break;
-            }
-        }
-
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (IsRegist) { inProcess.TransportDate = SetToDay(DateTime.Now); }
+            if (IsRegist) { TransportDate = SetToDay(DateTime.Now); }
         }
 
         //スワイプ処理
@@ -349,6 +320,52 @@ namespace Display
             {
                 case "Left":
                     KeyDown("DisplayList");
+                    break;
+            }
+        }
+
+        //キーイベント
+        public async void KeyDown(object value)
+        {
+            var result = false;
+            switch (value)
+            {
+                case "Regist":
+                    //登録
+                    if (await IsRequiredRegist()) { ProcessData("Regist"); }
+                    break;
+
+                case "Cancel":
+                    //取消（合板に戻す）
+                    result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        ProcessData("Cancel");
+                        DisplayFramePage(new TransportList());
+                    }
+                    break;
+
+                case "Enter":
+                    //フォーカス移動
+                    NextFocus();
+                    break;
+
+                case "DisplayInfo":
+                    //引取登録画面
+                    Initialize();
+                    SetGotFocus("Worker");
+                    break;
+
+                case "DisplayList":
+                    //引取履歴画面
+                    DisplayFramePage(new TransportHistory());
+                    break;
+
+                case "DisplayPlan":
+                    //仕掛置場
+                    DisplayFramePage(new TransportList());
                     break;
             }
         }
