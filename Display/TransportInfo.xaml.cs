@@ -3,7 +3,6 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
