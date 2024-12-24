@@ -14,13 +14,10 @@ namespace Display
     //画面クラス
     public partial class TransportInfo : UserControl
     {
-        public static string InProcessCODE     //仕掛CODE
-        { get; set; }
-
         //コンストラクター
-        public TransportInfo()
+        public TransportInfo(string code)
         {
-            DataContext = new ViewModelTransportInfo(InProcessCODE);
+            DataContext = new ViewModelTransportInfo(code);
             InitializeComponent();
         }
     }
@@ -160,13 +157,8 @@ namespace Display
         internal ViewModelTransportInfo(string code)
         {
             //仕掛移動データ取得
-            InProcessCODE = code;
             Initialize();
-
-
-            //デフォルト値設定
-            IsRegist = (Status == "搬入");
-            IsEnable = DATETIME.ToStringDate(TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
+            InProcessCODE = code;
         }
 
         //ロード時
@@ -203,6 +195,9 @@ namespace Display
             ProcessName = IniFile.GetString("Page", "Process");
             TransportWorker = IniFile.GetString("Page", "Worker");
             TransportDate = SetToDay(DateTime.Now);
+
+            IsRegist = (Status == "搬入");
+            IsEnable = DATETIME.ToStringDate(TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //選択処理

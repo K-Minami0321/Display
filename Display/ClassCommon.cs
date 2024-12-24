@@ -74,20 +74,19 @@ namespace Display
         //スタートページを表示
         public void StartPage(string page)
         {
-            //ページ移動
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             Type type = Type.GetType("Display." + page);
-            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
+            DisplayFramePage((ContentControl)Activator.CreateInstance(type));
         }
 
         //ページ移動
-        public void DisplayFramePage(object framepage, object page = null)
+        public void DisplayFramePage(object framepage)
         {
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.FramePage = (ContentControl)framepage;
         }
 
-        //ロット番号取得
+        //省略ロット番号取得
         public string GetLotNumber(string code)
         {
             Management management = new Management();

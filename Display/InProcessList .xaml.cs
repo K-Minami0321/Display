@@ -22,8 +22,6 @@ namespace Display
     public class ViewModelInProcessList : Common, IKeyDown, ISelect
     {
         //変数
-        ViewModelWindowMain windowMain;
-        DataGridBehavior dataGridBehavior;
         string processName;
         string inProcessCODE;
         string inProcessDate;
@@ -39,11 +37,10 @@ namespace Display
         { get; set; } = new ViewModelInProcessList();
         public string ProcessName                       //工程区分
         {
-            get { return inProcess.ProcessName; }
+            get { return ProcessName; }
             set 
             { 
                 SetProperty(ref processName, value);
-                inProcess.ProcessName = value;
 
                 if (value == null) { return; }
                 process = new ProcessCategory(value);
@@ -124,9 +121,6 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessList()
         {
-            inProcess = new InProcess();
-
-
             //デフォルト値設定
             InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
             SelectedIndex = -1;
@@ -135,26 +129,14 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
             DisplayCapution();
             DiaplayList();
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            windowMain = ViewModelWindowMain.Instance;
-            dataGridBehavior = DataGridBehavior.Instance;
-
-            windowMain.Ikeydown = this;
-            dataGridBehavior.Iselect = this;
-            Instance = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -163,6 +145,13 @@ namespace Display
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "搬入履歴";
+            windowMain.Ikeydown = this;
+
+            DataGridBehavior dataGridBehavior = DataGridBehavior.Instance;
+            dataGridBehavior.Iselect = this;
+
+            Instance = this;
+            Initialize();
         }
         
         //初期化
@@ -171,6 +160,33 @@ namespace Display
             ProcessName = IniFile.GetString("Page", "Process");
             InProcessInfo.InProcessCODE = null;
             InProcessInfo.LotNumber = null;
+        }
+
+        //一覧表示
+        private void DiaplayList()
+        {
+            InProcess inProcess = new InProcess();
+            SelectTable = inProcess.SelectList(ProcessName, null, null, InProcessDate);           
+        }
+
+        //選択処理
+        public async void SelectList()
+        {
+            if(SelectedItem == null) { return; }
+            InProcessInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            InProcessInfo.LotNumber = null;
+            DisplayFramePage(new InProcessInfo());
+        }
+
+        //スワイプ処理
+        public void Swipe(object value)
+        {
+            switch (value)
+            {
+                case "Right":
+                    KeyDown("DisplayInfo");
+                    break;
+            }
         }
 
         //キーイベント
@@ -198,7 +214,7 @@ namespace Display
                     //前日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, -1).ToString("yyyyMMdd");
                     break;
-                
+
                 case "NextDate":
                     //次の日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, 1).ToString("yyyyMMdd");
@@ -211,30 +227,5 @@ namespace Display
             }
         }
 
-        //一覧表示
-        private void DiaplayList()
-        {
-            SelectTable = inProcess.SelectList(ProcessName, null, null, InProcessDate);           
-        }
-
-        //選択処理
-        public async void SelectList()
-        {
-            if(SelectedItem == null) { return; }
-            InProcessInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            InProcessInfo.LotNumber = null;
-            DisplayFramePage(new InProcessInfo());
-        }
-
-        //スワイプ処理
-        public void Swipe(object value)
-        {
-            switch (value)
-            {
-                case "Right":
-                    KeyDown("DisplayInfo");
-                    break;
-            }
-        }
     }
 }

@@ -21,8 +21,6 @@ namespace Display
     public class ViewModelTransportList : Common, IKeyDown, ISelect
     {
         //プロパティ変数
-        ViewModelWindowMain windowMain;
-        DataGridBehavior dataGridBehavior;
         string processName;
         string inProcessCODE;
 
@@ -31,13 +29,11 @@ namespace Display
         { get; set; } = new ViewModelTransportList();
         public string ProcessName                       //工程区分
         {
-            get { return inProcess.ProcessName; }
+            get { return ProcessName; }
             set 
             {
                 SetProperty(ref processName, value);
-                inProcess.ProcessName = value;
                 process = new ProcessCategory(value);
-                windowMain.ProcessName = process.Before;
             }
         }
         public string InProcessCODE                     //仕掛在庫CODE
@@ -53,32 +49,20 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportList()
         {
-            inProcess = new InProcess();
-            SelectedIndex = -1;
+            Initialize();
+            DiaplayList();
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
             DisplayCapution();
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            windowMain = ViewModelWindowMain.Instance;
-            dataGridBehavior = DataGridBehavior.Instance;
-
-            windowMain.Ikeydown = this;
-            dataGridBehavior.Iselect = this;
-            Instance = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = false;
@@ -89,51 +73,36 @@ namespace Display
             windowMain.IconList = "ViewList";
             windowMain.IconPlan = "FileDocumentArrowRightOutline";
             windowMain.ProcessWork = "仕掛引取";
-            DiaplayList();
+            windowMain.Ikeydown = this;
+            windowMain.ProcessName = process.Before;
+
+            DataGridBehavior dataGridBehavior = DataGridBehavior.Instance;
+            dataGridBehavior.Iselect = this;
+
+            Instance = this;
         }
 
         //初期化
-        private void Initialize()
+        public void Initialize()
         {
-            //初期設定
             ProcessName = IniFile.GetString("Page", "Process");
+            SelectedIndex = -1;
             InProcessCODE = string.Empty;
-        }
-
-        //キーイベント
-        public void KeyDown(object value)
-        {
-            switch (value)
-            {
-                case "DisplayInfo":
-                    //引取登録
-                    DisplayFramePage(new TransportInfo()); 
-                    break;
-
-                case "DisplayList":
-                    //引取履歴
-                    DisplayFramePage(new TransportHistory());
-                    break;
-
-                case "DiaplayPlan":
-                    //仕掛置場
-                    DisplayFramePage(new TransportList());
-                    break;
-            }
         }
 
         //一覧表示
         private void DiaplayList()
         {
-            SelectTable = inProcess.SelectListTransport();
+            InProcess inProcess = new InProcess();
+            SelectTable = inProcess.SelectListTransport(process.Before);
         }
 
         //選択処理
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            TransportInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            windowMain.FramePage = new TransportInfo();
+            var code = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            DisplayFramePage(new TransportInfo(code));
         }
 
         //スワイプ処理
@@ -142,7 +111,24 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    KeyDown("DisplayInfo");
+                    KeyDown("DisplayList");
+                    break;
+            }
+        }
+
+        //キーイベント
+        public void KeyDown(object value)
+        {
+            switch (value)
+            {
+                case "DisplayList":
+                    //引取履歴
+                    DisplayFramePage(new TransportHistory());
+                    break;
+
+                case "DiaplayPlan":
+                    //仕掛置場
+                    DisplayFramePage(new TransportList());
                     break;
             }
         }
