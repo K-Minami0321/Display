@@ -14,10 +14,13 @@ namespace Display
     //画面クラス
     public partial class TransportInfo : UserControl
     {
+        public static string InProcessCODE     //仕掛CODE
+        { get; set; }
+
         //コンストラクター
-        public TransportInfo(string code)
+        public TransportInfo()
         {
-            DataContext = new ViewModelTransportInfo(code);
+            DataContext = new ViewModelTransportInfo(InProcessCODE);
             InitializeComponent();
         }
     }
@@ -181,12 +184,10 @@ namespace Display
             windowMain.Ikeydown = this;
             windowMain.Itimer = this;
             windowMain.InitializeIcon();
-            windowMain.ProcessWork = "仕掛引取";
-            windowMain.IconPlan = "FileDocumentArrowRightOutline";
+            windowMain.ProcessWork = "合板引取";
+            windowMain.IconPlan = "TrayArrowUp";
             windowMain.ProcessName = ProcessName;
-
-            ViewModelControlWorker controlWorker = ViewModelControlWorker.Instance;
-            controlWorker.Iworker = this;
+            ViewModelControlWorker.Instance.Iworker = this;
         }
 
         //初期化

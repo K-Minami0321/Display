@@ -21,8 +21,6 @@ namespace Display
     public class ViewModelPlanList : Common, IKeyDown, ISelect
     {
         //変数
-        string page;
-        string processName;
         string lotNumber;
         string updateDate;
         string file;
@@ -33,15 +31,6 @@ namespace Display
         //プロパティ
         public static ViewModelPlanList Instance    //インスタンス
         { get; set; } = new ViewModelPlanList();
-        public string ProcessName                   //工程区分
-        {
-            get { return processName;  }
-            set
-            {
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
-        }
         public string LotNumber                     //ロット番号
         {
             get { return lotNumber; }
@@ -82,60 +71,34 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
-            //デフォルト値設定
-            SelectedIndex = -1;
-            ScrollIndex = 0;
+            Instance = this;
+            Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
+            ReadINI();
             DisplayCapution();
+            DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //ボタン設定
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
             windowMain.InitializeIcon();
-            ProcessName = windowMain.ProcessName;
+            windowMain.ProcessName = ProcessName;
             windowMain.ProcessWork = ProcessName + "計画一覧";
-
-            Initialize();
-            DiaplayList();
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            ViewModelWindowMain.Instance.Ikeydown = this;
+            windowMain.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
-            Instance = this;
-        }
 
-        //初期化
-        private void Initialize()
-        {
-            //初期化
-            page = IniFile.GetString("Page", "Initial");
-            LotNumber = string.Empty;
-            ProcessName = IniFile.GetString("Page", "Process");
-            VisibleUnit = ProcessName == "合板" ? true : false;
-            VisibleAmount = !VisibleUnit;
-            InProcessInfo.InProcessCODE = null;
-            InProcessInfo.LotNumber = null;
-            ManufactureInfo.ManufactureCODE = null;
-            ManufactureInfo.LotNumber = null;
-
-            //画面設定
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            switch (page)
+            //遷移ページ設定
+            switch (Page)
             {
                 case "PlanList":
                     //計画一覧
@@ -150,6 +113,15 @@ namespace Display
                     EnableSelect = true;
                     break;
             }
+
+        }
+
+        //初期化
+        private void Initialize()
+        {
+            LotNumber = string.Empty;
+            VisibleUnit = ProcessName == "合板" ? true : false;
+            VisibleAmount = !VisibleUnit;
         }
 
         //一覧表示
@@ -175,22 +147,37 @@ namespace Display
 
             //ロット番号設定
             LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
-            switch (page)
+            ChangePage();
+        }
+
+        //ページ遷移
+        private void ChangePage()
+        {
+            switch (Page)
             {
                 case "InProcessInfo":
+                    InProcessInfo.InProcessCODE = string.Empty;
                     InProcessInfo.LotNumber = LotNumber;
-                    InProcessInfo.InProcessCODE = null;
                     break;
 
                 case "ManufactureInfo":
-                    ManufactureInfo.LotNumber = lotNumber;
-                    ManufactureInfo.ManufactureCODE = null;
-                    break;
 
-                default:
+                    ManufactureInfo.ManufactureCODE = string.Empty;
+                    ManufactureInfo.LotNumber = LotNumber;
                     break;
-            }          
-            if (EnableSelect) { StartPage(page); }
+            }
+            if (EnableSelect) { StartPage(Page); }
+        }
+
+        //スワイプ処理
+        public void Swipe(object value)
+        {
+            switch (value)
+            {
+                case "Right":
+                    KeyDown("DisplayPlan");
+                    break;
+            }
         }
 
         //キーイベント
@@ -200,18 +187,18 @@ namespace Display
             {
                 case "DisplayInfo":
                     //登録画面
-                    StartPage(page);
+                    ChangePage();
                     break;
 
                 case "DisplayList":
                     //一覧画面
-                    StartPage(page.Replace("Info", "List"));
+                    Page = Page.Replace("Info", "List");
+                    ChangePage();
                     break;
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    SelectedIndex = -1;
-                    ScrollIndex = 0;
+                    Initialize();
                     DiaplayList();
                     break;
 
@@ -221,17 +208,6 @@ namespace Display
 
                 case "Coil":
                     DiaplayList("コイル");
-                    break;
-            }
-        }
-
-        //スワイプ処理
-        public void Swipe(object value)
-        {
-            switch (value)
-            {
-                case "Right":
-                    KeyDown("DisplayInfo");
                     break;
             }
         }

@@ -22,25 +22,12 @@ namespace Display
     public class ViewModelManufactureList : Common, IKeyDown, ISelect
     {
         //変数
-        ViewModelWindowMain windowMain;
-        DataGridBehavior dataGridBehavior;
-        string processName;
         string manufactureCODE;
         string manufactureDate;
-        string equipmentCODE;
 
         //プロパティ
         public static ViewModelManufactureList Instance     //インスタンス
         { get; set; } = new ViewModelManufactureList();
-        public string ProcessName                           //工程区分
-        {
-            get { return processName; }
-            set
-            {
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
-        }
         public string ManufactureCODE                       //加工CODE
         {
             get { return manufactureCODE; }
@@ -55,16 +42,6 @@ namespace Display
                 DiaplayList();
             }
         }
-        public string EquipmentCODE                         //設備CODE
-        {
-            get { return equipmentCODE; }
-            set
-            {
-                equipment = new Equipment();
-                var name = equipment.EquipmentName;
-                windowMain.ProcessWork = string.IsNullOrEmpty(name) ? process.Name + "実績" : name + " - " + value;
-            }
-        }
 
         //イベント
         ActionCommand commandLoad;
@@ -73,54 +50,67 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
-            manufacture = new Manufacture();
-
-            //デフォルト値設定
-            ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-            SelectedIndex = -1;
+            Instance = this;
+            Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
+            ReadINI();
             DisplayCapution();
             DiaplayList();
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            windowMain = ViewModelWindowMain.Instance;
-            dataGridBehavior = DataGridBehavior.Instance;
-
-            windowMain.Ikeydown = this;
-            dataGridBehavior.Iselect = this;
-            Instance = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            Initialize();
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = true;
+            windowMain.Ikeydown = this;
+            windowMain.ProcessName = ProcessName;
+            windowMain.ProcessWork = ProcessWork;
             windowMain.InitializeIcon();
-            DiaplayList();
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //初期化
         private void Initialize()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
-            EquipmentCODE = IniFile.GetString("Page", "Equipment");
+            SelectedIndex = -1;
             ManufactureCODE = string.Empty;
+            ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
+        }
 
-            ManufactureInfo.ManufactureCODE = null;
-            ManufactureInfo.LotNumber = null;
+        //一覧表示
+        private void DiaplayList()
+        {
+            if (process == null) { return; }
+            Manufacture manufacture = new Manufacture();
+            SelectTable = manufacture.SelectHistoryListDate(ProcessName, ManufactureDate);
+        }
+
+        //選択処理
+        public async void SelectList()
+        {
+            if (SelectedItem == null) { return; }
+            ManufactureInfo.ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
+            DisplayFramePage(new ManufactureInfo());
+        }
+
+        //スワイプ処理
+        public void Swipe(object value)
+        {
+            switch (value)
+            {
+                case "Right":
+                    KeyDown("DisplayPlan");
+                    break;
+            }
         }
 
         //キーイベント
@@ -130,6 +120,7 @@ namespace Display
             {
                 case "DisplayInfo":
                     //搬入登録画面
+                    DataInitialize();
                     DisplayFramePage(new ManufactureInfo());
                     break;
 
@@ -157,32 +148,6 @@ namespace Display
                 case "Today":
                     //当日へ移動
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-                    break;
-            }
-        }
-
-        //一覧表示
-        private void DiaplayList()
-        {
-            if (process == null) { return; }
-            SelectTable = manufacture.SelectHistoryListDate(process.Name, ManufactureDate);
-        }
-
-        //選択処理
-        public async void SelectList()
-        {
-            if (SelectedItem == null) { return; }
-            ManufactureInfo.ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            DisplayFramePage(new ManufactureInfo());
-        }
-
-        //スワイプ処理
-        public void Swipe(object value)
-        {
-            switch (value)
-            {
-                case "Right":
-                    KeyDown("DisplayInfo");
                     break;
             }
         }

@@ -102,7 +102,7 @@
                         </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan,Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-2">
-                                <materialDesign:PackIcon Kind="{Binding IconPlan,FallbackValue=FileClockOutline}" Height="{Binding IconSize,FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="{Binding IconPlan, FallbackValue=FileClockOutline}" Height="{Binding IconSize,FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
                             </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">

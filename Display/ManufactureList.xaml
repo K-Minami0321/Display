@@ -71,7 +71,7 @@
                     <DataGridTemplateColumn Header="" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 完了,Converter={StaticResource CompletedConverter}}" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{Binding 完了,Converter={StaticResource CheckColorConverter}}"/>
+                                <TextBlock Text="{Binding 完了, Converter={StaticResource CompletedConverter}}" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{Binding 完了,Converter={StaticResource CheckColorConverter}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

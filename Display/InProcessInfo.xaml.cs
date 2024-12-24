@@ -31,14 +31,9 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker, ITimer
     {
         //変数
-        ViewModelWindowMain windowMain;
-        ViewModelControlTenKey controlTenKey;
-        ViewModelControlWorker controlWorker;
-       string processName;
         string inProcessCODE;
         string inProcessDate;
         string lotNumber;
-        string amountLabel;
         string notice;
         int amountWidth = 150;
         int amountRow = 5;
@@ -47,7 +42,8 @@ namespace Display
         int weightLength = 6;
         int unitLength = 6;
         string buttonName;
-        string weightLabel;
+        string labelWeight;
+        string labelAmount;
         bool visibleCoil;
         bool visibleItem1;
         bool visibleItem2;
@@ -63,62 +59,27 @@ namespace Display
         bool isFocusUnit;
         bool isFocusCompleted;
         bool isFocusAmount;
-        string unitLabel;
+
 
         //プロパティ
-        public string ProcessName           //工程区分
-        {
-            get { return processName; }
-            set
-            {
-                SetProperty(ref processName, value);              
-                process = new ProcessCategory(value);
-                switch (value)
-                {
-                    case "合板":
-                        NextFocus = "Amount";
-                        VisibleItem1 = true;
-                        VisibleItem2 = true;
-                        WeightLabel = "焼結重量";
-                        inProcess.LabelUnit = "重 量";
-                        AmountRow = 5;
-                        Notice = "※スリッター時のみ記入";
-                        break;
-
-                    case "プレス":
-                        if (NextFocus != null) { NextFocus = "LotNumber"; }
-                        VisibleItem1 = true;
-                        VisibleItem2 = false;
-                        WeightLabel = "単 重";
-                        inProcess.LabelUnit = "数 量";
-                        AmountRow = 5;
-                        Notice = string.Empty;
-                        VisibleCoil = false;
-                        break;
-
-                    default:
-                        if (NextFocus != null) { NextFocus = "LotNumber"; }
-                        VisibleItem1 = false;
-                        VisibleItem2 = false;
-                        inProcess.LabelUnit = "数 量";
-                        AmountRow = 4;
-                        Notice = string.Empty;
-                        VisibleCoil = false;
-                        break;
-                }
-
-                inProcess.ProcessName = ProcessName;
-                inProcess.Place = process.Name;                //保管場所
-                inProcess.ProcessNext = process.Next;          //次の工程設定
-            }
-        }
         public string InProcessCODE         //仕掛CODE
         {
             get { return inProcessCODE; }
             set 
             { 
+
                 SetProperty(ref inProcessCODE, value);
+
+
+                inProcess.Worker = Worker;
+                inProcess.InProcessDate = SetToDay(DateTime.Now);
+
                 CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
+
+
+
+
+
                 DisplayLot(inProcess.LotNumber);
             }
         }
@@ -167,15 +128,15 @@ namespace Display
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
         }
-        public string AmountLabel           //ラベル（数量）
+        public string LabelWeight           //ラベル（重量・焼結重量）
         {
-            get { return amountLabel; }
-            set { SetProperty(ref amountLabel, value); }
+            get { return labelWeight; }
+            set { SetProperty(ref labelWeight, value); }
         }
-        public string WeightLabel           //ラベル（重量・焼結重量）
+        public string LabelAmount           //ラベル（数量）
         {
-            get { return weightLabel; }
-            set { SetProperty(ref weightLabel, value); }
+            get { return labelAmount; }
+            set { SetProperty(ref labelAmount, value); }
         }
         public bool VisibleCoil             //表示・非表示（コイル数）
         {
@@ -265,11 +226,7 @@ namespace Display
             get { return isFocusAmount; }
             set { SetProperty(ref isFocusAmount, value); }
         }
-        public string UnitLabel
-        {
-            get { return unitLabel; }
-            set { SetProperty(ref unitLabel, value); }
-        }
+
 
         //イベント
         ActionCommand commandLoad;
@@ -282,7 +239,7 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelInProcessInfo(string code,string number)
+        internal ViewModelInProcessInfo(string code, string number)
         {
             inProcess = new InProcess();
             management = new Management();
@@ -291,36 +248,24 @@ namespace Display
             Initialize();
             InProcessCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }     //予定表からロット番号取得
-
-            //デフォルト値設定
-            IsRegist = string.IsNullOrEmpty(inProcess.InProcessCODE);
-            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetInterface();
+            ReadINI();
             DisplayCapution();
+
+            //デフォルト値設定
+            IsRegist = string.IsNullOrEmpty(inProcess.InProcessCODE);
+            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
             SetFocus();
-        }
-
-        //インターフェース設定
-        private void SetInterface()
-        {
-            windowMain = ViewModelWindowMain.Instance;
-            controlTenKey = ViewModelControlTenKey.Instance;
-            controlWorker = ViewModelControlWorker.Instance;
-
-            windowMain.Ikeydown = this;
-            windowMain.Itimer = this;
-            controlTenKey.Itenkey = this;
-            controlWorker.Iworker = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
+            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -328,22 +273,60 @@ namespace Display
             windowMain.VisibleArrow = false;
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
-            windowMain.ProcessWork = "仕掛搬入";
+            windowMain.ProcessWork = "完了実績";
             windowMain.ProcessName = ProcessName;
+            windowMain.Ikeydown = this;
+            windowMain.Itimer = this;
+
+            ViewModelControlTenKey.Instance.Itenkey = this;
+            ViewModelControlWorker.Instance.Iworker = this;
+
+            //工程区分
+            switch (ProcessName)
+            {
+                case "合板":
+                    NextFocus = "Amount";
+                    VisibleItem1 = true;
+                    VisibleItem2 = true;
+                    LabelWeight = "焼結重量";
+                    inProcess.LabelUnit = "重 量";
+                    AmountRow = 5;
+                    Notice = "※スリッター時のみ記入";
+                    break;
+
+                case "プレス":
+                    if (NextFocus != null) { NextFocus = "LotNumber"; }
+                    VisibleItem1 = true;
+                    VisibleItem2 = false;
+                    LabelWeight = "単 重";
+                    inProcess.LabelUnit = "数 量";
+                    AmountRow = 5;
+                    Notice = string.Empty;
+                    VisibleCoil = false;
+                    break;
+
+                default:
+                    if (NextFocus != null) { NextFocus = "LotNumber"; }
+                    VisibleItem1 = false;
+                    VisibleItem2 = false;
+                    inProcess.LabelUnit = "数 量";
+                    AmountRow = 4;
+                    Notice = string.Empty;
+                    VisibleCoil = false;
+                    break;
+            }
+
+            inProcess.ProcessName = ProcessName;
+            inProcess.Place = process.Name;                //保管場所
+            inProcess.ProcessNext = process.Next;          //次の工程設定
         }
 
         //初期化
         public void Initialize()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
             InProcessCODE = string.Empty;
             LotNumber = string.Empty;
-
-            inProcess.Worker = IniFile.GetString("Page", "Worker");
-            inProcess.InProcessDate = SetToDay(DateTime.Now);
             AmountWidth = 150;
-            IsRegist = true;
-            IsEnable = true;
         }
 
         //ロット番号処理
@@ -651,6 +634,8 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
+            ViewModelControlTenKey controlTenKey = ViewModelControlTenKey.Instance;
+
             Focus = value;
             switch (Focus)
             {

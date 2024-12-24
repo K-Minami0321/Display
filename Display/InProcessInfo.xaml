@@ -101,7 +101,7 @@
                             </i:Interaction.Behaviors>
                         </TextBox>
                         <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding WeightLabel ,FallbackValue=重 量}" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Text="{Binding LabelWeight ,FallbackValue=重 量}" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Visibility="{Binding VisibleItem1,Converter={StaticResource CollapsedConverter}}">
                             <TextBox x:Name="TextWeight" Text="{Binding inProcess.Weight}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 

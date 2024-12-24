@@ -26,11 +26,7 @@ namespace Display
     {
         //変数
         string version;
-        string connection;
-        string server;
-        string processName;
-        string equipmentCODE;
-        string worker;
+
         string logText;
         string log = CONST.SQL_LOG;
         bool isServer;
@@ -52,38 +48,6 @@ namespace Display
         {
             get { return version; }
             set { SetProperty(ref version, value); }
-        }
-        public string Connection                    //接続文字列
-        {
-            get { return connection; }
-            set { SetProperty(ref connection, value); }
-        }
-        public string Server                        //サーバーIP
-        {
-            get { return server; }
-            set { SetProperty(ref server, value); }
-        }
-        public string ProcessName                   //工程区分
-        {
-            get { return processName; }
-            set 
-            { 
-                SetProperty(ref processName, value);
-
-                process = new ProcessCategory(value);
-                EquipmentCODES = process.Equipments;
-                Workers = process.Workers;
-            }
-        }
-        public string EquipmentCODE                 //設備CODE
-        {
-            get { return equipmentCODE; }
-            set { SetProperty(ref equipmentCODE, value); }
-        }
-        public string Worker                        //担当者
-        {
-            get { return worker; }
-            set { SetProperty(ref worker, value); }
         }
         public string LogText                       //表示ログ
         {
@@ -210,11 +174,9 @@ namespace Display
         //データ表示
         private void DisplayData()
         {
-            Connection = IniFile.GetString("Database", "ConnectString");
-            Server = GetServerIP(Connection);
-            ProcessName = IniFile.GetString("Page", "Process");
-            EquipmentCODE = IniFile.GetString("Page", "Equipment");
-            Worker = IniFile.GetString("Page", "Worker");
+            ReadINI();
+            EquipmentCODES = process.Equipments;
+            Workers = process.Workers;
         }
 
         //ログ表示
@@ -240,15 +202,9 @@ namespace Display
             IniFile.WriteString("Page", "Process", ProcessName);
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
-            SetProcess();
-            StartPage(IniFile.GetString("Page", "Initial"));
-        }
 
-        //工程区分設定
-        public void SetProcess()
-        {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            windowMain.ProcessName = IniFile.GetString("Page", "Process");
+            ViewModelWindowMain.Instance.ProcessName = IniFile.GetString("Page", "Process");
+            StartPage(IniFile.GetString("Page", "Initial"));
         }
 
         //スワイプ処理
@@ -337,7 +293,6 @@ namespace Display
 
                 case "DisplayPlan":
                     //計画一覧画面
-                    SetProcess();
                     DisplayFramePage(new PlanList());
                     break;
             }

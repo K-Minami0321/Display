@@ -31,9 +31,9 @@ namespace Display
     {
         //変数
         public string processName;
+        public string worker;
         public bool visivleProcess;
         public bool visivleAll;
-        public string worker;
         public List<string> workers;
 
         //プロパティ
@@ -47,9 +47,13 @@ namespace Display
             set 
             { 
                 SetProperty(ref processName, value);
-                if (value == null) { return; }
                 process = new ProcessCategory(value);
             }
+        }
+        public string Worker                                //作業者
+        {
+            get { return worker; }
+            set { SetProperty(ref worker, value); }
         }
         public bool VisivleProcess                          //作業者
         {
@@ -61,14 +65,9 @@ namespace Display
             get { return visivleAll; }
             set { SetProperty(ref visivleAll, value); }
         }
-        public string Worker                                //作業者
-        {
-            get { return worker; }
-            set { SetProperty(ref worker, value); }
-        }
         public List<string> Workers                         //作業者リスト
         {
-            get { return workers; }
+            get { return workers;  }
             set { SetProperty(ref workers, value); }
         }
 
@@ -83,13 +82,13 @@ namespace Display
         //コンストラクター
         ViewModelControlWorker()
         {
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            Instance = this;
         }
         
         //ロード時
         private void OnLoad()
         {
-            Instance = this;
+            ProcessName = ViewModelWindowMain.Instance.ProcessName;
             KeyDown("Process");
         }
 
@@ -104,7 +103,7 @@ namespace Display
             Iworker.SelectionItem(value);
         }
 
-        //キー処理
+        //キー処理・一覧の作成
         private void KeyDown(object value)
         {
             ListSource listSource = new ListSource();
@@ -112,6 +111,7 @@ namespace Display
             switch (value)
             {
                 case "Process":
+
                     Workers = process.Workers;
                     VisivleProcess = false;
                     VisivleAll = true;

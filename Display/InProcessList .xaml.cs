@@ -22,79 +22,26 @@ namespace Display
     public class ViewModelInProcessList : Common, IKeyDown, ISelect
     {
         //変数
-        string processName;
         string inProcessCODE;
         string inProcessDate;
-        bool visibleShape;
-        bool visibleUnit;
-        bool visibleWeight;
         string headerUnit;
         string headerWeight;
         string headerAmount;
+        bool visibleShape;
+        bool visibleUnit;
+        bool visibleWeight;
 
         //プロパティ
         public static ViewModelInProcessList Instance   //インスタンス
         { get; set; } = new ViewModelInProcessList();
-        public string ProcessName                       //工程区分
-        {
-            get { return ProcessName; }
-            set 
-            { 
-                SetProperty(ref processName, value);
-
-                if (value == null) { return; }
-                process = new ProcessCategory(value);
-                switch (value)
-                {
-                    case "合板":
-                        VisibleShape = true;
-                        VisibleUnit = true;
-                        VisibleWeight = false;
-                        HeaderUnit = "数量";
-                        HeaderAmount = "重量";
-                        break;
-
-                    case "プレス":
-                        VisibleShape = false;
-                        VisibleUnit = false;
-                        VisibleWeight = true;
-                        HeaderAmount = "数量";
-                        HeaderWeight = "単重";
-                        break;
-
-                    default:
-                        VisibleShape = false;
-                        VisibleUnit = false;
-                        VisibleWeight = false;
-                        HeaderAmount = "数量";
-                        break;
-                }
-            }
-        }
         public string InProcessDate                     //作業日
         {
             get { return inProcessDate; }
             set 
             { 
                 SetProperty(ref inProcessDate, value);
-                inProcess.InProcessDate = value;
                 DiaplayList();
             }
-        }
-        public bool VisibleShape                        //表示・非表示（形状）
-        {
-            get { return visibleShape; }
-            set { SetProperty(ref visibleShape, value); }
-        }
-        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
-        {
-            get { return visibleUnit; }
-            set { SetProperty(ref visibleUnit, value); }
-        }
-        public bool VisibleWeight                       //表示・非表示（重量）
-        {
-            get { return visibleWeight; }
-            set { SetProperty(ref visibleWeight, value); }
         }
         public string HeaderUnit                        //コイル・枚数
         {
@@ -111,6 +58,21 @@ namespace Display
             get { return headerAmount; }
             set { SetProperty(ref headerAmount, value); }
         }
+        public bool VisibleShape                        //表示・非表示（形状）
+        {
+            get { return visibleShape; }
+            set { SetProperty(ref visibleShape, value); }
+        }
+        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
+        {
+            get { return visibleUnit; }
+            set { SetProperty(ref visibleUnit, value); }
+        }
+        public bool VisibleWeight                       //表示・非表示（重量）
+        {
+            get { return visibleWeight; }
+            set { SetProperty(ref visibleWeight, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -121,14 +83,14 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessList()
         {
-            //デフォルト値設定
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
-            SelectedIndex = -1;
+            Instance = this;
+            Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             DisplayCapution();
             DiaplayList();
         }
@@ -144,22 +106,44 @@ namespace Display
             windowMain.VisibleArrow = true;
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
-            windowMain.ProcessWork = "搬入履歴";
+            windowMain.ProcessWork = "完了履歴";
+            windowMain.ProcessName = ProcessName;
             windowMain.Ikeydown = this;
+            DataGridBehavior.Instance.Iselect = this;
 
-            DataGridBehavior dataGridBehavior = DataGridBehavior.Instance;
-            dataGridBehavior.Iselect = this;
+            //工程区分
+            switch (ProcessName)
+            {
+                case "合板":
+                    VisibleShape = true;
+                    VisibleUnit = true;
+                    VisibleWeight = false;
+                    HeaderUnit = "数量";
+                    HeaderAmount = "重量";
+                    break;
 
-            Instance = this;
-            Initialize();
+                case "プレス":
+                    VisibleShape = false;
+                    VisibleUnit = false;
+                    VisibleWeight = true;
+                    HeaderAmount = "数量";
+                    HeaderWeight = "単重";
+                    break;
+
+                default:
+                    VisibleShape = false;
+                    VisibleUnit = false;
+                    VisibleWeight = false;
+                    HeaderAmount = "数量";
+                    break;
+            }
         }
         
         //初期化
         public void Initialize()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
-            InProcessInfo.InProcessCODE = null;
-            InProcessInfo.LotNumber = null;
+            SelectedIndex = -1;
+            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
         }
 
         //一覧表示
@@ -174,7 +158,7 @@ namespace Display
         {
             if(SelectedItem == null) { return; }
             InProcessInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            InProcessInfo.LotNumber = null;
+            InProcessInfo.LotNumber = string.Empty;
             DisplayFramePage(new InProcessInfo());
         }
 
@@ -184,7 +168,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    KeyDown("DisplayInfo");
+                    KeyDown("DisplayPlan");
                     break;
             }
         }
@@ -195,13 +179,14 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
-                    //仕掛在庫登録画面
+                    //搬入登録画面
+                    DataInitialize();
                     DisplayFramePage(new InProcessInfo());
                     break;
 
                 case "DisplayList":
                     //仕掛在庫一覧画面
-                    InProcessDate = DateTime.Now.ToString("yyyyMMdd");
+                    Initialize();
                     DisplayFramePage(new InProcessList());
                     break;
 
@@ -226,6 +211,5 @@ namespace Display
                     break;
             }
         }
-
     }
 }

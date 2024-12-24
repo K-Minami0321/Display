@@ -21,10 +21,14 @@ namespace Display
         object focus;
         string nextFocus;
         string soundFolder;
-        string quantityLabel;
-        string amountLabel;
-        string unitLabel;
-        bool visibleCoil;
+        string page;
+        string connection;
+        string server;
+        string processName;
+        string equipmentCODE;
+        string equipmentName;
+        string worker;
+        string processWork;
 
         //プロパティ
         public INIFile IniFile              //iniファイル
@@ -71,12 +75,63 @@ namespace Display
             get { return STRING.Empty(FOLDER.ApplicationPath()) + @"Sound\"; }
         }
 
+        public string Page                  //遷移するページ
+        {
+            get { return page; }
+            set { SetProperty(ref page, value); }
+        }
+        public string Connection            //接続文字列
+        {
+            get { return connection; }
+            set { SetProperty(ref connection, value); }
+        }
+        public string Server                //サーバーIP
+        {
+            get { return server; }
+            set { SetProperty(ref server, value); }
+        }
+        public string ProcessName           //工程区分
+        {
+            get { return processName; }
+            set
+            {
+                SetProperty(ref processName, value);
+                process = new ProcessCategory(value);
+            }
+        }
+        public string EquipmentCODE         //設備CODE
+        {
+            get { return equipmentCODE; }
+            set
+            {
+                SetProperty(ref equipmentCODE, value);
+                equipment = new Equipment(value);
+                EquipmentName = equipment.EquipmentName;
+
+            }
+        }
+        public string EquipmentName         //設備名
+        {
+            get { return equipmentName; }
+            set { SetProperty(ref equipmentName, value); }
+        }
+        public string Worker                //担当者
+        {
+            get { return worker; }
+            set { SetProperty(ref worker, value); }
+        }
+        public string ProcessWork           //
+        {
+            get { return processWork; }
+            set { SetProperty(ref processWork, value); }
+        }
+
         //スタートページを表示
         public void StartPage(string page)
         {
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             Type type = Type.GetType("Display." + page);
-            DisplayFramePage((ContentControl)Activator.CreateInstance(type));
+            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
@@ -91,6 +146,27 @@ namespace Display
         {
             Management management = new Management();
             return management.GetLotNumber(code);
+        }
+
+        //データ初期化
+        public void DataInitialize()
+        {
+            ManufactureInfo.ManufactureCODE = string.Empty;
+            ManufactureInfo.LotNumber = string.Empty;
+            InProcessInfo.InProcessCODE = string.Empty;
+            InProcessInfo.LotNumber = string.Empty;
+        }
+
+        //INIファイル読み込み
+        public void ReadINI()
+        {
+            Connection = IniFile.GetString("Database", "ConnectString");
+            Server = GetServerIP(Connection);
+            Page = IniFile.GetString("Page", "Initial");
+            ProcessName = IniFile.GetString("Page", "Process");
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
+            Worker = IniFile.GetString("Page", "Worker");
+            ProcessWork = string.IsNullOrEmpty(EquipmentName) ? ProcessName + "実績" : EquipmentName + " - " + EquipmentCODE;
         }
     }
 }

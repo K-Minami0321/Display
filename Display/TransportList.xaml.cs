@@ -20,27 +20,9 @@ namespace Display
     //ViewModel
     public class ViewModelTransportList : Common, IKeyDown, ISelect
     {
-        //プロパティ変数
-        string processName;
-        string inProcessCODE;
-
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
         { get; set; } = new ViewModelTransportList();
-        public string ProcessName                       //工程区分
-        {
-            get { return ProcessName; }
-            set 
-            {
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
-        }
-        public string InProcessCODE                     //仕掛在庫CODE
-        {
-            get { return inProcessCODE; }
-            set { SetProperty(ref inProcessCODE, value); }
-        }
 
         //イベント
         ActionCommand commandLoad;
@@ -49,14 +31,16 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportList()
         {
+            Instance = this;
             Initialize();
-            DiaplayList();
         }
 
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             DisplayCapution();
+            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -71,23 +55,17 @@ namespace Display
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
             windowMain.IconList = "ViewList";
-            windowMain.IconPlan = "FileDocumentArrowRightOutline";
-            windowMain.ProcessWork = "仕掛引取";
+            windowMain.IconPlan = "TrayArrowUp";
+            windowMain.ProcessWork = "合板倉庫";
             windowMain.Ikeydown = this;
             windowMain.ProcessName = process.Before;
-
-            DataGridBehavior dataGridBehavior = DataGridBehavior.Instance;
-            dataGridBehavior.Iselect = this;
-
-            Instance = this;
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //初期化
         public void Initialize()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
             SelectedIndex = -1;
-            InProcessCODE = string.Empty;
         }
 
         //一覧表示
@@ -101,8 +79,8 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            var code = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            DisplayFramePage(new TransportInfo(code));
+            TransportInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            DisplayFramePage(new TransportInfo());
         }
 
         //スワイプ処理

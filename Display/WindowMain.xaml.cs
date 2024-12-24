@@ -38,7 +38,7 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //変数
-        SQL sql;
+        SQL connection;
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft;
@@ -61,6 +61,11 @@ namespace Display
         //プロパティ
         public static ViewModelWindowMain Instance      //インスタンス
         { get; set; } = new ViewModelWindowMain();
+        public SQL Connection                           //SQL接続コネクション
+        {
+            get { return connection; }
+            set { SetProperty(ref connection, value); }
+        }
         public IKeyDown Ikeydown                        //インターフェース
         { get; set; }
         public ITimer Itimer                            //インターフェース
@@ -177,12 +182,11 @@ namespace Display
             //データベース接続
             var db = IniFile.GetString("Database", "Database");
             var connect = IniFile.GetString("Database", "ConnectString");
-            sql = new SQL(db, connect);
+            Connection = new SQL(db, connect);
 
             //初期設定
             FunctionColor = IsServer ? "1" : "0.5";
             StartPage(IniFile.GetString("Page", "Initial"));
-            ProcessName = IniFile.GetString("Page", "Process");
             VisiblePower = false;
             VisibleList = false;
             VisibleInfo = false;
@@ -203,7 +207,11 @@ namespace Display
             try
             {
                 var result = (bool)await DialogHost.Show(new ControlMessage("システム終了", "※登録を破棄してシステムを終了します。", "警告"));
-                if (result) { Application.Current.Shutdown(); }
+                if (result) 
+                {
+                    Connection.DatabaseClose();
+                    Application.Current.Shutdown(); 
+                }
             }
             catch
             {
@@ -304,6 +312,8 @@ namespace Display
 
                 case "F1":
                     //実績登録画面
+                    ManufactureInfo.ManufactureCODE = string.Empty;
+                    ManufactureInfo.LotNumber = string.Empty;
                     FramePage = new ManufactureInfo();
                     IniFile.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
@@ -311,6 +321,8 @@ namespace Display
                 case "F2":
                     //搬入登録画面
                     if (ProcessName == "検査" || ProcessName == "梱包") { return; }
+                    InProcessInfo.InProcessCODE = string.Empty;
+                    InProcessInfo.LotNumber = string.Empty;
                     FramePage = new InProcessInfo();
                     IniFile.WriteString("Page", "Initial", "InProcessInfo");
                     break;
