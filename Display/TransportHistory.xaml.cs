@@ -133,7 +133,7 @@ namespace Display
         private void DiaplayList()
         {
             InProcess inProcess = new InProcess();
-            SelectTable = inProcess.SelectListTransportHistory(TransportDate);           
+            SelectTable = inProcess.SelectListTransportHistory("合板","プレス",TransportDate);           
         }
 
         //選択処理

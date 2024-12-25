@@ -7,6 +7,7 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Diagnostics;
 
 #pragma warning disable
 namespace Display
@@ -32,8 +33,16 @@ namespace Display
     {
         //変数
         string inProcessCODE;
-        string inProcessDate;
         string lotNumber;
+        string coil;
+        string unit = string.Empty;
+        string weight = string.Empty;
+        string amount = string.Empty;
+        string shirringUnit;
+        string inProcessDate;
+        string transportDate = string.Empty;
+        string completed;
+        string status = "搬入";
         string notice;
         int amountWidth = 150;
         int amountRow = 5;
@@ -44,6 +53,7 @@ namespace Display
         string buttonName;
         string labelWeight;
         string labelAmount;
+        string labelUnit;
         bool visibleCoil;
         bool visibleItem1;
         bool visibleItem2;
@@ -60,120 +70,160 @@ namespace Display
         bool isFocusCompleted;
         bool isFocusAmount;
 
-
         //プロパティ
-        public string InProcessCODE         //仕掛CODE
+        public string InProcessCODE     //仕掛CODE
         {
             get { return inProcessCODE; }
             set 
-            { 
-
+            {
                 SetProperty(ref inProcessCODE, value);
 
-
-                inProcess.Worker = Worker;
-                inProcess.InProcessDate = SetToDay(DateTime.Now);
-
-                CopyProperty(new InProcess(inProcessCODE, ProcessName), inProcess);
-
-
-
-
-
-                DisplayLot(inProcess.LotNumber);
+                InProcess inProcess = new InProcess(inProcessCODE, ProcessName);
+                CopyProperty(inProcess, this, "InProcessCODE");
+                DisplayLot(LotNumber);
             }
         }
-        public string LotNumber             //ロット番号
+        public string LotNumber         //ロット番号
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
         }
-        public string Notice                //注意文
+        public string Coil              //コイル数
+        {
+            get { return coil; }
+            set { SetProperty(ref coil, value); }
+        }
+        public string Unit              //数量
+        {
+            get { return unit; }
+            set { SetProperty(ref unit, value); }
+        }
+        public string Weight            //重量
+        {
+            get { return weight; }
+            set { SetProperty(ref weight, value); }
+        }
+        public string Amount            //枚数
+        {
+            get { return amount; }
+            set { SetProperty(ref amount, value); }
+        }
+        public string ShirringUnit      //コイル数
+        {
+            get { return shirringUnit; }
+            set { SetProperty(ref shirringUnit, value); }
+        }
+        public string InProcessDate     //搬入日
+        {
+            get { return inProcessDate; }
+            set { SetProperty(ref inProcessDate, value); }
+        }
+        public string TransportDate     //搬出日
+        {
+            get { return transportDate; }
+            set { SetProperty(ref transportDate, value); }
+        }
+        public string Completed         //完了
+        {
+            get { return completed; }
+            set { SetProperty(ref completed, value); }
+        }
+        public string Status            //状態
+        {
+            get { return status; }
+            set { SetProperty(ref status, value); }
+        }
+        public string Notice            //注意文
         {
             get { return notice; }
             set { SetProperty(ref notice, value); }
         }
-        public int AmountWidth              //コイル数テキストボックスのWidth
+        public int AmountWidth          //コイル数テキストボックスのWidth
         {
             get { return amountWidth; }
             set { SetProperty(ref amountWidth, value); }
         }
-        public int AmountRow                //数量・重量の位置
+        public int AmountRow            //数量・重量の位置
         {
             get { return amountRow; }
             set { SetProperty(ref amountRow, value); }
         }
-        public int LotNumberLength          //文字数（ロット番号）
+        public int LotNumberLength      //文字数（ロット番号）
         {
             get { return lotNumberLength; }
             set { SetProperty(ref lotNumberLength, value); }
         }
-        public int AmountLength             //文字数（数量）
+        public int AmountLength         //文字数（数量）
         {
             get { return amountLength; }
             set { SetProperty(ref amountLength, value); }
         }
-        public int WeightLength             //文字数（重量・焼結重量）
+        public int WeightLength         //文字数（重量・焼結重量）
         {
             get { return weightLength; }
             set { SetProperty(ref weightLength, value); }
         }
-        public int UnitLength               //文字数（枚数・コイル数）
+        public int UnitLength           //文字数（枚数・コイル数）
         {
             get { return unitLength; }
             set { SetProperty(ref unitLength, value); }
         }
-        public string ButtonName            //登録ボタン名
+        public string ButtonName        //登録ボタン名
         {
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
         }
-        public string LabelWeight           //ラベル（重量・焼結重量）
+        public string LabelWeight       //ラベル（重量・焼結重量）
         {
             get { return labelWeight; }
             set { SetProperty(ref labelWeight, value); }
         }
-        public string LabelAmount           //ラベル（数量）
+        public string LabelAmount       //ラベル（数量）
         {
             get { return labelAmount; }
             set { SetProperty(ref labelAmount, value); }
         }
-        public bool VisibleCoil             //表示・非表示（コイル数）
+        public string LabelUnit         //ラベル（数量・重量）
+        {
+            get { return labelUnit; }
+            set { SetProperty(ref labelUnit, value); }
+        }
+        public bool VisibleCoil         //表示・非表示（コイル数）
         {
             get { return visibleCoil; }
             set { SetProperty(ref visibleCoil, value); }
         }
-        public bool VisibleItem1            //表示・非表示（入力項目）
+        public bool VisibleItem1        //表示・非表示（入力項目）
         {
             get { return visibleItem1; }
             set { SetProperty(ref visibleItem1, value); }
         }
-        public bool VisibleItem2            //表示・非表示（入力項目）
+        public bool VisibleItem2        //表示・非表示（入力項目）
         {
             get { return visibleItem2; }
             set { SetProperty(ref visibleItem2, value); }
         }
-        public bool VisibleDelete           //表示・非表示（削除ボタン）
+        public bool VisibleDelete       //表示・非表示（削除ボタン）
         {
             get { return visibleDelete; }
             set { SetProperty(ref visibleDelete, value); }
         }
-        public bool VisibleCancel           //表示・非表示（取消ボタン）
+        public bool VisibleCancel       //表示・非表示（取消ボタン）
         {
             get { return visibleCancel; }
             set { SetProperty(ref visibleCancel, value); }
         }
-        public bool VisibleTenKey           //表示・非表示（テンキー）
+        public bool VisibleTenKey       //表示・非表示（テンキー）
         {
             get { return visibleTenKey; }
             set { SetProperty(ref visibleTenKey, value); }
         }
-        public bool VisibleWorker           //表示・非表示（作業者）
+        public bool VisibleWorker       //表示・非表示（作業者）
         {
             get { return visibleWorker; }
             set { SetProperty(ref visibleWorker, value); }
         }
-        public bool IsRegist                //新規・既存フラグ（true:新規、false:既存）
+        public bool IsRegist            //新規・既存フラグ（true:新規、false:既存）
         {
             get { return isRegist; }
             set
@@ -184,7 +234,7 @@ namespace Display
                 ButtonName = value ? "登　録" : "修　正";
             }
         }
-        public bool IsEnable                //表示・非表示（下部ボタン）
+        public bool IsEnable            //表示・非表示（下部ボタン）
         {
             get { return isEnable; }
             set 
@@ -192,41 +242,40 @@ namespace Display
                 SetProperty(ref isEnable, value);
                 if (value) { return; }
                 Notice = string.Empty;
-                AmountWidth = inProcess.Amount.Length * 50;
-                inProcess.Amount = !management.VisibleCoil ? inProcess.Amount : CONVERT.ConvertCircleEnclosing(inProcess.Amount);
+                AmountWidth = Amount.Length * 50;
+                Amount = !VisibleCoil ? Amount : CONVERT.ConvertCircleEnclosing(Amount);
             }
         }
-        public bool IsFocusLotNumber        //フォーカス（ロット番号）
+        public bool IsFocusLotNumber    //フォーカス（ロット番号）
         {
             get { return isFocusLotNumber; }
             set { SetProperty(ref isFocusLotNumber, value); }
         }
-        public bool IsFocusWorker           //フォーカス（作業者）
+        public bool IsFocusWorker       //フォーカス（作業者）
         {
             get { return isFocusWorker; }
             set { SetProperty(ref isFocusWorker, value); }
         }
-        public bool IsFocusWeight           //フォーカス（重量）
+        public bool IsFocusWeight       //フォーカス（重量）
         {
             get { return isFocusWeight; }
             set { SetProperty(ref isFocusWeight, value); }
         }
-        public bool IsFocusUnit             //フォーカス（単位）
+        public bool IsFocusUnit         //フォーカス（単位）
         {
             get { return isFocusUnit; }
             set { SetProperty(ref isFocusUnit, value); }
         }
-        public bool IsFocusCompleted        //フォーカス（完了）
+        public bool IsFocusCompleted    //フォーカス（完了）
         {
             get { return isFocusCompleted; }
             set { SetProperty(ref isFocusCompleted, value); }
         }
-        public bool IsFocusAmount           //フォーカス（数量）
+        public bool IsFocusAmount       //フォーカス（数量）
         {
             get { return isFocusAmount; }
             set { SetProperty(ref isFocusAmount, value); }
         }
-
 
         //イベント
         ActionCommand commandLoad;
@@ -241,10 +290,6 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string number)
         {
-            inProcess = new InProcess();
-            management = new Management();
-
-            //データ取得
             Initialize();
             InProcessCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }     //予定表からロット番号取得
@@ -253,12 +298,9 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            ReadINI();
             DisplayCapution();
-
-            //デフォルト値設定
-            IsRegist = string.IsNullOrEmpty(inProcess.InProcessCODE);
-            IsEnable = DATETIME.ToStringDate(inProcess.InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
+            IsRegist = string.IsNullOrEmpty(InProcessCODE);
+            IsEnable = DATETIME.ToStringDate(InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
             SetFocus();
         }
 
@@ -289,7 +331,7 @@ namespace Display
                     VisibleItem1 = true;
                     VisibleItem2 = true;
                     LabelWeight = "焼結重量";
-                    inProcess.LabelUnit = "重 量";
+                    LabelUnit = "重 量";
                     AmountRow = 5;
                     Notice = "※スリッター時のみ記入";
                     break;
@@ -299,7 +341,7 @@ namespace Display
                     VisibleItem1 = true;
                     VisibleItem2 = false;
                     LabelWeight = "単 重";
-                    inProcess.LabelUnit = "数 量";
+                    LabelUnit = "数 量";
                     AmountRow = 5;
                     Notice = string.Empty;
                     VisibleCoil = false;
@@ -309,38 +351,23 @@ namespace Display
                     if (NextFocus != null) { NextFocus = "LotNumber"; }
                     VisibleItem1 = false;
                     VisibleItem2 = false;
-                    inProcess.LabelUnit = "数 量";
+                    LabelUnit = "数 量";
                     AmountRow = 4;
                     Notice = string.Empty;
                     VisibleCoil = false;
                     break;
             }
 
-            inProcess.ProcessName = ProcessName;
-            inProcess.Place = process.Name;                //保管場所
-            inProcess.ProcessNext = process.Next;          //次の工程設定
         }
 
         //初期化
         public void Initialize()
         {
+            ReadINI();
+            InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = string.Empty;
             LotNumber = string.Empty;
             AmountWidth = 150;
-        }
-
-        //ロット番号処理
-        private void DisplayLot(string lotnumber)
-        {
-            //データ取得
-            CopyProperty(new Management(management.GetLotNumber(lotnumber), ProcessName), management);
-
-            //データ表示
-            if (!string.IsNullOrEmpty(management.ProductName) && management.ProductName != inProcess.ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
-            shape = new ProductShape(management.ShapeName);
-            LotNumber = management.LotNumber;
-            inProcess.LotNumber = LotNumber;
-            inProcess.Coil = inProcess.InProcessCoil(LotNumber, inProcess.InProcessCODE);   //コイル数取得
         }
 
         //選択処理
@@ -349,31 +376,10 @@ namespace Display
             switch (Focus)
             {
                 case "Worker":
-                    inProcess.Worker = value.ToString();
+                    Worker = value.ToString();
                     break;
             }
             SetNextFocus();
-        }
-
-        //登録処理
-        private void RegistData()
-        {
-            //コード確定
-            if (IsRegist)
-            {
-                var inprocessdate = STRING.ToDateDB(inProcess.InProcessDate);
-                var inprocesscode = inProcess.GenerateCode(process.Mark + inprocessdate);
-                inProcess.InProcessCODE = inprocesscode;
-            }
-
-            //登録処理
-            inProcess.ProductName = management.ProductName;
-            inProcess.Status = "搬入";
-            inProcess.TransportDate = string.Empty;
-            inProcess.InsertLog(IsRegist);
-            inProcess.Resist(inProcess.InProcessCODE);
-            IsRegist = true;
-            Initialize();
         }
 
         //必須チェック
@@ -385,7 +391,7 @@ namespace Display
             var messege2 = string.Empty;
             var messege3 = string.Empty;
 
-            if (string.IsNullOrEmpty(inProcess.Unit))
+            if (string.IsNullOrEmpty(Unit))
             {
                 focus = "Unit";
                 messege1 = "数量を入力してください";
@@ -394,7 +400,7 @@ namespace Display
                 result = false;
             }
 
-            if (string.IsNullOrEmpty(inProcess.Worker))
+            if (string.IsNullOrEmpty(Worker))
             {
                 focus = "Worker";
                 messege1 = "担当者を選択してください";
@@ -412,7 +418,7 @@ namespace Display
                 result = false;
             }
 
-            if (!result) 
+            if (!result)
             {
                 var messege = (bool)await DialogHost.Show(new ControlMessage(messege1, messege2, messege3));
                 await System.Threading.Tasks.Task.Delay(100);
@@ -421,11 +427,33 @@ namespace Display
             return result;
         }
 
+        //登録処理
+        private void RegistData()
+        {
+            InProcess inProcess = new InProcess();
+            CopyProperty(this, inProcess);
+
+            //コード確定
+            if (IsRegist)
+            {
+                var inprocessdate = STRING.ToDateDB(InProcessDate);
+                var inprocesscode = inProcess.GenerateCode(process.Mark + inprocessdate);
+                InProcessCODE = inprocesscode;
+            }
+
+            //登録処理
+            inProcess.InsertLog(IsRegist);
+            inProcess.Resist(InProcessCODE);
+            IsRegist = true;
+            Initialize();
+        }
+
         //削除処理
         private void DeleteDate()
         {
+            InProcess inProcess = new InProcess();
             inProcess.DeleteLog();
-            inProcess.DeleteHistory(inProcess.InProcessCODE);
+            inProcess.DeleteHistory(InProcessCODE);
             Initialize();
         }
 
@@ -505,7 +533,7 @@ namespace Display
 
                 case "Completed":
                     //完了チェック
-                    inProcess.Completed = inProcess.Completed == "E" ? "" : "E";
+                    Completed = Completed == "E" ? "" : "E";
                     break;
 
                 case "DisplayInfo":
@@ -538,15 +566,15 @@ namespace Display
                     break;
 
                 case "Unit":
-                    if (inProcess.Unit.Length < UnitLength) { inProcess.Unit += value.ToString(); }
+                    if (Unit.Length < UnitLength) { Unit += value.ToString(); }
                     break;
 
                 case "Weight":
-                    if (inProcess.Weight.Length < WeightLength) { inProcess.Weight += value.ToString(); }
+                    if (Weight.Length < WeightLength) { Weight += value.ToString(); }
                     break;
 
                 case "Amount":
-                    if (inProcess.Amount.Length < AmountLength) { inProcess.Amount += value.ToString(); }
+                    if (Amount.Length < AmountLength) { Amount += value.ToString(); }
                     break;
 
                 default:
@@ -564,15 +592,15 @@ namespace Display
                     break;
 
                 case "Unit":
-                    inProcess.Unit = string.Empty;
+                    Unit = string.Empty;
                     break;
 
                 case "Weight":
-                    inProcess.Weight = string.Empty;
+                    Weight = string.Empty;
                     break;
 
                 case "Amount":
-                    inProcess.Amount = string.Empty;
+                    Amount = string.Empty;
                     break;
             }
         }
@@ -587,15 +615,15 @@ namespace Display
                     break;
 
                 case "Unit":
-                    if (inProcess.Unit.Length > 0) { inProcess.Unit = inProcess.Unit[..^1]; }
+                    if (Unit.Length > 0) { Unit = Unit[..^1]; }
                     break;
 
                 case "Weight":
-                    if (inProcess.Weight.Length > 0) { inProcess.Weight = inProcess.Weight[..^1]; }
+                    if (Weight.Length > 0) { Weight = Weight[..^1]; }
                     break;
 
                 case "Amount":
-                    if (inProcess.Amount.Length > 0) { inProcess.Amount = inProcess.Amount[..^1]; }
+                    if (Amount.Length > 0) { Amount = Amount[..^1]; }
                     break;
             }
         }
@@ -715,20 +743,23 @@ namespace Display
         private void SetLostFocus()
         {
             DisplayLot(LotNumber);
+
+            InProcess inProcess = new InProcess();
+            Coil = inProcess.InProcessCoil(LotNumber, InProcessCODE);   //コイル数取得
         }
 
         //フォーカス設定
         private void SetFocus()
         {
             if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
-            if (string.IsNullOrEmpty(inProcess.Worker)) { SetGotFocus("Worker"); return; }
+            if (string.IsNullOrEmpty(Worker)) { SetGotFocus("Worker"); return; }
             SetGotFocus("LotNumber");
         }
 
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (IsRegist) { inProcess.InProcessDate = SetToDay(DateTime.Now); }
+            if (IsRegist) { InProcessDate = SetToDay(DateTime.Now); }
         }
 
         //スワイプ処理

@@ -82,13 +82,13 @@ namespace Display
         //コンストラクター
         ViewModelControlWorker()
         {
+            ProcessName = IniFile.GetString("Page", "Process");
             Instance = this;
         }
         
         //ロード時
         private void OnLoad()
         {
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
             KeyDown("Process");
         }
 
@@ -107,22 +107,21 @@ namespace Display
         private void KeyDown(object value)
         {
             ListSource listSource = new ListSource();
-
             switch (value)
             {
                 case "Process":
-
-                    Workers = process.Workers;
+                    listSource.Process = ProcessName;
                     VisivleProcess = false;
                     VisivleAll = true;
                     break;
 
                 case "All":
-                    Workers = listSource.Workers;
+                    listSource.Process = null;
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;
             }
+            Workers = listSource.Workers;
         }
     }
 }

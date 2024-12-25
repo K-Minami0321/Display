@@ -29,6 +29,8 @@ namespace Display
         string equipmentName;
         string worker;
         string processWork;
+        string productName;
+        string shapeName;
 
         //プロパティ
         public INIFile IniFile              //iniファイル
@@ -120,10 +122,36 @@ namespace Display
             get { return worker; }
             set { SetProperty(ref worker, value); }
         }
-        public string ProcessWork           //
+        public string ProcessWork           //工程
         {
             get { return processWork; }
             set { SetProperty(ref processWork, value); }
+        }
+        public string ProductName           //品番
+        {
+            get { return productName; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && ProductName != value) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+                SetProperty(ref productName, value);
+            }
+        }
+        public string ShapeName             //形式
+        {
+            get { return shapeName; }
+            set { SetProperty(ref shapeName, value); }
+        }
+
+        //INIファイル読み込み
+        public void ReadINI()
+        {
+            Connection = IniFile.GetString("Database", "ConnectString");
+            Server = GetServerIP(Connection);
+            Page = IniFile.GetString("Page", "Initial");
+            ProcessName = IniFile.GetString("Page", "Process");
+            EquipmentCODE = IniFile.GetString("Page", "Equipment");
+            Worker = IniFile.GetString("Page", "Worker");
+            ProcessWork = string.IsNullOrEmpty(EquipmentName) ? ProcessName + "実績" : EquipmentName + " - " + EquipmentCODE;
         }
 
         //スタートページを表示
@@ -148,6 +176,14 @@ namespace Display
             return management.GetLotNumber(code);
         }
 
+        //ロット番号処理
+        public void DisplayLot(string lotnumber)
+        {
+            Management management = new Management(GetLotNumber(lotnumber), ProcessName);
+            CopyProperty(management, this);
+            shape = new ProductShape(ShapeName);
+        }
+
         //データ初期化
         public void DataInitialize()
         {
@@ -155,18 +191,6 @@ namespace Display
             ManufactureInfo.LotNumber = string.Empty;
             InProcessInfo.InProcessCODE = string.Empty;
             InProcessInfo.LotNumber = string.Empty;
-        }
-
-        //INIファイル読み込み
-        public void ReadINI()
-        {
-            Connection = IniFile.GetString("Database", "ConnectString");
-            Server = GetServerIP(Connection);
-            Page = IniFile.GetString("Page", "Initial");
-            ProcessName = IniFile.GetString("Page", "Process");
-            EquipmentCODE = IniFile.GetString("Page", "Equipment");
-            Worker = IniFile.GetString("Page", "Worker");
-            ProcessWork = string.IsNullOrEmpty(EquipmentName) ? ProcessName + "実績" : EquipmentName + " - " + EquipmentCODE;
         }
     }
 }
