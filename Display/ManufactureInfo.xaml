@@ -43,7 +43,7 @@
                             <TextBlock Text="作業日"/>
                         </Viewbox>
                         <Viewbox Grid.Row="0" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding manufacture.ManufactureDate, FallbackValue=2024年6月3日, Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Text="{Binding ManufactureDate, FallbackValue=2024年6月3日, Converter={StaticResource DateTimeConverter}}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="1" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="品 番"/>
@@ -81,7 +81,7 @@
                         <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="工 程"/>
                         </Viewbox>
-                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorkProcess" Text="{Binding manufacture.WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,-5,0" 
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="TextWorkProcess" Text="{Binding WorkProcess}" HorizontalAlignment="Stretch" Margin="0,0,-5,0" 
                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="True">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -104,7 +104,7 @@
                         <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="担当者"/>
                         </Viewbox>
-                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextWorker" Text="{Binding manufacture.Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextWorker" Text="{Binding Worker}" HorizontalAlignment="Stretch" Margin="0,0,100,0"
                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="True">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -128,7 +128,7 @@
                             <TextBlock Text="作業時間"/>
                         </Viewbox>
                         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextStartTime" Text="{Binding manufacture.StartTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                            <TextBox x:Name="TextStartTime" Text="{Binding StartTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
                                         MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -152,12 +152,12 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <Viewbox Style="{StaticResource Label}" Margin="0,0,13,0">
-                                <TextBlock Text="{Binding manufacture.StartTime}" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}"/>
+                                <TextBlock Text="{Binding StartTime}" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}"/>
                             </Viewbox>
                             <Viewbox Style="{StaticResource Label}">
                                 <TextBlock Text="～" Visibility="{Binding EnabledControl2,Converter={StaticResource CollapsedConverter}}"/>
                             </Viewbox>
-                            <TextBox x:Name="TextEndTime" Text="{Binding manufacture.EndTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                            <TextBox x:Name="TextEndTime" Text="{Binding EndTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
                                         MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -181,14 +181,14 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <Viewbox Style="{StaticResource Label}">
-                                <TextBlock Text="{Binding manufacture.EndTime}" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}"/>
+                                <TextBlock Text="{Binding EndTime}" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}"/>
                             </Viewbox>
                         </StackPanel>
                         <Viewbox Grid.Row="6" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="{Binding management.LabelAmount,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextAmount" Text="{Binding manufacture.Amount}" Width="130" 
+                            <TextBox x:Name="TextAmount" Text="{Binding Amount}" Width="130" 
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 
                                         IsEnabled="{Binding EnabledControl2}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
@@ -209,7 +209,7 @@
                                     <local:TextBoxMode Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <CheckBox x:Name="CheckCompleted" IsChecked="{Binding manufacture.Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
+                            <CheckBox x:Name="CheckCompleted" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
                                         Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
                                 <Viewbox Stretch="Uniform">
                                     <TextBlock Text="ロット完了"/>
@@ -232,7 +232,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>
-                            <CheckBox x:Name="CheckSales" IsChecked="{Binding manufacture.Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
+                            <CheckBox x:Name="CheckSales" IsChecked="{Binding Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
                                         Visibility="{Binding VisibleSeal,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
                                 <Viewbox Stretch="Uniform" Margin="10,10,10,10">
                                     <TextBlock Text="売 上"/>

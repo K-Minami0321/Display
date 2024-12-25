@@ -30,27 +30,15 @@ namespace Display
     public class ViewModelControlWorkProcess : Common, IWorkProcess
     {
         //変数
-        string processName;
         bool visivleProcess;
         bool visivleAll;
         string workProcess;
-        List<string> workProcesses;
 
         //プロパティ
         public static ViewModelControlWorkProcess Instance      //インスタンス
         { get; set; } = new ViewModelControlWorkProcess();
         public IWorkProcess IworkProcess                        //インターフェース
         { get; set; }
-        public string ProcessName                               //工程区分
-        {
-            get { return processName; }
-            set 
-            { 
-                SetProperty(ref processName, value);
-                if (value == null) { return; }
-                process = new ProcessCategory(value);
-            }
-        }
         public bool VisivleProcess                              //設備
         {
             get { return visivleProcess; }
@@ -66,11 +54,6 @@ namespace Display
             get { return workProcess; }
             set { SetProperty(ref workProcess, value); }
         }
-        public List<string> WorkProcesses                       //工程リスト
-        {
-            get { return workProcesses; }
-            set { SetProperty(ref workProcesses, value); }
-        }
 
         //イベント
         ActionCommand commandLoad;
@@ -83,13 +66,13 @@ namespace Display
         //コンストラクター
         ViewModelControlWorkProcess()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
             Instance = this;
         }
 
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             KeyDown("Process");
         }
 

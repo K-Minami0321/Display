@@ -30,26 +30,15 @@ namespace Display
     public class ViewModelControlWorker : Common, IWorker
     {
         //変数
-        public string processName;
         public string worker;
         public bool visivleProcess;
         public bool visivleAll;
-        public List<string> workers;
 
         //プロパティ
         public static ViewModelControlWorker Instance       //インスタンス
         { get; set; } = new ViewModelControlWorker();
         public IWorker Iworker                              //インターフェース
         { get; set; }
-        public string ProcessName                           //工程区分
-        {
-            get { return processName; }
-            set 
-            { 
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
-        }
         public string Worker                                //作業者
         {
             get { return worker; }
@@ -65,11 +54,6 @@ namespace Display
             get { return visivleAll; }
             set { SetProperty(ref visivleAll, value); }
         }
-        public List<string> Workers                         //作業者リスト
-        {
-            get { return workers;  }
-            set { SetProperty(ref workers, value); }
-        }
 
         //イベント
         ActionCommand commandLoad;
@@ -82,13 +66,13 @@ namespace Display
         //コンストラクター
         ViewModelControlWorker()
         {
-            ProcessName = IniFile.GetString("Page", "Process");
             Instance = this;
         }
         
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             KeyDown("Process");
         }
 

@@ -17,7 +17,7 @@ namespace Display
             DataContext = new ViewModelManual();
             InitializeComponent();
 
-            mediaElement.Source = new Uri(@"C:\Users\bb10m\Downloads\mov_hts-samp001.mp4");
+            mediaElement.Source = new Uri(@"\\Sb2000-m\共有\中小企業振興公社\ミーティング資料\マニュアル\品質マニュアル\品質管理マニュアル基礎編動画方式.mp4");
             mediaElement.Play();
         }
     }
