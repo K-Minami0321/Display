@@ -526,6 +526,12 @@ namespace Display
             ManufactureCODE = string.Empty;
             ManufactureDate = SetToDay(DateTime.Now);
             LotNumber = string.Empty;
+            ProductName = string.Empty;
+            StartTime = string.Empty;
+            EndTime = string.Empty;
+            WorkTime = string.Empty;
+            Amount = string.Empty;
+            Completed = string.Empty;
             IsRegist = true;
             IsEnable = true;
         }
