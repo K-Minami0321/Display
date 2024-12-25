@@ -31,6 +31,7 @@ namespace Display
         string processWork;
         string productName;
         string shapeName;
+        string coil;
 
         //プロパティ
         public INIFile IniFile              //iniファイル
@@ -141,6 +142,11 @@ namespace Display
             get { return shapeName; }
             set { SetProperty(ref shapeName, value); }
         }
+        public string Coil              //コイル数
+        {
+            get { return coil; }
+            set { SetProperty(ref coil, value); }
+        }
 
         //INIファイル読み込み
         public void ReadINI()
@@ -177,11 +183,15 @@ namespace Display
         }
 
         //ロット番号処理
-        public void DisplayLot(string lotnumber)
+        public void DisplayLot(string lotnumber, string inProcesscode)
         {
-            Management management = new Management(GetLotNumber(lotnumber), ProcessName);
+            lotnumber = GetLotNumber(lotnumber);
+            Management management = new Management(lotnumber, ProcessName);
             CopyProperty(management, this);
             shape = new ProductShape(ShapeName);
+
+            InProcess inProcess = new InProcess();
+            Coil = inProcess.InProcessCoil(lotnumber, inProcesscode);   //コイル数取得
         }
 
         //データ初期化

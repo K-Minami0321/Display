@@ -30,7 +30,6 @@ namespace Display
     public class ViewModelControlWorkProcess : Common, IWorkProcess
     {
         //変数
-        ViewModelWindowMain windowMain;
         string processName;
         bool visivleProcess;
         bool visivleAll;
@@ -81,13 +80,16 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
+        //コンストラクター
+        ViewModelControlWorkProcess()
+        {
+            ProcessName = IniFile.GetString("Page", "Process");
+            Instance = this;
+        }
+
         //ロード時
         private void OnLoad()
         {
-            windowMain = ViewModelWindowMain.Instance;
-            Instance = this;
-
-            ProcessName = windowMain.ProcessName;
             KeyDown("Process");
         }
 
@@ -105,20 +107,22 @@ namespace Display
         //キー処理
         private void KeyDown(object value)
         {
+            ListSource listSource = new ListSource();
             switch (value)
             {
                 case "Process":
-                    WorkProcesses = process.WorkProcesses;
+                    listSource.Process = ProcessName;
                     VisivleProcess = false;
                     VisivleAll = true;
                     break;
 
                 case "All":
-                    WorkProcesses = process.WorkProcesses;
+                    listSource.Process = string.Empty;
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;
             }
+            WorkProcesses = listSource.WorkProcesses;
         }
     }
 }

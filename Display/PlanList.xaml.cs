@@ -113,7 +113,6 @@ namespace Display
                     EnableSelect = true;
                     break;
             }
-
         }
 
         //初期化

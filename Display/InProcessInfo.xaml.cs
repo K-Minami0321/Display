@@ -80,18 +80,13 @@ namespace Display
 
                 InProcess inProcess = new InProcess(inProcessCODE, ProcessName);
                 CopyProperty(inProcess, this, "InProcessCODE");
-                DisplayLot(LotNumber);
+                DisplayLot(LotNumber, InProcessCODE);
             }
         }
         public string LotNumber         //ロット番号
         {
             get { return lotNumber; }
             set { SetProperty(ref lotNumber, value); }
-        }
-        public string Coil              //コイル数
-        {
-            get { return coil; }
-            set { SetProperty(ref coil, value); }
         }
         public string Unit              //数量
         {
@@ -292,7 +287,7 @@ namespace Display
         {
             Initialize();
             InProcessCODE = code;
-            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }     //予定表からロット番号取得
+            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber, InProcessCODE); }     //予定表からロット番号取得
         }
 
         //ロード時
@@ -368,6 +363,8 @@ namespace Display
             InProcessCODE = string.Empty;
             LotNumber = string.Empty;
             AmountWidth = 150;
+            IsRegist = true;
+            IsEnable = true;
         }
 
         //選択処理
@@ -742,10 +739,7 @@ namespace Display
         //ロット番号フォーカス処理（LostFoucus）
         private void SetLostFocus()
         {
-            DisplayLot(LotNumber);
-
-            InProcess inProcess = new InProcess();
-            Coil = inProcess.InProcessCoil(LotNumber, InProcessCODE);   //コイル数取得
+            DisplayLot(LotNumber, InProcessCODE);
         }
 
         //フォーカス設定
