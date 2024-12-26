@@ -223,8 +223,6 @@ namespace Display
             lotnumber = GetLotNumber(lotnumber);
             Management management = new Management(lotnumber, ProcessName);
             CopyProperty(management, this);
-            shape = new ProductShape(ShapeName);
-
 
             //コイル数取得
             InProcess inProcess = new InProcess();
