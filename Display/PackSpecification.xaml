@@ -66,11 +66,48 @@
                                 <local:TextBoxMode/>
                             </i:Interaction.Behaviors>
                         </TextBox>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="段ボール" FontSize="40"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Type, FallbackValue=段ボール・ポリ箱}" FontSize="40"/>
                         <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="赤箱 ワンタッチ" FontSize="60"/>
                         <TextBlock Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Text="600" HorizontalAlignment="Right" FontSize="60" Margin="0,0,20,0"/>
-                        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Text="パレット　:　折パレ or 中古" FontSize="33"/>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Text="パレット：" FontSize="33"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Palette}" FontSize="33"/>
+                        
                         <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Comment}" FontSize="33"/>
+                        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Orientation="Horizontal" Visibility="{Binding VisibileButton, Converter={StaticResource CollapsedConverter}}">
+                            <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="1">
+                                <Viewbox Style="{StaticResource Button}">
+                                    <WrapPanel>
+                                        <materialDesign:PackIcon Kind="PackageVariant" Margin="0,3,20,0" Height="30" Width="30"/>
+                                        <TextBlock Text="段ボール"/>
+                                    </WrapPanel>
+                                </Viewbox>
+                                <i:Interaction.Behaviors>
+                                    <local:ButtonBehavior/>
+                                </i:Interaction.Behaviors>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="1"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="2">
+                                <Viewbox Style="{StaticResource Button}">
+                                    <WrapPanel>
+                                        <materialDesign:PackIcon Kind="Package" Margin="0,3,20,0" Height="30" Width="30"/>
+                                        <TextBlock Text="ポリ箱"/>
+                                    </WrapPanel>
+                                </Viewbox>
+                                <i:Interaction.Behaviors>
+                                    <local:ButtonBehavior/>
+                                </i:Interaction.Behaviors>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="2"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </StackPanel>
@@ -83,7 +120,6 @@
             </Grid.RowDefinitions>
             <Image Grid.Row="0" Grid.Column="0" Source="{Binding ImageSource1}" Width="400"/>
             <Image Grid.Row="2" Grid.Column="0" Source="{Binding ImageSource2}" Width="400"/>
-
         </Grid>
     </Grid>
 </UserControl>

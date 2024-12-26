@@ -2,7 +2,9 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
+using NPOI.Util.Collections;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -23,49 +25,67 @@ namespace Display
     public class ViewModelPackSpecification : Common
     {
         //変数
-        
+        string type = "段ボール・ポリ箱";
 
 
 
 
+
+
+        string palette;
         string comment;
         string imageFolder;
         string imageSource1;
         string imageSource2;
         int lengthProductName = 20;
+        bool visibileButton = false;
 
         //プロパティ
-        
+        public string Type              //段ボール・ポリ箱
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
 
 
 
 
 
-        public string Comment               //備考
+
+        public string Palette           //パレット
+        {
+            get { return palette; }
+            set { SetProperty(ref palette, value); }
+        }
+        public string Comment           //備考
         {
             get { return comment; }
             set { SetProperty(ref comment, value); }
         }
-        public string ImageFolder           //画像フォルダ
+        public string ImageFolder       //画像フォルダ
         {
             get { return CONST.SERVER_FILE + CONST.FORDER_PACKAGING; }
         }
-        public string ImageSource1          //画像1
+        public string ImageSource1      //画像1
         {
             get { return imageSource1; }
             set { SetProperty(ref imageSource1, value); }
         }
-        public string ImageSource2          //画像2
+        public string ImageSource2      //画像2
         {
             get { return imageSource2; }
             set { SetProperty(ref imageSource2, value); }
         }
-        public int LengthProductName        //文字数（品番）
+        public int LengthProductName    //文字数（品番）
         {
             get { return lengthProductName; }
             set { SetProperty(ref lengthProductName, value); }
         }
-
+        public bool VisibileButton      //ボタン表示
+        {
+            get { return visibileButton; }
+            set { SetProperty(ref visibileButton, value); }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -81,8 +101,6 @@ namespace Display
         public ViewModelPackSpecification()
         {
             ProductName = string.Empty;
-
-
         }
 
         //ロード時
@@ -144,9 +162,13 @@ namespace Display
 
 
 
+            VisibileButton = true;
+            Type = "段ボール";
 
 
 
+
+            Palette = "中古 or 折パレ";
             Comment = "ビニール 太いゴム +2個 50×1ラベル入 100×2";
             ImageSource1 = ImageFolder + "083G11050_1.jpg";
             ImageSource2 = ImageFolder + "083G11050_2.jpg";
