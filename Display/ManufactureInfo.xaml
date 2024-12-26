@@ -258,14 +258,14 @@
                         </StackPanel>
                     </Grid>
                     <!-- 右領域 -->
-                    <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left">
-                        <Grid  Visibility="{Binding VisibleTenKey,Converter={StaticResource CollapsedConverter},FallbackValue=Visible}">
+                    <Grid Margin="20,0,0,0" Width="520" HorizontalAlignment="Left" Visibility="{Binding IsEnable, Converter={StaticResource CollapsedConverter}}">
+                        <Grid  Visibility="{Binding VisibleTenKey, Converter={StaticResource CollapsedConverter}, FallbackValue=Visible}">
                             <local:ControlTenKey/>
                         </Grid>
-                        <Grid Visibility="{Binding VisibleWorker,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                        <Grid Visibility="{Binding VisibleWorker, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}">
                             <local:ControlWorker/>
                         </Grid>
-                        <Grid Visibility="{Binding VisibleWorkProcess,Converter={StaticResource CollapsedConverter},FallbackValue=Collapsed}">
+                        <Grid Visibility="{Binding VisibleWorkProcess, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}">
                             <local:ControlWorkProcess/>
                         </Grid>
                     </Grid>
@@ -273,7 +273,7 @@
             </StackPanel>
         </Grid>
         <!-- 下領域 -->
-        <Grid Grid.Row="1" Visibility="{Binding IsEnable,Converter={StaticResource CollapsedConverter}}">
+        <Grid Grid.Row="1" Visibility="{Binding IsEnable, Converter={StaticResource CollapsedConverter}}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkStart" Visibility="{Binding VisibleButtonStart,Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">

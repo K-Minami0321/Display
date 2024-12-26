@@ -341,6 +341,12 @@ namespace Display
                     break;
 
                 case "F5":
+                    //梱包仕様書
+                    FramePage = new PackSpecification();
+                    IniFile.WriteString("Page", "Initial", "PackSpecification");
+                    break;
+
+                case "F6":
                     //作業マニュアル画面
                     FramePage = new Manual();
                     break;
@@ -350,13 +356,8 @@ namespace Display
                     FramePage = new Setting();
                     break;
 
-                case "DisplayInfo":
-                case "DisplayList":
-                case "DefectInfo":
-                case "DisplayPlan":
-                case "PreviousDate":
-                case "NextDate":
-                case "Today":
+                case "DisplayInfo": case "DisplayList": case "DefectInfo": case "DisplayPlan":
+                case "PreviousDate": case "NextDate": case "Today":
                     //画面遷移
                     if (Ikeydown != null) { Ikeydown.KeyDown(value); }
                     break;

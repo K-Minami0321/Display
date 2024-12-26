@@ -32,6 +32,9 @@
     <Compile Update="Control\ControlWorkProcess.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="PackSpecification.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Manual.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -71,6 +74,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="PackSpecification.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

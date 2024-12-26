@@ -17,7 +17,7 @@
     <!-- 画面表示 -->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="182"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -26,11 +26,22 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <!-- 左領域 -->
-        <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
+        <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Top">
+            <Button Content="品質マニュアル" Style="{StaticResource SelectVideo}" Command="{Binding CommandButton}" CommandParameter="1">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="1"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
 
             
             
             
+            
+            
+
         </Grid>
         <!-- 右領域 -->
         <Grid Grid.Column="1" Grid.Row="1" Background="#000000">
@@ -44,8 +55,6 @@
             <TextBlock x:Name="Time" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Slider x:Name="VolumeSlider" Minimum="0" Maximum="1" Value="0.5" Width="100" Height="20"  Margin="5"/>
             <TextBlock x:Name="Volume" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Slider x:Name="SpeedSlider" Value="1" Width="80" Height="20"  Margin="5"></Slider>
-            <TextBlock x:Name="uxSpeed" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </StackPanel>
     </Grid>
 </UserControl>

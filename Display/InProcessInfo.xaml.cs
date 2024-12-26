@@ -353,7 +353,6 @@ namespace Display
                     VisibleCoil = false;
                     break;
             }
-
         }
 
         //初期化
@@ -558,7 +557,6 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    
                     if (LotNumber == null) { LotNumber = string.Empty; }
                     if (LotNumber.Length < LotNumberLength) { LotNumber += value.ToString(); }
                     break;
