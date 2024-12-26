@@ -44,6 +44,7 @@ namespace Display
         string completed;
         string status = "搬入";
         string notice;
+        string mark;
         int amountWidth = 150;
         int amountRow = 5;
         int lotNumberLength = 10;
@@ -434,7 +435,7 @@ namespace Display
             if (IsRegist)
             {
                 var inprocessdate = STRING.ToDateDB(InProcessDate);
-                var inprocesscode = inProcess.GenerateCode(process.Mark + inprocessdate);
+                var inprocesscode = inProcess.GenerateCode(Mark + inprocessdate);
                 InProcessCODE = inprocesscode;
             }
 

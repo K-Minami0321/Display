@@ -50,11 +50,7 @@ namespace Display
         public string ProcessName           //工程区分
         {
             get { return processName; }
-            set
-            {
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
+            set { SetProperty(ref processName, value); }
         }
         public string InProcessCODE         //仕掛CODE
         {

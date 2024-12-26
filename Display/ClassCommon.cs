@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Windows.Controls;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -28,6 +29,8 @@ namespace Display
         string server;
         string mode;
         string processName;
+        string processBefore;
+        string mark;
         string equipmentCODE;
         string equipmentName;
         string worker;
@@ -104,13 +107,26 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
+
+                ProcessCategory process = new ProcessCategory(value);
+                Mark = process.Mark;
+                ProcessBefore = process.Before;
 
                 ListSource listSource = new ListSource();
                 listSource.Process = value;
                 Workers = listSource.Workers;
                 EquipmentCODES = listSource.Equipments;
             }
+        }
+        public string ProcessBefore             //前工程
+        {
+            get { return processBefore; }
+            set { SetProperty(ref processBefore, value); }
+        }
+        public string Mark                      //接頭文字
+        {
+            get { return mark; }
+            set { SetProperty(ref mark, value); }
         }
         public string EquipmentCODE             //設備CODE
         {
@@ -187,16 +203,14 @@ namespace Display
         //スタートページを表示
         public void StartPage(string page)
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             Type type = Type.GetType("Display." + page);
-            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
+            ViewModelWindowMain.Instance.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            windowMain.FramePage = (ContentControl)framepage;
+            ViewModelWindowMain.Instance.FramePage = (ContentControl)framepage;
         }
 
         //省略ロット番号取得

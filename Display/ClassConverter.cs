@@ -128,7 +128,7 @@ namespace Display
                     break;
 
                 default:
-                    var process = new ProcessCategory(ret);
+                    ProcessCategory process = new ProcessCategory(ret);
                     color = process.Color;
                     break;
             }

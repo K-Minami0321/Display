@@ -89,7 +89,6 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            if (process == null) { return; }
             Manufacture manufacture = new Manufacture();
             SelectTable = manufacture.SelectHistoryListDate(ProcessName, ManufactureDate);
         }

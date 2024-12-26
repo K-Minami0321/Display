@@ -46,13 +46,8 @@ namespace Display
             set 
             { 
                 SetProperty(ref processName, value);
-                if (value == null) { return; }
-                process = new ProcessCategory(value);
-                if (windowMain.ProcessWork == "仕掛搬出")
-                {
-                    value = process.Next;
-                    process = new ProcessCategory(value);
-                }
+                ProcessCategory process = new ProcessCategory(value);
+                if (windowMain.ProcessWork == "仕掛搬出") { value = process.Next; }
             }
         }
         public string Defect                            //不良内容

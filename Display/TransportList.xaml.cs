@@ -58,7 +58,7 @@ namespace Display
             windowMain.IconPlan = "TrayArrowUp";
             windowMain.ProcessWork = "合板倉庫";
             windowMain.Ikeydown = this;
-            windowMain.ProcessName = process.Before;
+            windowMain.ProcessName = ProcessBefore;
             DataGridBehavior.Instance.Iselect = this;
         }
 
@@ -72,7 +72,7 @@ namespace Display
         private void DiaplayList()
         {
             InProcess inProcess = new InProcess();
-            SelectTable = inProcess.SelectListTransport(process.Before);
+            SelectTable = inProcess.SelectListTransport(ProcessBefore);
         }
 
         //選択処理

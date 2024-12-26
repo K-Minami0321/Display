@@ -30,14 +30,10 @@ namespace Display
         string file;
 
         //プロパティ
-        public string ProcessName           //工程区分
+        public string ProcessName   //工程区分
         {
             get { return processName; }
-            set
-            {
-                SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
-            }
+            set { SetProperty(ref processName, value); }
         }
         public string File          //再生ファイル
         {
@@ -52,7 +48,7 @@ namespace Display
         //コンストラクター
         public ViewModelManual()
         {
-            File = @"\\b2000-m\共有\中小企業振興公社\工場見学\サンキャスト\IMG_0351.MOV";
+            File = @"\\Sb2000-m\共有\中小企業振興公社\ミーティング資料\マニュアル\品質マニュアル\品質管理マニュアル基礎編動画方式.mp4";
 
 
 

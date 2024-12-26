@@ -92,7 +92,6 @@ namespace Display
             set
             {
                 SetProperty(ref processName, value);
-                process = new ProcessCategory(value);
                 
                 switch (value)
                 {
@@ -430,7 +429,7 @@ namespace Display
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelControlWorkProcess.Instance.IworkProcess = this;
-            windowMain.ProcessWork = string.IsNullOrEmpty(Equipment1) ? process.Name + "実績" : Equipment1 + " - " + EquipmentCODE;
+            windowMain.ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE;
 
             Mode = IniFile.GetString("Manufacture", "Mode");
             switch (Mode)
@@ -611,11 +610,10 @@ namespace Display
             CopyProperty(this, manufacture);
 
             //コード確定
-            var mark = process.Mark;
             if (IsRegist)
             {
                 var date = STRING.ToDateDB(ManufactureDate);
-                var code = manufacture.GenerateCode(mark + date);
+                var code = manufacture.GenerateCode(Mark + date);
                 ManufactureCODE = code;
             }
 
