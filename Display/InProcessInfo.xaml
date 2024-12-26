@@ -55,11 +55,11 @@
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0"
-                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}" InputMethod.IsInputMethodEnabled="False">
+                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}" InputMethod.IsInputMethodEnabled="False">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFocusLotNumber}" Value="True">
+                                        <DataTrigger Binding="{Binding FocusLotNumber}" Value="True">
                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumber}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -85,7 +85,7 @@
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
+                                        <DataTrigger Binding="{Binding FocusWorker}" Value="True">
                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -105,11 +105,11 @@
                         </Viewbox>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Visibility="{Binding VisibleItem1, Converter={StaticResource CollapsedConverter}}">
                             <TextBox x:Name="TextWeight" Text="{Binding Weight}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
-                                        MaxLength="{Binding AmountLength}" InputMethod.IsInputMethodEnabled="False">
+                                        MaxLength="{Binding LengthAmount}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusWeight}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusWeight}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWeight}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -134,11 +134,11 @@
                         </Viewbox>
                         <StackPanel Grid.Row="{Binding AmountRow,FallbackValue=5}" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextUnit" Text="{Binding Unit}" Width="150" InputMethod.IsInputMethodEnabled="False"
-                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding UnitLength}">
+                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthUnit}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusUnit}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusUnit}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextUnit}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -160,7 +160,7 @@
                                 <CheckBox.Resources>
                                     <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusCompleted}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusCompleted}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckCompleted}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -184,12 +184,12 @@
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextAmount" Text="{Binding Amount}" Width="{Binding AmountWidth, FallbackValue=150}"
-                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}"
+                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthAmount}"
                                         Visibility="{Binding VisibleItem2,Converter={StaticResource CollapsedConverter}}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusAmount}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusAmount}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextAmount}"/>
                                             </DataTrigger>
                                         </Style.Triggers>

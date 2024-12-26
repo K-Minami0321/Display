@@ -44,14 +44,13 @@ namespace Display
         string completed;
         string status = "搬入";
         string notice;
-        string mark;
+        string buttonName;
         int amountWidth = 150;
         int amountRow = 5;
-        int lotNumberLength = 10;
-        int amountLength = 6;
-        int weightLength = 6;
-        int unitLength = 6;
-        string buttonName;
+        int lengthLotNumber = 10;
+        int lengthAmount = 6;
+        int lengthWeight = 6;
+        int lengthUnit = 6;
         string labelWeight;
         string labelAmount;
         string labelUnit;
@@ -64,12 +63,12 @@ namespace Display
         bool visibleWorker;
         bool isRegist = true;
         bool isEnable;
-        bool isFocusLotNumber;
-        bool isFocusWorker;
-        bool isFocusWeight;
-        bool isFocusUnit;
-        bool isFocusCompleted;
-        bool isFocusAmount;
+        bool focusLotNumber;
+        bool focusWorker;
+        bool focusWeight;
+        bool focusUnit;
+        bool focusCompleted;
+        bool focusAmount;
 
         //プロパティ
         public string InProcessCODE     //仕掛CODE
@@ -134,6 +133,11 @@ namespace Display
             get { return notice; }
             set { SetProperty(ref notice, value); }
         }
+        public string ButtonName        //登録ボタン名
+        {
+            get { return buttonName; }
+            set { SetProperty(ref buttonName, value); }
+        }
         public int AmountWidth          //コイル数テキストボックスのWidth
         {
             get { return amountWidth; }
@@ -144,30 +148,25 @@ namespace Display
             get { return amountRow; }
             set { SetProperty(ref amountRow, value); }
         }
-        public int LotNumberLength      //文字数（ロット番号）
+        public int LengthLotNumber      //文字数（ロット番号）
         {
-            get { return lotNumberLength; }
-            set { SetProperty(ref lotNumberLength, value); }
+            get { return lengthLotNumber; }
+            set { SetProperty(ref lengthLotNumber, value); }
         }
-        public int AmountLength         //文字数（数量）
+        public int LengthAmount         //文字数（数量）
         {
-            get { return amountLength; }
-            set { SetProperty(ref amountLength, value); }
+            get { return lengthAmount; }
+            set { SetProperty(ref lengthAmount, value); }
         }
-        public int WeightLength         //文字数（重量・焼結重量）
+        public int LengthWeight         //文字数（重量・焼結重量）
         {
-            get { return weightLength; }
-            set { SetProperty(ref weightLength, value); }
+            get { return lengthWeight; }
+            set { SetProperty(ref lengthWeight, value); }
         }
-        public int UnitLength           //文字数（枚数・コイル数）
+        public int LengthUnit           //文字数（枚数・コイル数）
         {
-            get { return unitLength; }
-            set { SetProperty(ref unitLength, value); }
-        }
-        public string ButtonName        //登録ボタン名
-        {
-            get { return buttonName; }
-            set { SetProperty(ref buttonName, value); }
+            get { return lengthUnit; }
+            set { SetProperty(ref lengthUnit, value); }
         }
         public string LabelWeight       //ラベル（重量・焼結重量）
         {
@@ -242,35 +241,35 @@ namespace Display
                 Amount = !VisibleCoil ? Amount : CONVERT.ConvertCircleEnclosing(Amount);
             }
         }
-        public bool IsFocusLotNumber    //フォーカス（ロット番号）
+        public bool FocusLotNumber      //フォーカス（ロット番号）
         {
-            get { return isFocusLotNumber; }
-            set { SetProperty(ref isFocusLotNumber, value); }
+            get { return focusLotNumber; }
+            set { SetProperty(ref focusLotNumber, value); }
         }
-        public bool IsFocusWorker       //フォーカス（作業者）
+        public bool FocusWorker         //フォーカス（作業者）
         {
-            get { return isFocusWorker; }
-            set { SetProperty(ref isFocusWorker, value); }
+            get { return focusWorker; }
+            set { SetProperty(ref focusWorker, value); }
         }
-        public bool IsFocusWeight       //フォーカス（重量）
+        public bool FocusWeight         //フォーカス（重量）
         {
-            get { return isFocusWeight; }
-            set { SetProperty(ref isFocusWeight, value); }
+            get { return focusWeight; }
+            set { SetProperty(ref focusWeight, value); }
         }
-        public bool IsFocusUnit         //フォーカス（単位）
+        public bool FocusUnit           //フォーカス（単位）
         {
-            get { return isFocusUnit; }
-            set { SetProperty(ref isFocusUnit, value); }
+            get { return focusUnit; }
+            set { SetProperty(ref focusUnit, value); }
         }
-        public bool IsFocusCompleted    //フォーカス（完了）
+        public bool FocusCompleted      //フォーカス（完了）
         {
-            get { return isFocusCompleted; }
-            set { SetProperty(ref isFocusCompleted, value); }
+            get { return focusCompleted; }
+            set { SetProperty(ref focusCompleted, value); }
         }
-        public bool IsFocusAmount       //フォーカス（数量）
+        public bool FocusAmount         //フォーカス（数量）
         {
-            get { return isFocusAmount; }
-            set { SetProperty(ref isFocusAmount, value); }
+            get { return focusAmount; }
+            set { SetProperty(ref focusAmount, value); }
         }
 
         //イベント
@@ -558,19 +557,19 @@ namespace Display
             {
                 case "LotNumber":
                     if (LotNumber == null) { LotNumber = string.Empty; }
-                    if (LotNumber.Length < LotNumberLength) { LotNumber += value.ToString(); }
+                    if (LotNumber.Length < LengthLotNumber) { LotNumber += value.ToString(); }
                     break;
 
                 case "Unit":
-                    if (Unit.Length < UnitLength) { Unit += value.ToString(); }
+                    if (Unit.Length < LengthUnit) { Unit += value.ToString(); }
                     break;
 
                 case "Weight":
-                    if (Weight.Length < WeightLength) { Weight += value.ToString(); }
+                    if (Weight.Length < LengthWeight) { Weight += value.ToString(); }
                     break;
 
                 case "Amount":
-                    if (Amount.Length < AmountLength) { Amount += value.ToString(); }
+                    if (Amount.Length < LengthAmount) { Amount += value.ToString(); }
                     break;
 
                 default:
@@ -664,70 +663,70 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    IsFocusLotNumber = true;
-                    IsFocusWorker = false;
-                    IsFocusWeight = false;
-                    IsFocusUnit = false;
-                    IsFocusCompleted = false;
-                    IsFocusAmount = false;
+                    FocusLotNumber = true;
+                    FocusWorker = false;
+                    FocusWeight = false;
+                    FocusUnit = false;
+                    FocusCompleted = false;
+                    FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     controlTenKey.InputString = "-";
                     break;
 
                 case "Worker":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = true;
-                    IsFocusWeight = false;
-                    IsFocusUnit = false;
-                    IsFocusCompleted = false;
-                    IsFocusAmount = false;
+                    FocusLotNumber = false;
+                    FocusWorker = true;
+                    FocusWeight = false;
+                    FocusUnit = false;
+                    FocusCompleted = false;
+                    FocusAmount = false;
                     VisibleTenKey = false;
                     VisibleWorker = true;
                     break;
 
                 case "Weight":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = false;
-                    IsFocusWeight = true;
-                    IsFocusUnit = false;
-                    IsFocusCompleted = false;
-                    IsFocusAmount = false;
+                    FocusLotNumber = false;
+                    FocusWorker = false;
+                    FocusWeight = true;
+                    FocusUnit = false;
+                    FocusCompleted = false;
+                    FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     controlTenKey.InputString = ".";
                     break;
 
                 case "Unit":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = false;
-                    IsFocusWeight = false;
-                    IsFocusUnit = true;
-                    IsFocusCompleted = false;
-                    IsFocusAmount = false;
+                    FocusLotNumber = false;
+                    FocusWorker = false;
+                    FocusWeight = false;
+                    FocusUnit = true;
+                    FocusCompleted = false;
+                    FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     controlTenKey.InputString = ".";
                     break;
 
                 case "Completed":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = false;
-                    IsFocusWeight = false;
-                    IsFocusUnit = false;
-                    IsFocusCompleted = true;
-                    IsFocusAmount = false;
+                    FocusLotNumber = false;
+                    FocusWorker = false;
+                    FocusWeight = false;
+                    FocusUnit = false;
+                    FocusCompleted = true;
+                    FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     break;
 
                 case "Amount":
-                    IsFocusLotNumber = false;
-                    IsFocusWorker = false;
-                    IsFocusWeight = false;
-                    IsFocusUnit = false;
-                    IsFocusCompleted = false;
-                    IsFocusAmount = true;
+                    FocusLotNumber = false;
+                    FocusWorker = false;
+                    FocusWeight = false;
+                    FocusUnit = false;
+                    FocusCompleted = false;
+                    FocusAmount = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     controlTenKey.InputString = ".";
