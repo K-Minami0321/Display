@@ -145,7 +145,7 @@ namespace Display
             get { return worker; }
             set { SetProperty(ref worker, value); }
         }
-        public string ProcessWork               //工程
+        public string ProcessWork               //工程表示
         {
             get { return processWork; }
             set { SetProperty(ref processWork, value); }

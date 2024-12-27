@@ -76,11 +76,12 @@ namespace Display
             get { return inProcessCODE; }
             set 
             {
-                SetProperty(ref inProcessCODE, value);
+                IsRegist = string.IsNullOrEmpty(value);
 
-                InProcess inProcess = new InProcess(inProcessCODE, ProcessName);
+                InProcess inProcess = new InProcess(value, ProcessName);
                 CopyProperty(inProcess, this, "InProcessCODE");
-                DisplayLot(LotNumber, InProcessCODE);
+                DisplayLot(LotNumber, value);
+                SetProperty(ref inProcessCODE, value);
             }
         }
         public string LotNumber         //ロット番号
@@ -111,7 +112,11 @@ namespace Display
         public string InProcessDate     //搬入日
         {
             get { return inProcessDate; }
-            set { SetProperty(ref inProcessDate, value); }
+            set 
+            { 
+                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                SetProperty(ref inProcessDate, value);
+            }
         }
         public string TransportDate     //搬出日
         {
@@ -293,9 +298,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            DisplayCapution();
-            IsRegist = string.IsNullOrEmpty(InProcessCODE);
-            IsEnable = DATETIME.ToStringDate(InProcessDate) < SetVerificationDay(DateTime.Now) ? false : true;
+            DisplayCapution();           
             SetFocus();
         }
 

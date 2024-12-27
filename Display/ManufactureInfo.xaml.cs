@@ -2,8 +2,6 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using NPOI.SS.Formula.Functions;
-using NPOI.XSSF.Streaming.Values;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
@@ -50,13 +48,13 @@ namespace Display
         string team = string.Empty;
         string completed = string.Empty;
         string sales = string.Empty;
-        string buttonName;
-        int lotNumberLength = 10;
-        int startTimeLength = 4;
-        int endTimeLength = 4;
-        int amountLength = 5;
         string breakName;
-        bool isRegist;
+        string buttonName = "数 量";
+        string labelAmount;
+        int lengthLotNumber = 10;
+        int lengthStartTime = 4;
+        int lengthEndTime = 4;
+        int lengthAmount = 5;
         bool enabledControl1;
         bool enabledControl2;
         bool visiblePackaging;
@@ -69,16 +67,17 @@ namespace Display
         bool visibleWorker;
         bool visibleWorkProcess;
         bool visibleSeal;
+        bool isRegist;
         bool isEnable;
         bool isConvertTime;
-        bool isFocusLotNumber;
-        bool isFocusWorker;
-        bool isFocusWorkProcess;
-        bool isFocusStartTime;
-        bool isFocusEndTime;
-        bool isFocusAmount;
-        bool isFocusCompleted;
-        bool isFocusSales;
+        bool focusLotNumber;
+        bool focusWorker;
+        bool focusWorkProcess;
+        bool focusStartTime;
+        bool focusEndTime;
+        bool focusAmount;
+        bool focusCompleted;
+        bool focusSales;
 
         //プロパティ
         public string Mode                      //入力状況
@@ -86,13 +85,24 @@ namespace Display
             get { return mode; }
             set { SetProperty(ref mode, value); }
         }
+        public string ManufactureCODE           //製造CODE
+        {
+            get { return manufactureCODE; }
+            set 
+            { 
+                IsRegist = string.IsNullOrEmpty(value);
+                
+                Manufacture manufacture = new Manufacture(value);
+                CopyProperty(manufacture, this, "ManufactureCODE");
+                DisplayLot(LotNumber);
+                SetProperty(ref manufactureCODE, value);
+            }
+        }
         public string ProcessName               //工程区分
         {
             get { return processName; }
             set
             {
-                SetProperty(ref processName, value);
-                
                 switch (value)
                 {
                     case "検査":
@@ -113,26 +123,17 @@ namespace Display
                         if (IsRegist) { WorkProcess = ""; }
                         break;
                 }
-            }
-        }
-        public string ManufactureCODE           //製造CODE
-        {
-            get { return manufactureCODE; }
-            set 
-            { 
-                SetProperty(ref manufactureCODE, value);
-                if (!string.IsNullOrEmpty(ManufactureCODE))
-                {
-                    Manufacture manufacture = new Manufacture(ManufactureCODE);
-                    CopyProperty(manufacture, this, "ManufactureCODE");
-                    DisplayLot(LotNumber);
-                }
+                SetProperty(ref processName, value);
             }
         }
         public string ManufactureDate           //製造日
         {
             get { return manufactureDate; }
-            set { SetProperty(ref manufactureDate, value); }
+            set 
+            { 
+                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                SetProperty(ref manufactureDate, value);
+            }
         }
         public string LotNumber                 //ロット番号（テキストボックス）
         {
@@ -233,30 +234,35 @@ namespace Display
             get { return buttonName; }
             set { SetProperty(ref buttonName, value); }
         }
-        public int LotNumberLength              //文字数（ロット番号）
-        {
-            get { return lotNumberLength; }
-            set { SetProperty(ref lotNumberLength, value); }
-        }
-        public int StartTimeLength              //文字数（開始時間）
-        {
-            get { return startTimeLength; }
-            set { SetProperty(ref startTimeLength, value); }
-        }
-        public int EndTimeLength                //文字数（終了時間）
-        {
-            get { return endTimeLength; }
-            set { SetProperty(ref endTimeLength, value); }
-        }
-        public int AmountLength                 //文字数（数量）
-        {
-            get { return amountLength; }
-            set { SetProperty(ref amountLength, value); }
-        }
         public string BreakName                 //中断ボタン名
         {
             get { return breakName; }
             set { SetProperty(ref breakName, value); }
+        }
+        public string LabelAmount               //ラベル（数量）
+        {
+            get { return labelAmount; }
+            set { SetProperty(ref labelAmount, value); }
+        }
+        public int LengthLotNumber              //文字数（ロット番号）
+        {
+            get { return lengthLotNumber; }
+            set { SetProperty(ref lengthLotNumber, value); }
+        }
+        public int LengthStartTime              //文字数（開始時間）
+        {
+            get { return lengthStartTime; }
+            set { SetProperty(ref lengthStartTime, value); }
+        }
+        public int LengthEndTime                //文字数（終了時間）
+        {
+            get { return lengthEndTime; }
+            set { SetProperty(ref lengthEndTime, value); }
+        }
+        public int LengthAmount                 //文字数（数量）
+        {
+            get { return lengthAmount; }
+            set { SetProperty(ref lengthAmount, value); }
         }
         public bool EnabledControl1             //コントロール使用可能
         {
@@ -344,45 +350,45 @@ namespace Display
             get { return isConvertTime; }
             set { isConvertTime = value; }
         }
-        public bool IsFocusLotNumber            //フォーカス（ロット番号）
+        public bool FocusLotNumber              //フォーカス（ロット番号）
         {
-            get { return isFocusLotNumber; }
-            set { SetProperty(ref isFocusLotNumber, value); }
+            get { return focusLotNumber; }
+            set { SetProperty(ref focusLotNumber, value); }
         }
-        public bool IsFocusWorker               //フォーカス（作業者）
+        public bool FocusWorker                 //フォーカス（作業者）
         {
-            get { return isFocusWorker; }
-            set { SetProperty(ref isFocusWorker, value); }
+            get { return focusWorker; }
+            set { SetProperty(ref focusWorker, value); }
         }
-        public bool IsFocusWorkProcess          //フォーカス（工程）
+        public bool FocusWorkProcess            //フォーカス（工程）
         {
-            get { return isFocusWorkProcess; }
-            set { SetProperty(ref isFocusWorkProcess, value); }
+            get { return focusWorkProcess; }
+            set { SetProperty(ref focusWorkProcess, value); }
         }
-        public bool IsFocusStartTime            //フォーカス（開始時間）
+        public bool FocusStartTime              //フォーカス（開始時間）
         {
-            get { return isFocusStartTime; }
-            set { SetProperty(ref isFocusStartTime, value); }
+            get { return focusStartTime; }
+            set { SetProperty(ref focusStartTime, value); }
         }
-        public bool IsFocusEndTime              //フォーカス（終了時間）
+        public bool FocusEndTime                //フォーカス（終了時間）
         {
-            get { return isFocusEndTime; }
-            set { SetProperty(ref isFocusEndTime, value); }
+            get { return focusEndTime; }
+            set { SetProperty(ref focusEndTime, value); }
         }
-        public bool IsFocusAmount               //フォーカス（数量）
+        public bool FocusAmount                 //フォーカス（数量）
         {
-            get { return isFocusAmount; }
-            set { SetProperty(ref isFocusAmount, value); }
+            get { return focusAmount; }
+            set { SetProperty(ref focusAmount, value); }
         }
-        public bool IsFocusCompleted            //フォーカス（完了）
+        public bool FocusCompleted              //フォーカス（完了）
         {
-            get { return isFocusCompleted; }
-            set { SetProperty(ref isFocusCompleted, value); }
+            get { return focusCompleted; }
+            set { SetProperty(ref focusCompleted, value); }
         }
-        public bool IsFocusSales                //フォーカス（売上）
+        public bool FocusSales                  //フォーカス（売上）
         {
-            get { return isFocusSales; }
-            set { SetProperty(ref isFocusSales, value); }
+            get { return focusSales; }
+            set { SetProperty(ref focusSales, value); }
         }
 
         //イベント
@@ -407,8 +413,6 @@ namespace Display
         private void OnLoad()
         {
             DisplayCapution();
-            IsRegist = string.IsNullOrEmpty(ManufactureCODE);
-            IsEnable = DATETIME.ToStringDate(ManufactureDate) < SetVerificationDay(DateTime.Now) ? false : true;
             SetFocus();
         }
 
@@ -526,6 +530,7 @@ namespace Display
             ManufactureDate = SetToDay(DateTime.Now);
             LotNumber = string.Empty;
             ProductName = string.Empty;
+            WorkProcess = string.Empty;
             StartTime = string.Empty;
             EndTime = string.Empty;
             WorkTime = string.Empty;
@@ -780,27 +785,27 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    if (LotNumber.Length < LotNumberLength) { LotNumber += value.ToString(); }
+                    if (LotNumber.Length < LengthLotNumber) { LotNumber += value.ToString(); }
                     break;
 
                 case "StartTime":
-                    if (StartTime.Length > StartTimeLength) { return; }
+                    if (StartTime.Length > LengthStartTime) { return; }
                     IsConvertTime = !(StartTime.Length < 3);
                     StartTime += value.ToString();
                     IsConvertTime = true;
-                    if (StartTime.Length > StartTimeLength - 1) { SetNextFocus(); }
+                    if (StartTime.Length > LengthStartTime - 1) { SetNextFocus(); }
                     break;
 
                 case "EndTime":
-                    if (EndTime.Length > EndTimeLength) { return; }
+                    if (EndTime.Length > LengthEndTime) { return; }
                     IsConvertTime = !(EndTime.Length < 3);
                     EndTime += value.ToString();
                     IsConvertTime = true;
-                    if (EndTime.Length > EndTimeLength - 1) { SetNextFocus(); }
+                    if (EndTime.Length > LengthEndTime - 1) { SetNextFocus(); }
                     break;
 
                 case "Amount":
-                    if (Amount.Length < AmountLength) { Amount += value.ToString(); }
+                    if (Amount.Length < LengthAmount) { Amount += value.ToString(); }
                     break;
 
                 default:
@@ -962,14 +967,14 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
-                    IsFocusLotNumber = true;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = true;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -977,42 +982,42 @@ namespace Display
                     break;
 
                 case "WorkProcess":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = true;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = true;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = false;
                     VisibleWorker = false;
                     VisibleWorkProcess = true;
                     break;
 
                 case "Worker":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = true;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = true;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = false;
                     VisibleWorker = true;
                     VisibleWorkProcess = false;
                     break;
 
                 case "StartTime":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = true;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = true;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1020,14 +1025,14 @@ namespace Display
                     break;
 
                 case "EndTime":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = true;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = true;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1035,14 +1040,14 @@ namespace Display
                     break;
 
                 case "Amount":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = true;
-                    IsFocusCompleted = false;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = true;
+                    FocusCompleted = false;
+                    FocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1050,14 +1055,14 @@ namespace Display
                     break;
 
                 case "Completed":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = true;
-                    IsFocusSales = false;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = true;
+                    FocusSales = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1065,14 +1070,14 @@ namespace Display
                     break;
 
                 case "Sales":
-                    IsFocusLotNumber = false;
-                    IsFocusWorkProcess = false;
-                    IsFocusWorker = false;
-                    IsFocusStartTime = false;
-                    IsFocusEndTime = false;
-                    IsFocusAmount = false;
-                    IsFocusCompleted = false;
-                    IsFocusSales = true;
+                    FocusLotNumber = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;

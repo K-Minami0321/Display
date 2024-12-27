@@ -41,22 +41,22 @@ namespace Display
         SQL connection;
         WindowState displayState;
         WindowStyle displayStyle;
-        double windowLeft;
-        double windowTop;
-        double windowWidth;
-        double windowHeight;
-        string processName;
-        string processWork;
-        string functionColor;
-        bool visiblePower;
-        bool visibleList;
-        bool visibleInfo;
-        bool visibleDefect;
-        bool visibleArrow;
-        bool visiblePlan;
-        string iconPlan;
-        string iconList;
-        int iconSize;
+        double windowLeft = 0;
+        double windowTop = 0;
+        double windowWidth = 0;
+        double windowHeight = 0;
+        string processName = string.Empty;
+        string processWork = string.Empty;
+        string functionColor = string.Empty;
+        bool visiblePower = false;
+        bool visibleList = false;
+        bool visibleInfo = false;
+        bool visibleDefect = false;
+        bool visibleArrow = false;
+        bool visiblePlan = false;
+        string iconPlan = string.Empty;
+        string iconList = string.Empty;
+        int iconSize = 30;
 
         //プロパティ
         public static ViewModelWindowMain Instance      //インスタンス

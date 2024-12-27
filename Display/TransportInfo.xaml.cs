@@ -86,7 +86,11 @@ namespace Display
         public string TransportDate         //搬出日
         {
             get { return transportDate; }
-            set { SetProperty(ref transportDate, value); }
+            set 
+            { 
+                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                SetProperty(ref transportDate, value);
+            }
         }
         public string TransportWorker       //作業者
         {
@@ -194,7 +198,7 @@ namespace Display
             TransportDate = SetToDay(DateTime.Now);
 
             IsRegist = (Status == "搬入");
-            IsEnable = DATETIME.ToStringDate(TransportDate) < SetVerificationDay(DateTime.Now) ? false : true;
+            
         }
 
         //選択処理

@@ -55,12 +55,12 @@
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
-                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LotNumberLength}"
+                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}"
                                     IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="False">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFocusLotNumber}" Value="True">
+                                        <DataTrigger Binding="{Binding FocusLotNumber}" Value="True">
                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumber}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -86,7 +86,7 @@
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFocusWorkProcess}" Value="True">
+                                        <DataTrigger Binding="{Binding FocusWorkProcess}" Value="True">
                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorkProcess}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -109,7 +109,7 @@
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFocusWorker}" Value="True">
+                                        <DataTrigger Binding="{Binding FocusWorker}" Value="True">
                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextWorker}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -129,11 +129,11 @@
                         </Viewbox>
                         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextStartTime" Text="{Binding StartTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
-                                        MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
+                                     MaxLength="{Binding LengthStartTime}" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusStartTime}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusStartTime}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextStartTime}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -158,11 +158,11 @@
                                 <TextBlock Text="～" Visibility="{Binding EnabledControl2,Converter={StaticResource CollapsedConverter}}"/>
                             </Viewbox>
                             <TextBox x:Name="TextEndTime" Text="{Binding EndTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
-                                        MaxLength="5" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
+                                        MaxLength="{Binding LengthEndTime}" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusEndTime}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusEndTime}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextEndTime}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -185,16 +185,16 @@
                             </Viewbox>
                         </StackPanel>
                         <Viewbox Grid.Row="6" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding management.LabelAmount,FallbackValue=数 量}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}"/>
+                            <TextBlock Text="{Binding LabelAmount, FallbackValue=数 量}" Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                             <TextBox x:Name="TextAmount" Text="{Binding Amount}" Width="130" 
-                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding AmountLength}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 
+                                        materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthAmount}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 
                                         IsEnabled="{Binding EnabledControl2}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusAmount}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusAmount}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextAmount}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -210,14 +210,14 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <CheckBox x:Name="CheckCompleted" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
-                                        Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
+                                        Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
                                 <Viewbox Stretch="Uniform">
                                     <TextBlock Text="ロット完了"/>
                                 </Viewbox>
                                 <CheckBox.Resources>
                                     <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusCompleted}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusCompleted}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckCompleted}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -240,7 +240,7 @@
                                 <CheckBox.Resources>
                                     <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFocusSales}" Value="True">
+                                            <DataTrigger Binding="{Binding FocusSales}" Value="True">
                                                 <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckSales}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -275,7 +275,7 @@
         <!-- 下領域 -->
         <Grid Grid.Row="1" Visibility="{Binding IsEnable, Converter={StaticResource CollapsedConverter}}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkStart" Visibility="{Binding VisibleButtonStart,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkStart" Visibility="{Binding VisibleButtonStart, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="TimerStart" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -288,7 +288,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleButtonCancel,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Cancel" Visibility="{Binding VisibleButtonCancel, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Erase" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -301,7 +301,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkEnd" Visibility="{Binding VisibleButtonEnd,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkEnd" Visibility="{Binding VisibleButtonEnd, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="TimerEdit" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -314,7 +314,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkBreak" Visibility="{Binding VisibleButtonBreak,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="WorkBreak" Visibility="{Binding VisibleButtonBreak, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="TimerCancel" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -327,7 +327,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist" Visibility="{Binding VisibleEdit,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist" Visibility="{Binding VisibleEdit, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -340,7 +340,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleEdit,Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleEdit, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>

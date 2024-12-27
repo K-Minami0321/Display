@@ -238,8 +238,12 @@ namespace Display
 
                 case "Alphabet":
                     reg = new Regex("^[a-zA-Z0-9#-~]*$");   //英数字・記号
-
                     break;
+
+                case "AlphabetHyphen":
+                    reg = new Regex("^[a-zA-Z0-9-~]*$");    //英数字・記号+ハイフン
+                    break;
+
                 default:
                     reg = null;
                     break;
