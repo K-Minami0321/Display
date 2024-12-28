@@ -71,12 +71,12 @@
                         <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Text="パレット：" Visibility="{Binding Palette, Converter={StaticResource CollapsedValueConverter}}" FontSize="33"/>
                         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Palette, FallbackValue=折パレ}" FontSize="33"/>
                         <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="33"/>
-                        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Orientation="Horizontal" Visibility="{Binding VisibileButton, Converter={StaticResource CollapsedConverter}}">
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory1">
+                        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Orientation="Horizontal">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory1"  Visibility="{Binding VisibileButton1, Converter={StaticResource CollapsedConverter}}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
-                                        <materialDesign:PackIcon Kind="Package" Margin="0,3,20,0" Height="30" Width="30"/>
-                                        <TextBlock Text="ポリ箱"/>
+                                        <materialDesign:PackIcon Kind="{Binding IconButton[0]}" Margin="0,3,20,0" Height="30" Width="30"/>
+                                        <TextBlock Text="{Binding NameButton[0]}"/>
                                     </WrapPanel>
                                 </Viewbox>
                                 <i:Interaction.Behaviors>
@@ -88,11 +88,11 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2"  Visibility="{Binding VisibileButton1, Converter={StaticResource CollapsedConverter}}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
-                                        <materialDesign:PackIcon Kind="Package" Margin="0,3,20,0" Height="30" Width="30"/>
-                                        <TextBlock Text="ポリ箱"/>
+                                        <materialDesign:PackIcon Kind="{Binding IconButton[1]}" Margin="0,3,20,0" Height="30" Width="30"/>
+                                        <TextBlock Text="{Binding NameButton[1]}"/>
                                     </WrapPanel>
                                 </Viewbox>
                                 <i:Interaction.Behaviors>
@@ -100,15 +100,15 @@
                                 </i:Interaction.Behaviors>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TouchDown">
-                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ContainerCategory2"/>
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ContainerCategory3"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3"  Visibility="{Binding VisibileButton2, Converter={StaticResource CollapsedConverter}}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
-                                        <materialDesign:PackIcon Kind="PackageVariant" Margin="0,3,20,0" Height="30" Width="30"/>
-                                        <TextBlock Text="段ボール"/>
+                                        <materialDesign:PackIcon Kind="{Binding IconButton[2]}" Margin="0,3,20,0" Height="30" Width="30"/>
+                                        <TextBlock Text="{Binding NameButton[2]}"/>
                                     </WrapPanel>
                                 </Viewbox>
                                 <i:Interaction.Behaviors>

@@ -1,15 +1,8 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using NPOI.HPSF;
-using NPOI.SS.Formula.Functions;
-using NPOI.Util.Collections;
-using System;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Data;
-using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -30,7 +23,7 @@ namespace Display
     public class ViewModelPackSpecification : Common
     {
         //変数
-        DataTable table;
+        DataTable selectTable;
         string containerCategory;
         string container;
         string carton;
@@ -39,61 +32,79 @@ namespace Display
         string imageSource1;
         string imageSource2;
         int lengthProductName = 20;
-        bool visibileButton = true;
+        ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール" };
+        ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant" };
+        bool visibileButton1 = true;
+        bool visibileButton2 = false;
         bool focusLotProductName = false;
 
         //プロパティ
-        public DataTable Table          //データテーブル
+        public DataTable SelectTable                        //データテーブル
         {
-            get { return table; }
-            set { SetProperty(ref table, value); }
+            get { return selectTable; }
+            set { SetProperty(ref selectTable, value); }
         }
-        public string ContainerCategory //段ボール・ポリ箱
+        public string ContainerCategory                     //段ボール・ポリ箱
         {
             get { return containerCategory; }
             set { SetProperty(ref containerCategory, value); }
         }
-        public string Container         //段ボール・ポリ箱 詳細
+        public string Container                             //段ボール・ポリ箱 詳細
         {
             get { return container; }
             set { SetProperty(ref container, value); }
         }
-        public string Carton            //詰数
+        public string Carton                                //詰数
         {
             get { return carton; }
             set { SetProperty(ref carton, value); }
         }
-        public string Palette           //パレット
+        public string Palette                               //パレット
         {
             get { return palette; }
             set { SetProperty(ref palette, value); }
         }
-        public string ContainerComment  //備考
+        public string ContainerComment                      //備考
         {
             get { return containerComment; }
             set { SetProperty(ref containerComment, value); }
         }
-        public string ImageSource1      //画像1
+        public string ImageSource1                          //画像1
         {
             get { return imageSource1; }
             set { SetProperty(ref imageSource1, value); }
         }
-        public string ImageSource2      //画像2
+        public string ImageSource2                          //画像2
         {
             get { return imageSource2; }
             set { SetProperty(ref imageSource2, value); }
         }
-        public int LengthProductName    //文字数（品番）
+        public int LengthProductName                        //文字数（品番）
         {
             get { return lengthProductName; }
             set { SetProperty(ref lengthProductName, value); }
         }
-        public bool VisibileButton      //ボタン表示
+        public ObservableCollection<string> NameButton      //ボタン名称
         {
-            get { return visibileButton; }
-            set { SetProperty(ref visibileButton, value); }
+            get { return nameButton; }
+            set { SetProperty(ref nameButton, value); }
         }
-        public bool FocusProductName      //フォーカス（ロット番号）
+        public ObservableCollection<string> IconButton      //ボタンアイコン
+        {
+            get { return iconButton; }
+            set { SetProperty(ref iconButton, value); }
+        }
+        public bool VisibileButton1                         //ボタン表示
+        {
+            get { return visibileButton1; }
+            set { SetProperty(ref visibileButton1, value); }
+        }
+        public bool VisibileButton2                         //ボタン表示
+        {
+            get { return visibileButton2; }
+            set { SetProperty(ref visibileButton2, value); }
+        }
+        public bool FocusProductName                        //フォーカス（ロット番号）
         {
             get { return focusLotProductName; }
             set { SetProperty(ref focusLotProductName, value); }
@@ -150,6 +161,10 @@ namespace Display
                 case "ContainerCategory2":
                     DisplayPackSpecification(ProductName, "2");
                     break;
+
+                case "ContainerCategory3":
+                    DisplayPackSpecification(ProductName, "3");
+                    break;
             }
         }
 
@@ -165,19 +180,31 @@ namespace Display
         {
             //データ取得
             Product product = new Product();
-            Table = product.SelectPaking(code, no);          
+            SelectTable = product.SelectPaking(code, no);
             CopyProperty(product, this);
 
-            if (string.IsNullOrEmpty(no)) { VisibileButton = !(product.DataCount == 1); }
+            //表示
             ProductName = code.ToUpper();
-            if (product.DataCount > 0) { ContainerCategory = ContainerCategory == "P" ? "ポリ箱" : "段ボール"; }
-
+            if (product.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
             Container = STRING.ToTrim(Container.Replace("P", "").Replace("D", ""));
 
+            //ボタン制御
+            if (!string.IsNullOrEmpty(code))
+            {
+                VisibileButton1 = product.DataCount >= 2;
+                VisibileButton2 = product.DataCount == 3;
 
+                var count = 0;
+                foreach (DataRow datarow in SelectTable.Rows)
+                {
+                    NameButton[count] = SetName(STRING.ToTrim(datarow["容器"]));
+                    IconButton[count] = SetIcon(STRING.ToTrim(datarow["容器"]));
+                    count++;
+                }
+            }
 
-
-
+            string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
+            string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
         }
     }
 }
