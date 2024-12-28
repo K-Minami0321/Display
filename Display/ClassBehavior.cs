@@ -74,9 +74,9 @@ namespace Display
         [DllImport("user32")] private static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
         //プロパティ
-        public Regex RegMode        //入力文字制限
+        public Regex ModeReg        //入力文字制限
         { get; set; }
-        public bool UpperMode       //入力時大文字変換
+        public bool ModeUpper       //入力時大文字変換
         { get; set; }
 
         //イベント
@@ -138,7 +138,7 @@ namespace Display
             if (!(sender is TextBox control)) { return; }
 
             control.Select(control.Text.Length, 0);
-            if (UpperMode) { control.Text = control.Text.ToUpper(); }       //大文字変更
+            if (ModeUpper) { control.Text = control.Text.ToUpper(); }       //大文字変更
         }
 
         //マウスクリック時
@@ -173,28 +173,28 @@ namespace Display
         // 設定された文字以外の入力を拒否
         private void PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (RegMode == null) { return; }
-            if (!RegMode.IsMatch(e.Text)) { e.Handled = true; }
+            if (ModeReg == null) { return; }
+            if (!ModeReg.IsMatch(e.Text)) { e.Handled = true; }
         }
 
         // PreviewTextInputでは半角スペースを検知できないので、PreviewKeyDownで検知
         private void PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (RegMode == null) { return; }
+            if (ModeReg == null) { return; }
             if (e.Key == Key.Space) { e.Handled = true; }
         }
 
         // 貼り付け時に数字以外の入力を拒否
         private void PastingHandler(object sender, DataObjectPastingEventArgs e)
         {
-            if (RegMode == null) { return; }
+            if (ModeReg == null) { return; }
 
             //貼り付け時のチェック
             var isText = e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText, true);
             if (!isText) { return; }
 
             string text = e.SourceDataObject.GetData(DataFormats.UnicodeText) as string;
-            if (!RegMode.IsMatch(text))
+            if (!ModeReg.IsMatch(text))
             {
                 e.CancelCommand();
                 e.Handled = true;
@@ -208,10 +208,6 @@ namespace Display
         //依存プロパティ
         public static readonly DependencyProperty ModeProperty = DependencyProperty.Register("Mode", typeof(string), typeof(TextBoxMode), new PropertyMetadata(null, SetMode));
         public static readonly DependencyProperty UpperProperty = DependencyProperty.Register("Upper", typeof(bool), typeof(TextBoxMode), new PropertyMetadata(false, SetUpper));
-
-        //変数
-        static Regex reg;
-        static bool upper;
 
         //プロパティ
         public string Mode          //入力モード
@@ -228,6 +224,8 @@ namespace Display
         //入力モード
         private static void SetMode(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
+            Regex reg;
+
             switch (e.NewValue.ToString())
             {
                 case "Number":
@@ -260,14 +258,14 @@ namespace Display
             }
 
             TextBoxMode MODE = (TextBoxMode)sender;
-            MODE.RegMode = reg;
+            MODE.ModeReg = reg;
         }
 
         //入力時小文字→大文字変換
         private static void SetUpper(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             TextBoxMode UPPER = (TextBoxMode)sender;
-            UPPER.UpperMode = (bool)e.NewValue;
+            UPPER.ModeUpper = (bool)e.NewValue;
         }
     }
     #endregion
