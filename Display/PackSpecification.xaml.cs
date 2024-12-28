@@ -204,7 +204,7 @@ namespace Display
             CopyProperty(product, this);
 
             //表示
-            ProductName = code.ToUpper();
+            ProductName = code;
             if (product.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
             Container = STRING.ToTrim(Container.Replace("P", "").Replace("D", ""));
 
