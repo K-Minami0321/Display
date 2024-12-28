@@ -226,7 +226,7 @@ namespace Display
                 var querry = from a in SelectTable.AsEnumerable()
                              where a.Field<string>("品番") == code
                              select new { 連番 = a.Field<Int64>("連番") };
-                Index = (querry.FirstOrDefault() != null) ? INT.ToInt(querry.FirstOrDefault().連番) : 0;
+                IndexNumber = INT.ToInt(querry.FirstOrDefault().連番);
             }
 
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
@@ -254,16 +254,16 @@ namespace Display
             switch (value)
             {
                 case "Back":
-                    if (Index < SelectTable.Rows.Count) { Index = Index + 1; }
+                    if (IndexNumber < SelectTable.Rows.Count) { IndexNumber = IndexNumber + 1; }
                     break;
                 case "Forword":
-                    Index = Index - 1;
+                    IndexNumber = IndexNumber - 1;
                     break;
             }
 
             //CODEの設定
-            if (Index < 0) { Index = 0; }
-            DataRow dr = SelectTable.Rows[Index];
+            if (IndexNumber < 0) { IndexNumber = 0; }
+            DataRow dr = SelectTable.Rows[IndexNumber];
 
             var code = dr["品番"].ToString();
             DisplayPackSpecification(dr["品番"].ToString());
