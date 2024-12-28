@@ -74,7 +74,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <i:Interaction.Behaviors>
-                                <local:TextBoxMode Mode="Hyphen"/>
+                                <local:TextBoxBehavior Mode="Hyphen"/>
                             </i:Interaction.Behaviors>
                         </TextBox>
                         <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
@@ -97,7 +97,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <i:Interaction.Behaviors>
-                                <local:TextBoxMode/>
+                                <local:TextBoxBehavior/>
                             </i:Interaction.Behaviors>
                         </TextBox>
                         <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
@@ -121,7 +121,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <i:Interaction.Behaviors>
-                                    <local:TextBoxMode Mode="Number"/>
+                                    <local:TextBoxBehavior Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <Viewbox Grid.Row="2" Grid.Column="1" Style="{StaticResource Label}" Margin="10,40,0,5">
@@ -150,7 +150,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <i:Interaction.Behaviors>
-                                    <local:TextBoxMode Mode="Number"/>
+                                    <local:TextBoxBehavior Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <CheckBox x:Name="CheckCompleted" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" Width="150">
@@ -201,7 +201,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <i:Interaction.Behaviors>
-                                    <local:TextBoxMode Mode="Number"/>
+                                    <local:TextBoxBehavior Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <Viewbox Stretch="Uniform" Margin="0,12,12,12">

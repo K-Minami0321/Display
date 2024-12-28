@@ -91,7 +91,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <i:Interaction.Behaviors>
-                                <local:TextBoxMode/>
+                                <local:TextBoxBehavior/>
                             </i:Interaction.Behaviors>
                         </TextBox>
                     </Grid>

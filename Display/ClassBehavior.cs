@@ -73,6 +73,20 @@ namespace Display
         //DLL
         [DllImport("user32")] private static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
+        //依存プロパティ
+        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register("Mode", typeof(string), typeof(TextBoxBehavior), new PropertyMetadata(null, SetMode));
+        public static readonly DependencyProperty UpperProperty = DependencyProperty.Register("Upper", typeof(bool), typeof(TextBoxBehavior), new PropertyMetadata(false, SetUpper));
+        public string Mode          //入力文字制限
+        {
+            get { return GetValue(ModeProperty).ToString(); }
+            set { SetValue(ModeProperty, value); }
+        }
+        public bool Upper           //入力時大文字変換
+        {
+            get { return (bool)GetValue((UpperProperty)); }
+            set { SetValue(UpperProperty, value); }
+        }
+
         //プロパティ
         public Regex ModeReg        //入力文字制限
         { get; set; }
@@ -136,9 +150,8 @@ namespace Display
         private void TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!(sender is TextBox control)) { return; }
-
-            control.Select(control.Text.Length, 0);
             if (ModeUpper) { control.Text = control.Text.ToUpper(); }       //大文字変更
+            control.Select(control.Text.Length, 0);
         }
 
         //マウスクリック時
@@ -200,26 +213,6 @@ namespace Display
                 e.Handled = true;
             }
         }
-    }
-
-    //TextBox：入力制限(切替)
-    public class TextBoxMode : TextBoxBehavior
-    {
-        //依存プロパティ
-        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register("Mode", typeof(string), typeof(TextBoxMode), new PropertyMetadata(null, SetMode));
-        public static readonly DependencyProperty UpperProperty = DependencyProperty.Register("Upper", typeof(bool), typeof(TextBoxMode), new PropertyMetadata(false, SetUpper));
-
-        //プロパティ
-        public string Mode          //入力モード
-        {
-            get { return GetValue(ModeProperty).ToString(); }
-            set { SetValue(ModeProperty, value); }
-        }
-        public bool Upper           //入力時大文字変換
-        {
-            get { return (bool)GetValue((UpperProperty)); }
-            set { SetValue(UpperProperty, value); }
-        }
 
         //入力モード
         private static void SetMode(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -256,15 +249,14 @@ namespace Display
                     reg = null;
                     break;
             }
-
-            TextBoxMode MODE = (TextBoxMode)sender;
+            TextBoxBehavior MODE = (TextBoxBehavior)sender;
             MODE.ModeReg = reg;
         }
 
         //入力時小文字→大文字変換
         private static void SetUpper(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            TextBoxMode UPPER = (TextBoxMode)sender;
+            TextBoxBehavior UPPER = (TextBoxBehavior)sender;
             UPPER.ModeUpper = (bool)e.NewValue;
         }
     }

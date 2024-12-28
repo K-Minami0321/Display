@@ -61,7 +61,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <i:Interaction.Behaviors>
-                                <local:TextBoxMode Mode="AlphabetHyphen" Upper="true"/>
+                                <local:TextBoxBehavior Mode="AlphabetHyphen" Upper="true"/>
                             </i:Interaction.Behaviors>
                         </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ContainerCategory, FallbackValue=段ボール・ポリ箱}" FontSize="40"/>
