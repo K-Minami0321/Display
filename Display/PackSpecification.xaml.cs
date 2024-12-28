@@ -1,8 +1,10 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
+using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -20,10 +22,11 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelPackSpecification : Common
+    public class ViewModelPackSpecification : Common, IKeyDown
     {
         //変数
         DataTable selectTable;
+        DataTable listTable;
         string containerCategory;
         string container;
         string carton;
@@ -43,6 +46,11 @@ namespace Display
         {
             get { return selectTable; }
             set { SetProperty(ref selectTable, value); }
+        }
+        public DataTable ListTable                          //一覧テーブル
+        { 
+            get { return listTable; }
+            set { SetProperty(ref listTable, value); }
         }
         public string ContainerCategory                     //段ボール・ポリ箱
         {
@@ -122,8 +130,10 @@ namespace Display
         public ViewModelPackSpecification()
         {
             ProductName = string.Empty;
+            
             Product product = new Product(ProductName);
             CopyProperty(product, this);
+            SelectTable = product.SelectPakingIndex();
         }
 
         //ロード時
@@ -141,8 +151,9 @@ namespace Display
             windowMain.VisibleList = false;
             windowMain.VisibleInfo = false;
             windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
+            windowMain.VisibleArrow = true;
             windowMain.VisiblePlan = false;
+            windowMain.Ikeydown = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "梱包仕様書";
             windowMain.ProcessName = "梱包";
@@ -151,7 +162,6 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
-            var result = false;
             switch (value)
             {
                 case "ContainerCategory1":
@@ -164,6 +174,16 @@ namespace Display
 
                 case "ContainerCategory3":
                     DisplayPackSpecification(ProductName, "3");
+                    break;
+
+                case "PreviousDate":
+                    //前のデータ
+                    SetAroundCode("Back");
+                    break;
+
+                case "NextDate":
+                    //次のデータ
+                    SetAroundCode("Forword");
                     break;
             }
         }
@@ -180,7 +200,7 @@ namespace Display
         {
             //データ取得
             Product product = new Product();
-            SelectTable = product.SelectPaking(code, no);
+            ListTable = product.SelectPaking(code, no);
             CopyProperty(product, this);
 
             //表示
@@ -188,23 +208,65 @@ namespace Display
             if (product.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
             Container = STRING.ToTrim(Container.Replace("P", "").Replace("D", ""));
 
-            //ボタン制御
             if (!string.IsNullOrEmpty(code))
             {
+                //ボタン制御
                 VisibileButton1 = product.DataCount >= 2;
                 VisibileButton2 = product.DataCount == 3;
 
                 var count = 0;
-                foreach (DataRow datarow in SelectTable.Rows)
+                foreach (DataRow datarow in ListTable.Rows)
                 {
                     NameButton[count] = SetName(STRING.ToTrim(datarow["容器"]));
                     IconButton[count] = SetIcon(STRING.ToTrim(datarow["容器"]));
                     count++;
                 }
+
+                //Index設定
+                var querry = from a in SelectTable.AsEnumerable()
+                             where a.Field<string>("品番") == code
+                             select new { 連番 = a.Field<Int64>("連番") };
+                Index = (querry.FirstOrDefault() != null) ? INT.ToInt(querry.FirstOrDefault().連番) : 0;
             }
 
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
+        }
+
+        //スワイプ処理
+        public void Swipe(object value)
+        {
+            switch (value)
+            {
+                case "Right":
+                    SetAroundCode("Back");
+                    break;
+
+                case "Left":
+                    SetAroundCode("Forword");
+                    break;
+            }
+        }
+
+        //前後のコード取得
+        private void SetAroundCode(string value)
+        {
+            switch (value)
+            {
+                case "Back":
+                    if (Index < SelectTable.Rows.Count) { Index = Index + 1; }
+                    break;
+                case "Forword":
+                    Index = Index - 1;
+                    break;
+            }
+
+            //CODEの設定
+            if (Index < 0) { Index = 0; }
+            DataRow dr = SelectTable.Rows[Index];
+
+            var code = dr["品番"].ToString();
+            DisplayPackSpecification(dr["品番"].ToString());
         }
     }
 }

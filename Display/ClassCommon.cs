@@ -1,5 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Display
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
+        int index;
         int selectedIndex;
         double scrollIndex;
         object focus;
@@ -58,6 +60,11 @@ namespace Display
         {
             get { return selectedItem; }
             set { SetProperty(ref selectedItem, value); }
+        }
+        public int Index                        //表示データの行番号
+        {
+            get { return index; }
+            set { SetProperty(ref index, value); }
         }
         public int SelectedIndex                //行選択
         {
