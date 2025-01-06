@@ -1,12 +1,15 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 #pragma warning disable
 namespace Display
@@ -32,9 +35,9 @@ namespace Display
         string carton;
         string palette;
         string containerComment;
-        string imageSource1;
-        string imageSource2;
         int lengthProductName = 20;
+        BitmapSource image1;
+        BitmapSource image2;
         ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール" };
         ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant" };
         bool visibileButton1 = true;
@@ -77,20 +80,20 @@ namespace Display
             get { return containerComment; }
             set { SetProperty(ref containerComment, value); }
         }
-        public string ImageSource1                          //画像1
-        {
-            get { return imageSource1; }
-            set { SetProperty(ref imageSource1, value); }
-        }
-        public string ImageSource2                          //画像2
-        {
-            get { return imageSource2; }
-            set { SetProperty(ref imageSource2, value); }
-        }
         public int LengthProductName                        //文字数（品番）
         {
             get { return lengthProductName; }
             set { SetProperty(ref lengthProductName, value); }
+        }
+        public BitmapSource Image1                          //画像1
+        {
+            get { return image1; }
+            set { SetProperty(ref image1, value); }
+        }
+        public BitmapSource Image2                          //画像2
+        {
+            get { return image2; }
+            set { SetProperty(ref image2, value); }
         }
         public ObservableCollection<string> NameButton      //ボタン名称
         {
@@ -112,7 +115,7 @@ namespace Display
             get { return visibileButton2; }
             set { SetProperty(ref visibileButton2, value); }
         }
-        public bool FocusProductName                        //フォーカス（ロット番号）
+        public bool FocusProductName                        //フォーカス（品番）
         {
             get { return focusLotProductName; }
             set { SetProperty(ref focusLotProductName, value); }
@@ -133,6 +136,8 @@ namespace Display
             
             Product product = new Product(ProductName);
             CopyProperty(product, this);
+            DisplayImage(product);
+
             SelectTable = product.SelectPakingIndex();
         }
 
@@ -231,6 +236,27 @@ namespace Display
 
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
+            DisplayImage(product);
+        }
+
+        //画像表示処理
+        private void DisplayImage(Product product)
+        {
+            //画像1
+            var source1 = new Mat(product.ImageSource1);
+            var mat1 = new Mat();
+            Cv2.Resize(source1, mat1, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
+            Image1 = BitmapSourceConverter.ToBitmapSource(mat1);
+            mat1.Dispose();
+            source1.Dispose();
+
+            //画像2
+            var source2 = new Mat(product.ImageSource2);
+            var mat2 = new Mat();
+            Cv2.Resize(source2, mat2, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
+            Image2 = BitmapSourceConverter.ToBitmapSource(mat2);
+            mat2.Dispose();
+            source2.Dispose();
         }
 
         //スワイプ処理

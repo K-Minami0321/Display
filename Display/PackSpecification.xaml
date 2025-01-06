@@ -132,8 +132,8 @@
                 <RowDefinition  Height="20"/>
                 <RowDefinition  Height="280"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Source="{Binding ImageSource1}" Width="400"/>
-            <Image Grid.Row="2" Grid.Column="0" Source="{Binding ImageSource2}" Width="400"/>
+            <Image Grid.Row="0" Grid.Column="0" Source="{Binding Image1}" Width="400"/>
+            <Image Grid.Row="2" Grid.Column="0" Source="{Binding Image2}" Width="400"/>
         </Grid>
     </Grid>
 </UserControl>
