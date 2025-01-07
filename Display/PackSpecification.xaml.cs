@@ -6,6 +6,7 @@ using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -243,7 +244,8 @@ namespace Display
         private void DisplayImage(Product product)
         {
             //画像1
-            var source1 = new Mat(product.ImageSource1);
+            var img1 = File.Exists(product.ImageFolder + product.ImageSource1) ? product.ImageSource1 : "nophoto.jpg";
+            var source1 = new Mat(product.ImageFolder + img1);
             var mat1 = new Mat();
             Cv2.Resize(source1, mat1, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
             Image1 = BitmapSourceConverter.ToBitmapSource(mat1);
@@ -251,12 +253,14 @@ namespace Display
             source1.Dispose();
 
             //画像2
-            var source2 = new Mat(product.ImageSource2);
+            var img2 = File.Exists(product.ImageFolder + product.ImageSource2) ? product.ImageSource2 : "nophoto.jpg";
+            var source2 = new Mat(product.ImageFolder + img2);
             var mat2 = new Mat();
             Cv2.Resize(source2, mat2, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
             Image2 = BitmapSourceConverter.ToBitmapSource(mat2);
             mat2.Dispose();
             source2.Dispose();
+
         }
 
         //スワイプ処理
