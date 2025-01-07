@@ -193,6 +193,8 @@ namespace Display
             IniFile.WriteString("Page", "Worker", Worker);
 
             ViewModelWindowMain.Instance.ProcessName = IniFile.GetString("Page", "Process");
+
+            //画面遷移先設定
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 

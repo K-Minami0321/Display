@@ -17,7 +17,7 @@ namespace Display
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
-        int index;
+        int indexNumber;
         int selectedIndex;
         double scrollIndex;
         object focus;
@@ -61,10 +61,10 @@ namespace Display
             get { return selectedItem; }
             set { SetProperty(ref selectedItem, value); }
         }
-        public int Index                        //表示データの行番号
+        public int IndexNumber                  //表示データの行番号
         {
-            get { return index; }
-            set { SetProperty(ref index, value); }
+            get { return indexNumber; }
+            set { SetProperty(ref indexNumber, value); }
         }
         public int SelectedIndex                //行選択
         {
