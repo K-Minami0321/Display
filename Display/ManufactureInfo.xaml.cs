@@ -131,7 +131,7 @@ namespace Display
             get { return manufactureDate; }
             set 
             { 
-                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
                 SetProperty(ref manufactureDate, value);
             }
         }
@@ -617,7 +617,7 @@ namespace Display
             //コード確定
             if (IsRegist)
             {
-                var date = STRING.ToDateDB(ManufactureDate);
+                var date = ManufactureDate.ToStringDateDB();
                 var code = manufacture.GenerateCode(Mark + date);
                 ManufactureCODE = code;
             }

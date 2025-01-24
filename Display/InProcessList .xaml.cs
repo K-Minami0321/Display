@@ -143,7 +143,7 @@ namespace Display
         public void Initialize()
         {
             SelectedIndex = -1;
-            InProcessDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            InProcessDate = SetToDay(DateTime.Now).ToStringDateDB();
         }
 
         //一覧表示

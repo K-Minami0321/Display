@@ -114,7 +114,7 @@ namespace Display
             get { return inProcessDate; }
             set 
             { 
-                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
                 SetProperty(ref inProcessDate, value);
             }
         }
@@ -243,7 +243,7 @@ namespace Display
                 if (value) { return; }
                 Notice = string.Empty;
                 AmountWidth = Amount.Length * 50;
-                Amount = !VisibleCoil ? Amount : CONVERT.ConvertCircleEnclosing(Amount);
+                Amount = !VisibleCoil ? Amount : Amount.ToCircleEnclosing();
             }
         }
         public bool FocusLotNumber      //フォーカス（ロット番号）
@@ -435,7 +435,7 @@ namespace Display
             //コード確定
             if (IsRegist)
             {
-                var inprocessdate = STRING.ToDateDB(InProcessDate);
+                var inprocessdate = InProcessDate.ToStringDateDB();
                 var inprocesscode = inProcess.GenerateCode(Mark + inprocessdate);
                 InProcessCODE = inprocesscode;
             }

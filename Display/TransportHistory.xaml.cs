@@ -126,7 +126,7 @@ namespace Display
         {
             SelectedIndex = -1;
             InProcessCODE = string.Empty;
-            TransportDate = STRING.ToDateDB(SetToDay(DateTime.Now));
+            TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
         }
 
         //一覧表示
