@@ -14,7 +14,6 @@ using System.Windows.Media;
 #pragma warning disable
 namespace Display
 {
-
     #region IValueConverter
     //表示・非表示
     public class CollapsedConverter : IValueConverter
@@ -58,26 +57,26 @@ namespace Display
     //通貨形式
     public class CurrencyConverter : IValueConverter
     {
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToCurrency(value);
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringCurrency();
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null) { return string.Empty; }
             value = value.ToString() == "0" ? string.Empty : value;
-            return STRING.ToCurrency(value);
+            return value.ToStringCurrency();
         }
     }
 
     //日付形式
     public class DateTimeConverter : IValueConverter
     {
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToDate(value);
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToDate(value);
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate();
     }
 
     public class MonthDayConverter : IValueConverter
     {
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToDateFormat(STRING.ToDate(value), "M月d日");
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToDateFormat(STRING.ToDate(value), "M月d日");
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate("M月d日");
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate("M月d日");
     }
 
     //コイル数表示
@@ -91,7 +90,7 @@ namespace Display
     public class CircleEnclosingConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => CONVERT.ConvertCircleEnclosing(STRING.ToTrim(value));
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToTrim().ToCircleEnclosing();
     }
 
     //完了表記

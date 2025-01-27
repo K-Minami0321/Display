@@ -2,6 +2,8 @@
 using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
+using System.Diagnostics;
+using System.Reflection;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
@@ -172,8 +174,6 @@ namespace Display
         //コンストラクター
         internal ViewModelWindowMain()
         {
-            WindowBehavior.Instance.iWindow = this;
-            Instance = this;
 
             //Windowのサイズ・位置を復元
             LoadWindowProperty();
@@ -185,6 +185,8 @@ namespace Display
             Connection = new SQL(db, connect);
 
             //初期設定
+            WindowBehavior.Instance.iWindow = this;
+            Instance = this;
             FunctionColor = IsServer ? "1" : "0.5";
             StartPage(IniFile.GetString("Page", "Initial"));
             VisiblePower = false;

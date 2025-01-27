@@ -88,7 +88,7 @@ namespace Display
         }
         public string SoundFolder               //サウンドフォルダ
         {
-            get { return STRING.Empty(FOLDER.ApplicationPath()) + @"Sound\"; }
+            get { return FOLDER.ApplicationPath() + @"Sound\"; }
         }
         public string Page                      //遷移するページ
         {

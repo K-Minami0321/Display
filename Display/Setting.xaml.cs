@@ -3,7 +3,9 @@ using ClassLibrary;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -147,6 +149,11 @@ namespace Display
         //初期化
         private void DisplayCapution()
         {
+            //システム情報
+            var fullPath = Assembly.GetExecutingAssembly().Location;
+            FileVersionInfo info = FileVersionInfo.GetVersionInfo(fullPath);
+            Version = info.FileVersion.StringLeft(info.FileVersion.Length - 2);
+
             //ボタン設定
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
@@ -159,7 +166,6 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "設定画面";
             windowMain.ProcessName = "設定";
-            Version = CONST.DISPLAY_VERSION;
         }
 
         //初期化

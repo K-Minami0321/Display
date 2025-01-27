@@ -88,7 +88,7 @@ namespace Display
             get { return transportDate; }
             set 
             { 
-                IsEnable = DATETIME.ToStringDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
+                IsEnable = DATETIME.ToDate(value) < SetVerificationDay(DateTime.Now) ? false : true;
                 SetProperty(ref transportDate, value);
             }
         }
