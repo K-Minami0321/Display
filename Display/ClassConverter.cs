@@ -57,12 +57,12 @@ namespace Display
     //通貨形式
     public class CurrencyConverter : IValueConverter
     {
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringCurrency();
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToCurrency(value);
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null) { return string.Empty; }
             value = value.ToString() == "0" ? string.Empty : value;
-            return value.ToStringCurrency();
+            return STRING.ToCurrency(value);
         }
     }
 
