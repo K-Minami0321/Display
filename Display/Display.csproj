@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Image\note-edit.ico</ApplicationIcon>
+	  <Product>製造管理システム</Product>
+	  <Version>2.1.0</Version>
+	  <Company>株式会社 折橋製作所</Company>
   </PropertyGroup>
 
   <ItemGroup>
