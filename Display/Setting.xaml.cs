@@ -150,9 +150,7 @@ namespace Display
         private void DisplayCapution()
         {
             //システム情報
-            var fullPath = Assembly.GetExecutingAssembly().Location;
-            FileVersionInfo info = FileVersionInfo.GetVersionInfo(fullPath);
-            Version = info.FileVersion.StringLeft(info.FileVersion.Length - 2);
+            Version = CONST.DISPLAY_VERSION;
 
             //ボタン設定
             ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
@@ -166,6 +164,7 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "設定画面";
             windowMain.ProcessName = "設定";
+            
         }
 
         //初期化

@@ -55,7 +55,6 @@ namespace Update
             var setfile = "Display.exe";                                //対象ファイル
             var setpath = FOLDER.ApplicationPath();
             var serverpath = CONST.SERVER_UPDATE + CONST.UPDATE_DISPLAY;
-            Version = "（Ver.{info.FileVersion.StringLeft(info.FileVersion.Length - 2)}";
 
             //対象ファイルの比較(Display.exe)
             filetimeserver = File.GetLastWriteTime(serverpath + setfile);
