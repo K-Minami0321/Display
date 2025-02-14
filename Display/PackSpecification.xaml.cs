@@ -48,78 +48,78 @@ namespace Display
         //プロパティ
         public DataTable SelectTable                        //データテーブル
         {
-            get { return selectTable; }
-            set { SetProperty(ref selectTable, value); }
+            get => selectTable;
+            set => SetProperty(ref selectTable, value);
         }
         public DataTable ListTable                          //一覧テーブル
         { 
-            get { return listTable; }
-            set { SetProperty(ref listTable, value); }
+            get => listTable;
+            set => SetProperty(ref listTable, value);
         }
         public string ContainerCategory                     //段ボール・ポリ箱
         {
-            get { return containerCategory; }
-            set { SetProperty(ref containerCategory, value); }
+            get => containerCategory;
+            set => SetProperty(ref containerCategory, value);
         }
         public string Container                             //段ボール・ポリ箱 詳細
         {
-            get { return container; }
-            set { SetProperty(ref container, value); }
+            get => container;
+            set => SetProperty(ref container, value);
         }
         public string Carton                                //詰数
         {
-            get { return carton; }
-            set { SetProperty(ref carton, value); }
+            get => carton;
+            set => SetProperty(ref carton, value);
         }
         public string Palette                               //パレット
         {
-            get { return palette; }
-            set { SetProperty(ref palette, value); }
+            get => palette;
+            set => SetProperty(ref palette, value);
         }
         public string ContainerComment                      //備考
         {
-            get { return containerComment; }
-            set { SetProperty(ref containerComment, value); }
+            get => containerComment;
+            set => SetProperty(ref containerComment, value);
         }
         public int LengthProductName                        //文字数（品番）
         {
-            get { return lengthProductName; }
-            set { SetProperty(ref lengthProductName, value); }
+            get => lengthProductName;
+            set => SetProperty(ref lengthProductName, value);
         }
         public BitmapSource Image1                          //画像1
         {
-            get { return image1; }
-            set { SetProperty(ref image1, value); }
+            get => image1;
+            set => SetProperty(ref image1, value);
         }
         public BitmapSource Image2                          //画像2
         {
-            get { return image2; }
-            set { SetProperty(ref image2, value); }
+            get => image2;
+        set => SetProperty(ref image2, value);
         }
         public ObservableCollection<string> NameButton      //ボタン名称
         {
-            get { return nameButton; }
-            set { SetProperty(ref nameButton, value); }
+            get => nameButton;
+            set => SetProperty(ref nameButton, value);
         }
         public ObservableCollection<string> IconButton      //ボタンアイコン
         {
-            get { return iconButton; }
-            set { SetProperty(ref iconButton, value); }
+            get => iconButton;
+            set => SetProperty(ref iconButton, value);
         }
         public bool VisibileButton1                         //ボタン表示
         {
-            get { return visibileButton1; }
-            set { SetProperty(ref visibileButton1, value); }
+            get => visibileButton1;
+            set => SetProperty(ref visibileButton1, value);
         }
         public bool VisibileButton2                         //ボタン表示
         {
-            get { return visibileButton2; }
-            set { SetProperty(ref visibileButton2, value); }
+            get => visibileButton2;
+        set => SetProperty(ref visibileButton2, value);
         }
         public bool FocusProductName                        //フォーカス（品番）
         {
-            get { return focusLotProductName; }
-            set { SetProperty(ref focusLotProductName, value); }
+            get => focusLotProductName;
+            set => SetProperty(ref focusLotProductName, value);
         }
 
         //イベント
@@ -132,14 +132,11 @@ namespace Display
 
         //コンストラクター
         public ViewModelPackSpecification()
-        {
-            ProductName = string.Empty;
-            
-            Product product = new Product(ProductName);
-            CopyProperty(product, this);
-            DisplayImage(product);
-
-            SelectTable = product.SelectPakingIndex();
+        {           
+            var productPackingStyle = new ProductPackingStyle();
+            CopyProperty(productPackingStyle, this);
+            DisplayImage(productPackingStyle);
+            SelectTable = productPackingStyle.SelectPakingIndex();
         }
 
         //ロード時
@@ -171,15 +168,15 @@ namespace Display
             switch (value)
             {
                 case "ContainerCategory1":
-                    DisplayPackSpecification(ProductName, "1");
+                    DisplayPackStyle(ProductName, "1");
                     break;
 
                 case "ContainerCategory2":
-                    DisplayPackSpecification(ProductName, "2");
+                    DisplayPackStyle(ProductName, "2");
                     break;
 
                 case "ContainerCategory3":
-                    DisplayPackSpecification(ProductName, "3");
+                    DisplayPackStyle(ProductName, "3");
                     break;
 
                 case "PreviousDate":
@@ -198,27 +195,27 @@ namespace Display
         private void SetLostFocus()
         {
             FocusProductName = false;
-            DisplayPackSpecification(ProductName);
+            DisplayPackStyle(ProductName);
         }
 
         //梱包仕様表示
-        private void DisplayPackSpecification(string code, string no = "")
+        private void DisplayPackStyle(string code, string no = "")
         {
             //データ取得
-            Product product = new Product();
-            ListTable = product.SelectPaking(code, no);
-            CopyProperty(product, this);
+            var productPackingStyle = new ProductPackingStyle();
+            ListTable = productPackingStyle.SelectPaking(code, no);
+            CopyProperty(productPackingStyle, this);
 
             //表示
             ProductName = code;
-            if (product.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
+            if (productPackingStyle.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
             Container = STRING.ToTrim(Container.Replace("P", "").Replace("D", ""));
 
             if (!string.IsNullOrEmpty(code))
             {
                 //ボタン制御
-                VisibileButton1 = product.DataCount >= 2;
-                VisibileButton2 = product.DataCount == 3;
+                VisibileButton1 = productPackingStyle.DataCount >= 2;
+                VisibileButton2 = productPackingStyle.DataCount == 3;
 
                 var count = 0;
                 foreach (DataRow datarow in ListTable.Rows)
@@ -237,11 +234,11 @@ namespace Display
 
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
-            DisplayImage(product);
+            DisplayImage(productPackingStyle);
         }
 
         //画像表示処理
-        private void DisplayImage(Product product)
+        private void DisplayImage(ProductPackingStyle product)
         {
             //画像1
             var img1 = File.Exists(product.ImageFolder + product.ImageSource1) ? product.ImageSource1 : "nophoto.jpg";
