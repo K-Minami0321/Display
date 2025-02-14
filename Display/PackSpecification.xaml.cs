@@ -293,7 +293,7 @@ namespace Display
             DataRow dr = SelectTable.Rows[IndexNumber];
 
             var code = dr["品番"].ToString();
-            DisplayPackSpecification(dr["品番"].ToString());
+            DisplayPackStyle(dr["品番"].ToString());
         }
     }
 }
