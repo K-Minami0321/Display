@@ -108,11 +108,7 @@ namespace Display
         }
         public List<string> Servers             //サーバーコンボックス
         {
-            get 
-            {
-                ListSource listSource = new ListSource();
-                return listSource.Servers;
-            }
+            get => ListSource.Servers;
             set => SetProperty(ref servers, value);
         }
         public List<string> ProcessNames        //工程区分コンボボックス
