@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -35,8 +36,8 @@ namespace Display
         { get; set; }
         public string InputString                       //入力文字
         {
-            get { return inputString; }
-            set { SetProperty(ref inputString, value); }
+            get => inputString;
+            set => SetProperty(ref inputString, value);
         }
 
         //イベント
@@ -48,6 +49,8 @@ namespace Display
         {
             //呼び出し元で実行
             if (Itenkey == null) { return; }
+
+            var Sound = new SoundPlay();
             Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Itenkey.KeyDown(value); 
         }

@@ -33,33 +33,33 @@ namespace Display
         { get; set; } = new ViewModelPlanList();
         public string LotNumber                     //ロット番号
         {
-            get { return lotNumber; }
-            set { SetProperty(ref lotNumber, value); }
+            get => lotNumber; 
+            set => SetProperty(ref lotNumber, value); 
         }
         public string UpdateDate                    //更新表示
         {
-            get { return updateDate; }
-            set { SetProperty(ref updateDate, value); }
+            get => updateDate;
+            set => SetProperty(ref updateDate, value);
         }
         public string File                          //ファイル名
         {
-            get { return file; }
-            set { SetProperty(ref file, value); }
+            get => file;
+            set => SetProperty(ref file, value); 
         }
         public bool VisibleUnit                     //表示・非表示（コイル・シート絞り込み）
         {
-            get { return visibleUnit; }
-            set { SetProperty(ref visibleUnit, value); }
+            get => visibleUnit; 
+            set => SetProperty(ref visibleUnit, value); 
         }
         public bool VisibleAmount                   //表示・非表示（完了数）
         {
-            get { return visibleAmount; }
-            set { SetProperty(ref visibleAmount, value); }
+            get => visibleAmount; 
+            set => SetProperty(ref visibleAmount, value); 
         }
         public bool EnableSelect                    //選択可能
         {
-            get { return enableSelect; }
-            set { SetProperty(ref enableSelect, value); }
+            get => enableSelect; 
+            set => SetProperty(ref enableSelect, value); 
         }
 
         //イベント
@@ -86,7 +86,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleDefect = false;
@@ -127,8 +127,8 @@ namespace Display
         private void DiaplayList(string where = "")
         {
             var selectIndex = SelectedIndex;
+            var plan = new Plan();
 
-            Plan plan = new Plan();
             UpdateDate = plan.SelectFile(ProcessName) + "版";
             SelectTable = plan.SelectPlanList(ProcessName, where, true);
 

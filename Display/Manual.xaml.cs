@@ -32,13 +32,13 @@ namespace Display
         //プロパティ
         public string ProcessName   //工程区分
         {
-            get { return processName; }
-            set { SetProperty(ref processName, value); }
+            get => processName;
+            set => SetProperty(ref processName, value);
         }
         public string File          //再生ファイル
         {
-            get { return file; }
-            set { SetProperty(ref file, value); }
+            get => file;
+            set=> SetProperty(ref file, value);
         }
 
         //イベント
@@ -86,6 +86,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
+                    var IniFile = new INIFile(CONST.SETTING_INI);
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }

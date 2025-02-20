@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Collections.Generic;
 using System.Windows.Controls;
@@ -42,7 +43,7 @@ namespace Display
         { get; set; }
         public string ProcessName                                   //工程区分
         {
-            get { return processName; }
+            get => processName;
             set 
             { 
                 SetProperty(ref processName, value);
@@ -52,13 +53,13 @@ namespace Display
         }
         public string DefectCategory                                //不良分類
         {
-            get { return defectCategory; }
-            set { SetProperty(ref defectCategory, value); }
+            get => defectCategory;
+            set => SetProperty(ref defectCategory, value);
         }
         public List<string> DefectCategorys                         //不良分類リスト
         {
-            get { return defectCategorys; }
-            set { SetProperty(ref defectCategorys, value); }
+            get => defectCategorys;
+            set => SetProperty(ref defectCategorys, value);
         }
 
         //イベント
@@ -82,6 +83,7 @@ namespace Display
             value = DefectCategory.ToString();
             if (IdefectCategory == null) { return; }
 
+            var Sound = new SoundPlay();
             Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             IdefectCategory.SelectionItem(value);
 

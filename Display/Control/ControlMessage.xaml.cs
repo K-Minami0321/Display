@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -42,28 +43,28 @@ namespace Display
         { get; set; } = new ViewModelControlMessage();
         public string Message                           //処理メッセージ
         {
-            get { return message; }
-            set { SetProperty(ref message, value); }
+            get => message;
+            set => SetProperty(ref message, value);
         }
         public string Contents                          //処理内容
         {
-            get { return contents; }
-            set { SetProperty(ref contents, value); }
+            get => contents;
+            set => SetProperty(ref contents, value);
         }
         public string Type                              //メッセージボックスタイプ
         {
-            get { return type; }
-            set { SetProperty(ref type, value); }
+            get => type;
+            set => SetProperty(ref type, value);
         }
         public string ButtonOK                          //ボタン表示名
         {
-            get { return buttonOK; }
-            set { SetProperty(ref buttonOK, value); }
+            get => buttonOK;
+            set => SetProperty(ref buttonOK, value);
         }
         public bool IsButtonCancel                      //ボタン表示
         {
-            get { return isButtonCancel; }
-            set { SetProperty(ref isButtonCancel, value); }
+            get => isButtonCancel;
+            set => SetProperty(ref isButtonCancel, value);
         }
 
         //イベント
@@ -73,6 +74,8 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            var Sound = new SoundPlay();
+
             switch (Type)
             {
                 case "警告":

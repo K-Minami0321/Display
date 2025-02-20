@@ -73,7 +73,7 @@ namespace Display
         //プロパティ
         public string InProcessCODE     //仕掛CODE
         {
-            get { return inProcessCODE; }
+            get => inProcessCODE;
             set 
             {
                 IsRegist = string.IsNullOrEmpty(value);
@@ -86,32 +86,32 @@ namespace Display
         }
         public string LotNumber         //ロット番号
         {
-            get { return lotNumber; }
-            set { SetProperty(ref lotNumber, value); }
+            get => lotNumber;
+            set => SetProperty(ref lotNumber, value);
         }
         public string Unit              //数量
         {
-            get { return unit; }
-            set { SetProperty(ref unit, value); }
+            get => unit;
+            set => SetProperty(ref unit, value);
         }
         public string Weight            //重量
         {
-            get { return weight; }
-            set { SetProperty(ref weight, value); }
+            get => weight;
+            set => SetProperty(ref weight, value);
         }
         public string Amount            //枚数
         {
-            get { return amount; }
-            set { SetProperty(ref amount, value); }
+            get => amount;
+            set => SetProperty(ref amount, value);
         }
         public string ShirringUnit      //コイル数
         {
-            get { return shirringUnit; }
-            set { SetProperty(ref shirringUnit, value); }
+            get => shirringUnit;
+            set => SetProperty(ref shirringUnit, value);
         }
         public string InProcessDate     //搬入日
         {
-            get { return inProcessDate; }
+            get => inProcessDate;
             set 
             { 
                 IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
@@ -120,112 +120,112 @@ namespace Display
         }
         public string TransportDate     //搬出日
         {
-            get { return transportDate; }
-            set { SetProperty(ref transportDate, value); }
+            get => transportDate;
+            set => SetProperty(ref transportDate, value);
         }
         public string Completed         //完了
         {
-            get { return completed; }
-            set { SetProperty(ref completed, value); }
+            get => completed;
+            set => SetProperty(ref completed, value);
         }
         public string Status            //状態
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            get => status;
+            set => SetProperty(ref status, value);
         }
         public string Notice            //注意文
         {
-            get { return notice; }
-            set { SetProperty(ref notice, value); }
+            get => notice;
+            set => SetProperty(ref notice, value);
         }
         public string ButtonName        //登録ボタン名
         {
-            get { return buttonName; }
-            set { SetProperty(ref buttonName, value); }
+            get => buttonName;
+            set => SetProperty(ref buttonName, value);
         }
         public int AmountWidth          //コイル数テキストボックスのWidth
         {
-            get { return amountWidth; }
-            set { SetProperty(ref amountWidth, value); }
+            get => amountWidth;
+            set => SetProperty(ref amountWidth, value);
         }
         public int AmountRow            //数量・重量の位置
         {
-            get { return amountRow; }
-            set { SetProperty(ref amountRow, value); }
+            get => amountRow;
+            set => SetProperty(ref amountRow, value);
         }
         public int LengthLotNumber      //文字数（ロット番号）
         {
-            get { return lengthLotNumber; }
-            set { SetProperty(ref lengthLotNumber, value); }
+            get => lengthLotNumber;
+            set => SetProperty(ref lengthLotNumber, value);
         }
         public int LengthAmount         //文字数（数量）
         {
-            get { return lengthAmount; }
-            set { SetProperty(ref lengthAmount, value); }
+            get => lengthAmount;
+            set => SetProperty(ref lengthAmount, value);
         }
         public int LengthWeight         //文字数（重量・焼結重量）
         {
-            get { return lengthWeight; }
-            set { SetProperty(ref lengthWeight, value); }
+            get => lengthWeight;
+            set => SetProperty(ref lengthWeight, value);
         }
         public int LengthUnit           //文字数（枚数・コイル数）
         {
-            get { return lengthUnit; }
-            set { SetProperty(ref lengthUnit, value); }
+            get => lengthUnit;
+            set => SetProperty(ref lengthUnit, value);
         }
         public string LabelWeight       //ラベル（重量・焼結重量）
         {
-            get { return labelWeight; }
-            set { SetProperty(ref labelWeight, value); }
+            get => labelWeight;
+            set => SetProperty(ref labelWeight, value);
         }
         public string LabelAmount       //ラベル（数量）
         {
-            get { return labelAmount; }
-            set { SetProperty(ref labelAmount, value); }
+            get => labelAmount;
+            set => SetProperty(ref labelAmount, value);
         }
         public string LabelUnit         //ラベル（数量・重量）
         {
-            get { return labelUnit; }
-            set { SetProperty(ref labelUnit, value); }
+            get => labelUnit;
+            set => SetProperty(ref labelUnit, value);
         }
         public bool VisibleCoil         //表示・非表示（コイル数）
         {
-            get { return visibleCoil; }
-            set { SetProperty(ref visibleCoil, value); }
+            get => visibleCoil;
+            set => SetProperty(ref visibleCoil, value);
         }
         public bool VisibleItem1        //表示・非表示（入力項目）
         {
-            get { return visibleItem1; }
-            set { SetProperty(ref visibleItem1, value); }
+            get => visibleItem1;
+            set => SetProperty(ref visibleItem1, value);
         }
         public bool VisibleItem2        //表示・非表示（入力項目）
         {
-            get { return visibleItem2; }
-            set { SetProperty(ref visibleItem2, value); }
+            get => visibleItem2;
+            set => SetProperty(ref visibleItem2, value);
         }
         public bool VisibleDelete       //表示・非表示（削除ボタン）
         {
-            get { return visibleDelete; }
-            set { SetProperty(ref visibleDelete, value); }
+            get => visibleDelete;
+            set => SetProperty(ref visibleDelete, value);
         }
         public bool VisibleCancel       //表示・非表示（取消ボタン）
         {
-            get { return visibleCancel; }
-            set { SetProperty(ref visibleCancel, value); }
+            get => visibleCancel;
+            set => SetProperty(ref visibleCancel, value);
         }
         public bool VisibleTenKey       //表示・非表示（テンキー）
         {
-            get { return visibleTenKey; }
-            set { SetProperty(ref visibleTenKey, value); }
+            get => visibleTenKey;
+            set => SetProperty(ref visibleTenKey, value);
         }
         public bool VisibleWorker       //表示・非表示（作業者）
         {
-            get { return visibleWorker; }
-            set { SetProperty(ref visibleWorker, value); }
+            get => visibleWorker;
+            set => SetProperty(ref visibleWorker, value);
         }
         public bool IsRegist            //新規・既存フラグ（true:新規、false:既存）
         {
-            get { return isRegist; }
+            get => isRegist;
             set
             {
                 SetProperty(ref isRegist, value);
@@ -236,7 +236,7 @@ namespace Display
         }
         public bool IsEnable            //表示・非表示（下部ボタン）
         {
-            get { return isEnable; }
+            get => isEnable;
             set 
             { 
                 SetProperty(ref isEnable, value);
@@ -248,33 +248,33 @@ namespace Display
         }
         public bool FocusLotNumber      //フォーカス（ロット番号）
         {
-            get { return focusLotNumber; }
-            set { SetProperty(ref focusLotNumber, value); }
+            get => focusLotNumber;
+            set => SetProperty(ref focusLotNumber, value);
         }
         public bool FocusWorker         //フォーカス（作業者）
         {
-            get { return focusWorker; }
-            set { SetProperty(ref focusWorker, value); }
+            get => focusWorker;
+            set => SetProperty(ref focusWorker, value);
         }
         public bool FocusWeight         //フォーカス（重量）
         {
-            get { return focusWeight; }
-            set { SetProperty(ref focusWeight, value); }
+            get => focusWeight;
+            set => SetProperty(ref focusWeight, value);
         }
         public bool FocusUnit           //フォーカス（単位）
         {
-            get { return focusUnit; }
-            set { SetProperty(ref focusUnit, value); }
+            get => focusUnit;
+            set => SetProperty(ref focusUnit, value);
         }
         public bool FocusCompleted      //フォーカス（完了）
         {
-            get { return focusCompleted; }
-            set { SetProperty(ref focusCompleted, value); }
+            get => focusCompleted;
+            set => SetProperty(ref focusCompleted, value);
         }
         public bool FocusAmount         //フォーカス（数量）
         {
-            get { return focusAmount; }
-            set { SetProperty(ref focusAmount, value); }
+            get => focusAmount;
+            set => SetProperty(ref focusAmount, value);
         }
 
         //イベント
@@ -305,7 +305,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -429,7 +429,7 @@ namespace Display
         //登録処理
         private void RegistData()
         {
-            InProcess inProcess = new InProcess();
+            var inProcess = new InProcess();
             CopyProperty(this, inProcess);
 
             //コード確定
@@ -450,7 +450,7 @@ namespace Display
         //削除処理
         private void DeleteDate()
         {
-            InProcess inProcess = new InProcess();
+            var inProcess = new InProcess();
             inProcess.DeleteLog();
             inProcess.DeleteHistory(InProcessCODE);
             Initialize();
@@ -660,7 +660,7 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
-            ViewModelControlTenKey controlTenKey = ViewModelControlTenKey.Instance;
+            var controlTenKey = ViewModelControlTenKey.Instance;
 
             Focus = value;
             switch (Focus)

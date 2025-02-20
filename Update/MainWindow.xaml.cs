@@ -29,8 +29,8 @@ namespace Update
         //プロパティ
         public string Version                         //バージョン
         {
-            get { return version; }
-            set { SetProperty(ref version, value); }
+            get => version;
+            set => SetProperty(ref version, value);
         }
 
         //イベント

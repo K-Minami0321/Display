@@ -30,8 +30,8 @@ namespace Display
         { get; set; } = new ViewModelManufactureList();
         public string ManufactureCODE                       //加工CODE
         {
-            get { return manufactureCODE; }
-            set { SetProperty(ref manufactureCODE, value); }
+            get => manufactureCODE;
+            set => SetProperty(ref manufactureCODE, value);
         }
         public string ManufactureDate                       //作業日
         {
@@ -65,7 +65,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -89,7 +89,7 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            Manufacture manufacture = new Manufacture();
+            var manufacture = new Manufacture();
             SelectTable = manufacture.SelectHistoryListDate(ProcessName, ManufactureDate);
         }
 

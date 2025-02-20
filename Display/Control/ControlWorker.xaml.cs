@@ -1,6 +1,6 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -41,18 +41,18 @@ namespace Display
         { get; set; }
         public string Worker                                //作業者
         {
-            get { return worker; }
-            set { SetProperty(ref worker, value); }
+            get => worker;
+            set => SetProperty(ref worker, value);
         }
         public bool VisivleProcess                          //作業者
         {
-            get { return visivleProcess; }
-            set { SetProperty(ref visivleProcess, value);}
+            get => visivleProcess;
+            set => SetProperty(ref visivleProcess, value);
         }
         public bool VisivleAll                              //すべて
         {
-            get { return visivleAll; }
-            set { SetProperty(ref visivleAll, value); }
+            get => visivleAll;
+            set => SetProperty(ref visivleAll, value);
         }
 
         //イベント
@@ -83,6 +83,7 @@ namespace Display
             value = Worker != null ? Worker.ToString() : string.Empty;
             if (Iworker == null) { return; }
 
+            var Sound = new SoundPlay();
             Sound.PlayAsync(SoundFolder + CONST.SOUND_TOUCH);
             Iworker.SelectionItem(value);
         }
@@ -90,7 +91,7 @@ namespace Display
         //キー処理・一覧の作成
         private void KeyDown(object value)
         {
-            ListSource listSource = new ListSource();
+            var listSource = new ListSource();
             switch (value)
             {
                 case "Process":

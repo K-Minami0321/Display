@@ -49,43 +49,47 @@ namespace Display
         //プロパティ
         public string ProcessName           //工程区分
         {
-            get { return processName; }
-            set { SetProperty(ref processName, value); }
+            get => processName;
+            set => SetProperty(ref processName, value);
         }
         public string InProcessCODE         //仕掛CODE
         {
-            get { return inProcessCODE; }
+            get => inProcessCODE;
             set
             {
-                InProcess inProcess = new InProcess(value, ProcessName);
+                var inProcess = new InProcess(value, ProcessName);
                 CopyProperty(inProcess, this, "InProcessCODE");
                 SetProperty(ref inProcessCODE, value);
             }
         }
         public string LotNumber             //ロット番号
         {
-            get { return lotNumber; }
+            get => lotNumber;
             set 
             {
-                Management management = new Management(GetLotNumber(value), ProcessName);
+                var management = new Management(GetLotNumber(value), ProcessName);
                 CopyProperty(management, this, "LotNumber");
-                if (!string.IsNullOrEmpty(ProductName) && management.ProductName != ProductName) { Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); }
+                if (!string.IsNullOrEmpty(ProductName) && management.ProductName != ProductName) 
+                {
+                    var Sound = new SoundPlay();
+                    Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); 
+                }
                 SetProperty(ref lotNumber, value);
             }
         }
         public string ProductName           //品番
         {
-            get { return productName; }
-            set { SetProperty(ref productName, value); }
+            get => productName;
+            set => SetProperty(ref productName, value);
         }
         public string ShapeName             //形状
         {
-            get { return shapeName; }
-            set { SetProperty(ref shapeName, value); }
+            get => shapeName;
+            set => SetProperty(ref shapeName, value);
         }
         public string TransportDate         //搬出日
         {
-            get { return transportDate; }
+            get => transportDate;
             set 
             { 
                 IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
@@ -94,32 +98,32 @@ namespace Display
         }
         public string TransportWorker       //作業者
         {
-            get { return transportWorker; }
-            set { SetProperty(ref transportWorker, value); }
+            get => transportWorker;
+            set => SetProperty(ref transportWorker, value);
         }
         public string Unit                  //重量
         {
-            get { return unit; }
-            set { SetProperty(ref unit, value); }
+            get => unit;
+            set => SetProperty(ref unit, value);
         }
         public string Place                 //場所
         {
-            get { return place; }
-            set { SetProperty(ref place, value); }
+            get => place;
+            set => SetProperty(ref place, value);
         }
         public string Status                //ステータス
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            get => status;
+            set => SetProperty(ref status, value);
         }
         public string ButtonName            //登録ボタン名
         {
-            get { return buttonName; }
-            set { SetProperty(ref buttonName, value); }
+            get => buttonName;
+            set => SetProperty(ref buttonName, value);
         }
         public bool IsRegist                //新規・既存フラグ（true:新規、false:既存）
         {
-            get { return regFlg; }
+            get => regFlg;
             set
             {
                 SetProperty(ref regFlg, value);
@@ -129,23 +133,23 @@ namespace Display
         }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
-            get { return isEnable; }
-            set { SetProperty(ref isEnable, value); }
+            get => isEnable;
+            set => SetProperty(ref isEnable, value);
         }
         public bool VisibleWorker           //表示・非表示（作業者）
         {
-            get { return visibleWorker; }
-            set { SetProperty(ref visibleWorker, value); }
+            get => visibleWorker;
+            set => SetProperty(ref visibleWorker, value);
         }
         public bool VisibleCancel           //表示・非表示（取消ボタン）
         {
-            get { return visibleCancel; }
-            set { SetProperty(ref visibleCancel, value); }
+            get => visibleCancel;
+            set => SetProperty(ref visibleCancel, value);
         }
         public bool IsFocusWorker           //フォーカス（作業者）
         {
-            get { return isFocusWorker; }
-            set { SetProperty(ref isFocusWorker, value); }
+            get => isFocusWorker;
+            set => SetProperty(ref isFocusWorker, value);
         }
 
         //イベント
@@ -193,6 +197,7 @@ namespace Display
         //初期化
         public void Initialize()
         {
+            var IniFile = new INIFile(CONST.SETTING_INI);
             ProcessName = IniFile.GetString("Page", "Process");
             TransportWorker = IniFile.GetString("Page", "Worker");
             TransportDate = SetToDay(DateTime.Now);
@@ -244,9 +249,9 @@ namespace Display
         //データ処理
         private void ProcessData(string function)
         {
-            InProcess inProcess = new InProcess();
-
+            var inProcess = new InProcess();
             var flg = false;
+
             switch (function)
             {
                 case "Regist":

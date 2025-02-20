@@ -45,33 +45,33 @@ namespace Display
         }
         public string HeaderUnit                        //コイル・枚数
         {
-            get { return headerUnit; }
-            set { SetProperty(ref headerUnit, value); }
+            get => headerUnit;
+            set => SetProperty(ref headerUnit, value);
         }
         public string HeaderWeight                      //焼結重量・単重
         {
-            get { return headerWeight; }
-            set { SetProperty(ref headerWeight, value); }
+            get => headerWeight;
+            set => SetProperty(ref headerWeight, value);
         }
         public string HeaderAmount                      //ヘッダー（重量・数量）
         {
-            get { return headerAmount; }
-            set { SetProperty(ref headerAmount, value); }
+            get => headerAmount;
+            set => SetProperty(ref headerAmount, value);
         }
         public bool VisibleShape                        //表示・非表示（形状）
         {
-            get { return visibleShape; }
-            set { SetProperty(ref visibleShape, value); }
+            get => visibleShape;
+            set => SetProperty(ref visibleShape, value);
         }
         public bool VisibleUnit                         //表示・非表示（コイル・枚数）
         {
-            get { return visibleUnit; }
-            set { SetProperty(ref visibleUnit, value); }
+            get => visibleUnit;
+            set => SetProperty(ref visibleUnit, value);
         }
         public bool VisibleWeight                       //表示・非表示（重量）
         {
-            get { return visibleWeight; }
-            set { SetProperty(ref visibleWeight, value); }
+            get => visibleWeight;
+            set => SetProperty(ref visibleWeight, value);
         }
 
         //イベント
@@ -98,7 +98,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -149,7 +149,7 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            InProcess inProcess = new InProcess();
+            var inProcess = new InProcess();
             SelectTable = inProcess.SelectList(ProcessName, null, null, InProcessDate);           
         }
 

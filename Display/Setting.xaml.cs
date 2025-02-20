@@ -44,17 +44,17 @@ namespace Display
         //プロパティ
         public string Version                   //バージョン
         {
-            get { return version; }
-            set { SetProperty(ref version, value); }
+            get => version;
+            set => SetProperty(ref version, value);
         }
         public string LogText                   //表示ログ
         {
-            get { return logText; }
-            set { SetProperty(ref logText, value); }
+            get => logText;
+            set => SetProperty(ref logText, value);
         }
         public string Log                       //ログファイル
         {
-            get { return log; }
+            get => log;
             set 
             { 
                 SetProperty(ref log, value);
@@ -63,48 +63,48 @@ namespace Display
         }
         public bool IsServer                    //サーバーコンボボックス
         {
-            get { return isServer; }
-            set { SetProperty(ref isServer, value); }
+            get => isServer;
+            set => SetProperty(ref isServer, value);
         }
         public bool IsProcessName               //工程区分コンボボックス
         {
-            get { return isProcessName; }
-            set { SetProperty(ref isProcessName, value); }
+            get => isProcessName;
+            set => SetProperty(ref isProcessName, value);
         }
         public bool IsEquipment                 //設備コンボボックス
         {
-            get { return isEquipment; }
-            set { SetProperty(ref isEquipment, value); }
+            get => isEquipment;
+            set => SetProperty(ref isEquipment, value);
         }
         public bool IsWorker                    //作業者コンボボックス
         {
-            get { return isWorker; }
-            set { SetProperty(ref isWorker, value); }
+            get => isWorker;
+            set => SetProperty(ref isWorker, value);
         }
         public bool IsServerOpen                //コンボボックスが開いているかどうか
         {
-            get { return isServerOpen; }
-            set { SetProperty(ref isServerOpen, value); }
+            get => isServerOpen;
+            set => SetProperty(ref isServerOpen, value);
         }
         public bool IsProcessOpen               //コンボボックスが開いているかどうか
         {
-            get { return isProcessOpen; }
-            set { SetProperty(ref isProcessOpen, value); }
+            get => isProcessOpen;
+            set => SetProperty(ref isProcessOpen, value);
         }
         public bool IsEquipmentOpen             //コンボボックスが開いているかどうか
         {
-            get { return isEquipmentOpen; }
-            set { SetProperty(ref isEquipmentOpen, value); }
+            get => isEquipmentOpen;
+            set => SetProperty(ref isEquipmentOpen, value);
         }
         public bool IsWorkerOpen                //コンボボックスが開いているかどうか
         {
-            get { return isWorkerOpen; }
-            set { SetProperty(ref isWorkerOpen, value); }
+            get => isWorkerOpen;
+            set => SetProperty(ref isWorkerOpen, value);
         }
         public bool IsFocusServer               //フォーカス（サーバー設定）
         {
-            get { return isFocusServer; }
-            set { SetProperty(ref isFocusServer, value); }
+            get => isFocusServer;
+            set => SetProperty(ref isFocusServer, value);
         }
         public List<string> Servers             //サーバーコンボックス
         {
@@ -113,7 +113,7 @@ namespace Display
                 ListSource listSource = new ListSource();
                 return listSource.Servers;
             }
-            set { SetProperty(ref servers, value); }
+            set => SetProperty(ref servers, value);
         }
         public List<string> ProcessNames        //工程区分コンボボックス
         {
@@ -122,7 +122,7 @@ namespace Display
                 ListSource listSource = new ListSource();
                 return listSource.Processes;
             }
-            set { SetProperty(ref processNames, value); }
+            set => SetProperty(ref processNames, value);
         }
 
         //イベント
@@ -148,7 +148,7 @@ namespace Display
         private void DisplayCapution()
         {
             //ボタン設定
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleList = false;
@@ -187,6 +187,7 @@ namespace Display
             var connection = Connection.Replace(server, Server);
 
             //INIファイル書き込み
+            var IniFile = new INIFile(CONST.SETTING_INI);
             IniFile.WriteString("Database", "ConnectString", connection);
             IniFile.WriteString("Page", "Process", ProcessName);
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
@@ -204,6 +205,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
+                    var IniFile = new INIFile(CONST.SETTING_INI);
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
@@ -213,6 +215,8 @@ namespace Display
         public async void KeyDown(object value)
         {
             var result = false;
+            var IniFile = new INIFile(CONST.SETTING_INI);
+
             switch (value)
             {
                 case "Regist":
@@ -224,7 +228,10 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告"));
-                    if (result) { StartPage(IniFile.GetString("Page", "Initial")); }
+                    if (result) 
+                    {
+                        StartPage(IniFile.GetString("Page", "Initial")); 
+                    }
                     break;
 
                 case "Server":

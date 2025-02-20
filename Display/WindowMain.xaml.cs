@@ -63,8 +63,8 @@ namespace Display
         { get; set; } = new ViewModelWindowMain();
         public SQL Connection                           //SQL接続コネクション
         {
-            get { return connection; }
-            set { SetProperty(ref connection, value); }
+            get => connection;
+            set => SetProperty(ref connection, value);
         }
         public IKeyDown Ikeydown                        //インターフェース
         { get; set; }
@@ -72,93 +72,93 @@ namespace Display
         { get; set; }
         public WindowState DisplayState                 //最大化・Window化
         {
-            get { return displayState; }
-            set { SetProperty(ref displayState, value); }
+            get => displayState;
+            set => SetProperty(ref displayState, value);
         }
         public WindowStyle DisplayStyle                 //最大化・最小化・閉じるボタン
         {
-            get { return displayStyle; }
-            set { SetProperty(ref displayStyle, value); }
+            get => displayStyle;
+            set => SetProperty(ref displayStyle, value);
         }
         public double WindowLeft                        //Windowの位置（Left）
         {
-            get { return windowLeft; }
-            set { SetProperty(ref windowLeft, value); }
+            get => windowLeft;
+            set => SetProperty(ref windowLeft, value);
         }
         public double WindowTop                         //Windowの位置（Top）
         {
-            get { return windowTop; }
-            set { SetProperty(ref windowTop, value); }
+            get => windowTop;
+            set => SetProperty(ref windowTop, value);
         }
         public double WindowWidth                       //Windowの大きさ（Width）
         {
-            get { return windowWidth; }
-            set { SetProperty(ref windowWidth, value); }
+            get => windowWidth;
+            set => SetProperty(ref windowWidth, value);
         }
         public double WindowHeight                      //Windowの大きさ（Height）
         {
-            get { return windowHeight; }
-            set { SetProperty(ref windowHeight, value); }
+            get => windowHeight;
+            set => SetProperty(ref windowHeight, value);
         }
         public string ProcessName                       //工程区分
         {
-            get { return processName; }
-            set { SetProperty(ref processName, value); }
+            get => processName;
+            set => SetProperty(ref processName, value);
         }
         public string ProcessWork                       //工程区分表示
         {
-            get { return processWork; }
-            set { SetProperty(ref processWork, value); }
+            get => processWork;
+            set => SetProperty(ref processWork, value);
         }
         public string FunctionColor                     //ページ名色
         {
-            get { return functionColor; }
-            set { SetProperty(ref functionColor, value); }
+            get => functionColor;
+            set => SetProperty(ref functionColor, value);
         }
         public bool VisiblePower                        //表示・非表示（電源ボタン）
         {
-            get { return visiblePower; }
-            set { SetProperty(ref visiblePower, value); }
+            get => visiblePower;
+            set => SetProperty(ref visiblePower, value);
         }
         public bool VisibleList                         //表示・非表示（一覧ボタン）
         {
-            get { return visibleList; }
-            set { SetProperty(ref visibleList, value); }
+            get => visibleList;
+            set => SetProperty(ref visibleList, value);
         }
         public bool VisibleInfo                         //表示・非表示（登録ボタン）
         {
-            get { return visibleInfo; }
-            set { SetProperty(ref visibleInfo, value); }
+            get => visibleInfo;
+            set => SetProperty(ref visibleInfo, value);
         }
         public bool VisibleDefect                       //表示・非表示（不良ボタン）
         {
-            get { return visibleDefect; }
-            set { SetProperty(ref visibleDefect, value); }
+            get => visibleDefect;
+            set => SetProperty(ref visibleDefect, value);
         }
         public bool VisibleArrow                        //表示・非表示（矢印ボタン）
         {
-            get { return visibleArrow; }
-            set { SetProperty(ref visibleArrow, value); }
+            get => visibleArrow;
+            set => SetProperty(ref visibleArrow, value);
         }
         public bool VisiblePlan                         //表示・非表示（予定ボタン）
         {
-            get { return visiblePlan; }
-            set { SetProperty(ref visiblePlan, value); }
+            get => visiblePlan;
+            set => SetProperty(ref visiblePlan, value);
         }
         public string IconPlan                          //アイコン（計画一覧）
         {
-            get { return iconPlan; }
-            set { SetProperty(ref iconPlan, value); }
+            get => iconPlan;
+            set => SetProperty(ref iconPlan, value);
         }
         public string IconList                          //アイコン（計画一覧）
         {
-            get { return iconList; }
-            set { SetProperty(ref iconList, value); }
+            get => iconList;
+            set => SetProperty(ref iconList, value);
         }
         public int IconSize                             //アイコンサイズ
         {
-            get { return iconSize; }
-            set { SetProperty(ref iconSize, value); }
+            get => iconSize;
+            set => SetProperty(ref iconSize, value);
         }
 
         //イベント
@@ -180,6 +180,7 @@ namespace Display
             //DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
 
             //データベース接続
+            var IniFile = new INIFile(CONST.SETTING_INI);
             var db = IniFile.GetString("Database", "Database");
             var connect = IniFile.GetString("Database", "ConnectString");
             Connection = new SQL(db, connect);
@@ -223,6 +224,7 @@ namespace Display
         private void LoadWindowProperty()
         {
             //最大化設定
+            var IniFile = new INIFile(CONST.SETTING_INI);
             DisplayState = IniFile.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
             DisplayStyle = WindowStyle.None;
 
@@ -275,7 +277,7 @@ namespace Display
         //1秒間隔でタイマーを設定
         private void StartTimer()
         {
-            Timer timer = new Timer(1000);
+            var timer = new Timer(1000);
             timer.Elapsed += OnTimerElapsed;
             timer.Start();
         }
@@ -303,6 +305,7 @@ namespace Display
         //キー処理
         private void KeyDown(object value)
         {
+            var IniFile = new INIFile(CONST.SETTING_INI);
             switch (value)
             {
                 case "ESC":

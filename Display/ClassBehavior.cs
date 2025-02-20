@@ -78,13 +78,13 @@ namespace Display
         public static readonly DependencyProperty UpperProperty = DependencyProperty.Register("Upper", typeof(bool), typeof(TextBoxBehavior), new PropertyMetadata(false, SetUpper));
         public string Mode          //入力文字制限
         {
-            get { return GetValue(ModeProperty).ToString(); }
-            set { SetValue(ModeProperty, value); }
+            get => GetValue(ModeProperty).ToString();
+            set => SetValue(ModeProperty, value);
         }
         public bool Upper           //入力時大文字変換
         {
-            get { return (bool)GetValue((UpperProperty)); }
-            set { SetValue(UpperProperty, value); }
+            get => (bool)GetValue((UpperProperty));
+            set => SetValue(UpperProperty, value);
         }
 
         //プロパティ
@@ -218,7 +218,6 @@ namespace Display
         private static void SetMode(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             Regex reg;
-
             switch (e.NewValue.ToString())
             {
                 case "Number":
@@ -249,14 +248,14 @@ namespace Display
                     reg = null;
                     break;
             }
-            TextBoxBehavior MODE = (TextBoxBehavior)sender;
+            var MODE = (TextBoxBehavior)sender;
             MODE.ModeReg = reg;
         }
 
         //入力時小文字→大文字変換
         private static void SetUpper(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            TextBoxBehavior UPPER = (TextBoxBehavior)sender;
+            var UPPER = (TextBoxBehavior)sender;
             UPPER.ModeUpper = (bool)e.NewValue;
         }
     }
@@ -354,8 +353,8 @@ namespace Display
             DependencyProperty.Register("Select", typeof(string), typeof(ButtonBehavior), new PropertyMetadata(null, null));
         public string Select        //メニューボタン選択時
         {
-            get { return GetValue(SelectProperty).ToString(); }
-            set { SetValue(SelectProperty, value); }
+            get => GetValue(SelectProperty).ToString();
+            set => SetValue(SelectProperty, value);
         }
 
         //フォーカス処理
@@ -648,13 +647,13 @@ namespace Display
         { get; set; }
         public bool IsMonthYear                     //年月
         {
-            get { return (bool)GetValue(IsMonthYearProperty); }
-            set { SetValue(IsMonthYearProperty, value); }
+            get => (bool)GetValue(IsMonthYearProperty);
+        set =>SetValue(IsMonthYearProperty, value);
         }
         public string CustomDateFormat              //日付形式
         {
-            get { return (string)GetValue(CustomDateFormatProperty); }
-            set { SetValue(CustomDateFormatProperty, value); }
+            get => (string)GetValue(CustomDateFormatProperty);
+            set => SetValue(CustomDateFormatProperty, value);
         }
         public bool IsCustomizeFormat               //日付形式が設定されているかどうか
         { get; set; }
@@ -748,8 +747,7 @@ namespace Display
         // Key（DOWN）でIsDropDownOpenをします
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Key key = e.Key;
-
+            var key = e.Key;
             if (key == Key.System) { key = e.SystemKey; }
             if (key == Key.Down)
             {
@@ -789,7 +787,7 @@ namespace Display
         //カレンダー取得処理
         private Calendar GetDatePickerCalendar(object sender)
         {
-            DatePicker datePicker = sender as DatePicker;
+            var datePicker = sender as DatePicker;
             popup = (Popup)datePicker.Template.FindName("PART_Popup", datePicker);
             return ((Calendar)popup.Child);
         }
@@ -865,9 +863,7 @@ namespace Display
         //日付変更用メソッド
         private void SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            DatePicker datePicker = sender as DatePicker;
-
+            var datePicker = sender as DatePicker;
             if (datePicker.SelectedDate == null)
             {
                 //PART_TextBoxの値がない場合は、カレンダーの初期値を本日にします
