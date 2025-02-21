@@ -113,11 +113,7 @@ namespace Display
         }
         public List<string> ProcessNames        //工程区分コンボボックス
         {
-            get 
-            {
-                ListSource listSource = new ListSource();
-                return listSource.Processes;
-            }
+            get=>ListSource.Processes;
             set => SetProperty(ref processNames, value);
         }
 

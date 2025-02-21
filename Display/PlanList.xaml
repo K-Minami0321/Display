@@ -109,7 +109,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 計画数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding 計画数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -118,7 +118,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 実績数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding 実績数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

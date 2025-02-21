@@ -63,7 +63,7 @@ namespace Display
         {
             if (value == null) { return string.Empty; }
             value = value.ToString() == "0" ? string.Empty : value;
-            return value.ToCurrency;
+            return value.ToCurrency();
         }
     }
 

@@ -112,10 +112,9 @@ namespace Display
                 Mark = process.Mark;
                 ProcessBefore = process.Before;
 
-                ListSource listSource = new ListSource();
-                listSource.Process = value;
-                Workers = listSource.Workers;
-                EquipmentCODES = listSource.Equipments;
+                ListSource.Process = value;
+                Workers = ListSource.Workers;
+                EquipmentCODES = ListSource.Equipments;
             }
         }
         public string ProcessBefore             //前工程

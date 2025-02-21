@@ -96,18 +96,18 @@ namespace Display
             switch (value)
             {
                 case "Process":
-                    listSource.Process = ProcessName;
+                    ListSource.Process = ProcessName;
                     VisivleProcess = false;
                     VisivleAll = true;
                     break;
 
                 case "All":
-                    listSource.Process = string.Empty;
+                    ListSource.Process = string.Empty;
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;
             }
-            WorkProcesses = listSource.WorkProcesses;
+            WorkProcesses = ListSource.WorkProcesses;
         }
     }
 }
