@@ -91,22 +91,21 @@ namespace Display
         //キー処理・一覧の作成
         private void KeyDown(object value)
         {
-            var listSource = new ListSource();
             switch (value)
             {
                 case "Process":
-                    listSource.Process = ProcessName;
+                    ListSource.Process = ProcessName;
                     VisivleProcess = false;
                     VisivleAll = true;
                     break;
 
                 case "All":
-                    listSource.Process = null;
+                    ListSource.Process = null;
                     VisivleProcess = true;
                     VisivleAll = false;
                     break;
             }
-            Workers = listSource.Workers;
+            Workers = ListSource.Workers;
         }
     }
 }
