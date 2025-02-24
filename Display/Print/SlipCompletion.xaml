@@ -14,8 +14,8 @@
             <Rectangle Canvas.Left="10" Style="{StaticResource RectangleDotLine}" Margin="10,12,10,0"/>
             <StackPanel Margin="16,0,16,0">
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="50" Height="45" Width="45" Margin="5,0,-5,0">
-                        <TextBlock Text="正" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28"/>
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" Height="40" Width="45" Margin="5,-5,-5,0">
+                        <TextBlock Text="仕上" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
                     </Border>
                     <Border BorderThickness="0,0,0,1" BorderBrush="Black" Width="200" VerticalAlignment="Center" Padding="5,0,5,3" Margin="15,0,0,0">
                         <TextBlock Text="現     品     票" TextAlignment="Center" FontSize="28"/>
@@ -23,8 +23,8 @@
                     <Border Width="63" Height="63" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Top" Margin="18,-5,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,-5,0,5">
-                    <TextBlock Text="{Binding FlgFirst, FallbackValue=初回品}" Foreground="#FF0000" VerticalAlignment="Bottom" Width="98" FontSize="14" Padding="8,0,0,0"/>
-                    <TextBlock Text="{Binding FlgAlloy, FallbackValue=裏金合金付着不可}" Foreground="#FF0000" TextAlignment="Center" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock VerticalAlignment="Bottom" Width="98" FontSize="14" Padding="8,0,0,0"/>
+                    <TextBlock TextAlignment="Center" FontSize="18" FontWeight="Bold"/>
                 </StackPanel>
                 <Border BorderThickness="0,0,0,1" BorderBrush="#000000">
                     <StackPanel Orientation="Horizontal">
@@ -56,8 +56,8 @@
                     </StackPanel>
                 </Border>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <TextBlock Text="{Binding PressRNO, FallbackValue=プレス行き}" Foreground="#FF0000" TextAlignment="Left" FontSize="17" FontWeight="Bold" Width="140"/>
-                    <TextBlock Text="{Binding Press, FallbackValue=整形班}" Foreground="#FF0000" TextAlignment="Right" FontSize="17" FontWeight="Bold" Width="200"/>
+                    <TextBlock TextAlignment="Left" FontSize="17" FontWeight="Bold" Width="140"/>
+                    <TextBlock TextAlignment="Right" FontSize="17" FontWeight="Bold" Width="200"/>
                 </StackPanel>
                 <Border BorderThickness="1,1,0,1" BorderBrush="#000000" Margin="0,3,0,0">
                     <StackPanel Orientation="Horizontal">
@@ -131,8 +131,8 @@
                     <Grid HorizontalAlignment="Right" Width="50">
                         <Border BorderThickness="1,0,0,0" BorderBrush="#000000">
                             <StackPanel Orientation="Vertical" Margin="0,2,0,2">
-                                <TextBlock Text="リリース" TextAlignment="Center" FontFamily="BIZ UD明朝 Medium" FontSize="10"/>
-                                <TextBlock Text="許可者" TextAlignment="Center" FontFamily="BIZ UD明朝 Medium" FontSize="10"/>
+                                <TextBlock Text="リリース" TextAlignment="Center" FontFamily="BIZ UD明朝 Medium" FontSize="10" Width="50"/>
+                                <TextBlock Text="許可者" TextAlignment="Center" FontFamily="BIZ UD明朝 Medium" FontSize="10" Width="50"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -290,7 +290,15 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-                <Image Source="{Binding Barcode}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="200" Height="60" Margin="0,3,0,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="263" Height="60" Margin="0,3,0,0">
+                        <LineBreak/>
+                        <Run Text="この現品票は製造課仕上にて加工上"/>
+                        <LineBreak/>
+                        <Run Text="複数ロットに分割した為発行したものです。"/>
+                    </TextBlock>
+                    <Image Source="{Binding Barcode}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="80" Height="60" Margin="0,3,0,0"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Canvas>
