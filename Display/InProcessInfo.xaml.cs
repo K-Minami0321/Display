@@ -76,12 +76,14 @@ namespace Display
             get => inProcessCODE;
             set 
             {
-                IsRegist = string.IsNullOrEmpty(value);
-
-                InProcess inProcess = new InProcess(value, ProcessName);
-                CopyProperty(inProcess, this, "InProcessCODE");
-                DisplayLot(LotNumber, value);
                 SetProperty(ref inProcessCODE, value);
+
+                InProcess inProcess = new InProcess(ProcessName);
+                inProcess.InProcessCODE = value;
+                CopyProperty(inProcess, this, "InProcessCODE");
+
+                DisplayLot(LotNumber, value);
+                IsRegist = string.IsNullOrEmpty(value);
             }
         }
         public string LotNumber         //ロット番号

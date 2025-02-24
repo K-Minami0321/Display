@@ -138,7 +138,9 @@ namespace Display
             set
             {
                 SetProperty(ref equipmentCODE, value);
-                Equipment equipment = new Equipment(value);
+
+                Equipment equipment = new Equipment();
+                equipment.EquipmentCODE = value;
                 EquipmentName = equipment.EquipmentName;
             }
         }
@@ -162,12 +164,13 @@ namespace Display
             get => productName;
             set
             {
+                SetProperty(ref productName, value);
+
                 if (!string.IsNullOrEmpty(value) && ProductName != value) 
                 {
                     var Sound = new SoundPlay();
                     Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); 
                 }
-                SetProperty(ref productName, value);
             }
         }
         public string ShapeName                 //形式
@@ -233,7 +236,9 @@ namespace Display
         public void DisplayLot(string lotnumber, string inProcesscode = "")
         {
             lotnumber = GetLotNumber(lotnumber);
-            var management = new Management(lotnumber, ProcessName);
+            var management = new Management();
+            management.ProcessName = ProcessName;
+            management.LotNumber = lotnumber;
             CopyProperty(management, this);
 
             //コイル数取得

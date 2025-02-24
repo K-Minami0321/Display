@@ -196,7 +196,9 @@ namespace Display
             get => equipmentCODE;
             set 
             {
-                var equipment = new Equipment(value);
+                var equipment = new Equipment();
+                equipment.EquipmentCODE = value;
+
                 var name = equipment.EquipmentName;
                 Equipment1 = value;
             }

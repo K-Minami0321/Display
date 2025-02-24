@@ -57,9 +57,11 @@ namespace Display
             get => inProcessCODE;
             set
             {
-                var inProcess = new InProcess(value, ProcessName);
-                CopyProperty(inProcess, this, "InProcessCODE");
                 SetProperty(ref inProcessCODE, value);
+
+                var inProcess = new InProcess(ProcessName);
+                inProcess.InProcessCODE = value;
+                CopyProperty(inProcess, this, "InProcessCODE");
             }
         }
         public string LotNumber             //ロット番号
@@ -67,14 +69,18 @@ namespace Display
             get => lotNumber;
             set 
             {
-                var management = new Management(GetLotNumber(value), ProcessName);
+                SetProperty(ref lotNumber, value);
+
+                var management = new Management();
+                management.ProcessName = ProcessName;
+                management.LotNumber = GetLotNumber(value);
                 CopyProperty(management, this, "LotNumber");
+
                 if (!string.IsNullOrEmpty(ProductName) && management.ProductName != ProductName) 
                 {
                     var Sound = new SoundPlay();
                     Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); 
                 }
-                SetProperty(ref lotNumber, value);
             }
         }
         public string ProductName           //品番
