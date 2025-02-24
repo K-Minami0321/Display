@@ -14,7 +14,6 @@ using System.Windows.Media;
 #pragma warning disable
 namespace Display
 {
-
     #region IValueConverter
     //表示・非表示
     public class CollapsedConverter : IValueConverter
@@ -63,7 +62,7 @@ namespace Display
         {
             if (value == null) { return string.Empty; }
             value = value.ToString() == "0" ? string.Empty : value;
-            return value.ToCurrency;
+            return value.ToCurrency();
         }
     }
 
