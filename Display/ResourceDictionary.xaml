@@ -121,8 +121,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <!-- ボタン -->
+
+    <!-- Button -->
     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -241,7 +241,14 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
-    <!-- テキストブロック -->
+    <!-- Rectangle -->
+    <Style x:Key="RectangleDotLine"  TargetType="{x:Type Rectangle}">
+        <Setter Property="Stroke" Value="#AAAAAA"/>
+        <Setter Property="StrokeDashArray" Value="2"/>
+        <Setter Property="StrokeThickness" Value="0.5"/>
+    </Style>
+
+    <!-- TextBlock -->
     <Style TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -258,8 +265,8 @@
         <Setter Property="Foreground" Value="#FFFFFF"/>
         <Setter Property="Margin" Value="20,20,20,20"/>
     </Style>
-    
-    <!-- テキストボックス -->
+
+    <!-- TextBox -->
     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>
@@ -317,7 +324,7 @@
         </Style.Triggers>
     </Style>
 
-    <!-- コンボボックス -->
+    <!-- ComboBox -->
     <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>
@@ -347,7 +354,7 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     </Style>
 
-    <!-- リストボックス -->
+    <!-- ListBox -->
     <Style TargetType="ListBox" BasedOn="{StaticResource MaterialDesignListBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Background" Value="#FFFFFF"/>
