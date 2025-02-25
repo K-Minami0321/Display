@@ -38,7 +38,8 @@ namespace Display
     public class ViewModelWindowMain : Common, IWindow
     {
         //変数
-        SQL connection;
+        INIFile IniFile = new INIFile(CONST.SETTING_INI);
+        SQL sql = new SQL();
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft = 0;
@@ -59,103 +60,98 @@ namespace Display
         int iconSize = 30;
 
         //プロパティ
-        public static ViewModelWindowMain Instance      //インスタンス
+        public static ViewModelWindowMain Instance          //インスタンス
         { get; set; } = new ViewModelWindowMain();
-        public SQL Connection                           //SQL接続コネクション
-        {
-            get => connection;
-            set => SetProperty(ref connection, value);
-        }
-        public IKeyDown Ikeydown                        //インターフェース
+        public IKeyDown Ikeydown                            //インターフェース
         { get; set; }
-        public ITimer Itimer                            //インターフェース
+        public ITimer Itimer                                //インターフェース
         { get; set; }
-        public WindowState DisplayState                 //最大化・Window化
+        public WindowState DisplayState                     //最大化・Window化
         {
             get => displayState;
             set => SetProperty(ref displayState, value);
         }
-        public WindowStyle DisplayStyle                 //最大化・最小化・閉じるボタン
+        public WindowStyle DisplayStyle                     //最大化・最小化・閉じるボタン
         {
             get => displayStyle;
             set => SetProperty(ref displayStyle, value);
         }
-        public double WindowLeft                        //Windowの位置（Left）
+        public double WindowLeft                            //Windowの位置（Left）
         {
             get => windowLeft;
             set => SetProperty(ref windowLeft, value);
         }
-        public double WindowTop                         //Windowの位置（Top）
+        public double WindowTop                             //Windowの位置（Top）
         {
             get => windowTop;
             set => SetProperty(ref windowTop, value);
         }
-        public double WindowWidth                       //Windowの大きさ（Width）
+        public double WindowWidth                           //Windowの大きさ（Width）
         {
             get => windowWidth;
             set => SetProperty(ref windowWidth, value);
         }
-        public double WindowHeight                      //Windowの大きさ（Height）
+        public double WindowHeight                          //Windowの大きさ（Height）
         {
             get => windowHeight;
             set => SetProperty(ref windowHeight, value);
         }
-        public string ProcessName                       //工程区分
+        public string ProcessName                           //工程区分
         {
             get => processName;
             set => SetProperty(ref processName, value);
         }
-        public string ProcessWork                       //工程区分表示
+        public string ProcessWork                           //工程区分表示
         {
             get => processWork;
             set => SetProperty(ref processWork, value);
         }
-        public string FunctionColor                     //ページ名色
+        public string FunctionColor                         //ページ名色
         {
             get => functionColor;
             set => SetProperty(ref functionColor, value);
         }
-        public bool VisiblePower                        //表示・非表示（電源ボタン）
+        public bool VisiblePower                            //表示・非表示（電源ボタン）
         {
             get => visiblePower;
             set => SetProperty(ref visiblePower, value);
         }
-        public bool VisibleList                         //表示・非表示（一覧ボタン）
+        public bool VisibleList                             //表示・非表示（一覧ボタン）
         {
             get => visibleList;
             set => SetProperty(ref visibleList, value);
         }
-        public bool VisibleInfo                         //表示・非表示（登録ボタン）
+        public bool VisibleInfo                             //表示・非表示（登録ボタン）
         {
             get => visibleInfo;
             set => SetProperty(ref visibleInfo, value);
         }
-        public bool VisibleDefect                       //表示・非表示（不良ボタン）
+        public bool VisibleDefect                           //表示・非表示（不良ボタン）
         {
             get => visibleDefect;
             set => SetProperty(ref visibleDefect, value);
         }
-        public bool VisibleArrow                        //表示・非表示（矢印ボタン）
+        public bool VisibleArrow                            //表示・非表示（矢印ボタン）
         {
             get => visibleArrow;
             set => SetProperty(ref visibleArrow, value);
         }
-        public bool VisiblePlan                         //表示・非表示（予定ボタン）
+        public bool VisiblePlan                             //表示・非表示（予定ボタン）
         {
             get => visiblePlan;
             set => SetProperty(ref visiblePlan, value);
         }
-        public string IconPlan                          //アイコン（計画一覧）
+        public string IconPlan                              //アイコン（計画一覧）
         {
             get => iconPlan;
             set => SetProperty(ref iconPlan, value);
         }
-        public string IconList                          //アイコン（計画一覧）
+        public string IconList                              //アイコン（計画一覧）
         {
             get => iconList;
             set => SetProperty(ref iconList, value);
         }
-        public int IconSize                             //アイコンサイズ
+        public int IconSize                                 //アイコンサイズ
         {
             get => iconSize;
             set => SetProperty(ref iconSize, value);
@@ -180,10 +176,9 @@ namespace Display
             //DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
 
             //データベース接続
-            var IniFile = new INIFile(CONST.SETTING_INI);
             var db = IniFile.GetString("Database", "Database");
             var connect = IniFile.GetString("Database", "ConnectString");
-            Connection = new SQL(db, connect);
+            sql.DatabaseOpen(db, connect);
 
             //初期設定
             FunctionColor = IsServer ? "1" : "0.5";
@@ -210,7 +205,7 @@ namespace Display
                 var result = (bool)await DialogHost.Show(new ControlMessage("システム終了", "※登録を破棄してシステムを終了します。", "警告"));
                 if (result) 
                 {
-                    Connection.DatabaseClose();
+                    sql.DatabaseClose();
                     Application.Current.Shutdown(); 
                 }
             }
@@ -224,7 +219,6 @@ namespace Display
         private void LoadWindowProperty()
         {
             //最大化設定
-            var IniFile = new INIFile(CONST.SETTING_INI);
             DisplayState = IniFile.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
             DisplayStyle = WindowStyle.None;
 
@@ -305,7 +299,6 @@ namespace Display
         //キー処理
         private void KeyDown(object value)
         {
-            var IniFile = new INIFile(CONST.SETTING_INI);
             switch (value)
             {
                 case "ESC":

@@ -25,6 +25,8 @@ namespace Display
     public class ViewModelSetting : Common, IKeyDown
     {
         //変数
+        INIFile IniFile = new INIFile(CONST.SETTING_INI);
+        ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
         string version;
         string processName;
         string logText;
@@ -58,6 +60,7 @@ namespace Display
             set 
             { 
                 SetProperty(ref log, value);
+
                 LogText = string.Empty; DisplayLog();
             }
         }
@@ -123,11 +126,6 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        public ViewModelSetting() 
-        {
-            Initialize();
-        }
-
         //ロード時
         private void OnLoad()
         {
@@ -140,7 +138,6 @@ namespace Display
         private void DisplayCapution()
         {
             //ボタン設定
-            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisiblePlan = true;
             windowMain.VisibleList = false;
@@ -152,23 +149,17 @@ namespace Display
             windowMain.ProcessWork = "設定画面";
             windowMain.ProcessName = "設定";
             Version = CONST.DISPLAY_VERSION;
-        }
-
-        //初期化
-        public void Initialize()
-        {
-            IsFocusServer = true;                       //フォーカス
+            IsFocusServer = true;
         }
 
         //ログ表示
         private void DisplayLog()
         {
-            var file = FOLDER.ApplicationPath() + @"log\" + Log;
-            if (File.Exists(file))
-            {
-                StreamReader reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
-                if (reader != null) { LogText = reader.ReadToEnd(); }
-            }  
+            var file = FOLDER.ApplicationPath() + Log;
+
+            if (!File.Exists(file)) { return; }
+            StreamReader reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
+            if (reader != null) { LogText = reader.ReadToEnd(); }
         }
 
         //登録処理
@@ -178,16 +169,12 @@ namespace Display
             var server = GetServerIP(Connection);
             var connection = Connection.Replace(server, Server);
 
-            //INIファイル書き込み
-            var IniFile = new INIFile(CONST.SETTING_INI);
             IniFile.WriteString("Database", "ConnectString", connection);
             IniFile.WriteString("Page", "Process", ProcessName);
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
 
-            ViewModelWindowMain.Instance.ProcessName = IniFile.GetString("Page", "Process");
-
-            //画面遷移先設定
+            windowMain.ProcessName = IniFile.GetString("Page", "Process");
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 
@@ -197,7 +184,6 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    var IniFile = new INIFile(CONST.SETTING_INI);
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
@@ -207,7 +193,6 @@ namespace Display
         public async void KeyDown(object value)
         {
             var result = false;
-            var IniFile = new INIFile(CONST.SETTING_INI);
 
             switch (value)
             {
@@ -220,10 +205,7 @@ namespace Display
                 case "Cancel":
                     //取消
                     result = (bool)await DialogHost.Show(new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告"));
-                    if (result) 
-                    {
-                        StartPage(IniFile.GetString("Page", "Initial")); 
-                    }
+                    if (result) { StartPage(IniFile.GetString("Page", "Initial"));  }
                     break;
 
                 case "Server":
