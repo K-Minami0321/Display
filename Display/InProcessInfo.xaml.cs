@@ -32,6 +32,9 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker, ITimer
     {
         //変数
+        
+        ViewModelControlTenKey controlTenKey = ViewModelControlTenKey.Instance;
+        ViewModelControlWorker controlWorker = ViewModelControlWorker.Instance;
         string inProcessCODE;
         string lotNumber;
         string coil;
@@ -307,7 +310,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -315,13 +317,13 @@ namespace Display
             windowMain.VisibleArrow = false;
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
-            windowMain.ProcessWork = "完了実績";
+            windowMain.ProcessWork = ProcessName + "完了実績";
             windowMain.ProcessName = ProcessName;
             windowMain.Ikeydown = this;
             windowMain.Itimer = this;
 
-            ViewModelControlTenKey.Instance.Itenkey = this;
-            ViewModelControlWorker.Instance.Iworker = this;
+            controlTenKey.Itenkey = this;
+            controlWorker.Iworker = this;
 
             //工程区分
             switch (ProcessName)
@@ -662,7 +664,7 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
-            var controlTenKey = ViewModelControlTenKey.Instance;
+            
 
             Focus = value;
             switch (Focus)

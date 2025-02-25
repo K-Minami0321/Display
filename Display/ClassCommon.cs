@@ -19,6 +19,7 @@ namespace Display
     public class Common : Shared, INotifyPropertyChanged
     {
         //変数
+        INIFile IniFile = new INIFile(CONST.SETTING_INI);
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
@@ -47,66 +48,68 @@ namespace Display
         List<string> workProcesses;
 
         //プロパティ
-        public ContentControl FramePage         //画面ページ
+        public ViewModelWindowMain windowMain       //WindowMainInstance
+        { get; set; } = ViewModelWindowMain.Instance;
+        public ContentControl FramePage             //画面ページ
         {
             get => framePage;
             set => SetProperty(ref framePage, value);
         }
-        public DataTable SelectTable            //一覧データ
+        public DataTable SelectTable                //一覧データ
         {
             get => selectTable;
             set => SetProperty(ref selectTable, value);
         }
-        public DataRowView SelectedItem         //選択した行
+        public DataRowView SelectedItem             //選択した行
         {
             get => selectedItem;
             set => SetProperty(ref selectedItem, value);
         }
-        public int IndexNumber                  //表示データの行番号
+        public int IndexNumber                      //表示データの行番号
         {
             get => indexNumber;
             set => SetProperty(ref indexNumber, value);
         }
-        public int SelectedIndex                //行選択
+        public int SelectedIndex                    //行選択
         {
             get => selectedIndex;
             set => SetProperty(ref selectedIndex, value);
         }
-        public double ScrollIndex               //スクロール位置
+        public double ScrollIndex                   //スクロール位置
         {
             get => scrollIndex;
             set => SetProperty(ref scrollIndex, value);
         }
-        public object Focus                     //フォーカス
+        public object Focus                         //フォーカス
         {
             get => focus;
             set => SetProperty(ref focus, value);
         }
-        public string NextFocus                 //次のフォーカス
+        public string NextFocus                     //次のフォーカス
         {
             get => nextFocus;
             set => SetProperty(ref nextFocus, value);
         }
-        public string SoundFolder               //サウンドフォルダ
+        public string SoundFolder                   //サウンドフォルダ
         {
             get => FOLDER.ApplicationPath() + @"Sound\";
         }
-        public string Page                      //遷移するページ
+        public string Page                          //遷移するページ
         {
             get => page;
             set => SetProperty(ref page, value);
         }
-        public string Connection                //接続文字列
+        public string Connection                    //接続文字列
         {
             get => connection;
             set => SetProperty(ref connection, value);
         }
-        public string Server                    //サーバーIP
+        public string Server                        //サーバーIP
         {
             get => server;
             set => SetProperty(ref server, value);
         }
-        public string ProcessName               //工程区分
+        public string ProcessName                   //工程区分
         {
             get => processName;
             set
@@ -122,17 +125,17 @@ namespace Display
                 EquipmentCODES = ListSource.Equipments;
             }
         }
-        public string ProcessBefore             //前工程
+        public string ProcessBefore                 //前工程
         {
             get => processBefore;
             set => SetProperty(ref processBefore, value);
         }
-        public string Mark                      //接頭文字
+        public string Mark                          //接頭文字
         {
             get => mark;
             set => SetProperty(ref mark, value);
         }
-        public string EquipmentCODE             //設備CODE
+        public string EquipmentCODE                 //設備CODE
         {
             get => equipmentCODE;
             set
@@ -144,22 +147,22 @@ namespace Display
                 EquipmentName = equipment.EquipmentName;
             }
         }
-        public string EquipmentName             //設備名
+        public string EquipmentName                 //設備名
         {
             get => equipmentName;
             set => SetProperty(ref equipmentName, value);
         }
-        public string Worker                    //担当者
+        public string Worker                        //担当者
         {
             get => worker;
             set => SetProperty(ref worker, value);
         }
-        public string ProcessWork               //工程表示
+        public string ProcessWork                   //工程表示
         {
             get => processWork;
             set => SetProperty(ref processWork, value);
         }
-        public string ProductName               //品番
+        public string ProductName                   //品番
         {
             get => productName;
             set
@@ -173,36 +176,36 @@ namespace Display
                 }
             }
         }
-        public string ShapeName                 //形式
+        public string ShapeName                     //形式
         {
             get => shapeName;
             set => SetProperty(ref shapeName, value);
         }
-        public string Coil                      //コイル数
+        public string Coil                          //コイル数
         {
             get => coil;
             set => SetProperty(ref coil, value);
         }
-        public List<string> EquipmentCODES      //設備コンボボックス
+        public List<string> EquipmentCODES          //設備コンボボックス
         {
             get => equipmentCODES;
             set => SetProperty(ref equipmentCODES, value);
         }
-        public List<string> Workers             //作業者コンボボックス
+        public List<string> Workers                 //作業者コンボボックス
         {
             get => workers;
             set => SetProperty(ref workers, value);
         }
-        public List<string> WorkProcesses       //工程リスト
+        public List<string> WorkProcesses           //工程リスト
         {
             get => workProcesses;
             set => SetProperty(ref workProcesses, value);
         }
 
+
         //INIファイル読み込み
         public void ReadINI()
         {
-            var IniFile = new INIFile(CONST.SETTING_INI);
             Connection = IniFile.GetString("Database", "ConnectString");
             Server = GetServerIP(Connection);
             Page = IniFile.GetString("Page", "Initial");
@@ -216,13 +219,15 @@ namespace Display
         public void StartPage(string page)
         {
             var type = Type.GetType("Display." + page);
-            ViewModelWindowMain.Instance.FramePage = (ContentControl)Activator.CreateInstance(type);
+            windowMain = ViewModelWindowMain.Instance;
+            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            ViewModelWindowMain.Instance.FramePage = (ContentControl)framepage;
+            windowMain = ViewModelWindowMain.Instance;
+            windowMain.FramePage = (ContentControl)framepage;
         }
 
         //省略ロット番号取得
