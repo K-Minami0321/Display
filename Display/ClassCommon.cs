@@ -1,16 +1,10 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Windows.Controls;
-using ZXing.QrCode.Internal;
-using ZXing.QrCode;
-using ZXing;
 
 #pragma warning disable
 namespace Display
@@ -259,60 +253,5 @@ namespace Display
             InProcessInfo.InProcessCODE = string.Empty;
             InProcessInfo.LotNumber = string.Empty;
         }
-
-        #region バーコード・QRコード
-        //バーコード・QRコード
-        public class BarCode : Common
-        {
-            string path = "barcode";
-
-            //バーコード・QRコードの生成
-            public string GenerateBarcode(BarcodeFormat format, string text, int width, int height)
-            {
-                var barcodewriter = new BarcodeWriter
-                {
-                    Format = format,
-                    Options = new QrCodeEncodingOptions
-                    {
-                        QrVersion = 1,
-                        ErrorCorrection = ErrorCorrectionLevel.L,
-                        CharacterSet = "UTF-8",
-                        Width = width,
-                        Height = height,
-                        Margin = 2,
-                        PureBarcode = true
-                    },
-                };
-
-                //バーコード・QRコード画像保存
-                var file = string.Empty;
-                using (var barcodeBitmap = barcodewriter.Write(text))
-                {
-                    file = path + @"\barcode" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
-                    barcodeBitmap.Save(file, ImageFormat.Png);
-                }
-                return file;
-            }
-
-            //バーコード保存フォルダ
-            public void SetBarcodeFolder()
-            {
-                try
-                {
-                    //フォルダ設定
-                    if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
-                    foreach (FileInfo getfile in new DirectoryInfo(path).GetFiles())
-                    {
-                        if ((getfile.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) { getfile.Attributes = FileAttributes.Normal; }
-                        getfile.Delete();
-                    }
-                }
-                catch
-                {
-                    //エラー処理
-                }
-            }
-        }
-        #endregion
     }
 }
