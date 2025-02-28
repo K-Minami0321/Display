@@ -20,7 +20,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportHistory : Common, IKeyDown, ISelect
+    public class ViewModelTransportHistory : Common, IWindowBase, ISelect
     {
         //変数
         string processName;
@@ -91,6 +91,8 @@ namespace Display
         internal ViewModelTransportHistory()
         {
             Instance = this;
+            windowMain.Interface = this;
+
             Initialize();
         }
 
@@ -117,7 +119,6 @@ namespace Display
             windowMain.IconList = "ViewList";
             windowMain.IconPlan = "TrayArrowUp";
             windowMain.ProcessName = ProcessName;
-            windowMain.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;           
         }
 

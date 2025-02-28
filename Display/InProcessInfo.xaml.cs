@@ -7,7 +7,6 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Diagnostics;
 
 #pragma warning disable
 namespace Display
@@ -29,7 +28,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelInProcessInfo : Common, IKeyDown, ITenKey, IWorker, ITimer
+    public class ViewModelInProcessInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, ITimer
     {
         //変数
         
@@ -295,6 +294,9 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string number)
         {
+            windowMain.Interface = this;
+            Ibarcode = this;
+
             Initialize();
             InProcessCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber, InProcessCODE); }     //予定表からロット番号取得
@@ -319,7 +321,6 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessWork = ProcessName + "完了実績";
             windowMain.ProcessName = ProcessName;
-            windowMain.Ikeydown = this;
             windowMain.Itimer = this;
 
             controlTenKey.Itenkey = this;
@@ -460,103 +461,6 @@ namespace Display
             Initialize();
         }
 
-        //キーイベント
-        public async void KeyDown(object value)
-        {
-            var result = false;
-            switch (value)
-            {
-                case "Regist":
-                    //登録
-                    if (await IsRequiredRegist())
-                    {
-                        result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
-                        await System.Threading.Tasks.Task.Delay(100);
-                        SetGotFocus(Focus);
-                        if (result)
-                        {
-                            RegistData();
-                            SetGotFocus("LotNumber");
-                        }
-                    }
-                    break;
-
-                case "Delete":
-                    //削除
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        DeleteDate();
-                        DisplayFramePage(new InProcessList());
-                    }
-                    break;
-
-                case "Cancel":
-                    //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        Initialize();
-                        SetGotFocus("LotNumber");
-                    }
-                    break;
-
-                case "Enter":
-                    //フォーカス移動
-                    SetNextFocus();
-                    break;
-
-                case "BS":
-                    //バックスペース処理
-                    BackSpaceText();
-                    break;
-
-                case "CLEAR":
-                    //文字列消去
-                    ClearText();
-                    break;
-
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                case "-":
-                    DisplayText(value);
-                    break;
-
-                case "Completed":
-                    //完了チェック
-                    Completed = Completed == "E" ? "" : "E";
-                    break;
-
-                case "DisplayInfo":
-                    //搬入登録画面
-                    Initialize();
-                    SetFocus();
-                    break;
-
-                case "DisplayList":
-                    //仕掛在庫一覧画面
-                    DisplayFramePage(new InProcessList());
-                    break;
-
-                case "DisplayPlan":
-                    //計画一覧画面
-                    DisplayFramePage(new PlanList());
-                    break;
-            }
-        }
-
         //入力制御
         private void DisplayText(object value)
         {
@@ -664,8 +568,6 @@ namespace Display
         //フォーカス処理（GotFocus）
         private void SetGotFocus(object value)
         {
-            
-
             Focus = value;
             switch (Focus)
             {
@@ -761,6 +663,15 @@ namespace Display
             if (IsRegist) { InProcessDate = SetToDay(DateTime.Now); }
         }
 
+        //QRコード処理
+        public void SetBarcode()
+        {
+
+
+
+
+        }
+
         //スワイプ処理
         public void Swipe(object value)
         {
@@ -768,6 +679,103 @@ namespace Display
             {
                 case "Left":
                     KeyDown("DisplayList");
+                    break;
+            }
+        }
+
+        //キーイベント
+        public async void KeyDown(object value)
+        {
+            var result = false;
+            switch (value)
+            {
+                case "Regist":
+                    //登録
+                    if (await IsRequiredRegist())
+                    {
+                        result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
+                        await System.Threading.Tasks.Task.Delay(100);
+                        SetGotFocus(Focus);
+                        if (result)
+                        {
+                            RegistData();
+                            SetGotFocus("LotNumber");
+                        }
+                    }
+                    break;
+
+                case "Delete":
+                    //削除
+                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        DeleteDate();
+                        DisplayFramePage(new InProcessList());
+                    }
+                    break;
+
+                case "Cancel":
+                    //取消
+                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        Initialize();
+                        SetGotFocus("LotNumber");
+                    }
+                    break;
+
+                case "Enter":
+                    //フォーカス移動
+                    SetNextFocus();
+                    break;
+
+                case "BS":
+                    //バックスペース処理
+                    BackSpaceText();
+                    break;
+
+                case "CLEAR":
+                    //文字列消去
+                    ClearText();
+                    break;
+
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                case "-":
+                    DisplayText(value);
+                    break;
+
+                case "Completed":
+                    //完了チェック
+                    Completed = Completed == "E" ? "" : "E";
+                    break;
+
+                case "DisplayInfo":
+                    //搬入登録画面
+                    Initialize();
+                    SetFocus();
+                    break;
+
+                case "DisplayList":
+                    //仕掛在庫一覧画面
+                    DisplayFramePage(new InProcessList());
+                    break;
+
+                case "DisplayPlan":
+                    //計画一覧画面
+                    DisplayFramePage(new PlanList());
                     break;
             }
         }

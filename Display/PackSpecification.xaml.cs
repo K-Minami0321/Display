@@ -26,7 +26,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelPackSpecification : Common, IKeyDown
+    public class ViewModelPackSpecification : Common, IWindowBase
     {
         //変数
         DataTable selectTable;
@@ -132,7 +132,9 @@ namespace Display
 
         //コンストラクター
         public ViewModelPackSpecification()
-        {           
+        {
+            windowMain.Interface = this;
+
             var productPackingStyle = new ProductPackingStyle();
             CopyProperty(productPackingStyle, this);
             DisplayImage(productPackingStyle);
@@ -156,7 +158,6 @@ namespace Display
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = true;
             windowMain.VisiblePlan = false;
-            windowMain.Ikeydown = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "梱包仕様書";
             windowMain.ProcessName = "梱包";

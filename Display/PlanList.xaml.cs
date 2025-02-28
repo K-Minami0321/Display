@@ -18,7 +18,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelPlanList : Common, IKeyDown, ISelect
+    public class ViewModelPlanList : Common, IWindowBase, ISelect
     {
         //変数
         string lotNumber;
@@ -71,6 +71,8 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
+            windowMain.Interface = this;
+
             Instance = this;
             Initialize();
         }
@@ -94,7 +96,6 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessName = ProcessName;
             windowMain.ProcessWork = ProcessName + "計画一覧";
-            windowMain.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
 
             //遷移ページ設定

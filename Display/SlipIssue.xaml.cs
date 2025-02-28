@@ -18,7 +18,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelSlipIssue : Common, IKeyDown, ISelect
+    public class ViewModelSlipIssue : Common, IWindowBase, ISelect
     {
         //変数
         ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
@@ -67,6 +67,12 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
+        //コンストラクター
+        public ViewModelSlipIssue()
+        {
+            windowMain.Interface = this;
+        }
+
         //ロード時
         private void OnLoad()
         {
@@ -85,7 +91,6 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessName = ProcessName;
             windowMain.ProcessWork = ProcessName + "現品票発行";
-            windowMain.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
 
             //遷移ページ設定

@@ -26,7 +26,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportInfo : Common, IKeyDown, IWorker, ITimer
+    public class ViewModelTransportInfo : Common, IWindowBase, IWorker, ITimer
     {
         //変数
         string processName;
@@ -169,7 +169,8 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportInfo(string code)
         {
-            //仕掛移動データ取得
+            windowMain.Interface = this;
+
             Initialize();
             InProcessCODE = code;
         }
@@ -191,7 +192,6 @@ namespace Display
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
             windowMain.VisiblePlan = true;
-            windowMain.Ikeydown = this;
             windowMain.Itimer = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "合板引取";

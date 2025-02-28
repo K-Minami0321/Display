@@ -22,7 +22,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelSetting : Common, IKeyDown
+    public class ViewModelSetting : Common, IWindowBase
     {
         //変数
         INIFile IniFile = new INIFile(CONST.SETTING_INI);
@@ -126,6 +126,11 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
+        public ViewModelSetting()
+        {
+            windowMain.Interface = this;
+        }
+
         //ロード時
         private void OnLoad()
         {
@@ -144,7 +149,6 @@ namespace Display
             windowMain.VisibleInfo = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = false;
-            windowMain.Ikeydown = this;
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "設定画面";
             windowMain.ProcessName = "設定";

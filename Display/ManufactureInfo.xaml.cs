@@ -28,7 +28,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManufactureInfo : Common, IKeyDown, ITenKey, IWorker, IWorkProcess, ITimer
+    public class ViewModelManufactureInfo : Common, IWindowBase, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
         string mode;
@@ -403,6 +403,9 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureInfo(string code, string number)
         {
+            windowMain.Interface = this;
+            windowMain.Itimer = this;
+
             Initialize();
             ManufactureCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }
@@ -418,7 +421,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -426,8 +428,6 @@ namespace Display
             windowMain.VisibleArrow = false;
             windowMain.VisiblePlan = true;
             windowMain.InitializeIcon();
-            windowMain.Ikeydown = this;
-            windowMain.Itimer = this;
             windowMain.ProcessName = ProcessName;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;

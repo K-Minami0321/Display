@@ -19,7 +19,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelInProcessList : Common, IKeyDown, ISelect
+    public class ViewModelInProcessList : Common, IWindowBase, ISelect
     {
         //変数
         string inProcessCODE;
@@ -84,6 +84,8 @@ namespace Display
         internal ViewModelInProcessList()
         {
             Instance = this;
+            windowMain.Interface = this;
+
             Initialize();
         }
 
@@ -98,7 +100,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            var windowMain = ViewModelWindowMain.Instance;
             windowMain.VisiblePower = true;
             windowMain.VisibleList = true;
             windowMain.VisibleInfo = true;
@@ -108,7 +109,6 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessWork = "完了履歴";
             windowMain.ProcessName = ProcessName;
-            windowMain.Ikeydown = this;
             DataGridBehavior.Instance.Iselect = this;
 
             //工程区分

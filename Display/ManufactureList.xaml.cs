@@ -19,7 +19,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManufactureList : Common, IKeyDown, ISelect
+    public class ViewModelManufactureList : Common, IWindowBase, ISelect
     {
         //変数
         string manufactureCODE;
@@ -50,6 +50,8 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
+            windowMain.Interface = this;
+
             Instance = this;
             Initialize();
         }
@@ -71,7 +73,6 @@ namespace Display
             windowMain.VisibleInfo = true;
             windowMain.VisibleDefect = false;
             windowMain.VisibleArrow = true;
-            windowMain.Ikeydown = this;
             windowMain.ProcessName = ProcessName;
             windowMain.ProcessWork = ProcessWork;
             windowMain.InitializeIcon();

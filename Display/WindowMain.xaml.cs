@@ -10,11 +10,12 @@ using System.Windows.Input;
 namespace Display
 {
     //インターフェース
-    public interface IKeyDown
+    public interface IWindowBase
     {
-        //キー押下処理
-        void KeyDown(object value);
-        void Swipe(object value);
+        string ReceivedData                         //COMポートからの値
+        { get; set; }
+        void KeyDown(object value);                 //キー押下処理
+        void Swipe(object value);                   //スワイプ処理
     }
 
     //インターフェース
@@ -35,11 +36,12 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelWindowMain : Common, IWindow
+    public class ViewModelWindowMain : Common, IWindow, ISerialPort
     {
         //変数
-        INIFile IniFile = new INIFile(CONST.SETTING_INI);
-        SQL sql = new SQL();
+        INIFile IniFile = new INIFile(CONST.SETTING_INI);   //設定ファイル
+        SQL sql = new SQL();                                //データベース
+        ComPort comPort;                                    //COMポート
         WindowState displayState;
         WindowStyle displayStyle;
         double windowLeft = 0;
@@ -49,6 +51,7 @@ namespace Display
         string processName = string.Empty;
         string processWork = string.Empty;
         string functionColor = string.Empty;
+        string receivedData;
         bool visiblePower = false;
         bool visibleList = false;
         bool visibleInfo = false;
@@ -62,7 +65,7 @@ namespace Display
         //プロパティ
         public static ViewModelWindowMain Instance          //インスタンス
         { get; set; } = new ViewModelWindowMain();
-        public IKeyDown Ikeydown                            //インターフェース
+        public IWindowBase Interface                        //インターフェース
         { get; set; }
         public ITimer Itimer                                //インターフェース
         { get; set; }
@@ -110,6 +113,15 @@ namespace Display
         {
             get => functionColor;
             set => SetProperty(ref functionColor, value);
+        }
+        public string ReceivedData                          //COMポートから取得した値
+        {
+            get => receivedData;
+            set
+            {
+                receivedData = value;
+                if (Interface != null) { Interface.ReceivedData = receivedData; }
+            }
         }
         public bool VisiblePower                            //表示・非表示（電源ボタン）
         {
@@ -168,19 +180,15 @@ namespace Display
         //コンストラクター
         internal ViewModelWindowMain()
         {
-            WindowBehavior.Instance.iWindow = this;
             Instance = this;
-
-            //Windowのサイズ・位置を復元
-            LoadWindowProperty();
-            //DisplayState = INI.GetBool("System", "WindowwStateMax") ? WindowState.Maximized : WindowState.Normal;
-
-            //データベース接続
-            var db = IniFile.GetString("Database", "Database");
-            var connect = IniFile.GetString("Database", "ConnectString");
-            sql.DatabaseOpen(db, connect);
+            WindowBehavior.Instance.iWindow = this;
 
             //初期設定
+            LoadWindowProperty();       //Windowのサイズ・位置を復元
+            ReadIniFile();              //設定ファイル読み込み
+            StartTimer();               //時刻設定スタート
+
+            //表示項目
             FunctionColor = IsServer ? "1" : "0.5";
             StartPage(IniFile.GetString("Page", "Initial"));
             VisiblePower = false;
@@ -188,7 +196,6 @@ namespace Display
             VisibleInfo = false;
             VisibleDefect = false;
             VisibleArrow = false;
-            StartTimer();
         }
 
         //終了処理
@@ -206,6 +213,7 @@ namespace Display
                 if (result) 
                 {
                     sql.DatabaseClose();
+                    comPort.PortClose();
                     Application.Current.Shutdown(); 
                 }
             }
@@ -260,6 +268,20 @@ namespace Display
             Properties.Settings.Default.Save();
         }
 
+        //iniファイル読み込み
+        private void ReadIniFile()
+        {
+            //データベース接続
+            var db = IniFile.GetString("Database", "Database");
+            var connect = IniFile.GetString("Database", "ConnectString");
+            sql.DatabaseOpen(db, connect);
+
+            //シリアルポート接続
+            comPort = new ComPort();
+            comPort.PortOpen(IniFile.GetString("Common", "SerialPort", ""));
+            comPort.Interface = this;
+        }
+
         //アイコン初期化
         public void InitializeIcon()
         {
@@ -292,8 +314,8 @@ namespace Display
             //スワイプ処理
             if (offsetY > 80) { KeyDown("ESC"); }               //上から下（電源を切る）
             if (offsetY < -80) { KeyDown("F12"); }              //下から上（設定画面表示）
-            if (offsetX > 80) { Ikeydown.Swipe("Left"); }       //左から右（一覧画面表示）
-            if (offsetX < -80) { Ikeydown.Swipe("Right"); }     //右から左（入力画面表示）
+            if (offsetX > 80) { Interface.Swipe("Left"); }       //左から右（一覧画面表示）
+            if (offsetX < -80) { Interface.Swipe("Right"); }     //右から左（入力画面表示）
         }
 
         //キー処理
@@ -355,11 +377,11 @@ namespace Display
                 case "DisplayInfo": case "DisplayList": case "DefectInfo": case "DisplayPlan":
                 case "PreviousDate": case "NextDate": case "Today":
                     //画面遷移
-                    if (Ikeydown != null) { Ikeydown.KeyDown(value); }
+                    if (Interface != null) { Interface.KeyDown(value); }
                     break;
 
                 case "Grid":
-                    if (Ikeydown != null) { Ikeydown.KeyDown(value); }
+                    if (Interface != null) { Interface.KeyDown(value); }
                     break;
             }
         }

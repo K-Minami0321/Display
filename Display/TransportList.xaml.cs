@@ -18,7 +18,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelTransportList : Common, IKeyDown, ISelect
+    public class ViewModelTransportList : Common, IWindowBase, ISelect
     {
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
@@ -32,6 +32,8 @@ namespace Display
         internal ViewModelTransportList()
         {
             Instance = this;
+            windowMain.Interface = this;
+
             Initialize();
         }
 
@@ -57,7 +59,6 @@ namespace Display
             windowMain.IconList = "ViewList";
             windowMain.IconPlan = "TrayArrowUp";
             windowMain.ProcessWork = "合板倉庫";
-            windowMain.Ikeydown = this;
             windowMain.ProcessName = ProcessBefore;
             DataGridBehavior.Instance.Iselect = this;
         }
@@ -65,6 +66,8 @@ namespace Display
         //初期化
         public void Initialize()
         {
+            windowMain.Interface = this;
+
             SelectedIndex = -1;
         }
 
