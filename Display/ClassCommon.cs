@@ -11,10 +11,17 @@ using System.Windows.Controls;
 using ZXing.QrCode.Internal;
 using ZXing.QrCode;
 using ZXing;
+using static Display.Common;
 
 #pragma warning disable
 namespace Display
 {
+    //インターフェース
+    public interface IBarcode
+    {
+        void SetBarcode();
+    }
+
     //共通クラス
     public class Common : Shared, INotifyPropertyChanged
     {
@@ -27,6 +34,7 @@ namespace Display
         int selectedIndex;
         double scrollIndex;
         object focus;
+        string receivedData;
         string nextFocus;
         string soundFolder;
         string page;
@@ -50,6 +58,8 @@ namespace Display
         //プロパティ
         public ViewModelWindowMain windowMain       //WindowMainInstance
         { get; set; } = ViewModelWindowMain.Instance;
+        public IBarcode Ibarcode                    //インターフェース（QRコード）
+        { get; set; }
         public ContentControl FramePage             //画面ページ
         {
             get => framePage;
@@ -84,6 +94,15 @@ namespace Display
         {
             get => focus;
             set => SetProperty(ref focus, value);
+        }
+        public string ReceivedData                  //COMポートからの値
+        {
+            get => receivedData;
+            set
+            {
+                receivedData = value;
+                if (Ibarcode != null) { Ibarcode.SetBarcode(); }
+            }
         }
         public string NextFocus                     //次のフォーカス
         {
@@ -202,7 +221,6 @@ namespace Display
             set => SetProperty(ref workProcesses, value);
         }
 
-
         //INIファイル読み込み
         public void ReadINI()
         {
@@ -259,60 +277,5 @@ namespace Display
             InProcessInfo.InProcessCODE = string.Empty;
             InProcessInfo.LotNumber = string.Empty;
         }
-
-        #region バーコード・QRコード
-        //バーコード・QRコード
-        public class BarCode : Common
-        {
-            string path = "barcode";
-
-            //バーコード・QRコードの生成
-            public string GenerateBarcode(BarcodeFormat format, string text, int width, int height)
-            {
-                var barcodewriter = new BarcodeWriter
-                {
-                    Format = format,
-                    Options = new QrCodeEncodingOptions
-                    {
-                        QrVersion = 1,
-                        ErrorCorrection = ErrorCorrectionLevel.L,
-                        CharacterSet = "UTF-8",
-                        Width = width,
-                        Height = height,
-                        Margin = 2,
-                        PureBarcode = true
-                    },
-                };
-
-                //バーコード・QRコード画像保存
-                var file = string.Empty;
-                using (var barcodeBitmap = barcodewriter.Write(text))
-                {
-                    file = path + @"\barcode" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
-                    barcodeBitmap.Save(file, ImageFormat.Png);
-                }
-                return file;
-            }
-
-            //バーコード保存フォルダ
-            public void SetBarcodeFolder()
-            {
-                try
-                {
-                    //フォルダ設定
-                    if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
-                    foreach (FileInfo getfile in new DirectoryInfo(path).GetFiles())
-                    {
-                        if ((getfile.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) { getfile.Attributes = FileAttributes.Normal; }
-                        getfile.Delete();
-                    }
-                }
-                catch
-                {
-                    //エラー処理
-                }
-            }
-        }
-        #endregion
     }
 }
