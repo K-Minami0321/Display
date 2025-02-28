@@ -43,6 +43,9 @@
     <Compile Update="SlipIssue.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Transport.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="TransportHistory.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -347,9 +347,9 @@ namespace Display
 
                 case "F3":
                     //搬出登録画面
-                    if (ProcessName != "プレス") { return; }
-                    FramePage = new TransportList();
-                    IniFile.WriteString("Page", "Initial", "TransportList");
+                    if (ProcessName == "梱包") { return; }
+                    FramePage = new Transport();
+                    IniFile.WriteString("Page", "Initial", "Transport");
                     break;
 
                 case "F4":

@@ -34,8 +34,10 @@ namespace Display
         
         ViewModelControlTenKey controlTenKey = ViewModelControlTenKey.Instance;
         ViewModelControlWorker controlWorker = ViewModelControlWorker.Instance;
+        InProcess inProcess = new InProcess();
         string inProcessCODE;
         string lotNumber;
+        string lotNumberSEQ;
         string coil;
         string unit = string.Empty;
         string weight = string.Empty;
@@ -80,7 +82,7 @@ namespace Display
             {
                 SetProperty(ref inProcessCODE, value);
 
-                InProcess inProcess = new InProcess(ProcessName);
+                inProcess = new InProcess(ProcessName);
                 inProcess.InProcessCODE = value;
                 CopyProperty(inProcess, this, "InProcessCODE");
 
@@ -92,6 +94,11 @@ namespace Display
         {
             get => lotNumber;
             set => SetProperty(ref lotNumber, value);
+        }
+        public string LotNumberSEQ      //ロット番号SEQ
+        {
+            get => lotNumberSEQ;
+            set => SetProperty(ref lotNumberSEQ, value);
         }
         public string Unit              //数量
         {
@@ -295,6 +302,7 @@ namespace Display
         internal ViewModelInProcessInfo(string code, string number)
         {
             windowMain.Interface = this;
+            windowMain.Itimer = this;
             Ibarcode = this;
 
             Initialize();
@@ -321,7 +329,7 @@ namespace Display
             windowMain.InitializeIcon();
             windowMain.ProcessWork = ProcessName + "完了実績";
             windowMain.ProcessName = ProcessName;
-            windowMain.Itimer = this;
+            
 
             controlTenKey.Itenkey = this;
             controlWorker.Iworker = this;
@@ -434,7 +442,6 @@ namespace Display
         //登録処理
         private void RegistData()
         {
-            var inProcess = new InProcess();
             CopyProperty(this, inProcess);
 
             //コード確定
@@ -455,7 +462,6 @@ namespace Display
         //削除処理
         private void DeleteDate()
         {
-            var inProcess = new InProcess();
             inProcess.DeleteLog();
             inProcess.DeleteHistory(InProcessCODE);
             Initialize();
@@ -666,10 +672,11 @@ namespace Display
         //QRコード処理
         public void SetBarcode()
         {
-
-
-
-
+            if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
+            LotNumber = ReceivedData.StringLeft(10);
+            LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+            DisplayLot(LotNumber, InProcessCODE);
+            SetGotFocus("Worker");
         }
 
         //スワイプ処理

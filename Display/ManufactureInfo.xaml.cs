@@ -28,7 +28,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManufactureInfo : Common, IWindowBase, ITenKey, IWorker, IWorkProcess, ITimer
+    public class ViewModelManufactureInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
         string mode;
@@ -36,6 +36,7 @@ namespace Display
         string manufactureCODE;
         string manufactureDate;
         string lotNumber = string.Empty;
+        string lotNumberSEQ = string.Empty;
         string productName = string.Empty;
         string workProcess = string.Empty;
         string startTime = string.Empty;
@@ -139,6 +140,11 @@ namespace Display
         {
             get => lotNumber;
             set => SetProperty(ref lotNumber, value);
+        }
+        public string LotNumberSEQ              //ロット番号SEQ
+        {
+            get => lotNumberSEQ;
+            set => SetProperty(ref lotNumberSEQ, value);
         }
         public string ProductName               //品番
         {
@@ -405,6 +411,7 @@ namespace Display
         {
             windowMain.Interface = this;
             windowMain.Itimer = this;
+            Ibarcode = this;
 
             Initialize();
             ManufactureCODE = code;
@@ -642,145 +649,6 @@ namespace Display
             Initialize();
             var IniFile = new INIFile(CONST.SETTING_INI);
             Mode = IniFile.GetString("Manufacture", "Mode");
-        }
-
-        //キーイベント
-        public async void KeyDown(object value)
-        {
-            var result = false;
-            switch (value)
-            {
-                case "WorkStart":
-                    //作業開始
-                    if (await IsRequiredRegist())
-                    {
-                        result = (bool)await DialogHost.Show(new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告"));
-                        await System.Threading.Tasks.Task.Delay(100);
-                        if (result)
-                        {
-                            //ボタン処理
-                            Mode = "作業中";
-                            SetGotFocus("Amount");
-                            StartTime = DateTime.Now.ToString("HH:mm");
-                        }
-                    }
-                    break;
-
-                case "WorkEnd":
-                    //作業終了処理
-                    EndTime = DateTime.Now.ToString("HH:mm");
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        RegistData();
-                        Mode = "準備";
-                    }
-                    else
-                    {
-                        EndTime = string.Empty;
-                        WorkTime = string.Empty;
-                    }
-                    break;
-
-                case "WorkBreak":
-                    //中断処理・再開処理
-                    Mode = (Mode == "中断") ? "作業中" : "中断";
-                    break;
-
-                case "Cancel":
-                    //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        Initialize();
-                        Mode = "準備";
-                    }
-                    break;
-
-                case "Regist":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを" + ButtonName.Replace("　", "") +"します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        RegistData();
-                        SetGotFocus("LotNumber");
-                    }
-                    break;
-
-                case "Delete":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告"));
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        DeleteDate();
-                        DisplayFramePage(new ManufactureList());
-                    }
-                    break;
-
-                case "Enter":
-                    //フォーカス移動
-                    SetNextFocus();
-                    break;
-
-                case "BS":
-                    //バックスペース処理
-                    BackSpaceText();
-                    break;
-
-                case "CLEAR":
-                    //文字列消去
-                    ClearText();
-                    break;
-
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                case "-":
-                    //テンキー処理
-                    DisplayText(value);
-                    break;
-
-                case "Completed":
-                    //完了
-                    Completed = Completed == "E" ? "" : "E";
-                    break;
-
-                case "Sales":
-                    //売上
-                    Sales = Sales == "*" ? "" : "*";
-                    break;
-
-                case "DisplayInfo":
-                    //加工登録画面
-                    Initialize();
-                    var IniFile = new INIFile(CONST.SETTING_INI);
-                    Mode = IniFile.GetString("Manufacture", "Mode");
-                    SetFocus();
-                    break;
-
-                case "DisplayList":
-                    //加工一覧画面
-                    DisplayFramePage(new ManufactureList());
-                    break;
-
-                case "DisplayPlan":
-                    //計画一覧画面
-                    DisplayFramePage(new PlanList());
-                    break;
-            }
         }
 
         //入力制御
@@ -1128,6 +996,16 @@ namespace Display
             if (IsRegist) { ManufactureDate = SetToDay(DateTime.Now); }
         }
 
+        //QRコード処理
+        public void SetBarcode()
+        {
+            if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
+            LotNumber = ReceivedData.StringLeft(10);
+            LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+            DisplayLot(LotNumber);
+            SetGotFocus("WorkProcess");
+        }
+
         //スワイプ処理
         public void Swipe(object value)
         {
@@ -1135,6 +1013,145 @@ namespace Display
             {
                 case "Left":
                     KeyDown("DisplayList");
+                    break;
+            }
+        }
+
+        //キーイベント
+        public async void KeyDown(object value)
+        {
+            var result = false;
+            switch (value)
+            {
+                case "WorkStart":
+                    //作業開始
+                    if (await IsRequiredRegist())
+                    {
+                        result = (bool)await DialogHost.Show(new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告"));
+                        await System.Threading.Tasks.Task.Delay(100);
+                        if (result)
+                        {
+                            //ボタン処理
+                            Mode = "作業中";
+                            SetGotFocus("Amount");
+                            StartTime = DateTime.Now.ToString("HH:mm");
+                        }
+                    }
+                    break;
+
+                case "WorkEnd":
+                    //作業終了処理
+                    EndTime = DateTime.Now.ToString("HH:mm");
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        RegistData();
+                        Mode = "準備";
+                    }
+                    else
+                    {
+                        EndTime = string.Empty;
+                        WorkTime = string.Empty;
+                    }
+                    break;
+
+                case "WorkBreak":
+                    //中断処理・再開処理
+                    Mode = (Mode == "中断") ? "作業中" : "中断";
+                    break;
+
+                case "Cancel":
+                    //取消
+                    result = (bool)await DialogHost.Show(new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        Initialize();
+                        Mode = "準備";
+                    }
+                    break;
+
+                case "Regist":
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを" + ButtonName.Replace("　", "") + "します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        RegistData();
+                        SetGotFocus("LotNumber");
+                    }
+                    break;
+
+                case "Delete":
+                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告"));
+                    await System.Threading.Tasks.Task.Delay(100);
+                    SetGotFocus(Focus);
+                    if (result)
+                    {
+                        DeleteDate();
+                        DisplayFramePage(new ManufactureList());
+                    }
+                    break;
+
+                case "Enter":
+                    //フォーカス移動
+                    SetNextFocus();
+                    break;
+
+                case "BS":
+                    //バックスペース処理
+                    BackSpaceText();
+                    break;
+
+                case "CLEAR":
+                    //文字列消去
+                    ClearText();
+                    break;
+
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                case "-":
+                    //テンキー処理
+                    DisplayText(value);
+                    break;
+
+                case "Completed":
+                    //完了
+                    Completed = Completed == "E" ? "" : "E";
+                    break;
+
+                case "Sales":
+                    //売上
+                    Sales = Sales == "*" ? "" : "*";
+                    break;
+
+                case "DisplayInfo":
+                    //加工登録画面
+                    Initialize();
+                    var IniFile = new INIFile(CONST.SETTING_INI);
+                    Mode = IniFile.GetString("Manufacture", "Mode");
+                    SetFocus();
+                    break;
+
+                case "DisplayList":
+                    //加工一覧画面
+                    DisplayFramePage(new ManufactureList());
+                    break;
+
+                case "DisplayPlan":
+                    //計画一覧画面
+                    DisplayFramePage(new PlanList());
                     break;
             }
         }

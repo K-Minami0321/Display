@@ -54,30 +54,54 @@
                         <Viewbox Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Stretch="Uniform" Margin="0,13,13,13">
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
-                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TextLotNumber" Text="{Binding LotNumber}" HorizontalAlignment="Stretch" Margin="0,0,60,0" 
-                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}"
-                                    IsEnabled="{Binding EnabledControl1}" InputMethod.IsInputMethodEnabled="False">
-                            <TextBox.Resources>
-                                <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FocusLotNumber}" Value="True">
-                                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumber}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Resources>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="LotNumber"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="LostFocus">
-                                    <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="LotNumber"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <i:Interaction.Behaviors>
-                                <local:TextBoxBehavior Mode="Hyphen"/>
-                            </i:Interaction.Behaviors>
-                        </TextBox>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                            <TextBox x:Name="TextLotNumber" Text="{Binding LotNumber}" Width="250"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}" InputMethod.IsInputMethodEnabled="False">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FocusLotNumber}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumber}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="LotNumber"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="LotNumber"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <i:Interaction.Behaviors>
+                                    <local:TextBoxBehavior Mode="Hyphen"/>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                            <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False">
+                                <TextBox.Resources>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FocusLotNumberSEQ}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextLotNumberSEQ}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Resources>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="LotNumberSEQ"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="LotNumberSEQ"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <i:Interaction.Behaviors>
+                                    <local:TextBoxBehavior Mode="Number"/>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                        </StackPanel>
                         <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="工 程"/>
                         </Viewbox>
