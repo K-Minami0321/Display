@@ -25,8 +25,6 @@ namespace Display
     public class ViewModelSetting : Common, IWindowBase
     {
         //変数
-        INIFile IniFile = new INIFile(CONST.SETTING_INI);
-        ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
         string version;
         string processName;
         string logText;
@@ -126,14 +124,10 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        public ViewModelSetting()
-        {
-            windowMain.Interface = this;
-        }
-
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             DisplayCapution();
             DisplayLog();
             ReadINI();
@@ -143,15 +137,15 @@ namespace Display
         private void DisplayCapution()
         {
             //ボタン設定
-            windowMain.VisiblePower = true;
-            windowMain.VisiblePlan = true;
-            windowMain.VisibleList = false;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.InitializeIcon();
-            windowMain.ProcessWork = "設定画面";
-            windowMain.ProcessName = "設定";
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.VisibleList = false;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessWork = "設定画面";
+            CtrlWindow.ProcessName = "設定";
             Version = CONST.DISPLAY_VERSION;
             IsFocusServer = true;
         }
@@ -178,7 +172,7 @@ namespace Display
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
 
-            windowMain.ProcessName = IniFile.GetString("Page", "Process");
+            CtrlWindow.ProcessName = IniFile.GetString("Page", "Process");
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 
@@ -202,13 +196,15 @@ namespace Display
             {
                 case "Regist":
                     //登録
-                    result = (bool)await DialogHost.Show(new ControlMessage("登録します", "※入力されたものを反映します。", "警告"));
+                    CtrlMessage = new ControlMessage("登録します", "※入力されたものを反映します。", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     if (result) { RegistData(); }
                     break;
 
                 case "Cancel":
                     //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告"));
+                    CtrlMessage = new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     if (result) { StartPage(IniFile.GetString("Page", "Initial"));  }
                     break;
 

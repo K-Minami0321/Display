@@ -86,7 +86,6 @@ namespace Display
             switch (value)
             {
                 case "Right":
-                    var IniFile = new INIFile(CONST.SETTING_INI);
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }

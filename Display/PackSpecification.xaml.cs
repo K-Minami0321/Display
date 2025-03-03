@@ -133,8 +133,6 @@ namespace Display
         //コンストラクター
         public ViewModelPackSpecification()
         {
-            windowMain.Interface = this;
-
             var productPackingStyle = new ProductPackingStyle();
             CopyProperty(productPackingStyle, this);
             DisplayImage(productPackingStyle);
@@ -144,6 +142,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             DisplayCapution();
             FocusProductName = true;
         }
@@ -151,16 +150,15 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = false;
-            windowMain.VisibleInfo = false;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = true;
-            windowMain.VisiblePlan = false;
-            windowMain.InitializeIcon();
-            windowMain.ProcessWork = "梱包仕様書";
-            windowMain.ProcessName = "梱包";
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = false;
+            CtrlWindow.VisibleInfo = false;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = true;
+            CtrlWindow.VisiblePlan = false;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessWork = "梱包仕様書";
+            CtrlWindow.ProcessName = "梱包";
         }
 
         //キーイベント

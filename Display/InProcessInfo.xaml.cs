@@ -301,8 +301,8 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string number)
         {
-            windowMain.Interface = this;
-            windowMain.Itimer = this;
+            CtrlWindow.Interface = this;
+            CtrlWindow.Itimer = this;
             Ibarcode = this;
 
             Initialize();
@@ -320,15 +320,15 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.VisiblePlan = true;
-            windowMain.InitializeIcon();
-            windowMain.ProcessWork = ProcessName + "完了実績";
-            windowMain.ProcessName = ProcessName;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessWork = ProcessName + "完了実績";
+            CtrlWindow.ProcessName = ProcessName;
             
 
             controlTenKey.Itenkey = this;
@@ -432,7 +432,8 @@ namespace Display
 
             if (!result)
             {
-                var messege = (bool)await DialogHost.Show(new ControlMessage(messege1, messege2, messege3));
+                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
+                var messege = (bool)await DialogHost.Show(CtrlMessage);
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -700,7 +701,8 @@ namespace Display
                     //登録
                     if (await IsRequiredRegist())
                     {
-                        result = (bool)await DialogHost.Show(new ControlMessage("搬入データを登録します", "", "警告"));
+                        CtrlMessage = new ControlMessage("搬入データを登録します", "", "警告");
+                        result = (bool)await DialogHost.Show(CtrlMessage);
                         await System.Threading.Tasks.Task.Delay(100);
                         SetGotFocus(Focus);
                         if (result)
@@ -713,7 +715,8 @@ namespace Display
 
                 case "Delete":
                     //削除
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告"));
+                    CtrlMessage = new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -725,7 +728,8 @@ namespace Display
 
                 case "Cancel":
                     //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告"));
+                    CtrlMessage = new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)

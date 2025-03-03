@@ -23,12 +23,12 @@ namespace Display
     public class ViewModelTransport : Common, IWindowBase, IBarcode
     {
         //変数
-        ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
+        InProcess inProcess = new InProcess();
         string processName;
         string lotNumber;
         string lotNumberSEQ;
         string inProcessCODE;
-        string transportDate;
+        string transportDate = DateTime.Now.ToString();
         string headerUnit;
         string headerWeight;
         string headerAmount;
@@ -101,34 +101,32 @@ namespace Display
         //コンストラクター
         internal ViewModelTransport()
         {
-            windowMain.Interface = this;
             Ibarcode = this;
-
             Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            windowMain.ProcessWork = "引取処理";
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = false;
-            windowMain.VisibleInfo = false;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.VisiblePlan = false;
-            windowMain.InitializeIcon();
-            windowMain.IconList = "ViewList";
-            windowMain.IconPlan = "TrayArrowUp";
-            windowMain.ProcessName = ProcessName;  
+            CtrlWindow.ProcessWork = "引取処理";
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = false;
+            CtrlWindow.VisibleInfo = false;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.VisiblePlan = false;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.IconList = "ViewList";
+            CtrlWindow.IconPlan = "TrayArrowUp";
+            CtrlWindow.ProcessName = ProcessName;  
         }
 
         //初期化
@@ -141,8 +139,10 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            var inProcess = new InProcess();
-            SelectTable = inProcess.SelectListTransportHistory("合板","プレス",TransportDate);           
+            //取得したQRコードを表示
+            
+
+
         }
 
         //QRコード処理
@@ -151,8 +151,7 @@ namespace Display
             if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
             LotNumber = ReceivedData.StringLeft(10);
             LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-
-
+            DiaplayList();
         }
 
         //スワイプ処理

@@ -84,14 +84,13 @@ namespace Display
         internal ViewModelInProcessList()
         {
             Instance = this;
-            windowMain.Interface = this;
-
             Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -100,15 +99,15 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = true;
-            windowMain.VisiblePlan = true;
-            windowMain.InitializeIcon();
-            windowMain.ProcessWork = "完了履歴";
-            windowMain.ProcessName = ProcessName;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = true;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessWork = "完了履歴";
+            CtrlWindow.ProcessName = ProcessName;
             DataGridBehavior.Instance.Iselect = this;
 
             //工程区分

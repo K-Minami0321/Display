@@ -50,8 +50,6 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
-            windowMain.Interface = this;
-
             Instance = this;
             Initialize();
         }
@@ -59,6 +57,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -67,15 +66,14 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            var windowMain = ViewModelWindowMain.Instance;
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = true;
-            windowMain.ProcessName = ProcessName;
-            windowMain.ProcessWork = ProcessWork;
-            windowMain.InitializeIcon();
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = true;
+            CtrlWindow.ProcessName = ProcessName;
+            CtrlWindow.ProcessWork = ProcessWork;
+            CtrlWindow.InitializeIcon();
             DataGridBehavior.Instance.Iselect = this;
         }
 

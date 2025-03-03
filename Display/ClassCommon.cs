@@ -19,12 +19,11 @@ namespace Display
     public class Common : Shared, INotifyPropertyChanged
     {
         //変数
-        INIFile IniFile = new INIFile(CONST.SETTING_INI);
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
         int indexNumber;
-        int selectedIndex;
+        int selectedIndex = -1;
         double scrollIndex;
         object focus;
         string receivedData;
@@ -33,7 +32,6 @@ namespace Display
         string page;
         string connection;
         string server;
-        string mode;
         string processName;
         string processBefore;
         string mark;
@@ -43,14 +41,22 @@ namespace Display
         string processWork;
         string productName;
         string shapeName;
+        string mode;
         string coil;
         List<string> equipmentCODES;
         List<string> workers;
         List<string> workProcesses;
 
         //プロパティ
-        public ViewModelWindowMain windowMain       //WindowMainInstance
+        public INIFile IniFile                      //設定ファイル
+        { get; set; } = new INIFile(CONST.SETTING_INI);
+        public ViewModelWindowMain CtrlWindow       //WindowMainInstance
         { get; set; } = ViewModelWindowMain.Instance;
+        public ControlMessage CtrlMessage           //メッセージダイアログ
+        { get; set; }
+
+
+
         public IBarcode Ibarcode                    //インターフェース（QRコード）
         { get; set; }
         public ContentControl FramePage             //画面ページ
@@ -193,6 +199,11 @@ namespace Display
             get => shapeName;
             set => SetProperty(ref shapeName, value);
         }
+        public string Mode                          //入力状況
+        {
+            get => mode;
+            set => SetProperty(ref mode, value);
+        }
         public string Coil                          //コイル数
         {
             get => coil;
@@ -224,21 +235,20 @@ namespace Display
             EquipmentCODE = IniFile.GetString("Page", "Equipment");
             Worker = IniFile.GetString("Page", "Worker");
             ProcessWork = string.IsNullOrEmpty(EquipmentName) ? ProcessName + "実績" : EquipmentName + " - " + EquipmentCODE;
+            Mode = IniFile.GetString("Manufacture", "Mode");
         }
 
         //スタートページを表示
         public void StartPage(string page)
         {
             var type = Type.GetType("Display." + page);
-            windowMain = ViewModelWindowMain.Instance;
-            windowMain.FramePage = (ContentControl)Activator.CreateInstance(type);
+            CtrlWindow.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            windowMain = ViewModelWindowMain.Instance;
-            windowMain.FramePage = (ContentControl)framepage;
+            CtrlWindow.FramePage = (ContentControl)framepage;
         }
 
         //省略ロット番号取得

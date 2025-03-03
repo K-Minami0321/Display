@@ -31,7 +31,6 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
-        string mode;
         string processName;
         string manufactureCODE;
         string manufactureDate;
@@ -81,11 +80,6 @@ namespace Display
         bool focusSales;
 
         //プロパティ
-        public string Mode                      //入力状況
-        {
-            get => mode;
-            set => SetProperty(ref mode, value);
-        }
         public string ManufactureCODE           //製造CODE
         {
             get => manufactureCODE;
@@ -409,10 +403,7 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureInfo(string code, string number)
         {
-            windowMain.Interface = this;
-            windowMain.Itimer = this;
             Ibarcode = this;
-
             Initialize();
             ManufactureCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }
@@ -421,6 +412,8 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
+            CtrlWindow.Itimer = this;
             DisplayCapution();
             SetFocus();
         }
@@ -428,21 +421,18 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.VisiblePlan = true;
-            windowMain.InitializeIcon();
-            windowMain.ProcessName = ProcessName;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessName = ProcessName;
             ViewModelControlTenKey.Instance.Itenkey = this;
             ViewModelControlWorker.Instance.Iworker = this;
             ViewModelControlWorkProcess.Instance.IworkProcess = this;
-            windowMain.ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE;
-
-            var IniFile = new INIFile(CONST.SETTING_INI);
-            Mode = IniFile.GetString("Manufacture", "Mode");
+            CtrlWindow.ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE;
 
             switch (Mode)
             {
@@ -454,9 +444,9 @@ namespace Display
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
                     VisibleEdit = true;
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
-                    windowMain.VisibleArrow = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
+                    CtrlWindow.VisibleArrow = false;
                     SetGotFocus("LotNumber");
                     break;
 
@@ -467,9 +457,9 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
-                    windowMain.VisibleArrow = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
+                    CtrlWindow.VisibleArrow = false;
                     break;
 
                 case "作業中":
@@ -480,8 +470,8 @@ namespace Display
                     VisibleButtonBreak = true;
                     VisibleButtonCancel = false;
                     BreakName = "中　断";
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
                     SetGotFocus("Amount");
 
                     break;
@@ -494,8 +484,8 @@ namespace Display
                     VisibleButtonBreak = true;
                     VisibleButtonCancel = true;
                     BreakName = "再　開";
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
                     break;
 
                 case "編集":
@@ -506,8 +496,8 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
                     break;
 
                 default:
@@ -518,16 +508,16 @@ namespace Display
                     VisibleButtonEnd = false;
                     VisibleButtonBreak = false;
                     VisibleButtonCancel = false;
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleDefect = false;
-                    windowMain.VisibleArrow = false;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleDefect = false;
+                    CtrlWindow.VisibleArrow = false;
                     break;
             }
 
             //ボタン設定
-            windowMain.VisiblePower = true;
-            windowMain.VisibleInfo = true;
-            windowMain.VisibleArrow = false;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleInfo = true;
+            CtrlWindow.VisibleArrow = false;
         }
 
         //初期化
@@ -609,7 +599,8 @@ namespace Display
 
             if (!result) 
             {
-                var messege = (bool)await DialogHost.Show(new ControlMessage(messege1, messege2, messege3));
+                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
+                var messege = (bool)await DialogHost.Show(CtrlMessage);
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -633,10 +624,7 @@ namespace Display
             //登録処理
             manufacture.InsertLog(IsRegist);
             manufacture.Resist(ManufactureCODE);
-
             Initialize();
-            var IniFile = new INIFile(CONST.SETTING_INI);
-            Mode = IniFile.GetString("Manufacture", "Mode");
         }
 
         //削除処理
@@ -645,10 +633,7 @@ namespace Display
             var manufacture = new Manufacture();
             manufacture.DeleteLog();
             manufacture.Delete(ManufactureCODE);        //製造実績削除
-
             Initialize();
-            var IniFile = new INIFile(CONST.SETTING_INI);
-            Mode = IniFile.GetString("Manufacture", "Mode");
         }
 
         //入力制御
@@ -1027,7 +1012,8 @@ namespace Display
                     //作業開始
                     if (await IsRequiredRegist())
                     {
-                        result = (bool)await DialogHost.Show(new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告"));
+                        CtrlMessage = new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告")
+                        result = (bool)await DialogHost.Show(CtrlMessage);
                         await System.Threading.Tasks.Task.Delay(100);
                         if (result)
                         {
@@ -1042,7 +1028,8 @@ namespace Display
                 case "WorkEnd":
                     //作業終了処理
                     EndTime = DateTime.Now.ToString("HH:mm");
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告"));
+                    CtrlMessage = new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1064,7 +1051,8 @@ namespace Display
 
                 case "Cancel":
                     //取消
-                    result = (bool)await DialogHost.Show(new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告"));
+                    CtrlMessage = new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1075,7 +1063,8 @@ namespace Display
                     break;
 
                 case "Regist":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを" + ButtonName.Replace("　", "") + "します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告"));
+                    CtrlMessage = new ControlMessage("作業データを" + ButtonName.Replace("　", "") + "します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1086,7 +1075,8 @@ namespace Display
                     break;
 
                 case "Delete":
-                    result = (bool)await DialogHost.Show(new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告"));
+                    CtrlMessage = new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1139,8 +1129,6 @@ namespace Display
                 case "DisplayInfo":
                     //加工登録画面
                     Initialize();
-                    var IniFile = new INIFile(CONST.SETTING_INI);
-                    Mode = IniFile.GetString("Manufacture", "Mode");
                     SetFocus();
                     break;
 

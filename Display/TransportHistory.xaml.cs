@@ -91,14 +91,13 @@ namespace Display
         internal ViewModelTransportHistory()
         {
             Instance = this;
-            windowMain.Interface = this;
-
             Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -107,18 +106,17 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            var windowMain = ViewModelWindowMain.Instance;
-            windowMain.ProcessWork = "合板引取履歴";
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = false;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = true;
-            windowMain.VisiblePlan = true;
-            windowMain.InitializeIcon();
-            windowMain.IconList = "ViewList";
-            windowMain.IconPlan = "TrayArrowUp";
-            windowMain.ProcessName = ProcessName;
+            CtrlWindow.ProcessWork = "合板引取履歴";
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = false;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = true;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.IconList = "ViewList";
+            CtrlWindow.IconPlan = "TrayArrowUp";
+            CtrlWindow.ProcessName = ProcessName;
             DataGridBehavior.Instance.Iselect = this;           
         }
 

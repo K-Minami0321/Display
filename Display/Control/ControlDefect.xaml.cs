@@ -31,7 +31,7 @@ namespace Display
     public class ViewModelControlDefect : Common, IDefect
     {
         //変数
-        ViewModelWindowMain windowMain;
+        ViewModelWindowMain CtrlWindow;
         string processName;
         string defect;
         List<string> defects;
@@ -48,7 +48,7 @@ namespace Display
             { 
                 SetProperty(ref processName, value);
                 ProcessCategory process = new ProcessCategory(value);
-                if (windowMain.ProcessWork == "仕掛搬出") { value = process.Next; }
+                if (CtrlWindow.ProcessWork == "仕掛搬出") { value = process.Next; }
             }
         }
         public string Defect                            //不良内容
@@ -71,9 +71,8 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            windowMain = ViewModelWindowMain.Instance;
             Instance = this;
-            ProcessName = windowMain.ProcessName;
+            ProcessName = CtrlWindow.ProcessName;
 
             //不良内容追加
             Defects = new List<string>();

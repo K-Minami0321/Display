@@ -20,6 +20,9 @@ namespace Display
     //ViewModel
     public class ViewModelTransportList : Common, IWindowBase, ISelect
     {
+        //変数
+        InProcess inProcess = new InProcess();
+
         //プロパティ
         public static ViewModelTransportList Instance   //インスタンス
         { get; set; } = new ViewModelTransportList();
@@ -32,14 +35,12 @@ namespace Display
         internal ViewModelTransportList()
         {
             Instance = this;
-            windowMain.Interface = this;
-
-            Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -48,33 +49,23 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = false;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.VisiblePlan = true;
-            windowMain.InitializeIcon();
-            windowMain.IconList = "ViewList";
-            windowMain.IconPlan = "TrayArrowUp";
-            windowMain.ProcessWork = "合板倉庫";
-            windowMain.ProcessName = ProcessBefore;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = false;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.IconList = "ViewList";
+            CtrlWindow.IconPlan = "TrayArrowUp";
+            CtrlWindow.ProcessWork = "合板倉庫";
+            CtrlWindow.ProcessName = ProcessBefore;
             DataGridBehavior.Instance.Iselect = this;
-        }
-
-        //初期化
-        public void Initialize()
-        {
-            windowMain.Interface = this;
-
-            SelectedIndex = -1;
         }
 
         //一覧表示
         private void DiaplayList()
         {
-            InProcess inProcess = new InProcess();
             SelectTable = inProcess.SelectListTransport(ProcessBefore);
         }
 

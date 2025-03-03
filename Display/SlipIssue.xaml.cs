@@ -21,7 +21,6 @@ namespace Display
     public class ViewModelSlipIssue : Common, IWindowBase, ISelect
     {
         //変数
-        ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
         string lotNumber;
         string updateDate;
         string file;
@@ -65,17 +64,11 @@ namespace Display
         ActionCommand commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandButton;
-        public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-
-        //コンストラクター
-        public ViewModelSlipIssue()
-        {
-            windowMain.Interface = this;
-        }
 
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -84,13 +77,13 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            windowMain.VisiblePower = true;
-            windowMain.VisiblePlan = true;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.InitializeIcon();
-            windowMain.ProcessName = ProcessName;
-            windowMain.ProcessWork = ProcessName + "現品票発行";
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessName = ProcessName;
+            CtrlWindow.ProcessWork = ProcessName + "現品票発行";
             DataGridBehavior.Instance.Iselect = this;
 
             //遷移ページ設定
@@ -98,14 +91,14 @@ namespace Display
             {
                 case "PlanList":
                     //計画一覧
-                    windowMain.VisibleList = false;
-                    windowMain.VisibleInfo = false;
+                    CtrlWindow.VisibleList = false;
+                    CtrlWindow.VisibleInfo = false;
                     EnableSelect = false;
                     break;
 
                 default:
-                    windowMain.VisibleList = true;
-                    windowMain.VisibleInfo = true;
+                    CtrlWindow.VisibleList = true;
+                    CtrlWindow.VisibleInfo = true;
                     EnableSelect = true;
                     break;
             }

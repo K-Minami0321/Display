@@ -181,6 +181,7 @@ namespace Display
         internal ViewModelWindowMain()
         {
             Instance = this;
+            CtrlWindow = this;
             WindowBehavior.Instance.iWindow = this;
 
             //初期設定
@@ -209,7 +210,8 @@ namespace Display
         {
             try
             {
-                var result = (bool)await DialogHost.Show(new ControlMessage("システム終了", "※登録を破棄してシステムを終了します。", "警告"));
+                CtrlMessage = new ControlMessage("システム終了", "※登録を破棄してシステムを終了します。", "警告");
+                var result = (bool)await DialogHost.Show(CtrlMessage);
                 if (result) 
                 {
                     sql.DatabaseClose();

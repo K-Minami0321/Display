@@ -169,8 +169,6 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportInfo(string code)
         {
-            windowMain.Interface = this;
-
             Initialize();
             InProcessCODE = code;
         }
@@ -178,6 +176,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            CtrlWindow.Interface = this;
             DisplayCapution();
             SetGotFocus("Worker");
         }
@@ -185,31 +184,27 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain windowMain = ViewModelWindowMain.Instance;
-            windowMain.VisiblePower = true;
-            windowMain.VisibleList = true;
-            windowMain.VisibleInfo = false;
-            windowMain.VisibleDefect = false;
-            windowMain.VisibleArrow = false;
-            windowMain.VisiblePlan = true;
-            windowMain.Itimer = this;
-            windowMain.InitializeIcon();
-            windowMain.ProcessWork = "合板引取";
-            windowMain.IconPlan = "TrayArrowUp";
-            windowMain.ProcessName = ProcessName;
+            CtrlWindow.VisiblePower = true;
+            CtrlWindow.VisibleList = true;
+            CtrlWindow.VisibleInfo = false;
+            CtrlWindow.VisibleDefect = false;
+            CtrlWindow.VisibleArrow = false;
+            CtrlWindow.VisiblePlan = true;
+            CtrlWindow.Itimer = this;
+            CtrlWindow.InitializeIcon();
+            CtrlWindow.ProcessWork = "合板引取";
+            CtrlWindow.IconPlan = "TrayArrowUp";
+            CtrlWindow.ProcessName = ProcessName;
             ViewModelControlWorker.Instance.Iworker = this;
         }
 
         //初期化
         public void Initialize()
         {
-            var IniFile = new INIFile(CONST.SETTING_INI);
             ProcessName = IniFile.GetString("Page", "Process");
             TransportWorker = IniFile.GetString("Page", "Worker");
             TransportDate = SetToDay(DateTime.Now);
-
             IsRegist = (Status == "搬入");
-            
         }
 
         //選択処理
@@ -245,7 +240,8 @@ namespace Display
 
             if (!result)
             {
-                var messege = (bool)await DialogHost.Show(new ControlMessage(messege1, messege2, messege3));
+                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
+                var messege = (bool)await DialogHost.Show(CtrlMessage);
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -343,7 +339,8 @@ namespace Display
 
                 case "Cancel":
                     //取消（合板に戻す）
-                    result = (bool)await DialogHost.Show(new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告"));
+                    CtrlMessage = new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告");
+                    result = (bool)await DialogHost.Show(CtrlMessage);
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
