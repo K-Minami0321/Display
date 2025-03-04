@@ -1012,7 +1012,7 @@ namespace Display
                     //作業開始
                     if (await IsRequiredRegist())
                     {
-                        CtrlMessage = new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告")
+                        CtrlMessage = new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告");
                         result = (bool)await DialogHost.Show(CtrlMessage);
                         await System.Threading.Tasks.Task.Delay(100);
                         if (result)

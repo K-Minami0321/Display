@@ -52,9 +52,13 @@ namespace Display
         { get; set; } = new INIFile(CONST.SETTING_INI);
         public ViewModelWindowMain CtrlWindow       //WindowMainInstance
         { get; set; } = ViewModelWindowMain.Instance;
+        public ViewModelControlTenKey CtrlTenKey    //テンキーコントロール
+        { get; set; } = ViewModelControlTenKey.Instance;
+        public ViewModelControlWorker CtrlWorker    //作業者コントロール
+        { get; set; } = ViewModelControlWorker.Instance;
         public ControlMessage CtrlMessage           //メッセージダイアログ
         { get; set; }
-
+        
 
 
         public IBarcode Ibarcode                    //インターフェース（QRコード）

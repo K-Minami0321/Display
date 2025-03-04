@@ -40,7 +40,7 @@ namespace Display
         string place;
         string status;
         string buttonName;
-        bool regFlg;
+        bool isRegist;
         bool isEnable;
         bool visibleWorker;
         bool visibleCancel;
@@ -97,9 +97,9 @@ namespace Display
         {
             get => transportDate;
             set 
-            { 
-                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
+            {
                 SetProperty(ref transportDate, value);
+                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
             }
         }
         public string TransportWorker       //作業者
@@ -129,13 +129,8 @@ namespace Display
         }
         public bool IsRegist                //新規・既存フラグ（true:新規、false:既存）
         {
-            get => regFlg;
-            set
-            {
-                SetProperty(ref regFlg, value);
-                VisibleCancel = !value;
-                ButtonName = value ? "登　録" : "修　正";
-            }
+            get => isRegist;
+            set => SetProperty(ref isRegist, value);
         }
         public bool IsEnable                //表示・非表示（下部ボタン）
         {
@@ -177,6 +172,7 @@ namespace Display
         private void OnLoad()
         {
             CtrlWindow.Interface = this;
+            CtrlWorker.Iworker = this;
             DisplayCapution();
             SetGotFocus("Worker");
         }
@@ -184,6 +180,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
+            
             CtrlWindow.VisiblePower = true;
             CtrlWindow.VisibleList = true;
             CtrlWindow.VisibleInfo = false;
@@ -195,7 +192,9 @@ namespace Display
             CtrlWindow.ProcessWork = "合板引取";
             CtrlWindow.IconPlan = "TrayArrowUp";
             CtrlWindow.ProcessName = ProcessName;
-            ViewModelControlWorker.Instance.Iworker = this;
+
+            VisibleCancel = !IsRegist;
+            ButtonName = IsRegist ? "登　録" : "修　正";
         }
 
         //初期化
