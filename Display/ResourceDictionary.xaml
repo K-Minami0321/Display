@@ -296,7 +296,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="TextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>
@@ -318,7 +317,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="LogStyle" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>
@@ -346,7 +344,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="ComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>

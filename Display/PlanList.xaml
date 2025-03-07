@@ -127,7 +127,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <Border CornerRadius="2" Background="{Binding 工程,Converter={StaticResource ProcessColorConverter},FallbackValue=#00FFFFFF}" 
+                                        <Border CornerRadius="2" Background="{Binding 工程, Converter={StaticResource ProcessColorConverter},FallbackValue=#00FFFFFF}" 
                                                 MinWidth="70" Height="32" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding 工程}" Foreground="{Binding 工程,Converter={StaticResource CompletedColorConverter}}" 
                                                        FontWeight="Bold" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>

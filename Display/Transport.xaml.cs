@@ -2,7 +2,7 @@
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -24,12 +24,7 @@ namespace Display
     public class ViewModelTransport : Common, IWindowBase, IBarcode
     {
         //変数
-        InProcess inProcess = new InProcess();
-        ObservableCollection<ListTable> table = new ObservableCollection<ListTable>();
-        string processName;
-        string lotNumber;
-        string lotNumberSEQ;
-        string inProcessCODE;
+        ManagementSlip managementSlip = new ManagementSlip();
         string transportDate = DateTime.Now.ToString();
         string headerUnit;
         string headerWeight;
@@ -39,69 +34,41 @@ namespace Display
         bool visibleWeight;
 
         //プロパティ
-        public ObservableCollection<ListTable> Table    //引取リスト
-        {
-            get => table;
-            set => SetProperty(ref table, value);
-        }
-        public string LotNumber                         //ロット番号
-        {
-            get => lotNumber;
-            set
-            {
-                SetProperty(ref lotNumber, value);
-
-
-
-
-
-            }
-        }
-        public string LotNumberSEQ                      //ロット番号SEQ
-        {
-            get => lotNumberSEQ;
-            set => SetProperty(ref lotNumberSEQ, value);
-        }
-        public string InProcessCODE                     //仕掛在庫CODE
-        {
-            get => inProcessCODE;
-            set => SetProperty(ref inProcessCODE, value);
-        }
-        public string TransportDate                     //作業日
+        public string TransportDate             //作業日
         {
             get => transportDate;
-            set 
-            {
-                SetProperty(ref transportDate, value);
-                DiaplayList();
-            }
+            set => SetProperty(ref transportDate, value);
         }
-        public string HeaderUnit                        //コイル・枚数
+        public string LotNumber                 //ロット番号
+        { get; set; }
+        public string LotNumberSEQ              //ロット番号SEQ
+        { get; set; }
+        public string HeaderUnit                //コイル・枚数
         {
             get => headerUnit;
             set => SetProperty(ref headerUnit, value);
         }
-        public string HeaderWeight                      //焼結重量・単重
+        public string HeaderWeight              //焼結重量・単重
         {
             get => headerWeight;
             set => SetProperty(ref headerWeight, value);
         }
-        public string HeaderAmount                      //ヘッダー（重量・数量）
+        public string HeaderAmount              //ヘッダー（重量・数量）
         {
             get => headerAmount;
             set => SetProperty(ref headerAmount, value);
         }
-        public bool VisibleShape                        //表示・非表示（形状）
+        public bool VisibleShape                //表示・非表示（形状）
         {
             get => visibleShape;
             set => SetProperty(ref visibleShape, value);
         }
-        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
+        public bool VisibleUnit                 //表示・非表示（コイル・枚数）
         {
             get => visibleUnit;
             set => SetProperty(ref visibleUnit, value);
         }
-        public bool VisibleWeight                       //表示・非表示（重量）
+        public bool VisibleWeight               //表示・非表示（重量）
         {
             get => visibleWeight;
             set => SetProperty(ref visibleWeight, value);
@@ -113,25 +80,10 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //一覧表クラス
-        public class ListTable
-        {
-            public string LotNumber                     //ロット一覧
-            { get; set; }
-            public string LotNumberSEQ                  //ロット番号SEQ
-            { get; set; }
-            //品番
-            //形状
-            //
-
-
-        }
-
         //コンストラクター
         internal ViewModelTransport()
         {
             Ibarcode = this;
-            Initialize();
         }
 
         //ロード時
@@ -155,36 +107,25 @@ namespace Display
             CtrlWindow.InitializeIcon();
             CtrlWindow.IconList = "ViewList";
             CtrlWindow.IconPlan = "TrayArrowUp";
-            CtrlWindow.ProcessName = ProcessName;           
-        }
-
-        //初期化
-        public void Initialize()
-        {
-            SelectedIndex = -1;
-            InProcessCODE = string.Empty;
-        }
-
-        //取得したQRコードを表示
-        private void DiaplayList()
-        {
-            //既に登録されているデータは登録しない
-
-
-            //データ追加
-            Table.Add(new ListTable { LotNumber = LotNumber, LotNumberSEQ = LotNumberSEQ });
-
-
-
+            CtrlWindow.ProcessName = ProcessName;
         }
 
         //QRコード処理
         public void SetBarcode()
         {
-            if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
-            LotNumber = ReceivedData.StringLeft(10);
-            LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-            DiaplayList();
+            if (CONVERT.IsLotNumber(ReceivedData)) 
+            {
+                //ロット番号
+                LotNumber = ReceivedData.StringLeft(10);
+                LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+                SelectTable = managementSlip.Select(SelectTable, LotNumber, LotNumberSEQ);
+            }
+            else
+            {
+                //作業者
+                Worker = ReceivedData;
+
+            }
         }
 
         //スワイプ処理
@@ -197,23 +138,12 @@ namespace Display
             {
                 case "DisplayList":
                     //引取履歴
-                    Initialize();
-                    DiaplayList();
+
                     break;
 
                 case "DisplayPlan":
                     //仕掛置場
                     DisplayFramePage(new TransportList());
-                    break;
-
-                case "PreviousDate":
-                    //前日へ移動
-                    TransportDate = DATETIME.AddDate(TransportDate, -1).ToString("yyyyMMdd");
-                    break;
-
-                case "NextDate":
-                    //次の日へ移動
-                    TransportDate = DATETIME.AddDate(TransportDate, 1).ToString("yyyyMMdd");
                     break;
             }
         }
