@@ -281,7 +281,7 @@ namespace Display
             //シリアルポート接続
             comPort = new ComPort();
             comPort.PortOpen(IniFile.GetString("Common", "SerialPort", ""));
-            comPort.Interface = this;
+            comPort.IserialPort = this;
         }
 
         //アイコン初期化

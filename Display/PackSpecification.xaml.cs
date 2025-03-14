@@ -228,6 +228,7 @@ namespace Display
                 var querry = from a in SelectTable.AsEnumerable()
                              where a.Field<string>("品番") == code
                              select new { 連番 = a.Field<Int64>("連番") };
+                if (querry.Count() <= 0) { return; }
                 IndexNumber = INT.ToInt(querry.FirstOrDefault().連番);
             }
 
