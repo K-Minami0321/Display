@@ -180,7 +180,6 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            
             CtrlWindow.VisiblePower = true;
             CtrlWindow.VisibleList = true;
             CtrlWindow.VisibleInfo = false;
@@ -222,6 +221,7 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
+            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -239,8 +239,14 @@ namespace Display
 
             if (!result)
             {
-                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
-                var messege = (bool)await DialogHost.Show(CtrlMessage);
+                PropertyMessage = new PropertyMessageControl()
+                {
+                    Message = messege1,
+                    Contents = messege2,
+                    Type = messege3
+                };
+                var messege = (bool)await DialogHost.Show(control);
+
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -256,6 +262,7 @@ namespace Display
             switch (function)
             {
                 case "Regist":
+
                     //登録
                     Place = "プレス";
                     Status = "引取";
@@ -266,6 +273,7 @@ namespace Display
                     break;
 
                 case "Cancel":
+
                     //キャンセル
                     inProcess.DeleteLog();
                     Place = "合板";
@@ -328,18 +336,28 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
+            var control = new ControlMessage();
             var result = false;
+
             switch (value)
             {
                 case "Regist":
+
                     //登録
                     if (await IsRequiredRegist()) { ProcessData("Regist"); }
                     break;
 
                 case "Cancel":
+
                     //取消（合板に戻す）
-                    CtrlMessage = new ControlMessage("仕掛引取一覧に戻ります。", "※入力されたものが消去されます", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "仕掛引取一覧に戻ります",
+                        Contents = "※入力されたものが消去されます。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+                    
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -350,22 +368,26 @@ namespace Display
                     break;
 
                 case "Enter":
+
                     //フォーカス移動
                     NextFocus();
                     break;
 
                 case "DisplayInfo":
+
                     //引取登録画面
                     Initialize();
                     SetGotFocus("Worker");
                     break;
 
                 case "DisplayList":
+
                     //引取履歴画面
                     DisplayFramePage(new TransportHistory());
                     break;
 
                 case "DisplayPlan":
+
                     //仕掛置場
                     DisplayFramePage(new TransportList());
                     break;

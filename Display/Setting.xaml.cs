@@ -190,64 +190,87 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
+            var control = new ControlMessage();
             var result = false;
 
             switch (value)
             {
                 case "Regist":
+
                     //登録
-                    CtrlMessage = new ControlMessage("登録します", "※入力されたものを反映します。", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "登録します",
+                        Contents = "※入力されたものを反映します。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     if (result) { RegistData(); }
                     break;
 
                 case "Cancel":
+
                     //取消
-                    CtrlMessage = new ControlMessage("修正を破棄します", "※入力されたものは設定に反映されません。", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "修正を破棄します",
+                        Contents = "※入力されたものは設定に反映されません。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     if (result) { StartPage(IniFile.GetString("Page", "Initial"));  }
                     break;
 
                 case "Server":
+
                     //サーバーコンボボックス
                     IsServer = true;
                     IsServerOpen = true;
                     break;
 
                 case "ProcessName":
+
                     //工程区分コンボボックス
                     IsProcessName = true;
                     IsProcessOpen = true;
                     break;
 
                 case "Equipment":
+
                     //設備コンボボックス
                     IsEquipment = true;
                     IsEquipmentOpen = true;
                     break;
 
                 case "Worker":
+
                     //作業者コンボボックス
                     IsWorker = true;
                     IsWorkerOpen = true;
                     break;
 
                 case "SQL":
+
                     //SQLログ
                     Log = CONST.SQL_LOG;
                     break;
 
                 case "Error":
+
                     //Errorログ
                     Log = CONST.ERROR_LOG;
                     break;
 
                 case "Debug":
+
                     //Debugログ
                     Log = CONST.DEBUG_LOG;
                     break;
 
                 case "Grid":
+
                     IsServer = IsServerOpen;
                     IsProcessName = IsProcessOpen;
                     IsEquipment = IsEquipmentOpen;
@@ -259,11 +282,13 @@ namespace Display
                     break;
 
                 case "DisplayInfo":
+
                     //戻る
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
                     DisplayFramePage(new PlanList());
                     break;

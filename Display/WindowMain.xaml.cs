@@ -210,9 +210,15 @@ namespace Display
         {
             try
             {
-                CtrlMessage = new ControlMessage("システム終了", "※登録を破棄してシステムを終了します。", "警告");
-                var result = (bool)await DialogHost.Show(CtrlMessage);
-                if (result) 
+                var control = new ControlMessage();
+                PropertyMessage = new PropertyMessageControl()
+                {
+                    Message = "システム終了",
+                    Contents = "※登録を破棄してシステムを終了します。",
+                    Type = "警告"
+                };
+
+                if ((bool)await DialogHost.Show(control)) 
                 {
                     sql.DatabaseClose();
                     comPort.PortClose();

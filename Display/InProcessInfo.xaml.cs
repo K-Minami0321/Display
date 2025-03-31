@@ -397,6 +397,7 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
+            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -432,8 +433,14 @@ namespace Display
 
             if (!result)
             {
-                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
-                var messege = (bool)await DialogHost.Show(CtrlMessage);
+                PropertyMessage = new PropertyMessageControl()
+                {
+                    Message = messege1,
+                    Contents = messege2,
+                    Type = messege3
+                };
+                var messege = (bool)await DialogHost.Show(control);
+
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -694,15 +701,23 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
+            var control = new ControlMessage();
             var result = false;
+
             switch (value)
             {
                 case "Regist":
+
                     //登録
                     if (await IsRequiredRegist())
                     {
-                        CtrlMessage = new ControlMessage("搬入データを登録します", "", "警告");
-                        result = (bool)await DialogHost.Show(CtrlMessage);
+                        PropertyMessage = new PropertyMessageControl()
+                        {
+                            Message = "搬入データを登録します",
+                            Type = "警告"
+                        };
+                        result = (bool)await DialogHost.Show(control);
+
                         await System.Threading.Tasks.Task.Delay(100);
                         SetGotFocus(Focus);
                         if (result)
@@ -714,9 +729,16 @@ namespace Display
                     break;
 
                 case "Delete":
+
                     //削除
-                    CtrlMessage = new ControlMessage("搬入データを削除します", "※削除されたデータは復元できません", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "搬入データを削除します",
+                        Contents = "※削除されたデータは復元できません。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -727,9 +749,16 @@ namespace Display
                     break;
 
                 case "Cancel":
+
                     //取消
-                    CtrlMessage = new ControlMessage("搬入データをクリアします", "※入力されたものが消去されます", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "搬入データをクリアします",
+                        Contents = "※入力されたものが消去されます。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)

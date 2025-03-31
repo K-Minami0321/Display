@@ -557,6 +557,7 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
+            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -599,8 +600,14 @@ namespace Display
 
             if (!result) 
             {
-                CtrlMessage = new ControlMessage(messege1, messege2, messege3);
-                var messege = (bool)await DialogHost.Show(CtrlMessage);
+                PropertyMessage = new PropertyMessageControl()
+                {
+                    Message = messege1,
+                    Contents = messege2,
+                    Type = messege3
+                };
+                var messege = (bool)await DialogHost.Show(control);
+
                 await System.Threading.Tasks.Task.Delay(100);
                 if (messege) { SetGotFocus(focus); }
             }
@@ -1005,15 +1012,24 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
+            var control = new ControlMessage();
             var result = false;
+
             switch (value)
             {
                 case "WorkStart":
+
                     //作業開始
                     if (await IsRequiredRegist())
                     {
-                        CtrlMessage = new ControlMessage("作業を開始します。", "※「はい」ボタンを押して作業を開始します。", "警告");
-                        result = (bool)await DialogHost.Show(CtrlMessage);
+                        PropertyMessage = new PropertyMessageControl()
+                        {
+                            Message = "作業を開始します",
+                            Contents = "※「はい」ボタンを押して作業を開始します。",
+                            Type = "警告"
+                        };
+                        result = (bool)await DialogHost.Show(control);
+
                         await System.Threading.Tasks.Task.Delay(100);
                         if (result)
                         {
@@ -1026,10 +1042,17 @@ namespace Display
                     break;
 
                 case "WorkEnd":
+
                     //作業終了処理
                     EndTime = DateTime.Now.ToString("HH:mm");
-                    CtrlMessage = new ControlMessage("作業を完了します。", "※登録後、次の作業の準備をしてください。", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "作業を完了します",
+                        Contents = "※登録後、次の作業の準備をしてください。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1045,14 +1068,22 @@ namespace Display
                     break;
 
                 case "WorkBreak":
+
                     //中断処理・再開処理
                     Mode = (Mode == "中断") ? "作業中" : "中断";
                     break;
 
                 case "Cancel":
+
                     //取消
-                    CtrlMessage = new ControlMessage("この作業を取消します。", "※入力されたものが消去されます", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "この作業を取消します",
+                        Contents = "※入力されたものが消去されます。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1063,8 +1094,16 @@ namespace Display
                     break;
 
                 case "Regist":
-                    CtrlMessage = new ControlMessage("作業データを" + ButtonName.Replace("　", "") + "します。", "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+
+                    //登録
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "作業データを" + ButtonName.Replace("　", "") + "します",
+                        Contents = "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+                    
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
@@ -1075,8 +1114,16 @@ namespace Display
                     break;
 
                 case "Delete":
-                    CtrlMessage = new ControlMessage("作業データを削除します", "※削除されたデータは復元できません", "警告");
-                    result = (bool)await DialogHost.Show(CtrlMessage);
+
+                    //削除
+                    PropertyMessage = new PropertyMessageControl()
+                    {
+                        Message = "作業データを削除します",
+                        Contents = "※削除されたデータは復元できません",
+                        Type = "警告"
+                    };
+                    result = (bool)await DialogHost.Show(control);
+                    
                     await System.Threading.Tasks.Task.Delay(100);
                     SetGotFocus(Focus);
                     if (result)
