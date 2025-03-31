@@ -403,7 +403,6 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureInfo(string code, string number)
         {
-            Ibarcode = this;
             Initialize();
             ManufactureCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }
@@ -412,132 +411,18 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            //CtrlWindow.Interface = this;
-            //CtrlWindow.Itimer = this;
-
             SetControl();
             DisplayCapution();
             SetFocus();
         }
 
-        //キャプション・ボタン表示
-        private void DisplayCapution()
-        {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessName = ProcessName;
-            CtrlWindow.ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE;
-
-            switch (Mode)
-            {
-                case "登録":
-                    EnabledControl1 = true;
-                    EnabledControl2 = true;
-                    VisibleButtonStart = false;
-                    VisibleButtonEnd = false;
-                    VisibleButtonBreak = false;
-                    VisibleButtonCancel = false;
-                    VisibleEdit = true;
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    CtrlWindow.VisibleArrow = false;
-                    SetGotFocus("LotNumber");
-                    break;
-
-                case "準備":
-                    EnabledControl1 = true;
-                    EnabledControl2 = false;
-                    VisibleButtonStart = true;
-                    VisibleButtonEnd = false;
-                    VisibleButtonBreak = false;
-                    VisibleButtonCancel = false;
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    CtrlWindow.VisibleArrow = false;
-                    break;
-
-                case "作業中":
-                    EnabledControl1 = false;
-                    EnabledControl2 = true;
-                    VisibleButtonStart = false;
-                    VisibleButtonEnd = true;
-                    VisibleButtonBreak = true;
-                    VisibleButtonCancel = false;
-                    BreakName = "中　断";
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    SetGotFocus("Amount");
-
-                    break;
-
-                case "中断":
-                    EnabledControl1 = false;
-                    EnabledControl2 = false;
-                    VisibleButtonStart = false;
-                    VisibleButtonEnd = false;
-                    VisibleButtonBreak = true;
-                    VisibleButtonCancel = true;
-                    BreakName = "再　開";
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    break;
-
-                case "編集":
-                    EnabledControl1 = true;
-                    EnabledControl2 = true;
-                    VisibleEdit = true;
-                    VisibleButtonStart = false;
-                    VisibleButtonEnd = false;
-                    VisibleButtonBreak = false;
-                    VisibleButtonCancel = false;
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    break;
-
-                default:
-                    Mode = "準備";
-                    EnabledControl1 = true;
-                    EnabledControl2 = false;
-                    VisibleButtonStart = true;
-                    VisibleButtonEnd = false;
-                    VisibleButtonBreak = false;
-                    VisibleButtonCancel = false;
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleDefect = false;
-                    CtrlWindow.VisibleArrow = false;
-                    break;
-            }
-
-            //ボタン設定
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleArrow = false;
-        }
-
-        //コントロールの設定
-        private void SetControl()
-        {
-            //テンキーコントロール
-            TenKeyProperty = new PropertyTenKey();
-            TenKeyProperty.Itenkey = this;
-
-            //作業者コントロール
-            WorkerProperty = new PropertyWorker();
-            WorkerProperty.Iworker = this;
-
-            //工程コントロール
-            WorkProcessProperty = new PropertyWorkProcess();
-            WorkProcessProperty.IworkProcess = this;
-        }
-
         //初期化
         public void Initialize()
         {
+            //インターフェース
+            Ibarcode = this;
+
+            //初期化
             ReadINI();
             ManufactureCODE = string.Empty;
             ManufactureDate = SetToDay(DateTime.Now);
@@ -551,6 +436,124 @@ namespace Display
             Completed = string.Empty;
             IsRegist = true;
             IsEnable = true;
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = true,
+                ProcessName = ProcessName,
+                ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE
+            };
+
+            //テンキーコントロール
+            TenKeyProperty = new PropertyTenKey();
+            TenKeyProperty.Itenkey = this;
+
+            //作業者コントロール
+            WorkerProperty = new PropertyWorker();
+            WorkerProperty.Iworker = this;
+
+            //工程コントロール
+            WorkProcessProperty = new PropertyWorkProcess();
+            WorkProcessProperty.IworkProcess = this;
+        }
+
+        //キャプション・ボタン表示
+        private void DisplayCapution()
+        {
+            switch (Mode)
+            {
+                case "登録":
+                    EnabledControl1 = true;
+                    EnabledControl2 = true;
+                    VisibleButtonStart = false;
+                    VisibleButtonEnd = false;
+                    VisibleButtonBreak = false;
+                    VisibleButtonCancel = false;
+                    VisibleEdit = true;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    WindowProperty.VisibleArrow = false;
+                    SetGotFocus("LotNumber");
+                    break;
+
+                case "準備":
+                    EnabledControl1 = true;
+                    EnabledControl2 = false;
+                    VisibleButtonStart = true;
+                    VisibleButtonEnd = false;
+                    VisibleButtonBreak = false;
+                    VisibleButtonCancel = false;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    WindowProperty.VisibleArrow = false;
+                    break;
+
+                case "作業中":
+                    EnabledControl1 = false;
+                    EnabledControl2 = true;
+                    VisibleButtonStart = false;
+                    VisibleButtonEnd = true;
+                    VisibleButtonBreak = true;
+                    VisibleButtonCancel = false;
+                    BreakName = "中　断";
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    SetGotFocus("Amount");
+
+                    break;
+
+                case "中断":
+                    EnabledControl1 = false;
+                    EnabledControl2 = false;
+                    VisibleButtonStart = false;
+                    VisibleButtonEnd = false;
+                    VisibleButtonBreak = true;
+                    VisibleButtonCancel = true;
+                    BreakName = "再　開";
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    break;
+
+                case "編集":
+                    EnabledControl1 = true;
+                    EnabledControl2 = true;
+                    VisibleEdit = true;
+                    VisibleButtonStart = false;
+                    VisibleButtonEnd = false;
+                    VisibleButtonBreak = false;
+                    VisibleButtonCancel = false;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    break;
+
+                default:
+                    Mode = "準備";
+                    EnabledControl1 = true;
+                    EnabledControl2 = false;
+                    VisibleButtonStart = true;
+                    VisibleButtonEnd = false;
+                    VisibleButtonBreak = false;
+                    VisibleButtonCancel = false;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleDefect = false;
+                    WindowProperty.VisibleArrow = false;
+                    break;
+            }
+
+            //ボタン設定
+            WindowProperty.VisiblePower = true;
+            WindowProperty.VisibleInfo = true;
+            WindowProperty.VisibleArrow = false;
         }
 
         //選択処理

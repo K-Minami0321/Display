@@ -89,7 +89,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
+            CtrlWindow.IwindowBase = this;
             ReadINI();
             DisplayCapution();
         }

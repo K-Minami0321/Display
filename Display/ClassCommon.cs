@@ -52,6 +52,10 @@ namespace Display
         { get; set; } = ViewModelWindowMain.Instance;
 
 
+
+
+
+
         public INIFile IniFile                                  //設定ファイル
         { get; set; } = new INIFile(CONST.SETTING_INI);
         public PropertyWindow WindowProperty                    //プロパティ（PropertyWindow）
@@ -253,13 +257,13 @@ namespace Display
         public void StartPage(string page)
         {
             var type = Type.GetType("Display." + page);
-            CtrlWindow.FramePage = (ContentControl)Activator.CreateInstance(type);
+            FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            CtrlWindow.FramePage = (ContentControl)framepage;
+            FramePage = (ContentControl)framepage;
         }
 
         //省略ロット番号取得

@@ -78,37 +78,48 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
+            CtrlWindow.IwindowBase = this;
             ReadINI();
+
+            SetControl();
             DisplayCapution();
             DiaplayList();
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                VisiblePower = true,
+                VisiblePlan = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                ProcessName = ProcessName,
+                ProcessWork = ProcessName + "計画一覧"
+            };
+
+
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessName = ProcessName;
-            CtrlWindow.ProcessWork = ProcessName + "計画一覧";
-            DataGridBehavior.Instance.Iselect = this;
-
             //遷移ページ設定
             switch (Page)
             {
                 case "PlanList":
                     //計画一覧
-                    CtrlWindow.VisibleList = false;
-                    CtrlWindow.VisibleInfo = false;
+                    WindowProperty.VisibleList = false;
+                    WindowProperty.VisibleInfo = false;
                     EnableSelect = false;
                     break;
 
                 default:
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleInfo = true;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleInfo = true;
                     EnableSelect = true;
                     break;
             }

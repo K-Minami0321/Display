@@ -142,23 +142,26 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
-            DisplayCapution();
+            SetControl();
             FocusProductName = true;
         }
 
-        //キャプション・ボタン表示
-        private void DisplayCapution()
+        //コントロールの設定
+        private void SetControl()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = false;
-            CtrlWindow.VisibleInfo = false;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = true;
-            CtrlWindow.VisiblePlan = false;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessWork = "梱包仕様書";
-            CtrlWindow.ProcessName = "梱包";
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisibleList = false,
+                VisibleInfo = false,
+                VisibleDefect = false,
+                VisibleArrow = true,
+                VisiblePlan = false,
+                ProcessWork = "梱包仕様書",
+                ProcessName = "梱包"
+            };
         }
 
         //キーイベント
@@ -257,7 +260,6 @@ namespace Display
             Image2 = BitmapSourceConverter.ToBitmapSource(mat2);
             mat2.Dispose();
             source2.Dispose();
-
         }
 
         //スワイプ処理

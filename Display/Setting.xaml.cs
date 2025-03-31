@@ -127,7 +127,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
+            SetControl();
             DisplayCapution();
             DisplayLog();
             ReadINI();
@@ -136,18 +136,26 @@ namespace Display
         //初期化
         private void DisplayCapution()
         {
-            //ボタン設定
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.VisibleList = false;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessWork = "設定画面";
-            CtrlWindow.ProcessName = "設定";
             Version = CONST.DISPLAY_VERSION;
             IsFocusServer = true;
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisiblePlan = true,
+                VisibleList = false,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                ProcessWork = "設定画面",
+                ProcessName = "設定"
+            };
         }
 
         //ログ表示
@@ -172,7 +180,7 @@ namespace Display
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
 
-            CtrlWindow.ProcessName = IniFile.GetString("Page", "Process");
+            WindowProperty.ProcessName = IniFile.GetString("Page", "Process");
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 

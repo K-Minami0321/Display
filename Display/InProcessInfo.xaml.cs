@@ -298,10 +298,6 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string number)
         {
-            CtrlWindow.Interface = this;
-            CtrlWindow.Itimer = this;
-            Ibarcode = this;
-
             Initialize();
             InProcessCODE = code;
             if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber, InProcessCODE); }     //予定表からロット番号取得
@@ -315,19 +311,52 @@ namespace Display
             SetFocus();
         }
 
+        //初期化
+        public void Initialize()
+        {
+            //インターフェース
+            Ibarcode = this;
+
+            //初期値
+            ReadINI();
+            InProcessDate = SetToDay(DateTime.Now);
+            InProcessCODE = string.Empty;
+            LotNumber = string.Empty;
+            AmountWidth = 150;
+            IsRegist = true;
+            IsEnable = true;
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                Itimer = this,
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = true,
+                ProcessWork = ProcessName + "完了実績",
+                ProcessName = ProcessName
+            };
+
+            //テンキーコントロール
+            TenKeyProperty = new PropertyTenKey();
+            TenKeyProperty.Itenkey = this;
+
+            //作業者コントロール
+            WorkerProperty = new PropertyWorker();
+            WorkerProperty.Iworker = this;
+        }
+
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessWork = ProcessName + "完了実績";
-            CtrlWindow.ProcessName = ProcessName;
-
             //工程区分
             switch (ProcessName)
             {
@@ -362,30 +391,6 @@ namespace Display
                     VisibleCoil = false;
                     break;
             }
-        }
-
-        //コントロールの設定
-        private void SetControl()
-        {
-            //テンキーコントロール
-            TenKeyProperty = new PropertyTenKey();
-            TenKeyProperty.Itenkey = this;
-
-            //作業者コントロール
-            WorkerProperty = new PropertyWorker();
-            WorkerProperty.Iworker = this;
-        }
-
-        //初期化
-        public void Initialize()
-        {
-            ReadINI();
-            InProcessDate = SetToDay(DateTime.Now);
-            InProcessCODE = string.Empty;
-            LotNumber = string.Empty;
-            AmountWidth = 150;
-            IsRegist = true;
-            IsEnable = true;
         }
 
         //選択処理

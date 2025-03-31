@@ -57,24 +57,11 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
-            ReadINI();
-            DisplayCapution();
-            DiaplayList();
-        }
+            CtrlWindow.IwindowBase = this;
 
-        //キャプション・ボタン表示
-        private void DisplayCapution()
-        {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = true;
-            CtrlWindow.ProcessName = ProcessName;
-            CtrlWindow.ProcessWork = ProcessWork;
-            CtrlWindow.InitializeIcon();
-            DataGridBehavior.Instance.Iselect = this;
+            SetControl();
+            ReadINI();
+            DiaplayList();
         }
 
         //初期化
@@ -83,6 +70,24 @@ namespace Display
             SelectedIndex = -1;
             ManufactureCODE = string.Empty;
             ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = true,
+                ProcessName = ProcessName,
+                ProcessWork = ProcessWork
+            };
+
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //一覧表示
