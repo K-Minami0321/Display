@@ -172,7 +172,8 @@ namespace Display
         private void OnLoad()
         {
             CtrlWindow.Interface = this;
-            CtrlWorker.Iworker = this;
+
+            SetControl();
             DisplayCapution();
             SetGotFocus("Worker");
         }
@@ -194,6 +195,14 @@ namespace Display
 
             VisibleCancel = !IsRegist;
             ButtonName = IsRegist ? "登　録" : "修　正";
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //作業者コントロール
+            WorkerProperty = new PropertyWorker();
+            WorkerProperty.Iworker = this;
         }
 
         //初期化
@@ -239,7 +248,7 @@ namespace Display
 
             if (!result)
             {
-                PropertyMessage = new PropertyMessageControl()
+                MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
                     Contents = messege2,
@@ -350,7 +359,7 @@ namespace Display
                 case "Cancel":
 
                     //取消（合板に戻す）
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "仕掛引取一覧に戻ります",
                         Contents = "※入力されたものが消去されます。",

@@ -25,9 +25,8 @@ namespace Display
         }
     }
 
-    //プロパティ
     //メッセージコントロールプロパティ
-    public class PropertyMessageControl
+    public class PropertyMessage
     {
         public static ViewModelControlMessage ViewModel     //ViewModel
         { get; set; }
@@ -94,8 +93,8 @@ namespace Display
         //コンストラクター
         public ViewModelControlMessage(ControlMessage control)
         {
-            PropertyMessageControl.PanelMessage = control;
-            PropertyMessageControl.ViewModel = this;
+            PropertyMessage.PanelMessage = control;
+            PropertyMessage.ViewModel = this;
         }
 
         //ロード時

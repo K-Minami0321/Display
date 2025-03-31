@@ -31,9 +31,6 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, ITimer
     {
         //変数
-        
-        ViewModelControlTenKey controlTenKey = ViewModelControlTenKey.Instance;
-        ViewModelControlWorker controlWorker = ViewModelControlWorker.Instance;
         InProcess inProcess = new InProcess();
         string inProcessCODE;
         string lotNumber;
@@ -313,7 +310,8 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            DisplayCapution();           
+            SetControl();
+            DisplayCapution();
             SetFocus();
         }
 
@@ -329,10 +327,6 @@ namespace Display
             CtrlWindow.InitializeIcon();
             CtrlWindow.ProcessWork = ProcessName + "完了実績";
             CtrlWindow.ProcessName = ProcessName;
-            
-
-            controlTenKey.Itenkey = this;
-            controlWorker.Iworker = this;
 
             //工程区分
             switch (ProcessName)
@@ -368,6 +362,18 @@ namespace Display
                     VisibleCoil = false;
                     break;
             }
+        }
+
+        //コントロールの設定
+        private void SetControl()
+        {
+            //テンキーコントロール
+            TenKeyProperty = new PropertyTenKey();
+            TenKeyProperty.Itenkey = this;
+
+            //作業者コントロール
+            WorkerProperty = new PropertyWorker();
+            WorkerProperty.Iworker = this;
         }
 
         //初期化
@@ -433,7 +439,7 @@ namespace Display
 
             if (!result)
             {
-                PropertyMessage = new PropertyMessageControl()
+                MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
                     Contents = messege2,
@@ -594,7 +600,7 @@ namespace Display
                     FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    controlTenKey.InputString = "-";
+                    TenKeyProperty.InputString = "-";
                     break;
 
                 case "Worker":
@@ -617,7 +623,7 @@ namespace Display
                     FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "Unit":
@@ -629,7 +635,7 @@ namespace Display
                     FocusAmount = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "Completed":
@@ -652,7 +658,7 @@ namespace Display
                     FocusAmount = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
             }
         }
@@ -711,7 +717,7 @@ namespace Display
                     //登録
                     if (await IsRequiredRegist())
                     {
-                        PropertyMessage = new PropertyMessageControl()
+                        MessageProperty = new PropertyMessage()
                         {
                             Message = "搬入データを登録します",
                             Type = "警告"
@@ -731,7 +737,7 @@ namespace Display
                 case "Delete":
 
                     //削除
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "搬入データを削除します",
                         Contents = "※削除されたデータは復元できません。",
@@ -751,7 +757,7 @@ namespace Display
                 case "Cancel":
 
                     //取消
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "搬入データをクリアします",
                         Contents = "※入力されたものが消去されます。",

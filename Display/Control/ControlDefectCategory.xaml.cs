@@ -17,14 +17,22 @@ namespace Display
     //画面クラス
     public partial class ControlDefectCategory : UserControl
     {
-        public static ControlDefectCategory Instance
-        { get; set; }
         public ControlDefectCategory()
         {
-            Instance = this;
-            DataContext = ViewModelControlDefectCategory.Instance;
+            DataContext = new ViewModelControlDefectCategory();
             InitializeComponent();
         }
+    }
+
+    //プロパティ
+    public class PropertyDefectCategory
+    {
+        public static ViewModelControlDefectCategory ViewModel      //ViewModel
+        { get; set; }
+
+
+
+
     }
 
     //ViewModel
@@ -37,8 +45,6 @@ namespace Display
         List<string> defectCategorys;
 
         //プロパティ
-        public static ViewModelControlDefectCategory Instance       //インスタンス
-        { get; set; } = new ViewModelControlDefectCategory();
         public IDefectCategory IdefectCategory                      //インターフェース
         { get; set; }
         public string ProcessName                                   //工程区分
@@ -68,10 +74,15 @@ namespace Display
         ActionCommand selectionChanged;
         public ICommand SelectionChanged => selectionChanged ??= new ActionCommand(SelectionItem);
 
+        //コンストラクター
+        public ViewModelControlDefectCategory()
+        {
+            PropertyDefectCategory.ViewModel = this;
+        }
+
         //ロード時
         private void OnLoad()
         {
-            Instance = this;
             ProcessName = CtrlWindow.ProcessName;
         }
 

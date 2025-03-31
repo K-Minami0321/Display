@@ -412,8 +412,10 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.Interface = this;
-            CtrlWindow.Itimer = this;
+            //CtrlWindow.Interface = this;
+            //CtrlWindow.Itimer = this;
+
+            SetControl();
             DisplayCapution();
             SetFocus();
         }
@@ -429,9 +431,6 @@ namespace Display
             CtrlWindow.VisiblePlan = true;
             CtrlWindow.InitializeIcon();
             CtrlWindow.ProcessName = ProcessName;
-            ViewModelControlTenKey.Instance.Itenkey = this;
-            ViewModelControlWorker.Instance.Iworker = this;
-            ViewModelControlWorkProcess.Instance.IworkProcess = this;
             CtrlWindow.ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE;
 
             switch (Mode)
@@ -520,6 +519,22 @@ namespace Display
             CtrlWindow.VisibleArrow = false;
         }
 
+        //コントロールの設定
+        private void SetControl()
+        {
+            //テンキーコントロール
+            TenKeyProperty = new PropertyTenKey();
+            TenKeyProperty.Itenkey = this;
+
+            //作業者コントロール
+            WorkerProperty = new PropertyWorker();
+            WorkerProperty.Iworker = this;
+
+            //工程コントロール
+            WorkProcessProperty = new PropertyWorkProcess();
+            WorkProcessProperty.IworkProcess = this;
+        }
+
         //初期化
         public void Initialize()
         {
@@ -600,7 +615,7 @@ namespace Display
 
             if (!result) 
             {
-                PropertyMessage = new PropertyMessageControl()
+                MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
                     Contents = messege2,
@@ -825,8 +840,6 @@ namespace Display
         //フォーカス処理（GotForcus）
         private void SetGotFocus(object value)
         {
-            var controlTenKey = ViewModelControlTenKey.Instance;
-
             Focus = value;
             switch (Focus)
             {
@@ -842,7 +855,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = "-";
+                    TenKeyProperty.InputString = "-";
                     break;
 
                 case "WorkProcess":
@@ -885,7 +898,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "EndTime":
@@ -900,7 +913,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "Amount":
@@ -915,7 +928,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "Completed":
@@ -930,7 +943,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 case "Sales":
@@ -945,7 +958,7 @@ namespace Display
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
-                    controlTenKey.InputString = ".";
+                    TenKeyProperty.InputString = ".";
                     break;
 
                 default:
@@ -1022,7 +1035,7 @@ namespace Display
                     //作業開始
                     if (await IsRequiredRegist())
                     {
-                        PropertyMessage = new PropertyMessageControl()
+                        MessageProperty = new PropertyMessage()
                         {
                             Message = "作業を開始します",
                             Contents = "※「はい」ボタンを押して作業を開始します。",
@@ -1045,7 +1058,7 @@ namespace Display
 
                     //作業終了処理
                     EndTime = DateTime.Now.ToString("HH:mm");
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "作業を完了します",
                         Contents = "※登録後、次の作業の準備をしてください。",
@@ -1076,7 +1089,7 @@ namespace Display
                 case "Cancel":
 
                     //取消
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "この作業を取消します",
                         Contents = "※入力されたものが消去されます。",
@@ -1096,7 +1109,7 @@ namespace Display
                 case "Regist":
 
                     //登録
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "作業データを" + ButtonName.Replace("　", "") + "します",
                         Contents = "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。",
@@ -1116,7 +1129,7 @@ namespace Display
                 case "Delete":
 
                     //削除
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "作業データを削除します",
                         Contents = "※削除されたデータは復元できません",

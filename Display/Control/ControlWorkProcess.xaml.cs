@@ -1,7 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -17,13 +16,37 @@ namespace Display
     //画面クラス
     public partial class ControlWorkProcess : UserControl
     {
-        public static ControlWorkProcess Instance
-        { get; set; }
         public ControlWorkProcess()
         {
-            Instance = this;
-            DataContext = ViewModelControlWorkProcess.Instance;
+            DataContext = new ViewModelControlWorkProcess();
             InitializeComponent();
+        }
+    }
+
+    //プロパティ
+    public class PropertyWorkProcess
+    {
+        public static ViewModelControlWorkProcess ViewModel     //ViewModel
+        { get; set; }
+        public IWorkProcess IworkProcess                        //インターフェース
+        {
+            get => ViewModel.IworkProcess;
+            set => ViewModel.IworkProcess = value;
+        }
+        public bool VisivleProcess                              //設備
+        {
+            get => ViewModel.VisivleProcess;
+            set => ViewModel.VisivleProcess = value;
+        }
+        public bool VisivleAll                                  //すべて
+        {
+            get => ViewModel.VisivleAll;
+            set => ViewModel.VisivleAll = value;
+        }
+        public string WorkProcess                               //工程
+        {
+            get => ViewModel.WorkProcess;
+            set => ViewModel.WorkProcess = value;
         }
     }
 
@@ -36,8 +59,6 @@ namespace Display
         string workProcess;
 
         //プロパティ
-        public static ViewModelControlWorkProcess Instance      //インスタンス
-        { get; set; } = new ViewModelControlWorkProcess();
         public IWorkProcess IworkProcess                        //インターフェース
         { get; set; }
         public bool VisivleProcess                              //設備
@@ -65,9 +86,9 @@ namespace Display
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
-        ViewModelControlWorkProcess()
+        public ViewModelControlWorkProcess()
         {
-            Instance = this;
+            PropertyWorkProcess.ViewModel = this;
         }
 
         //ロード時

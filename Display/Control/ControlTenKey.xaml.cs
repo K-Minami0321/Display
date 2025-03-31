@@ -18,8 +18,25 @@ namespace Display
     {
          public ControlTenKey()
         {
-            DataContext = ViewModelControlTenKey.Instance;
+            DataContext = new ViewModelControlTenKey();
             InitializeComponent();
+        }
+    }
+
+    //プロパティ
+    public class PropertyTenKey
+    {
+        public static ViewModelControlTenKey ViewModel      //ViewModel
+        { get; set; }
+        public ITenKey Itenkey                              //インターフェース
+        {
+            get => ViewModel.Itenkey;
+            set => ViewModel.Itenkey = value;
+        }
+        public string InputString                       //入力文字
+        {
+            get => ViewModel.InputString;
+            set => ViewModel.InputString = value;
         }
     }
 
@@ -30,8 +47,6 @@ namespace Display
         string inputString;
 
         //プロパティ
-        public static ViewModelControlTenKey Instance   //インスタンス
-        { get; set; } = new ViewModelControlTenKey();
         public ITenKey Itenkey                          //インターフェース
         { get; set; }
         public string InputString                       //入力文字
@@ -43,6 +58,12 @@ namespace Display
         //イベント
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
+
+        //コンストラクター
+        public ViewModelControlTenKey()
+        {
+            PropertyTenKey.ViewModel = this;
+        }
 
         //Key処理
         public void KeyDown(object value)

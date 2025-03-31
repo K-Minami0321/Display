@@ -17,14 +17,24 @@ namespace Display
     //画面クラス
     public partial class ControlDefect : UserControl
     {
-        public static ControlDefect Instance
-        { get; set; }
         public ControlDefect()
         {
-            Instance = this;
-            DataContext = ViewModelControlDefect.Instance;
+            DataContext = new ViewModelControlDefect();
             InitializeComponent();
         }
+    }
+
+    //プロパティ
+    public class PropertyDefect
+    {
+        public static ViewModelControlDefect ViewModel      //ViewModel
+        { get; set; }
+
+
+
+
+
+
     }
 
     //ViewModel
@@ -67,6 +77,12 @@ namespace Display
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand selectionChanged;
         public ICommand SelectionChanged => selectionChanged ??= new ActionCommand(SelectionItem);
+
+        //コンストラクター
+        public ViewModelControlDefect()
+        {
+            PropertyDefect.ViewModel = this;
+        }
 
         //ロード時
         private void OnLoad()

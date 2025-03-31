@@ -69,15 +69,15 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            ViewModelWindowMain.Instance.VisiblePower = true;
-            ViewModelWindowMain.Instance.VisibleList = true;
-            ViewModelWindowMain.Instance.VisibleInfo = true;
-            ViewModelWindowMain.Instance.VisibleDefect = false;
-            ViewModelWindowMain.Instance.VisibleArrow = false;
-            ViewModelWindowMain.Instance.VisiblePlan = true;
-            ViewModelWindowMain.Instance.InitializeIcon();
-            ViewModelWindowMain.Instance.ProcessWork = "動画マニュアル";
-            ProcessName = ViewModelWindowMain.Instance.ProcessName;
+            //ViewModelWindowMain.Instance.VisiblePower = true;
+            //ViewModelWindowMain.Instance.VisibleList = true;
+            //ViewModelWindowMain.Instance.VisibleInfo = true;
+            //ViewModelWindowMain.Instance.VisibleDefect = false;
+            //ViewModelWindowMain.Instance.VisibleArrow = false;
+            //ViewModelWindowMain.Instance.VisiblePlan = true;
+            //ViewModelWindowMain.Instance.InitializeIcon();
+            //ViewModelWindowMain.Instance.ProcessWork = "動画マニュアル";
+            //ProcessName = ViewModelWindowMain.Instance.ProcessName;
         }
 
         //スワイプ処理

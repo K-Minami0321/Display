@@ -9,6 +9,16 @@ using System.Windows.Input;
 #pragma warning disable
 namespace Display
 {
+    //画面クラス
+    public partial class WindowMain : Window
+    {
+        public WindowMain()
+        {
+            DataContext = ViewModelWindowMain.Instance;
+            InitializeComponent();
+        }
+    }
+
     //インターフェース
     public interface IWindowBase
     {
@@ -25,14 +35,16 @@ namespace Display
         void OnTimerElapsed(object sender, ElapsedEventArgs e);
     }
 
-    //画面クラス
-    public partial class WindowMain : Window
+    //プロパティ
+    public class PropertyWindow
     {
-        public WindowMain()
-        {
-            DataContext = ViewModelWindowMain.Instance;
-            InitializeComponent();
-        }
+
+
+
+
+
+
+
     }
 
     //ViewModel
@@ -211,7 +223,7 @@ namespace Display
             try
             {
                 var control = new ControlMessage();
-                PropertyMessage = new PropertyMessageControl()
+                MessageProperty = new PropertyMessage()
                 {
                     Message = "システム終了",
                     Contents = "※登録を破棄してシステムを終了します。",

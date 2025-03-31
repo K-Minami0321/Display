@@ -16,13 +16,37 @@ namespace Display
     //画面クラス
     public partial class ControlWorker : UserControl
     {
-        public static ControlWorker Instance
-        { get; set; }
         public ControlWorker()
         {
-            Instance = this;
-            DataContext = ViewModelControlWorker.Instance;
+            DataContext = new ViewModelControlWorker();
             InitializeComponent();
+        }
+    }
+
+    //プロパティ
+    public class PropertyWorker
+    {
+        public static ViewModelControlWorker ViewModel      //ViewModel
+        { get; set; }
+        public IWorker Iworker                              //インターフェース
+        {
+            get => ViewModel.Iworker;
+            set => ViewModel.Iworker = value;
+        }
+        public string Worker                                //作業者
+        {
+            get => ViewModel.Worker;
+            set => ViewModel.Worker = value;
+        }
+        public bool VisivleProcess                          //作業者
+        {
+            get => ViewModel.VisivleProcess;
+            set => ViewModel.VisivleProcess = value;
+        }
+        public bool VisivleAll                              //すべて
+        {
+            get => ViewModel.VisivleAll;
+            set => ViewModel.VisivleAll = value;
         }
     }
 
@@ -35,8 +59,6 @@ namespace Display
         public bool visivleAll;
 
         //プロパティ
-        public static ViewModelControlWorker Instance       //インスタンス
-        { get; set; } = new ViewModelControlWorker();
         public IWorker Iworker                              //インターフェース
         { get; set; }
         public string Worker                                //作業者
@@ -64,9 +86,9 @@ namespace Display
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
-        ViewModelControlWorker()
+        public ViewModelControlWorker()
         {
-            Instance = this;
+            PropertyWorker.ViewModel = this;
         }
         
         //ロード時

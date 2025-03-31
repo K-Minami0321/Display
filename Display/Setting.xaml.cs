@@ -198,7 +198,7 @@ namespace Display
                 case "Regist":
 
                     //登録
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "登録します",
                         Contents = "※入力されたものを反映します。",
@@ -212,7 +212,7 @@ namespace Display
                 case "Cancel":
 
                     //取消
-                    PropertyMessage = new PropertyMessageControl()
+                    MessageProperty = new PropertyMessage()
                     {
                         Message = "修正を破棄します",
                         Contents = "※入力されたものは設定に反映されません。",
