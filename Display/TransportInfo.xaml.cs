@@ -171,9 +171,6 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
-
-            SetControl();
             DisplayCapution();
             SetGotFocus("Worker");
         }
@@ -181,28 +178,28 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = false;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.Itimer = this;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessWork = "合板引取";
-            CtrlWindow.IconPlan = "TrayArrowUp";
-            CtrlWindow.ProcessName = ProcessName;
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                Itimer = this,
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = false,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = true,
+                ProcessWork = "合板引取",
+                IconPlan = "TrayArrowUp"
+            };
 
-            VisibleCancel = !IsRegist;
-            ButtonName = IsRegist ? "登　録" : "修　正";
-        }
 
-        //コントロールの設定
-        private void SetControl()
-        {
             //作業者コントロール
             WorkerProperty = new PropertyWorker();
             WorkerProperty.Iworker = this;
+
+            VisibleCancel = !IsRegist;
+            ButtonName = IsRegist ? "登　録" : "修　正";
         }
 
         //初期化
@@ -230,7 +227,6 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
-            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -248,6 +244,7 @@ namespace Display
 
             if (!result)
             {
+                var control = new ControlMessage();
                 MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,

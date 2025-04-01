@@ -51,10 +51,15 @@ namespace Display
             get => ViewModel.Itimer;
             set => ViewModel.Itimer = value;
         }
-        public string ProcessName                       //工程区分
+        public ContentControl FramePage                 //画面ページ
         {
-            get => ViewModel.ProcessName;
-            set => ViewModel.ProcessName = value;
+            get => ViewModel.FramePage;
+            set => ViewModel.FramePage = value;
+        }
+        public string Process                           //工程区分
+        {
+            get => ViewModel.Process;
+            set => ViewModel.Process = value;
         }
         public string ProcessWork                       //工程区分表示
         {
@@ -123,6 +128,7 @@ namespace Display
         ComPort comPort;                                //COMポート
         WindowState displayState;
         WindowStyle displayStyle;
+        ContentControl framePage;
         double windowLeft = 0;
         double windowTop = 0;
         double windowWidth = 0;
@@ -142,8 +148,6 @@ namespace Display
         int iconSize = 30;
 
         //プロパティ
-        public static ViewModelWindowMain Instance      //インスタンス
-        { get; set; } = new ViewModelWindowMain();
         public IWindowBase IwindowBase                  //インターフェース
         { get; set; }
         public ITimer Itimer                            //インターフェース
@@ -157,6 +161,11 @@ namespace Display
         {
             get => displayStyle;
             set => SetProperty(ref displayStyle, value);
+        }
+        public ContentControl FramePage                 //画面ページ
+        {
+            get => framePage;
+            set => SetProperty(ref framePage, value);
         }
         public double WindowLeft                        //Windowの位置（Left）
         {
@@ -178,7 +187,7 @@ namespace Display
             get => windowHeight;
             set => SetProperty(ref windowHeight, value);
         }
-        public string ProcessName                       //工程区分
+        public string Process                           //工程区分
         {
             get => processName;
             set => SetProperty(ref processName, value);
@@ -259,12 +268,6 @@ namespace Display
         //コンストラクター
         internal ViewModelWindowMain()
         {
-            Instance = this;
-            CtrlWindow = this;
-
-
-
-
             PropertyWindow.ViewModel = this;
             WindowBehavior.Instance.iWindow = this;
 

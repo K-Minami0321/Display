@@ -97,27 +97,9 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
-        }
-
-        //キャプション・ボタン表示
-        private void DisplayCapution()
-        {
-            CtrlWindow.ProcessWork = "合板引取履歴";
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = false;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = true;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.IconList = "ViewList";
-            CtrlWindow.IconPlan = "TrayArrowUp";
-            CtrlWindow.ProcessName = ProcessName;
-            DataGridBehavior.Instance.Iselect = this;           
         }
 
         //初期化
@@ -126,6 +108,27 @@ namespace Display
             SelectedIndex = -1;
             InProcessCODE = string.Empty;
             TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
+        }
+
+        //キャプション・ボタン表示
+        private void DisplayCapution()
+        {
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                ProcessWork = "合板引取履歴",
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = false,
+                VisibleDefect = false,
+                VisibleArrow = true,
+                VisiblePlan = true,
+                IconList = "ViewList",
+                IconPlan = "TrayArrowUp",
+            };
+
+            DataGridBehavior.Instance.Iselect = this;           
         }
 
         //一覧表示

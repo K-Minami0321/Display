@@ -1,6 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using MaterialDesignThemes.Wpf;
+using MaterialDesignThemes.Wpf;　
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Timers;
@@ -48,6 +48,7 @@ namespace Display
         string buttonName;
         int amountWidth = 150;
         int amountRow = 5;
+        int lengthLotNumberSEQ = 1;
         int lengthLotNumber = 10;
         int lengthAmount = 6;
         int lengthWeight = 6;
@@ -63,7 +64,8 @@ namespace Display
         bool visibleTenKey;
         bool visibleWorker;
         bool isRegist = true;
-        bool isEnable;
+        bool isEnable = true;
+        bool focusLotNumberSEQ;
         bool focusLotNumber;
         bool focusWorker;
         bool focusWeight;
@@ -82,7 +84,6 @@ namespace Display
                 inProcess = new InProcess(ProcessName);
                 inProcess.InProcessCODE = value;
                 CopyProperty(inProcess, this, "InProcessCODE");
-
                 DisplayLot(LotNumber, value);
                 IsRegist = string.IsNullOrEmpty(value);
             }
@@ -165,6 +166,11 @@ namespace Display
         {
             get => lengthLotNumber;
             set => SetProperty(ref lengthLotNumber, value);
+        }
+        public int LengthNumberSEQ      //文字数（ロット番号SEQ）
+        {
+            get => lengthLotNumberSEQ;
+            set => SetProperty(ref lengthLotNumberSEQ, value);
         }
         public int LengthAmount         //文字数（数量）
         {
@@ -259,6 +265,11 @@ namespace Display
             get => focusLotNumber;
             set => SetProperty(ref focusLotNumber, value);
         }
+        public bool FocusLotNumberSEQ   //フォーカス（ロット番号SEQ）
+        {
+            get => focusLotNumberSEQ;
+            set => SetProperty(ref focusLotNumberSEQ, value);
+        }
         public bool FocusWorker         //フォーカス（作業者）
         {
             get => focusWorker;
@@ -298,15 +309,21 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string number)
         {
+            Ibarcode = this;
+
+            ReadINI();
             Initialize();
+
             InProcessCODE = code;
-            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber, InProcessCODE); }     //予定表からロット番号取得
+            if (string.IsNullOrEmpty(code)) { 
+                LotNumber = number; 
+                DisplayLot(LotNumber, InProcessCODE); 
+            }     
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetControl();
             DisplayCapution();
             SetFocus();
         }
@@ -314,21 +331,18 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            //インターフェース
-            Ibarcode = this;
-
             //初期値
-            ReadINI();
             InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = string.Empty;
             LotNumber = string.Empty;
+            LotNumberSEQ = string.Empty;
             AmountWidth = 150;
             IsRegist = true;
             IsEnable = true;
         }
 
-        //コントロールの設定
-        private void SetControl()
+        //キャプション・ボタン表示
+        private void DisplayCapution()
         {
             //WindowMain
             WindowProperty = new PropertyWindow()
@@ -341,8 +355,8 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = true,
+                Process = ProcessName,
                 ProcessWork = ProcessName + "完了実績",
-                ProcessName = ProcessName
             };
 
             //テンキーコントロール
@@ -352,15 +366,12 @@ namespace Display
             //作業者コントロール
             WorkerProperty = new PropertyWorker();
             WorkerProperty.Iworker = this;
-        }
 
-        //キャプション・ボタン表示
-        private void DisplayCapution()
-        {
             //工程区分
             switch (ProcessName)
             {
                 case "合板":
+
                     NextFocus = "Amount";
                     VisibleItem1 = true;
                     VisibleItem2 = true;
@@ -371,6 +382,7 @@ namespace Display
                     break;
 
                 case "プレス":
+
                     if (NextFocus != null) { NextFocus = "LotNumber"; }
                     VisibleItem1 = true;
                     VisibleItem2 = false;
@@ -382,6 +394,7 @@ namespace Display
                     break;
 
                 default:
+
                     if (NextFocus != null) { NextFocus = "LotNumber"; }
                     VisibleItem1 = false;
                     VisibleItem2 = false;
@@ -408,7 +421,6 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
-            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -444,6 +456,7 @@ namespace Display
 
             if (!result)
             {
+                var control = new ControlMessage();
                 MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
@@ -461,6 +474,7 @@ namespace Display
         //登録処理
         private void RegistData()
         {
+            var code = InProcessCODE;
             CopyProperty(this, inProcess);
 
             //コード確定
@@ -468,12 +482,12 @@ namespace Display
             {
                 var inprocessdate = InProcessDate.ToStringDateDB();
                 var inprocesscode = inProcess.GenerateCode(Mark + inprocessdate);
-                InProcessCODE = inprocesscode;
+                code = inprocesscode;
             }
 
             //登録処理
             inProcess.InsertLog(IsRegist);
-            inProcess.Resist(InProcessCODE);
+            inProcess.Resist(code);
             IsRegist = true;
             Initialize();
         }
@@ -492,19 +506,29 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     if (LotNumber == null) { LotNumber = string.Empty; }
                     if (LotNumber.Length < LengthLotNumber) { LotNumber += value.ToString(); }
                     break;
 
+                case "LotNumberSEQ":
+
+                    if (LotNumberSEQ == null) { LotNumberSEQ = string.Empty; }
+                    if (LotNumberSEQ.Length < LengthNumberSEQ) { LotNumberSEQ += value.ToString(); }
+                    break;
+
                 case "Unit":
+
                     if (Unit.Length < LengthUnit) { Unit += value.ToString(); }
                     break;
 
                 case "Weight":
+
                     if (Weight.Length < LengthWeight) { Weight += value.ToString(); }
                     break;
 
                 case "Amount":
+
                     if (Amount.Length < LengthAmount) { Amount += value.ToString(); }
                     break;
 
@@ -519,18 +543,27 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     LotNumber = string.Empty;
                     break;
 
+                case "LotNumberSEQ":
+
+                    LotNumberSEQ = string.Empty;
+                    break;
+
                 case "Unit":
+
                     Unit = string.Empty;
                     break;
 
                 case "Weight":
+
                     Weight = string.Empty;
                     break;
 
                 case "Amount":
+
                     Amount = string.Empty;
                     break;
             }
@@ -543,6 +576,10 @@ namespace Display
             {
                 case "LotNumber":
                     if (LotNumber.Length > 0) { LotNumber = LotNumber[..^1]; }
+                    break;
+
+                case "LotNumberSEQ":
+                    if (LotNumberSEQ.Length > 0) { LotNumberSEQ = LotNumberSEQ[..^1]; }
                     break;
 
                 case "Unit":
@@ -565,26 +602,37 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
+                    SetGotFocus("LotNumberSEQ");
+                    break;
+
+                case "LotNumberSEQ":
+
                     SetGotFocus("Worker");
                     break;
 
                 case "Worker":
+
                     SetGotFocus("Weight");
                     break;
 
                 case "Weight":
+
                     SetGotFocus("Unit");
                     break;
 
                 case "Unit":
+
                     SetGotFocus("Completed");
                     break;
 
                 case "Completed":
+
                     SetGotFocus(NextFocus);
                     break;
 
                 case "Amount":
+
                     SetGotFocus("LotNumber");
                     break;
             }
@@ -597,6 +645,7 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     FocusLotNumber = true;
                     FocusWorker = false;
                     FocusWeight = false;
@@ -608,7 +657,22 @@ namespace Display
                     TenKeyProperty.InputString = "-";
                     break;
 
+                case "LotNumberSEQ":
+
+                    FocusLotNumber = false;
+                    FocusLotNumberSEQ = true;
+                    FocusWorker = false;
+                    FocusWeight = false;
+                    FocusUnit = false;
+                    FocusCompleted = false;
+                    FocusAmount = false;
+                    VisibleTenKey = true;
+                    VisibleWorker = false;
+                    TenKeyProperty.InputString = "-";
+                    break;
+
                 case "Worker":
+
                     FocusLotNumber = false;
                     FocusWorker = true;
                     FocusWeight = false;
@@ -620,6 +684,7 @@ namespace Display
                     break;
 
                 case "Weight":
+
                     FocusLotNumber = false;
                     FocusWorker = false;
                     FocusWeight = true;
@@ -632,6 +697,7 @@ namespace Display
                     break;
 
                 case "Unit":
+
                     FocusLotNumber = false;
                     FocusWorker = false;
                     FocusWeight = false;
@@ -644,6 +710,7 @@ namespace Display
                     break;
 
                 case "Completed":
+
                     FocusLotNumber = false;
                     FocusWorker = false;
                     FocusWeight = false;
@@ -655,6 +722,7 @@ namespace Display
                     break;
 
                 case "Amount":
+
                     FocusLotNumber = false;
                     FocusWorker = false;
                     FocusWeight = false;
@@ -691,11 +759,18 @@ namespace Display
         //QRコード処理
         public void SetBarcode()
         {
-            if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
-            LotNumber = ReceivedData.StringLeft(10);
-            LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-            DisplayLot(LotNumber, InProcessCODE);
-            SetGotFocus("Worker");
+            //ロット番号
+            if (CONVERT.IsLotNumber(ReceivedData)) 
+            {
+                LotNumber = ReceivedData.StringLeft(10);
+                LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+                DisplayLot(LotNumber, InProcessCODE);
+                SetGotFocus("Worker");
+            }
+
+            //作業者
+
+
         }
 
         //スワイプ処理
@@ -725,6 +800,7 @@ namespace Display
                         MessageProperty = new PropertyMessage()
                         {
                             Message = "搬入データを登録します",
+                            Contents = "",
                             Type = "警告"
                         };
                         result = (bool)await DialogHost.Show(control);
@@ -780,51 +856,50 @@ namespace Display
                     break;
 
                 case "Enter":
+
                     //フォーカス移動
                     SetNextFocus();
                     break;
 
                 case "BS":
+
                     //バックスペース処理
                     BackSpaceText();
                     break;
 
                 case "CLEAR":
+
                     //文字列消去
                     ClearText();
                     break;
 
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                case "-":
+                case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case "0": case "-":
+                    
+                    //数字入力
                     DisplayText(value);
                     break;
 
                 case "Completed":
+
                     //完了チェック
                     Completed = Completed == "E" ? "" : "E";
                     break;
 
                 case "DisplayInfo":
+
                     //搬入登録画面
                     Initialize();
                     SetFocus();
                     break;
 
                 case "DisplayList":
+
                     //仕掛在庫一覧画面
                     DisplayFramePage(new InProcessList());
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
                     DisplayFramePage(new PlanList());
                     break;

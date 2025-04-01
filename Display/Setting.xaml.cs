@@ -124,24 +124,21 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
+        //コンストラクター
+        public ViewModelSetting()
+        {
+            ReadINI();
+        }
+
         //ロード時
         private void OnLoad()
         {
-            SetControl();
             DisplayCapution();
             DisplayLog();
-            ReadINI();
         }
 
         //初期化
         private void DisplayCapution()
-        {
-            Version = CONST.DISPLAY_VERSION;
-            IsFocusServer = true;
-        }
-
-        //コントロールの設定
-        private void SetControl()
         {
             //WindowMain
             WindowProperty = new PropertyWindow()
@@ -154,8 +151,11 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = false,
                 ProcessWork = "設定画面",
-                ProcessName = "設定"
+                Process = "設定"
             };
+
+            Version = CONST.DISPLAY_VERSION;
+            IsFocusServer = true;
         }
 
         //ログ表示
@@ -180,7 +180,7 @@ namespace Display
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
 
-            WindowProperty.ProcessName = IniFile.GetString("Page", "Process");
+            WindowProperty.Process = IniFile.GetString("Page", "Process");
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 

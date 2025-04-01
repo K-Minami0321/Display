@@ -23,7 +23,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelManual : Common
+    public class ViewModelManual : Common, IWindowBase
     {
         //変数
         string processName;
@@ -59,6 +59,7 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             DisplayCapution();
 
 
@@ -69,15 +70,22 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //ViewModelWindowMain.Instance.VisiblePower = true;
-            //ViewModelWindowMain.Instance.VisibleList = true;
-            //ViewModelWindowMain.Instance.VisibleInfo = true;
-            //ViewModelWindowMain.Instance.VisibleDefect = false;
-            //ViewModelWindowMain.Instance.VisibleArrow = false;
-            //ViewModelWindowMain.Instance.VisiblePlan = true;
-            //ViewModelWindowMain.Instance.InitializeIcon();
-            //ViewModelWindowMain.Instance.ProcessWork = "動画マニュアル";
-            //ProcessName = ViewModelWindowMain.Instance.ProcessName;
+
+
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = true,
+                ProcessWork = "動画マニュアル"
+            };
+
+
         }
 
         //スワイプ処理
@@ -89,6 +97,14 @@ namespace Display
                     StartPage(IniFile.GetString("Page", "Initial"));
                     break;
             }
+        }
+
+        //キーイベント
+        public void KeyDown(object value)
+        {
+
+
+
         }
     }
 }

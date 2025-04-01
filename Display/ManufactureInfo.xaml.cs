@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 #pragma warning disable
 namespace Display
@@ -404,14 +405,18 @@ namespace Display
         internal ViewModelManufactureInfo(string code, string number)
         {
             Initialize();
+
             ManufactureCODE = code;
-            if (string.IsNullOrEmpty(code)) { LotNumber = number; DisplayLot(LotNumber); }
+            if (string.IsNullOrEmpty(code)) 
+            {
+                LotNumber = number; 
+                DisplayLot(LotNumber); 
+            }
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetControl();
             DisplayCapution();
             SetFocus();
         }
@@ -438,8 +443,8 @@ namespace Display
             IsEnable = true;
         }
 
-        //コントロールの設定
-        private void SetControl()
+        //キャプション・ボタン表示
+        private void DisplayCapution()
         {
             //WindowMain
             WindowProperty = new PropertyWindow()
@@ -450,7 +455,7 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = true,
-                ProcessName = ProcessName,
+                Process = ProcessName,
                 ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE
             };
 
@@ -465,11 +470,7 @@ namespace Display
             //工程コントロール
             WorkProcessProperty = new PropertyWorkProcess();
             WorkProcessProperty.IworkProcess = this;
-        }
 
-        //キャプション・ボタン表示
-        private void DisplayCapution()
-        {
             switch (Mode)
             {
                 case "登録":
@@ -575,7 +576,6 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
-            var control = new ControlMessage();
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -618,6 +618,7 @@ namespace Display
 
             if (!result) 
             {
+                var control = new ControlMessage();
                 MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
@@ -1061,6 +1062,7 @@ namespace Display
 
                     //作業終了処理
                     EndTime = DateTime.Now.ToString("HH:mm");
+
                     MessageProperty = new PropertyMessage()
                     {
                         Message = "作業を完了します",
@@ -1150,57 +1152,56 @@ namespace Display
                     break;
 
                 case "Enter":
+
                     //フォーカス移動
                     SetNextFocus();
                     break;
 
                 case "BS":
+
                     //バックスペース処理
                     BackSpaceText();
                     break;
 
                 case "CLEAR":
+
                     //文字列消去
                     ClearText();
                     break;
 
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                case "-":
+                case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9": case "0": case "-":
+
                     //テンキー処理
                     DisplayText(value);
                     break;
 
                 case "Completed":
+
                     //完了
                     Completed = Completed == "E" ? "" : "E";
                     break;
 
                 case "Sales":
+
                     //売上
                     Sales = Sales == "*" ? "" : "*";
                     break;
 
                 case "DisplayInfo":
+
                     //加工登録画面
                     Initialize();
                     SetFocus();
                     break;
 
                 case "DisplayList":
+
                     //加工一覧画面
                     DisplayFramePage(new ManufactureList());
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
                     DisplayFramePage(new PlanList());
                     break;

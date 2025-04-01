@@ -29,6 +29,7 @@ namespace Display
     public class ViewModelPackSpecification : Common, IWindowBase
     {
         //変数
+        ProductPackingStyle productPackingStyle;
         DataTable selectTable;
         DataTable listTable;
         string containerCategory;
@@ -133,21 +134,21 @@ namespace Display
         //コンストラクター
         public ViewModelPackSpecification()
         {
-            var productPackingStyle = new ProductPackingStyle();
+            productPackingStyle = new ProductPackingStyle();
             CopyProperty(productPackingStyle, this);
-            DisplayImage(productPackingStyle);
+            DisplayImage();
             SelectTable = productPackingStyle.SelectPakingIndex();
         }
 
         //ロード時
         private void OnLoad()
         {
-            SetControl();
+            DisplayCapution();
             FocusProductName = true;
         }
 
         //コントロールの設定
-        private void SetControl()
+        private void DisplayCapution()
         {
             //WindowMain
             WindowProperty = new PropertyWindow()
@@ -160,7 +161,7 @@ namespace Display
                 VisibleArrow = true,
                 VisiblePlan = false,
                 ProcessWork = "梱包仕様書",
-                ProcessName = "梱包"
+                Process = "梱包"
             };
         }
 
@@ -204,7 +205,6 @@ namespace Display
         private void DisplayPackStyle(string code, string no = "")
         {
             //データ取得
-            var productPackingStyle = new ProductPackingStyle();
             ListTable = productPackingStyle.SelectPaking(code, no);
             CopyProperty(productPackingStyle, this);
 
@@ -237,15 +237,15 @@ namespace Display
 
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
-            DisplayImage(productPackingStyle);
+            DisplayImage();
         }
 
         //画像表示処理
-        private void DisplayImage(ProductPackingStyle product)
+        private void DisplayImage()
         {
             //画像1
-            var img1 = File.Exists(product.ImageFolder + product.ImageSource1) ? product.ImageSource1 : "nophoto.jpg";
-            var source1 = new Mat(product.ImageFolder + img1);
+            var img1 = File.Exists(productPackingStyle.ImageFolder + productPackingStyle.ImageSource1) ? productPackingStyle.ImageSource1 : "nophoto.jpg";
+            var source1 = new Mat(productPackingStyle.ImageFolder + img1);
             var mat1 = new Mat();
             Cv2.Resize(source1, mat1, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
             Image1 = BitmapSourceConverter.ToBitmapSource(mat1);
@@ -253,8 +253,8 @@ namespace Display
             source1.Dispose();
 
             //画像2
-            var img2 = File.Exists(product.ImageFolder + product.ImageSource2) ? product.ImageSource2 : "nophoto.jpg";
-            var source2 = new Mat(product.ImageFolder + img2);
+            var img2 = File.Exists(productPackingStyle.ImageFolder + productPackingStyle.ImageSource2) ? productPackingStyle.ImageSource2 : "nophoto.jpg";
+            var source2 = new Mat(productPackingStyle.ImageFolder + img2);
             var mat2 = new Mat();
             Cv2.Resize(source2, mat2, new OpenCvSharp.Size(800, 600), 0, 0, InterpolationFlags.Cubic);
             Image2 = BitmapSourceConverter.ToBitmapSource(mat2);

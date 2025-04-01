@@ -57,10 +57,8 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
-
-            SetControl();
             ReadINI();
+            DisplayCapution();
             DiaplayList();
         }
 
@@ -73,17 +71,18 @@ namespace Display
         }
 
         //コントロールの設定
-        private void SetControl()
+        private void DisplayCapution()
         {
             //WindowMain
             WindowProperty = new PropertyWindow()
             {
+                IwindowBase = this,
                 VisiblePower = true,
                 VisibleList = true,
                 VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = true,
-                ProcessName = ProcessName,
+                Process = ProcessName,
                 ProcessWork = ProcessWork
             };
 
@@ -122,33 +121,39 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
+
                     //搬入登録画面
                     DataInitialize();
                     DisplayFramePage(new ManufactureInfo());
                     break;
 
                 case "DisplayList":
+
                     //搬入一覧画面
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
                     DisplayFramePage(new ManufactureList());
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
                     DisplayFramePage(new PlanList());
                     break;
 
                 case "PreviousDate":
+
                     //前日へ移動
                     ManufactureDate = DATETIME.AddDate(ManufactureDate, -1).ToString("yyyyMMdd");
                     break;
 
                 case "NextDate":
+
                     //次の日へ移動
                     ManufactureDate = DATETIME.AddDate(ManufactureDate, 1).ToString("yyyyMMdd");
                     break;
 
                 case "Today":
+
                     //当日へ移動
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
                     break;

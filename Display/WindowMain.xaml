@@ -61,7 +61,7 @@
                         <ColumnDefinition Width="600"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Border CornerRadius="2" Background="{Binding ProcessName,Converter={StaticResource ProcessColorConverter},FallbackValue=#90A4AE}" 
+                    <Border CornerRadius="2" Background="{Binding Process, Converter={StaticResource ProcessColorConverter}, FallbackValue=#90A4AE}" 
                             MinWidth="240" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding FunctionColor}" >
                         <Viewbox Stretch="Uniform">
                             <TextBlock Text="{Binding ProcessWork}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Medium" Foreground="#FFFFFF" Padding="40,0,40,0" Margin="10,10,10,10"/>

@@ -68,7 +68,6 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -77,13 +76,18 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessName = ProcessName;
-            CtrlWindow.ProcessWork = ProcessName + "現品票発行";
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisiblePlan = true,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                Process = ProcessName,
+                ProcessWork = ProcessName + "現品票発行"
+            };
+
             DataGridBehavior.Instance.Iselect = this;
 
             //遷移ページ設定
@@ -91,14 +95,14 @@ namespace Display
             {
                 case "PlanList":
                     //計画一覧
-                    CtrlWindow.VisibleList = false;
-                    CtrlWindow.VisibleInfo = false;
+                    WindowProperty.VisibleList = false;
+                    WindowProperty.VisibleInfo = false;
                     EnableSelect = false;
                     break;
 
                 default:
-                    CtrlWindow.VisibleList = true;
-                    CtrlWindow.VisibleInfo = true;
+                    WindowProperty.VisibleList = true;
+                    WindowProperty.VisibleInfo = true;
                     EnableSelect = true;
                     break;
             }

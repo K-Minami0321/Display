@@ -48,14 +48,6 @@ namespace Display
         List<string> workProcesses;
 
         //プロパティ
-        public ViewModelWindowMain CtrlWindow                   //WindowMainInstance
-        { get; set; } = ViewModelWindowMain.Instance;
-
-
-
-
-
-
         public INIFile IniFile                                  //設定ファイル
         { get; set; } = new INIFile(CONST.SETTING_INI);
         public PropertyWindow WindowProperty                    //プロパティ（PropertyWindow）
@@ -74,11 +66,6 @@ namespace Display
         { get; set; }
         public IBarcode Ibarcode                                //インターフェース（QRコード）
         { get; set; }
-        public ContentControl FramePage                         //画面ページ
-        {
-            get => framePage;
-            set => SetProperty(ref framePage, value);
-        }
         public DataTable SelectTable                            //一覧データ
         {
             get => selectTable;
@@ -257,13 +244,16 @@ namespace Display
         public void StartPage(string page)
         {
             var type = Type.GetType("Display." + page);
-            FramePage = (ContentControl)Activator.CreateInstance(type);
+
+            PropertyWindow windowProperty = new PropertyWindow();
+            windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type);
         }
 
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            FramePage = (ContentControl)framepage;
+            PropertyWindow windowProperty = new PropertyWindow();
+            windowProperty.FramePage = (ContentControl)framepage;
         }
 
         //省略ロット番号取得

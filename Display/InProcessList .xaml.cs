@@ -84,14 +84,14 @@ namespace Display
         internal ViewModelInProcessList()
         {
             Instance = this;
+
+            ReadINI();
             Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
-            ReadINI();
             DisplayCapution();
             DiaplayList();
         }
@@ -99,15 +99,19 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = true;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = true;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.ProcessWork = "完了履歴";
-            CtrlWindow.ProcessName = ProcessName;
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = true,
+                VisibleDefect = false,
+                VisibleArrow = true,
+                VisiblePlan = true,
+                ProcessWork = "完了履歴",
+            };
+
             DataGridBehavior.Instance.Iselect = this;
 
             //工程区分
@@ -178,33 +182,39 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
+
                     //搬入登録画面
                     DataInitialize();
                     DisplayFramePage(new InProcessInfo());
                     break;
 
                 case "DisplayList":
+
                     //仕掛在庫一覧画面
                     Initialize();
                     DisplayFramePage(new InProcessList());
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
                     DisplayFramePage(new PlanList());
                     break;
 
                 case "PreviousDate":
+
                     //前日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, -1).ToString("yyyyMMdd");
                     break;
 
                 case "NextDate":
+
                     //次の日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, 1).ToString("yyyyMMdd");
                     break;
 
                 case "Today":
+
                     //当日へ移動
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
                     break;

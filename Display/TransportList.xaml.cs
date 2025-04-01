@@ -40,7 +40,6 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
             ReadINI();
             DisplayCapution();
             DiaplayList();
@@ -49,17 +48,22 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = true;
-            CtrlWindow.VisibleInfo = false;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.VisiblePlan = true;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.IconList = "ViewList";
-            CtrlWindow.IconPlan = "TrayArrowUp";
-            CtrlWindow.ProcessWork = "合板倉庫";
-            CtrlWindow.ProcessName = ProcessBefore;
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisibleList = true,
+                VisibleInfo = false,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = true,
+                IconList = "ViewList",
+                IconPlan = "TrayArrowUp",
+                ProcessWork = "合板倉庫",
+                Process = ProcessBefore,
+            };
+
             DataGridBehavior.Instance.Iselect = this;
         }
 

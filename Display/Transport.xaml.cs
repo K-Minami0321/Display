@@ -84,30 +84,34 @@ namespace Display
         internal ViewModelTransport()
         {
             Ibarcode = this;
+            ReadINI();
         }
 
         //ロード時
         private void OnLoad()
         {
-            CtrlWindow.IwindowBase = this;
-            ReadINI();
+            
             DisplayCapution();
         }
 
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            CtrlWindow.ProcessWork = "引取処理";
-            CtrlWindow.VisiblePower = true;
-            CtrlWindow.VisibleList = false;
-            CtrlWindow.VisibleInfo = false;
-            CtrlWindow.VisibleDefect = false;
-            CtrlWindow.VisibleArrow = false;
-            CtrlWindow.VisiblePlan = false;
-            CtrlWindow.InitializeIcon();
-            CtrlWindow.IconList = "ViewList";
-            CtrlWindow.IconPlan = "TrayArrowUp";
-            CtrlWindow.ProcessName = ProcessName;
+            //WindowMain
+            WindowProperty = new PropertyWindow()
+            {
+                IwindowBase = this,
+                VisiblePower = true,
+                VisibleList = false,
+                VisibleInfo = false,
+                VisibleDefect = false,
+                VisibleArrow = false,
+                VisiblePlan = false,
+                IconList = "ViewList",
+                IconPlan = "TrayArrowUp",
+                Process = ProcessName,
+                ProcessWork = "引取処理",
+            };
         }
 
         //QRコード処理
