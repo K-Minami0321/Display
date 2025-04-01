@@ -769,8 +769,11 @@ namespace Display
             }
 
             //作業者
-
-
+            if (CONVERT.IsWoker(ReceivedData))
+            {
+                Worker = ReceivedData;
+                SetGotFocus("Weight");
+            }
         }
 
         //スワイプ処理
