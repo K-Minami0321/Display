@@ -241,12 +241,21 @@ namespace Display
         }
 
         //スタートページを表示
-        public void StartPage(string page)
+        public void StartPage(string page, string code = null, string date = null)
         {
-            var type = Type.GetType("Display." + page);
-
             PropertyWindow windowProperty = new PropertyWindow();
-            windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type);
+            var type = Type.GetType("Display." + page);
+ 
+            switch(page)
+            {
+                case "ManufactureInfo":
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty, string.Empty);
+                    break;
+
+                default:
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type);
+                    break;
+            }
         }
 
         //ページ移動
@@ -280,8 +289,6 @@ namespace Display
         //データ初期化
         public void DataInitialize()
         {
-            ManufactureInfo.ManufactureCODE = string.Empty;
-            ManufactureInfo.LotNumber = string.Empty;
             InProcessInfo.InProcessCODE = string.Empty;
             InProcessInfo.LotNumber = string.Empty;
         }

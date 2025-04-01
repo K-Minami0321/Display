@@ -1,6 +1,7 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
+using NPOI.SS.Formula.Functions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -163,8 +164,11 @@ namespace Display
 
                 case "ManufactureInfo":
 
-                    ManufactureInfo.ManufactureCODE = string.Empty;
-                    ManufactureInfo.LotNumber = LotNumber;
+
+
+
+
+
                     break;
             }
             if (EnableSelect) { StartPage(Page); }

@@ -48,7 +48,7 @@ namespace Display
         string buttonName;
         int amountWidth = 150;
         int amountRow = 5;
-        int lengthLotNumberSEQ = 1;
+        int lengthLotNumberSEQ = 2;
         int lengthLotNumber = 10;
         int lengthAmount = 6;
         int lengthWeight = 6;
@@ -84,6 +84,7 @@ namespace Display
                 inProcess = new InProcess(ProcessName);
                 inProcess.InProcessCODE = value;
                 CopyProperty(inProcess, this, "InProcessCODE");
+
                 DisplayLot(LotNumber, value);
                 IsRegist = string.IsNullOrEmpty(value);
             }
@@ -313,12 +314,7 @@ namespace Display
 
             ReadINI();
             Initialize();
-
             InProcessCODE = code;
-            if (string.IsNullOrEmpty(code)) { 
-                LotNumber = number; 
-                DisplayLot(LotNumber, InProcessCODE); 
-            }     
         }
 
         //ロード時
@@ -575,22 +571,27 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     if (LotNumber.Length > 0) { LotNumber = LotNumber[..^1]; }
                     break;
 
                 case "LotNumberSEQ":
+
                     if (LotNumberSEQ.Length > 0) { LotNumberSEQ = LotNumberSEQ[..^1]; }
                     break;
 
                 case "Unit":
+
                     if (Unit.Length > 0) { Unit = Unit[..^1]; }
                     break;
 
                 case "Weight":
+
                     if (Weight.Length > 0) { Weight = Weight[..^1]; }
                     break;
 
                 case "Amount":
+
                     if (Amount.Length > 0) { Amount = Amount[..^1]; }
                     break;
             }
@@ -647,6 +648,7 @@ namespace Display
                 case "LotNumber":
 
                     FocusLotNumber = true;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = false;
                     FocusWeight = false;
                     FocusUnit = false;
@@ -674,6 +676,7 @@ namespace Display
                 case "Worker":
 
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = true;
                     FocusWeight = false;
                     FocusUnit = false;
@@ -686,6 +689,7 @@ namespace Display
                 case "Weight":
 
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = false;
                     FocusWeight = true;
                     FocusUnit = false;
@@ -699,6 +703,7 @@ namespace Display
                 case "Unit":
 
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = false;
                     FocusWeight = false;
                     FocusUnit = true;
@@ -712,6 +717,7 @@ namespace Display
                 case "Completed":
 
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = false;
                     FocusWeight = false;
                     FocusUnit = false;
@@ -724,6 +730,7 @@ namespace Display
                 case "Amount":
 
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorker = false;
                     FocusWeight = false;
                     FocusUnit = false;

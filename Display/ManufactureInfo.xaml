@@ -234,7 +234,7 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <CheckBox x:Name="CheckCompleted" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
-                                        Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
+                                      Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
                                 <Viewbox Stretch="Uniform">
                                     <TextBlock Text="ロット完了"/>
                                 </Viewbox>
@@ -257,7 +257,7 @@
                                 </i:Interaction.Triggers>
                             </CheckBox>
                             <CheckBox x:Name="CheckSales" IsChecked="{Binding Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
-                                        Visibility="{Binding VisibleSeal,Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                        Visibility="{Binding VisibleSeal, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
                                 <Viewbox Stretch="Uniform" Margin="10,10,10,10">
                                     <TextBlock Text="売 上"/>
                                 </Viewbox>
@@ -355,7 +355,7 @@
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
-                            <TextBlock Text="{Binding ButtonName,FallbackValue=登　録}"/>
+                            <TextBlock Text="{Binding ButtonName, FallbackValue=登　録}"/>
                         </WrapPanel>
                     </Viewbox>
                     <i:Interaction.Triggers>
@@ -364,7 +364,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleEdit, Converter={StaticResource CollapsedConverter}}">
+                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleDelete, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Delete" Margin="0,3,20,0" Height="30" Width="30"/>

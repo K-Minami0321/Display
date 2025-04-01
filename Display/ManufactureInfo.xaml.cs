@@ -15,15 +15,10 @@ namespace Display
     //画面クラス
     public partial class ManufactureInfo : UserControl
     {
-        public static string ManufactureCODE    //製造CODE
-        { get; set; }
-        public static string LotNumber          //ロット番号
-        { get; set; }
-
         //コンストラクター
-        public ManufactureInfo()
+        public ManufactureInfo(string code = "", string date = "")
         {
-            DataContext = new ViewModelManufactureInfo(ManufactureCODE, LotNumber);
+            DataContext = new ViewModelManufactureInfo(code, date);
             InitializeComponent();
         }
     }
@@ -32,6 +27,7 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
+        Manufacture manufacture = new Manufacture();
         string processName;
         string manufactureCODE;
         string manufactureDate;
@@ -53,6 +49,7 @@ namespace Display
         string buttonName = "数 量";
         string labelAmount;
         int lengthLotNumber = 10;
+        int lengthLotNumberSEQ = 2;
         int lengthStartTime = 4;
         int lengthEndTime = 4;
         int lengthAmount = 5;
@@ -63,6 +60,7 @@ namespace Display
         bool visibleButtonEnd;
         bool visibleButtonCancel;
         bool visibleButtonBreak;
+        bool visibleDelete;
         bool visibleEdit;
         bool visibleTenKey;
         bool visibleWorker;
@@ -70,8 +68,9 @@ namespace Display
         bool visibleSeal;
         bool isRegist;
         bool isEnable;
-        bool isConvertTime;
+        bool isConvertTime = true;
         bool focusLotNumber;
+        bool focusLotNumberSEQ;
         bool focusWorker;
         bool focusWorkProcess;
         bool focusStartTime;
@@ -81,19 +80,6 @@ namespace Display
         bool focusSales;
 
         //プロパティ
-        public string ManufactureCODE           //製造CODE
-        {
-            get => manufactureCODE;
-            set 
-            { 
-                IsRegist = string.IsNullOrEmpty(value);
-                
-                var manufacture = new Manufacture(value);
-                CopyProperty(manufacture, this, "ManufactureCODE");
-                DisplayLot(LotNumber);
-                SetProperty(ref manufactureCODE, value);
-            }
-        }
         public string ProcessName               //工程区分
         {
             get => processName;
@@ -122,13 +108,32 @@ namespace Display
                 SetProperty(ref processName, value);
             }
         }
+        public string ManufactureCODE           //製造CODE
+        {
+            get => manufactureCODE;
+            set 
+            { 
+                var manufacture = new Manufacture(value);
+                manufacture.ManufactureCODE = value;
+                CopyProperty(manufacture, this, "ManufactureCODE");
+
+                DisplayLot(LotNumber);
+                SetProperty(ref manufactureCODE, value);
+
+                IsRegist = string.IsNullOrEmpty(value);
+                
+            }
+        }
         public string ManufactureDate           //製造日
         {
             get => manufactureDate;
             set 
-            { 
-                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
+            {
+                if (string.IsNullOrEmpty(value)) { value = SetToDay(DateTime.Now); }
                 SetProperty(ref manufactureDate, value);
+
+                IsDate = value == SetToDay(DateTime.Now) ? true : false;
+                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) && !string.IsNullOrEmpty(ManufactureCODE) ? false : true;
             }
         }
         public string LotNumber                 //ロット番号（テキストボックス）
@@ -156,7 +161,6 @@ namespace Display
             get => startTime;
             set 
             {
-                var manufacture = new Manufacture();
                 manufacture.IsConvertTime = IsConvertTime;
                 manufacture.ManufactureDate = ManufactureDate;
                 manufacture.StartTime = value;
@@ -164,7 +168,6 @@ namespace Display
 
                 SetProperty(ref startTime, manufacture.StartTime);
                 WorkTime = manufacture.WorkTime;
-
             }
         }
         public string EndTime                   //終了時刻
@@ -172,7 +175,6 @@ namespace Display
             get => endTime;
             set
             {
-                var manufacture = new Manufacture();
                 manufacture.IsConvertTime = IsConvertTime;
                 manufacture.ManufactureDate = ManufactureDate;
                 manufacture.StartTime = StartTime;
@@ -249,6 +251,11 @@ namespace Display
             get => lengthLotNumber;
             set => SetProperty(ref lengthLotNumber, value);
         }
+        public int LengthNumberSEQ              //文字数（ロット番号SEQ）
+        {
+            get => lengthLotNumberSEQ;
+            set => SetProperty(ref lengthLotNumberSEQ, value);
+        }
         public int LengthStartTime              //文字数（開始時間）
         {
             get => lengthStartTime;
@@ -303,10 +310,15 @@ namespace Display
             get => visibleButtonBreak;
             set => SetProperty(ref visibleButtonBreak, value);
         }
-        public bool VisibleEdit                 //表示・非表示（削除ボタン）
+        public bool VisibleEdit                 //表示・非表示（登録ボタン）
         {
             get => visibleEdit;
             set => SetProperty(ref visibleEdit, value);
+        }
+        public bool VisibleDelete               //表示・非表示（削除ボタン）
+        {
+            get => visibleDelete;
+            set => SetProperty(ref visibleDelete, value);
         }
         public bool VisibleTenKey               //表示・非表示（テンキー）
         {
@@ -337,6 +349,7 @@ namespace Display
                 //EnabledControl1 = !value;
                 //EnabledControl2 = !value;
                 //VisibleButtonStart = value;
+                VisibleDelete = !value;
                 ButtonName = value ? "登　録" : "修　正";
             }
         }
@@ -345,6 +358,8 @@ namespace Display
             get => isEnable;
             set => SetProperty(ref isEnable, value);
         }
+        public bool IsDate                      //日付調整
+        { get; set; }
         public bool IsConvertTime               //時間変換をするか
         {
             get => isConvertTime;
@@ -354,6 +369,11 @@ namespace Display
         {
             get => focusLotNumber;
             set => SetProperty(ref focusLotNumber, value);
+        }
+        public bool FocusLotNumberSEQ           //フォーカス（ロット番号SEQ）
+        {
+            get => focusLotNumberSEQ;
+            set => SetProperty(ref focusLotNumberSEQ, value);
         }
         public bool FocusWorker                 //フォーカス（作業者）
         {
@@ -402,16 +422,14 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelManufactureInfo(string code, string number)
+        internal ViewModelManufactureInfo(string code, string date)
         {
-            Initialize();
+            Ibarcode = this;
 
+            ReadINI();
+            Initialize();
             ManufactureCODE = code;
-            if (string.IsNullOrEmpty(code)) 
-            {
-                LotNumber = number; 
-                DisplayLot(LotNumber); 
-            }
+            ManufactureDate = date;
         }
 
         //ロード時
@@ -424,14 +442,11 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            //インターフェース
-            Ibarcode = this;
-
             //初期化
-            ReadINI();
             ManufactureCODE = string.Empty;
             ManufactureDate = SetToDay(DateTime.Now);
             LotNumber = string.Empty;
+            LotNumberSEQ = string.Empty;
             ProductName = string.Empty;
             WorkProcess = string.Empty;
             StartTime = string.Empty;
@@ -449,6 +464,8 @@ namespace Display
             //WindowMain
             WindowProperty = new PropertyWindow()
             {
+                IwindowBase = this,
+                Itimer = this,
                 VisiblePower = true,
                 VisibleList = true,
                 VisibleInfo = true,
@@ -474,6 +491,7 @@ namespace Display
             switch (Mode)
             {
                 case "登録":
+
                     EnabledControl1 = true;
                     EnabledControl2 = true;
                     VisibleButtonStart = false;
@@ -488,6 +506,7 @@ namespace Display
                     break;
 
                 case "準備":
+
                     EnabledControl1 = true;
                     EnabledControl2 = false;
                     VisibleButtonStart = true;
@@ -500,6 +519,7 @@ namespace Display
                     break;
 
                 case "作業中":
+
                     EnabledControl1 = false;
                     EnabledControl2 = true;
                     VisibleButtonStart = false;
@@ -514,6 +534,7 @@ namespace Display
                     break;
 
                 case "中断":
+
                     EnabledControl1 = false;
                     EnabledControl2 = false;
                     VisibleButtonStart = false;
@@ -526,6 +547,7 @@ namespace Display
                     break;
 
                 case "編集":
+
                     EnabledControl1 = true;
                     EnabledControl2 = true;
                     VisibleEdit = true;
@@ -538,6 +560,7 @@ namespace Display
                     break;
 
                 default:
+
                     Mode = "準備";
                     EnabledControl1 = true;
                     EnabledControl2 = false;
@@ -636,27 +659,26 @@ namespace Display
         //登録処理
         private void RegistData()
         {
-            var manufacture = new Manufacture();
+            var code = ManufactureCODE;
             CopyProperty(this, manufacture);
 
             //コード確定
             if (IsRegist)
             {
-                var date = ManufactureDate.ToStringDateDB();
-                var code = manufacture.GenerateCode(Mark + date);
-                ManufactureCODE = code;
+                var manufacturedate = ManufactureDate.ToStringDateDB();
+                var manufacturecode = manufacture.GenerateCode(Mark + manufacturedate);
+                code = manufacturecode;
             }
 
             //登録処理
             manufacture.InsertLog(IsRegist);
-            manufacture.Resist(ManufactureCODE);
+            manufacture.Resist(code);
             Initialize();
         }
 
         //削除処理
         private void DeleteDate()
         {
-            var manufacture = new Manufacture();
             manufacture.DeleteLog();
             manufacture.Delete(ManufactureCODE);        //製造実績削除
             Initialize();
@@ -668,10 +690,20 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
+                    if (LotNumber == null) { LotNumber = string.Empty; }
                     if (LotNumber.Length < LengthLotNumber) { LotNumber += value.ToString(); }
                     break;
 
+                case "LotNumberSEQ":
+
+                    if (LotNumberSEQ == null) { LotNumberSEQ = string.Empty; }
+                    if (LotNumberSEQ.Length < LengthNumberSEQ) { LotNumberSEQ += value.ToString(); }
+                    break;
+
+
                 case "StartTime":
+
                     if (StartTime.Length > LengthStartTime) { return; }
                     IsConvertTime = !(StartTime.Length < 3);
                     StartTime += value.ToString();
@@ -680,6 +712,7 @@ namespace Display
                     break;
 
                 case "EndTime":
+
                     if (EndTime.Length > LengthEndTime) { return; }
                     IsConvertTime = !(EndTime.Length < 3);
                     EndTime += value.ToString();
@@ -688,6 +721,7 @@ namespace Display
                     break;
 
                 case "Amount":
+
                     if (Amount.Length < LengthAmount) { Amount += value.ToString(); }
                     break;
 
@@ -702,18 +736,27 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     LotNumber = string.Empty;
                     break;
 
+                case "LotNumberSEQ":
+
+                    LotNumberSEQ = string.Empty;
+                    break;
+
                 case "StartTime":
+
                     StartTime = string.Empty;
                     break;
 
                 case "EndTime":
+
                     EndTime = string.Empty;
                     break;
 
                 case "Amount":
+
                     Amount = string.Empty;
                     break;
 
@@ -728,22 +771,31 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     if (LotNumber.Length > 0) { LotNumber = LotNumber[..^1]; }
                     break;
 
+                case "LotNumberSEQ":
+
+                    if (LotNumberSEQ.Length > 0) { LotNumberSEQ = LotNumberSEQ[..^1]; }
+                    break;
+
                 case "StartTime":
+
                     if (StartTime.Length == 0) { return; }
                     IsConvertTime = false;
                     StartTime = StartTime[..^1];
                     break;
 
                 case "EndTime":
+
                     if (EndTime.Length == 0) { return; }
                     IsConvertTime = false;
                     EndTime = EndTime[..^1];
                     break;
 
                 case "Amount":
+
                     if (Amount.Length > 0) { Amount = Amount[..^1]; }
                     break;
 
@@ -761,35 +813,55 @@ namespace Display
                     switch (Focus)
                     {
                         case "LotNumber":
+
+                            SetGotFocus("LotNumberSEQ");
+                            break;
+
+                        case "LotNumberSEQ":
+
                             SetGotFocus("WorkProcess");
                             break;
 
                         case "WorkProcess":
+
                             SetGotFocus("Worker");
                             break;
 
                         case "Worker":
+
                             SetGotFocus("StartTime");
                             break;
 
                         case "StartTime":
+
                             SetGotFocus("EndTime");
                             break;
 
                         case "EndTime":
+
                             SetGotFocus("Amount");
                             break;
 
                         case "Amount":
+
                             SetGotFocus("Completed");
                             break;
 
                         case "Completed":
-                            SetGotFocus("Sales");
+
+                            if (!VisibleSeal)
+                            {
+                                KeyDown("Regist");
+                            }
+                            else
+                            {
+                                SetGotFocus("Sales");
+                            }
                             break;
 
                         case "Sales":
-                            SetGotFocus("LotNumber");
+
+                            KeyDown("Regist");
                             break;
 
                         default:
@@ -801,6 +873,10 @@ namespace Display
                     switch (Focus)
                     {
                         case "LotNumber":
+                            SetGotFocus("LotNumberSEQ");
+                            break;
+
+                        case "LotNumberSEQ":
                             SetGotFocus("WorkProcess");
                             break;
 
@@ -848,7 +924,26 @@ namespace Display
             switch (Focus)
             {
                 case "LotNumber":
+
                     FocusLotNumber = true;
+                    FocusLotNumberSEQ = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
+                    VisibleTenKey = true;
+                    VisibleWorker = false;
+                    VisibleWorkProcess = false;
+                    TenKeyProperty.InputString = "-";
+                    break;
+
+                case "LotNumberSEQ":
+
+                    FocusLotNumber = false;
+                    FocusLotNumberSEQ = true;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -863,7 +958,9 @@ namespace Display
                     break;
 
                 case "WorkProcess":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = true;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -877,7 +974,9 @@ namespace Display
                     break;
 
                 case "Worker":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = true;
                     FocusStartTime = false;
@@ -891,7 +990,9 @@ namespace Display
                     break;
 
                 case "StartTime":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = true;
@@ -906,7 +1007,9 @@ namespace Display
                     break;
 
                 case "EndTime":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -921,7 +1024,9 @@ namespace Display
                     break;
 
                 case "Amount":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -936,7 +1041,9 @@ namespace Display
                     break;
 
                 case "Completed":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -951,7 +1058,9 @@ namespace Display
                     break;
 
                 case "Sales":
+
                     FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
                     FocusWorkProcess = false;
                     FocusWorker = false;
                     FocusStartTime = false;
@@ -976,15 +1085,18 @@ namespace Display
             switch (value)
             {
                 case "LotNumber":
+
                     DisplayLot(LotNumber);
                     break;
 
                 case "StartTime":
+
                     IsConvertTime = true;
                     StartTime = StartTime.Replace(":", "");
                     break;
 
                 case "EndTime":
+
                     IsConvertTime = true;
                     EndTime = EndTime.Replace(":", "");
                     break;
@@ -994,25 +1106,38 @@ namespace Display
         //フォーカス設定
         private void SetFocus()
         {
-            if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
             if (string.IsNullOrEmpty(WorkProcess)) { SetGotFocus("WorkProcess"); return; }
-            SetGotFocus("LotNumber");
+            if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
         }
 
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (IsRegist) { ManufactureDate = SetToDay(DateTime.Now); }
+            if (IsRegist && IsDate) { ManufactureDate = SetToDay(DateTime.Now); }
         }
 
         //QRコード処理
         public void SetBarcode()
         {
-            if (!CONVERT.IsLotNumber(ReceivedData)) { return; }
-            LotNumber = ReceivedData.StringLeft(10);
-            LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-            DisplayLot(LotNumber);
-            SetGotFocus("WorkProcess");
+
+            //ロット番号
+            if (CONVERT.IsLotNumber(ReceivedData)) 
+            {
+                LotNumber = ReceivedData.StringLeft(10);
+                LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+                DisplayLot(LotNumber);
+                SetGotFocus("WorkProcess");
+            }
+
+            //作業者
+
+
+
+
+            //工程
+
+
+
         }
 
         //スワイプ処理

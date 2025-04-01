@@ -428,9 +428,7 @@ namespace Display
                 case "F1":
 
                     //実績登録画面
-                    ManufactureInfo.ManufactureCODE = string.Empty;
-                    ManufactureInfo.LotNumber = string.Empty;
-                    FramePage = new ManufactureInfo();
+                    FramePage = new ManufactureInfo(string.Empty, string.Empty);
                     IniFile.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 

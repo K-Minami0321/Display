@@ -100,8 +100,8 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            ManufactureInfo.ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            DisplayFramePage(new ManufactureInfo());
+            ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
+            DisplayFramePage(new ManufactureInfo(ManufactureCODE, ManufactureDate));
         }
 
         //スワイプ処理
@@ -124,7 +124,7 @@ namespace Display
 
                     //搬入登録画面
                     DataInitialize();
-                    DisplayFramePage(new ManufactureInfo());
+                    DisplayFramePage(new ManufactureInfo(string.Empty, ManufactureDate));
                     break;
 
                 case "DisplayList":

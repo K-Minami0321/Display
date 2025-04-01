@@ -144,8 +144,11 @@ namespace Display
 
                 case "ManufactureInfo":
 
-                    ManufactureInfo.ManufactureCODE = string.Empty;
-                    ManufactureInfo.LotNumber = LotNumber;
+
+
+
+
+
                     break;
             }
             if (EnableSelect) { StartPage(Page); }
