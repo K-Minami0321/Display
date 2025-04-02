@@ -236,7 +236,6 @@ namespace Display
             ProcessName = IniFile.GetString("Page", "Process");
             EquipmentCODE = IniFile.GetString("Page", "Equipment");
             Worker = IniFile.GetString("Page", "Worker");
-            ProcessWork = string.IsNullOrEmpty(EquipmentName) ? ProcessName + "実績" : EquipmentName + " - " + EquipmentCODE;
             Mode = IniFile.GetString("Manufacture", "Mode");
         }
 

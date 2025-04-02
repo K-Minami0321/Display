@@ -124,15 +124,10 @@ namespace Display
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
-        //コンストラクター
-        public ViewModelSetting()
-        {
-            ReadINI();
-        }
-
         //ロード時
         private void OnLoad()
         {
+            ReadINI();
             DisplayCapution();
             DisplayLog();
         }
@@ -154,6 +149,7 @@ namespace Display
                 Process = "設定"
             };
 
+            //表示
             Version = CONST.DISPLAY_VERSION;
             IsFocusServer = true;
         }

@@ -26,7 +26,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Viewbox Stretch="Uniform">
-                    <TextBlock Text="{Binding ManufactureDate,Converter={StaticResource DateTimeConverter},FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}"/>
+                    <TextBlock Text="{Binding ManufactureDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}"/>
                 </Viewbox>
             </StackPanel>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"

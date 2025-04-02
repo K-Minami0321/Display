@@ -83,7 +83,7 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = true,
                 Process = ProcessName,
-                ProcessWork = ProcessWork
+                ProcessWork = "作業実績"
             };
 
             DataGridBehavior.Instance.Iselect = this;

@@ -254,6 +254,9 @@
                                     <i:EventTrigger EventName="TouchDown">
                                         <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Completed"/>
                                     </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Completed"/>
+                                    </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>
                             <CheckBox x:Name="CheckSales" IsChecked="{Binding Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
@@ -277,7 +280,44 @@
                                     <i:EventTrigger EventName="TouchDown">
                                         <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Sales"/>
                                     </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Sales"/>
+                                    </i:EventTrigger>
                                 </i:Interaction.Triggers>
+                                <CheckBox.InputBindings>
+                                    <KeyBinding Gesture="Enter" Command="{Binding CommandFocus}"/>
+                                    <KeyBinding Gesture="Tab" Command="{Binding CommandFocus}"/>
+                                </CheckBox.InputBindings>
+                            </CheckBox>
+                            <CheckBox x:Name="CheckOutsourced" IsChecked="{Binding Outsourced, Converter={StaticResource AsteriskConverter}}" FontSize="20"
+                                      Visibility="{Binding VisibleOutsourced, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
+                                <Viewbox Stretch="Uniform" Margin="10,10,10,10">
+                                    <TextBlock Text="外 注"/>
+                                </Viewbox>
+                                <CheckBox.Resources>
+                                    <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FocusOutsourced}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckOutsourced}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Resources>
+                                <i:Interaction.Behaviors>
+                                    <local:CheckBoxBehavior/>
+                                </i:Interaction.Behaviors>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TouchDown">
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Outsourced"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Outsourced"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <CheckBox.InputBindings>
+                                    <KeyBinding Gesture="Enter" Command="{Binding CommandFocus}"/>
+                                    <KeyBinding Gesture="Tab" Command="{Binding CommandFocus}"/>
+                                </CheckBox.InputBindings>
                             </CheckBox>
                         </StackPanel>
                     </Grid>

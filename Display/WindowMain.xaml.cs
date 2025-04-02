@@ -114,7 +114,7 @@ namespace Display
         public PropertyWindow()                         //コンストラクター
         {
             IconList = "ViewList";
-            IconPlan = "FileClockOutline";
+            IconPlan = "CalendarMonth";
             IconSize = 30;
         }
     }
@@ -376,13 +376,16 @@ namespace Display
             comPort = new ComPort();
             comPort.PortOpen(IniFile.GetString("Common", "SerialPort", ""));
             comPort.IserialPort = this;
+
+            //設定
+            ProcessName = IniFile.GetString("Page", "Process");
         }
 
         //アイコン初期化
         public void InitializeIcon()
         {
             IconList = "ViewList";
-            IconPlan = "FileClockOutline";
+            IconPlan = "CalendarMonth";
             IconSize = 30;
         }
 

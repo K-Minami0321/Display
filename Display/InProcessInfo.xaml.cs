@@ -352,7 +352,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = true,
                 Process = ProcessName,
-                ProcessWork = ProcessName + "完了実績",
+                ProcessWork = ProcessName + "売上",
             };
 
             //テンキーコントロール

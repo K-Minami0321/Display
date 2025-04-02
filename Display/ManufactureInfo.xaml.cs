@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using ZXing;
 
 #pragma warning disable
 namespace Display
@@ -45,9 +45,10 @@ namespace Display
         string team = string.Empty;
         string completed = string.Empty;
         string sales = string.Empty;
+        string outsourced = string.Empty;
         string breakName;
         string buttonName = "数 量";
-        string labelAmount;
+        string labelAmount = "数 量";
         int lengthLotNumber = 10;
         int lengthLotNumberSEQ = 2;
         int lengthStartTime = 4;
@@ -66,6 +67,7 @@ namespace Display
         bool visibleWorker;
         bool visibleWorkProcess;
         bool visibleSeal;
+        bool visibleOutsourced = false;
         bool isRegist;
         bool isEnable;
         bool isConvertTime = true;
@@ -78,50 +80,24 @@ namespace Display
         bool focusAmount;
         bool focusCompleted;
         bool focusSales;
+        bool focusOutsourced;
 
         //プロパティ
-        public string ProcessName               //工程区分
-        {
-            get => processName;
-            set
-            {
-                switch (value)
-                {
-                    case "検査":
-                        VisibleSeal = false;
-                        VisiblePackaging = true;
-                        if (IsRegist) { WorkProcess = "検査"; }
-                        break;
-
-                    case "梱包":
-                        VisibleSeal = false;
-                        VisiblePackaging = false;
-                        if (IsRegist) { WorkProcess = "梱包"; }
-                        break;
-
-                    default:
-                        VisibleSeal = true;
-                        VisiblePackaging = true;
-                        if (IsRegist) { WorkProcess = ""; }
-                        break;
-                }
-                SetProperty(ref processName, value);
-            }
-        }
         public string ManufactureCODE           //製造CODE
         {
             get => manufactureCODE;
             set 
-            { 
-                var manufacture = new Manufacture(value);
-                manufacture.ManufactureCODE = value;
-                CopyProperty(manufacture, this, "ManufactureCODE");
-
-                DisplayLot(LotNumber);
+            {
                 SetProperty(ref manufactureCODE, value);
 
-                IsRegist = string.IsNullOrEmpty(value);
-                
+                var manufacture = new Manufacture(value);
+                manufacture.ManufactureCODE = value;
+                if (manufacture.DataCount == 0) { return; }
+
+                CopyProperty(manufacture, this, "ManufactureCODE");
+                DisplayLot(LotNumber);
+                IsRegist = false;
+
             }
         }
         public string ManufactureDate           //製造日
@@ -230,6 +206,11 @@ namespace Display
         {
             get => sales;
             set => SetProperty(ref sales, value);
+        }
+        public string Outsourced                //外注
+        {
+            get => outsourced;
+            set => SetProperty(ref outsourced, value);
         }
         public string ButtonName                //登録ボタン名
         {
@@ -340,6 +321,11 @@ namespace Display
             get => visibleSeal;
             set => SetProperty(ref visibleSeal, value);
         }
+        public bool VisibleOutsourced            //表示・非表示（外注）
+        {
+            get => visibleOutsourced;
+            set => SetProperty(ref visibleOutsourced, value);
+        }
         public bool IsRegist                    //新規・既存フラグ（true:新規、false:既存）
         {
             get => isRegist;
@@ -410,12 +396,19 @@ namespace Display
             get => focusSales;
             set => SetProperty(ref focusSales, value);
         }
+        public bool FocusOutsourced             //フォーカス（外注）
+        {
+            get => focusOutsourced;
+            set => SetProperty(ref focusOutsourced, value);
+        }
 
         //イベント
         ActionCommand commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
+        ActionCommand commandFocus;
+        public ICommand CommandFocus => commandFocus ??= new ActionCommand(RegistData);
         ActionCommand gotFocus;
         public ICommand GotFocus => gotFocus ??= new ActionCommand(SetGotFocus);
         ActionCommand lostFocus;
@@ -444,18 +437,53 @@ namespace Display
         {
             //初期化
             ManufactureCODE = string.Empty;
-            ManufactureDate = SetToDay(DateTime.Now);
+            ManufactureDate = string.IsNullOrEmpty(ManufactureDate) ? SetToDay(DateTime.Now) : ManufactureDate;
             LotNumber = string.Empty;
             LotNumberSEQ = string.Empty;
             ProductName = string.Empty;
-            WorkProcess = string.Empty;
             StartTime = string.Empty;
             EndTime = string.Empty;
+            Worker = string.Empty;
             WorkTime = string.Empty;
             Amount = string.Empty;
             Completed = string.Empty;
+            Sales = string.Empty;
+            Outsourced = string.Empty;
             IsRegist = true;
             IsEnable = true;
+
+            //工程初期値
+            switch (ProcessName)
+            {
+                case "合板":
+                    VisibleSeal = true;
+                    VisiblePackaging = true;
+                    LabelAmount = "枚 数";
+                    if (IsRegist) { WorkProcess = string.Empty; }
+                    break;
+
+                case "検査":
+
+                    VisibleSeal = false;
+                    VisiblePackaging = true;
+                    VisibleOutsourced = true;
+                    if (IsRegist) { WorkProcess = "検査"; }
+                    break;
+
+                case "梱包":
+
+                    VisibleSeal = false;
+                    VisiblePackaging = false;
+                    if (IsRegist) { WorkProcess = "梱包"; }
+                    break;
+
+                default:
+
+                    VisibleSeal = true;
+                    VisiblePackaging = true;
+                    if (IsRegist) { WorkProcess = string.Empty; }
+                    break;
+            }
         }
 
         //キャプション・ボタン表示
@@ -473,7 +501,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = true,
                 Process = ProcessName,
-                ProcessWork = string.IsNullOrEmpty(Equipment1) ? ProcessName + "実績" : Equipment1 + " - " + EquipmentCODE
+                ProcessWork = string.IsNullOrEmpty(Equipment1) ? "作業実績" : Equipment1 + " - " + EquipmentCODE
             };
 
             //テンキーコントロール
@@ -657,12 +685,51 @@ namespace Display
         }
 
         //登録処理
-        private void RegistData()
+        private async void RegistData()
         {
+            var control = new ControlMessage();
+            var result = false;
+            var forcus = string.Empty;
+            var mode = string.Empty;
+
+            if (!(bool)await IsRequiredRegist()) { return; }
+
+            switch (Mode)
+            {
+                case "登録":
+
+                    MessageProperty = new PropertyMessage()
+                    {
+                        Message = "作業データを" + ButtonName.Replace("　", "") + "します",
+                        Contents = "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。",
+                        Type = "警告"
+                    };
+                    forcus = "LotNumber";
+                    mode = "登録";
+                    break;
+
+                case "作業中":
+
+                    MessageProperty = new PropertyMessage()
+                    {
+                        Message = "作業を完了します",
+                        Contents = "※登録後、次の作業の準備をしてください。",
+                        Type = "警告"
+                    };
+                    mode = "準備";
+                    forcus = "Amount";
+                    break;
+            }
+
+            //メッセージ表示
+            result = (bool)await DialogHost.Show(control);
+            await System.Threading.Tasks.Task.Delay(100);
+            if (!result) { return; }
+
+            //登録処理
             var code = ManufactureCODE;
             CopyProperty(this, manufacture);
 
-            //コード確定
             if (IsRegist)
             {
                 var manufacturedate = ManufactureDate.ToStringDateDB();
@@ -670,18 +737,36 @@ namespace Display
                 code = manufacturecode;
             }
 
-            //登録処理
             manufacture.InsertLog(IsRegist);
             manufacture.Resist(code);
             Initialize();
+            SetGotFocus(forcus);
         }
 
         //削除処理
-        private void DeleteDate()
+        private async void DeleteDate()
         {
-            manufacture.DeleteLog();
-            manufacture.Delete(ManufactureCODE);        //製造実績削除
-            Initialize();
+            var control = new ControlMessage();
+
+            MessageProperty = new PropertyMessage()
+            {
+                Message = "作業データを削除します",
+                Contents = "※削除されたデータは復元できません",
+                Type = "警告"
+            };
+            var result = (bool)await DialogHost.Show(control);
+
+            await System.Threading.Tasks.Task.Delay(100);
+            SetGotFocus(Focus);
+
+            if (result)
+            {
+                //削除処理
+                manufacture.DeleteLog();
+                manufacture.Delete(ManufactureCODE);        
+                Initialize();
+                DisplayFramePage(new ManufactureList());
+            }
         }
 
         //入力制御
@@ -849,19 +934,24 @@ namespace Display
 
                         case "Completed":
 
-                            if (!VisibleSeal)
-                            {
-                                KeyDown("Regist");
+                            if (VisibleSeal) 
+                            { 
+                                SetGotFocus("Sales");
                             }
                             else
                             {
-                                SetGotFocus("Sales");
+                                SetGotFocus("Outsourced");
                             }
                             break;
 
                         case "Sales":
 
-                            KeyDown("Regist");
+                            RegistData();
+                            break;
+
+                        case "Outsourced":
+
+                            RegistData();
                             break;
 
                         default:
@@ -873,18 +963,22 @@ namespace Display
                     switch (Focus)
                     {
                         case "LotNumber":
+
                             SetGotFocus("LotNumberSEQ");
                             break;
 
                         case "LotNumberSEQ":
+
                             SetGotFocus("WorkProcess");
                             break;
 
                         case "WorkProcess":
+
                             SetGotFocus("Worker");
                             break;
 
                         case "Worker":
+
                             SetGotFocus("LotNumber");
                             break;
 
@@ -899,14 +993,17 @@ namespace Display
                     switch (Focus)
                     {
                         case "Amount":
+
                             SetGotFocus("Completed");
                             break;
 
                         case "Completed":
+
                             SetGotFocus("Sales");
                             break;
 
                         case "Sales":
+
                             SetGotFocus("Amount");
                             break;
 
@@ -934,6 +1031,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -951,6 +1049,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -968,6 +1067,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = false;
                     VisibleWorker = false;
                     VisibleWorkProcess = true;
@@ -984,6 +1084,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = false;
                     VisibleWorker = true;
                     VisibleWorkProcess = false;
@@ -1000,6 +1101,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1017,6 +1119,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1034,6 +1137,7 @@ namespace Display
                     FocusAmount = true;
                     FocusCompleted = false;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1051,6 +1155,7 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = true;
                     FocusSales = false;
+                    FocusOutsourced = false;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1068,6 +1173,25 @@ namespace Display
                     FocusAmount = false;
                     FocusCompleted = false;
                     FocusSales = true;
+                    FocusOutsourced = false;
+                    VisibleTenKey = true;
+                    VisibleWorker = false;
+                    VisibleWorkProcess = false;
+                    TenKeyProperty.InputString = ".";
+                    break;
+
+                case "Outsourced":
+
+                    FocusLotNumber = false;
+                    FocusLotNumberSEQ = false;
+                    FocusWorkProcess = false;
+                    FocusWorker = false;
+                    FocusStartTime = false;
+                    FocusEndTime = false;
+                    FocusAmount = false;
+                    FocusCompleted = false;
+                    FocusSales = false;
+                    FocusOutsourced = true;
                     VisibleTenKey = true;
                     VisibleWorker = false;
                     VisibleWorkProcess = false;
@@ -1106,8 +1230,8 @@ namespace Display
         //フォーカス設定
         private void SetFocus()
         {
-            if (string.IsNullOrEmpty(WorkProcess)) { SetGotFocus("WorkProcess"); return; }
-            if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); return; }
+            if (string.IsNullOrEmpty(WorkProcess)) { SetGotFocus("WorkProcess"); }
+            if (string.IsNullOrEmpty(LotNumber)) { SetGotFocus("LotNumber"); }
         }
 
         //現在の日付設定
@@ -1119,7 +1243,6 @@ namespace Display
         //QRコード処理
         public void SetBarcode()
         {
-
             //ロット番号
             if (CONVERT.IsLotNumber(ReceivedData)) 
             {
@@ -1187,27 +1310,7 @@ namespace Display
 
                     //作業終了処理
                     EndTime = DateTime.Now.ToString("HH:mm");
-
-                    MessageProperty = new PropertyMessage()
-                    {
-                        Message = "作業を完了します",
-                        Contents = "※登録後、次の作業の準備をしてください。",
-                        Type = "警告"
-                    };
-                    result = (bool)await DialogHost.Show(control);
-
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        RegistData();
-                        Mode = "準備";
-                    }
-                    else
-                    {
-                        EndTime = string.Empty;
-                        WorkTime = string.Empty;
-                    }
+                    RegistData();
                     break;
 
                 case "WorkBreak":
@@ -1239,41 +1342,13 @@ namespace Display
                 case "Regist":
 
                     //登録
-                    MessageProperty = new PropertyMessage()
-                    {
-                        Message = "作業データを" + ButtonName.Replace("　", "") + "します",
-                        Contents = "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。",
-                        Type = "警告"
-                    };
-                    result = (bool)await DialogHost.Show(control);
-                    
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        RegistData();
-                        SetGotFocus("LotNumber");
-                    }
+                    RegistData();
                     break;
 
                 case "Delete":
 
                     //削除
-                    MessageProperty = new PropertyMessage()
-                    {
-                        Message = "作業データを削除します",
-                        Contents = "※削除されたデータは復元できません",
-                        Type = "警告"
-                    };
-                    result = (bool)await DialogHost.Show(control);
-                    
-                    await System.Threading.Tasks.Task.Delay(100);
-                    SetGotFocus(Focus);
-                    if (result)
-                    {
-                        DeleteDate();
-                        DisplayFramePage(new ManufactureList());
-                    }
+                    DeleteDate();
                     break;
 
                 case "Enter":
@@ -1310,6 +1385,12 @@ namespace Display
 
                     //売上
                     Sales = Sales == "*" ? "" : "*";
+                    break;
+
+                case "Outsourced":
+
+                    //外注
+                    Outsourced = Outsourced == "*" ? "" : "*";
                     break;
 
                 case "DisplayInfo":

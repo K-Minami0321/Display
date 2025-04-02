@@ -109,7 +109,7 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = true,
                 VisiblePlan = true,
-                ProcessWork = "完了履歴",
+                ProcessWork = ProcessName + "売上"
             };
 
             DataGridBehavior.Instance.Iselect = this;
