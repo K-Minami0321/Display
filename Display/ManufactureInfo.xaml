@@ -79,7 +79,7 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
-                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False">
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False" Visibility="{Binding VisibleSEQ, Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
@@ -233,7 +233,7 @@
                                     <local:TextBoxBehavior Mode="Number"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <CheckBox x:Name="CheckCompleted" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
+                            <CheckBox x:Name="CheckCompleted" Style="{StaticResource Check}" IsChecked="{Binding Completed, Converter={StaticResource CompletConverter}}" FontSize="20" 
                                       Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}" Margin="20,0,0,0">
                                 <Viewbox Stretch="Uniform">
                                     <TextBlock Text="ロット完了"/>
@@ -256,9 +256,6 @@
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Completed"/>
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="LostFocus">
-                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="Completed"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>
@@ -285,9 +282,6 @@
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Sales"/>
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="LostFocus">
-                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="Sales"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>

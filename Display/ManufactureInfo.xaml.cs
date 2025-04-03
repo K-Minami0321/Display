@@ -65,6 +65,7 @@ namespace Display
         bool visibleWorker;
         bool visibleWorkProcess;
         bool visibleSeal;
+        bool visibleSEQ = false;
         bool isRegist;
         bool isEnable;
         bool isConvertTime = true;
@@ -295,6 +296,11 @@ namespace Display
         {
             get => visibleSeal;
             set => SetProperty(ref visibleSeal, value);
+        }
+        public bool VisibleSEQ                  //表示・非表示（SEQ）
+        {
+            get => visibleSEQ;
+            set => SetProperty(ref visibleSEQ, value);
         }
         public bool IsRegist                    //新規・既存フラグ（true:新規、false:既存）
         {
@@ -874,7 +880,14 @@ namespace Display
                     {
                         case "LotNumber":
 
-                            SetGotFocus("LotNumberSEQ");
+                            if (VisibleSEQ)
+                            {
+                                SetGotFocus("LotNumberSEQ");
+                            }
+                            else
+                            {
+                                SetGotFocus("WorkProcess");
+                            }
                             break;
 
                         case "LotNumberSEQ":
