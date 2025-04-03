@@ -171,23 +171,28 @@ namespace Display
             switch (value)
             {
                 case "ContainerCategory1":
+
                     DisplayPackStyle(ProductName, "1");
                     break;
 
                 case "ContainerCategory2":
+
                     DisplayPackStyle(ProductName, "2");
                     break;
 
                 case "ContainerCategory3":
+
                     DisplayPackStyle(ProductName, "3");
                     break;
 
                 case "PreviousDate":
+
                     //前のデータ
                     SetAroundCode("Back");
                     break;
 
                 case "NextDate":
+
                     //次のデータ
                     SetAroundCode("Forword");
                     break;

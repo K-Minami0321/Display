@@ -130,7 +130,7 @@
                         </Viewbox>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Visibility="{Binding VisibleItem1, Converter={StaticResource CollapsedConverter}}">
                             <TextBox x:Name="TextWeight" Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
-                                        MaxLength="{Binding LengthAmount}" InputMethod.IsInputMethodEnabled="False">
+                                     MaxLength="{Binding LengthAmount}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>
