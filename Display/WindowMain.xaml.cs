@@ -111,6 +111,12 @@ namespace Display
             get => ViewModel.IconSize;
             set => ViewModel.IconSize = value;
         }
+        public bool IsMessage                           //メッセージコントロールが開いてるかどうか
+        {
+            get => ViewModel.IsMessage;
+            set => ViewModel.IsMessage = value;
+        }
+
         public PropertyWindow()                         //コンストラクター
         {
             IconList = "ViewList";
@@ -420,6 +426,8 @@ namespace Display
         //キー処理
         private void KeyDown(object value)
         {
+            if (IsMessage) { return; }
+
             switch (value)
             {
                 case "ESC":

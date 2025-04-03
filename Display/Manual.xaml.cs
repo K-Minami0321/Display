@@ -76,12 +76,12 @@ namespace Display
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
-                VisiblePower = true,
-                VisibleList = true,
-                VisibleInfo = true,
+                VisiblePower = false,
+                VisibleList = false,
+                VisibleInfo = false,
                 VisibleDefect = false,
                 VisibleArrow = false,
-                VisiblePlan = true,
+                VisiblePlan = false,
                 ProcessWork = "動画マニュアル"
             };
 

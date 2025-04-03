@@ -73,13 +73,15 @@ namespace Display
         internal ViewModelPlanList()
         {
             Instance = this;
+
+            ReadINI();
             Initialize();
         }
 
         //ロード時
         private void OnLoad()
         {
-            ReadINI();
+            
             DisplayCapution();
             DiaplayList();
         }

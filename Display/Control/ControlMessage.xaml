@@ -15,7 +15,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <!-- 表示 -->
-    <Grid HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=ButtonCancel}">
+    <Grid HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=ButtonOk}">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="30,30,0,30" >
             <materialDesign:PackIcon Width="50" Height="50" Foreground="#607D8B" Kind="AlertCircleOutline"/>
             <StackPanel Orientation="Vertical">
@@ -26,7 +26,7 @@
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="20,40,40,40">
             <Button x:Name="ButtonOK" Style="{StaticResource Bottom}" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True">
                 <Viewbox Stretch="Uniform" Margin="8,8,8,8">
-                    <TextBlock Text="{Binding ButtonOK,FallbackValue=はい}" />
+                    <TextBlock Text="{Binding ButtonOK, FallbackValue=はい}" />
                 </Viewbox>
                 <Button.CommandParameter>
                     <system:Boolean>True</system:Boolean>

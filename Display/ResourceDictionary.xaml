@@ -22,7 +22,7 @@
     <local:MonthDayConverter x:Key="MonthDayConverter"/>
     <local:AsteriskConverter x:Key="AsteriskConverter"/>
     <local:CompletConverter x:Key="CompletConverter"/>
-
+   
     <!-- ScrollBar -->
     <sys:Double x:Key="ScrollBarSize">20</sys:Double>
     <sys:Double x:Key="ThumbSize">16</sys:Double>
@@ -127,87 +127,136 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="#FFFFFF"/>
     </Style>
-    <Style x:Key="TenKey" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="TenKey" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
         <Setter Property="FontSize" Value="50" />
         <Setter Property="Width" Value="110"/>
         <Setter Property="Height" Value="110"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="Top" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="Top" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="Width" Value="60"/>
         <Setter Property="Height" Value="60"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="Bottom" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="Bottom" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="Width" Value="200"/>
         <Setter Property="Height" Value="60"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="Select" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="Select" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="163"/>
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="Search" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="BottomPackSpecification" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="True"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="60"/>
+        <Setter Property="Margin" Value="0,0,20,0"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Search" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="120"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
-            <Trigger Property="IsFocused" Value="True">
+            <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style x:Key="BottomPackSpecification" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Focusable" Value="False"/>
-        <Setter Property="FontSize" Value="25"/>
-        <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Width" Value="200"/>
-        <Setter Property="Height" Value="60"/>
-        <Setter Property="Margin" Value="0,0,20,0"/>
-        <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#90A4AE"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -219,6 +268,20 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="1.2"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- チェックボックス -->
@@ -229,11 +292,11 @@
     </Style>
     <Style x:Key="Check" TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="Width" Value="110"/>
-        <Setter Property="Height" Value="53"/>
+        <Setter Property="Height" Value="56"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -374,6 +437,7 @@
         <Setter Property="Margin" Value="0,13,13,13"/>
     </Style>
     <Style x:Key="Button" TargetType="Viewbox" >
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Stretch" Value="Uniform"/>
         <Setter Property="Margin" Value="0,10,10,10"/>

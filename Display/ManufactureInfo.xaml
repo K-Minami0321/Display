@@ -55,7 +55,7 @@
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
                         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextLotNumber" Text="{Binding LotNumber}" Width="250"
+                            <TextBox x:Name="TextLotNumber" Text="{Binding LotNumber, UpdateSourceTrigger=PropertyChanged}" Width="250"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -78,7 +78,7 @@
                                     <local:TextBoxBehavior Mode="Hyphen"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
+                            <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -152,7 +152,7 @@
                             <TextBlock Text="作業時間"/>
                         </Viewbox>
                         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextStartTime" Text="{Binding StartTime}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                            <TextBox x:Name="TextStartTime" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}" Width="130" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
                                      MaxLength="{Binding LengthStartTime}" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding EnabledControl2}" Visibility="{Binding EnabledControl1,Converter={StaticResource CollapsedConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -212,7 +212,7 @@
                             <TextBlock Text="{Binding LabelAmount, FallbackValue=数 量}" Visibility="{Binding VisiblePackaging, Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextAmount" Text="{Binding Amount}" Width="130" 
+                            <TextBox x:Name="TextAmount" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Width="130" 
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthAmount}" Visibility="{Binding VisiblePackaging,Converter={StaticResource CollapsedConverter}}" 
                                         IsEnabled="{Binding EnabledControl2}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
@@ -257,6 +257,9 @@
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Completed"/>
                                     </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="Completed"/>
+                                    </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>
                             <CheckBox x:Name="CheckSales" IsChecked="{Binding Sales, Converter={StaticResource AsteriskConverter}}" FontSize="20"
@@ -283,41 +286,10 @@
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Sales"/>
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <CheckBox.InputBindings>
-                                    <KeyBinding Gesture="Enter" Command="{Binding CommandFocus}"/>
-                                    <KeyBinding Gesture="Tab" Command="{Binding CommandFocus}"/>
-                                </CheckBox.InputBindings>
-                            </CheckBox>
-                            <CheckBox x:Name="CheckOutsourced" IsChecked="{Binding Outsourced, Converter={StaticResource AsteriskConverter}}" FontSize="20"
-                                      Visibility="{Binding VisibleOutsourced, Converter={StaticResource CollapsedConverter}}" IsEnabled="{Binding EnabledControl2}">
-                                <Viewbox Stretch="Uniform" Margin="10,10,10,10">
-                                    <TextBlock Text="外 注"/>
-                                </Viewbox>
-                                <CheckBox.Resources>
-                                    <Style TargetType="CheckBox" BasedOn="{StaticResource Check}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding FocusOutsourced}" Value="True">
-                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CheckOutsourced}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </CheckBox.Resources>
-                                <i:Interaction.Behaviors>
-                                    <local:CheckBoxBehavior/>
-                                </i:Interaction.Behaviors>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TouchDown">
-                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Outsourced"/>
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding GotFocus}" CommandParameter="Outsourced"/>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}" CommandParameter="Sales"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                <CheckBox.InputBindings>
-                                    <KeyBinding Gesture="Enter" Command="{Binding CommandFocus}"/>
-                                    <KeyBinding Gesture="Tab" Command="{Binding CommandFocus}"/>
-                                </CheckBox.InputBindings>
                             </CheckBox>
                         </StackPanel>
                     </Grid>
@@ -391,7 +363,8 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist" Visibility="{Binding VisibleEdit, Converter={StaticResource CollapsedConverter}}">
+                <Button x:Name="ButtonRegist" Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Regist" Focusable="True"
+                        Visibility="{Binding VisibleEdit, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="PenAdd" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -403,6 +376,9 @@
                             <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Regist"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <Button.InputBindings>
+                        <KeyBinding Gesture="Enter" Command="{Binding CommandFocus}"/>
+                    </Button.InputBindings>
                 </Button>
                 <Button Style="{StaticResource Bottom}" Command="{Binding CommandButton}" CommandParameter="Delete" Visibility="{Binding VisibleDelete, Converter={StaticResource CollapsedConverter}}">
                     <Viewbox Style="{StaticResource Button}">

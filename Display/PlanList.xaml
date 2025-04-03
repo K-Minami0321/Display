@@ -34,7 +34,8 @@
                         <ColumnDefinition Width="900*"/>
                         <ColumnDefinition Width="260"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding VisibleUnit,Converter={StaticResource CollapsedConverter}}">
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0"
+                                Visibility="{Binding VisibleUnit,Converter={StaticResource CollapsedConverter}}">
                         <Button Command="{Binding CommandButton}" CommandParameter="Sheet" Style="{StaticResource Search}" Height="35" FontSize="22">
                             <Viewbox Stretch="Uniform">
                                 <TextBlock Text="シート"/>

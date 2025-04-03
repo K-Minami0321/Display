@@ -19,6 +19,7 @@ namespace Display
     public class Common : Shared, INotifyPropertyChanged
     {
         //変数
+        ControlMessage messageControl = null;
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
@@ -43,6 +44,7 @@ namespace Display
         string shapeName;
         string mode;
         string coil;
+        bool isMessage;
         List<string> equipmentCODES;
         List<string> workers;
         List<string> workProcesses;
@@ -50,6 +52,16 @@ namespace Display
         //プロパティ
         public INIFile IniFile                                  //設定ファイル
         { get; set; } = new INIFile(CONST.SETTING_INI);
+        public ControlMessage MessageControl                    //メッセージコントロール
+        {
+            get => messageControl;
+            set
+            {
+                messageControl = value;
+                IsMessage = value == null ? false : true;
+                WindowProperty.IsMessage = IsMessage;
+            }
+        }
         public PropertyWindow WindowProperty                    //プロパティ（PropertyWindow）
         { get; set; }
         public PropertyMessage MessageProperty                  //プロパティ（PropertyMessage）
@@ -210,6 +222,11 @@ namespace Display
         {
             get => coil;
             set => SetProperty(ref coil, value);
+        }
+        public bool IsMessage                                   //メッセージボックスを開いているかどうか
+        {
+            get => isMessage;
+            set => isMessage = value;
         }
         public List<string> EquipmentCODES                      //設備コンボボックス
         {
