@@ -452,17 +452,18 @@ namespace Display
 
             if (!result)
             {
-                var control = new ControlMessage();
+                MessageControl = new ControlMessage();
                 MessageProperty = new PropertyMessage()
                 {
                     Message = messege1,
                     Contents = messege2,
                     Type = messege3
                 };
-                var messege = (bool)await DialogHost.Show(control);
-
+                var messege = (bool)await DialogHost.Show(MessageControl);
                 await System.Threading.Tasks.Task.Delay(100);
-                if (messege) { SetGotFocus(focus); }
+
+                SetGotFocus(focus);
+                MessageControl = null;
             }
             return result;
         }
@@ -797,72 +798,79 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
-            var control = new ControlMessage();
-            var result = false;
+            var messege = false;
 
             switch (value)
             {
                 case "Regist":
 
                     //登録
-                    if (await IsRequiredRegist())
-                    {
+                    if (!(bool)await IsRequiredRegist()) { return;  }
+
+                        MessageControl = new ControlMessage();
                         MessageProperty = new PropertyMessage()
                         {
                             Message = "搬入データを登録します",
                             Contents = "",
                             Type = "警告"
                         };
-                        result = (bool)await DialogHost.Show(control);
-
+                        messege = (bool)await DialogHost.Show(MessageControl);
                         await System.Threading.Tasks.Task.Delay(100);
+
                         SetGotFocus(Focus);
-                        if (result)
+                        if (messege)
                         {
                             RegistData();
                             SetGotFocus("LotNumber");
                         }
-                    }
+                        MessageControl = null;
+
                     break;
 
                 case "Delete":
 
+                    if (IsMessage) { return; }
+
                     //削除
+                    MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {
                         Message = "搬入データを削除します",
                         Contents = "※削除されたデータは復元できません。",
                         Type = "警告"
                     };
-                    result = (bool)await DialogHost.Show(control);
-
+                    messege = (bool)await DialogHost.Show(MessageControl);
                     await System.Threading.Tasks.Task.Delay(100);
+
                     SetGotFocus(Focus);
-                    if (result)
+                    if (messege)
                     {
                         DeleteDate();
                         DisplayFramePage(new InProcessList());
                     }
+                    MessageControl = null;
                     break;
 
                 case "Cancel":
 
                     //取消
+                    MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {
                         Message = "搬入データをクリアします",
                         Contents = "※入力されたものが消去されます。",
                         Type = "警告"
                     };
-                    result = (bool)await DialogHost.Show(control);
-
+                    messege = (bool)await DialogHost.Show(MessageControl);
                     await System.Threading.Tasks.Task.Delay(100);
+
                     SetGotFocus(Focus);
-                    if (result)
+                    if (messege)
                     {
                         Initialize();
                         SetGotFocus("LotNumber");
                     }
+                    MessageControl = null;
                     break;
 
                 case "Enter":

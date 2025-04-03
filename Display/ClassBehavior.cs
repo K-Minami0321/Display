@@ -484,8 +484,6 @@ namespace Display
         public void Checked(object sender, RoutedEventArgs e)
         {
             StatusCheckBox(sender);
-
-            //インタフェース処理
             if (Icheck != null) { Icheck.ChackCange(); }
         }
         //フォーカス処理
@@ -506,6 +504,7 @@ namespace Display
             }
         }
 
+        //ロストフォーカス処理
         public virtual void LostFocus(object sender, RoutedEventArgs e)
         {
             StatusCheckBox(sender);
@@ -1111,5 +1110,4 @@ namespace Display
         }
     }
     #endregion
-
 }

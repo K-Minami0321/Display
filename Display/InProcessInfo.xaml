@@ -55,7 +55,7 @@
                             <TextBlock Text="ロット番号"/>
                         </Viewbox>
                         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextLotNumber" Text="{Binding LotNumber}" Width="250"
+                            <TextBox x:Name="TextLotNumber" Text="{Binding LotNumber, UpdateSourceTrigger=PropertyChanged}" Width="250"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthLotNumber}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -78,7 +78,7 @@
                                     <local:TextBoxBehavior Mode="Hyphen"/>
                                 </i:Interaction.Behaviors>
                             </TextBox>
-                            <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
+                            <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
                                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -129,7 +129,7 @@
                             <TextBlock Text="{Binding LabelWeight, FallbackValue=重 量}" Visibility="{Binding VisibleItem1, Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Visibility="{Binding VisibleItem1, Converter={StaticResource CollapsedConverter}}">
-                            <TextBox x:Name="TextWeight" Text="{Binding Weight}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
+                            <TextBox x:Name="TextWeight" Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" Width="150" materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" 
                                         MaxLength="{Binding LengthAmount}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -158,7 +158,7 @@
                             <TextBlock Text="{Binding LabelUnit, FallbackValue=数 量}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="{Binding AmountRow, FallbackValue=5}" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextUnit" Text="{Binding Unit}" Width="150" InputMethod.IsInputMethodEnabled="False"
+                            <TextBox x:Name="TextUnit" Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}" Width="150" InputMethod.IsInputMethodEnabled="False"
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthUnit}">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -208,7 +208,7 @@
                             <TextBlock Text="{Binding LabelAmount, FallbackValue=枚 数}" Visibility="{Binding VisibleItem2, Converter={StaticResource CollapsedConverter}}"/>
                         </Viewbox>
                         <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox x:Name="TextAmount" Text="{Binding Amount}" Width="{Binding AmountWidth, FallbackValue=150}"
+                            <TextBox x:Name="TextAmount" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Width="{Binding AmountWidth, FallbackValue=150}"
                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthAmount}"
                                         Visibility="{Binding VisibleItem2, Converter={StaticResource CollapsedConverter}}" InputMethod.IsInputMethodEnabled="False">
                                 <TextBox.Resources>
@@ -260,9 +260,6 @@
                             <TextBlock Text="{Binding ButtonName, FallbackValue=登　録}"/>
                         </WrapPanel>
                     </Viewbox>
-                    <i:Interaction.Behaviors>
-                        <local:ButtonBehavior/>
-                    </i:Interaction.Behaviors>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TouchDown">
                             <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Regist"/>
