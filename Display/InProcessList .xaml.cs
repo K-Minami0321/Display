@@ -88,7 +88,6 @@ namespace Display
         internal ViewModelInProcessList(string date)
         {
             ReadINI();
-
             SelectedIndex = -1;
             InProcessCODE = string.Empty;
             InProcessDate = date.ToStringDateDB();
@@ -99,6 +98,8 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
+
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //キャプション・ボタン表示
@@ -116,8 +117,6 @@ namespace Display
                 VisiblePlan = true,
                 ProcessWork = ProcessName + "売上"
             };
-
-            DataGridBehavior.Instance.Iselect = this;
 
             //工程区分
             switch (ProcessName)

@@ -26,7 +26,6 @@ namespace Display
         string file;
         bool visibleUnit;
         bool visibleAmount;
-        bool enableSelect;
 
         //プロパティ
         public static ViewModelPlanList Instance    //インスタンス
@@ -56,11 +55,6 @@ namespace Display
             get => visibleAmount; 
             set => SetProperty(ref visibleAmount, value); 
         }
-        public bool EnableSelect                    //選択可能
-        {
-            get => enableSelect; 
-            set => SetProperty(ref enableSelect, value); 
-        }
 
         //イベント
         ActionCommand commandLoad;
@@ -72,15 +66,19 @@ namespace Display
         internal ViewModelPlanList()
         {
             ReadINI();
-            Initialize();
+            SelectedIndex = -1;
+            LotNumber = string.Empty;
+            VisibleUnit = ProcessName == "合板" ? true : false;
+            VisibleAmount = !VisibleUnit;
         }
 
         //ロード時
         private void OnLoad()
         {
-            
             DisplayCapution();
             DiaplayList();
+
+            DataGridBehavior.Instance.Iselect = this;
         }
 
 
@@ -95,34 +93,11 @@ namespace Display
                 VisiblePlan = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
+                VisibleList = true,
+                VisibleInfo = true,
                 Process = ProcessName,
                 ProcessWork = ProcessName + "計画一覧"
             };
-
-            //遷移ページ設定
-            switch (Page)
-            {
-                case "PlanList":
-                    //計画一覧
-                    WindowProperty.VisibleList = false;
-                    WindowProperty.VisibleInfo = false;
-                    EnableSelect = false;
-                    break;
-
-                default:
-                    WindowProperty.VisibleList = true;
-                    WindowProperty.VisibleInfo = true;
-                    EnableSelect = true;
-                    break;
-            }
-        }
-
-        //初期化
-        private void Initialize()
-        {
-            LotNumber = string.Empty;
-            VisibleUnit = ProcessName == "合板" ? true : false;
-            VisibleAmount = !VisibleUnit;
         }
 
         //一覧表示
@@ -154,27 +129,7 @@ namespace Display
         //ページ遷移
         private void ChangePage()
         {
-            switch (Page)
-            {
-                case "InProcessInfo":
-
-
-
-
-
-
-                    break;
-
-                case "ManufactureInfo":
-
-
-
-
-
-
-                    break;
-            }
-            if (EnableSelect) { StartPage(Page); }
+            StartPage(Page, string.Empty, string.Empty, LotNumber);
         }
 
         //スワイプ処理
@@ -194,27 +149,31 @@ namespace Display
             switch (value)
             {
                 case "DisplayInfo":
+
                     //登録画面
                     ChangePage();
                     break;
 
                 case "DisplayList":
+
                     //一覧画面
                     Page = Page.Replace("Info", "List");
                     ChangePage();
                     break;
 
                 case "DisplayPlan":
+
                     //計画一覧画面
-                    Initialize();
                     DiaplayList();
                     break;
 
                 case "Sheet":
+
                     DiaplayList("シート");
                     break;
 
                 case "Coil":
+
                     DiaplayList("コイル");
                     break;
             }

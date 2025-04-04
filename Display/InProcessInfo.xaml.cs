@@ -7,11 +7,6 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NPOI.SS.Formula.Functions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using NAudio;
-using System.Windows.Media.Media3D;
-using NPOI.Util;
 
 #pragma warning disable
 namespace Display
@@ -20,9 +15,9 @@ namespace Display
     public partial class InProcessInfo : UserControl
     {
         //コンストラクター
-        public InProcessInfo(string code, string date)
+        public InProcessInfo(string code, string date, string lotnumber = "")
         {
-            DataContext = new ViewModelInProcessInfo(code, date);
+            DataContext = new ViewModelInProcessInfo(code, date, lotnumber);
             InitializeComponent();
         }
     }
@@ -314,12 +309,13 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelInProcessInfo(string code, string date)
+        internal ViewModelInProcessInfo(string code, string date, string lotnumber)
         {
             Ibarcode = this;
 
             ReadINI();
-            Initialize();
+            Initialize(lotnumber);
+
             InProcessCODE = code;
             InProcessDate = string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
@@ -332,9 +328,9 @@ namespace Display
         }
 
         //初期化
-        public void Initialize()
+        public void Initialize(string lotnumber = "")
         {
-            LotNumber = string.Empty;
+            LotNumber = lotnumber;
             LotNumberSEQ = string.Empty;
             ProductName = string.Empty;
             Worker = string.Empty;
@@ -345,6 +341,7 @@ namespace Display
             AmountWidth = 150;
             IsRegist = true;
             IsEnable = true;
+            DisplayLot(LotNumber);
         }
 
         //キャプション・ボタン表示

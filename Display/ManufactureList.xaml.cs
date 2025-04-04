@@ -50,7 +50,6 @@ namespace Display
         internal ViewModelManufactureList(string date)
         {
             ReadINI();
-
             SelectedIndex = -1;
             ManufactureCODE = string.Empty;
             ManufactureDate = date.ToStringDateDB();
@@ -61,6 +60,8 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
+
+            DataGridBehavior.Instance.Iselect = this;
         }
 
         //コントロールの設定
@@ -78,8 +79,6 @@ namespace Display
                 Process = ProcessName,
                 ProcessWork = "作業実績"
             };
-
-            DataGridBehavior.Instance.Iselect = this;
         }
 
         //一覧表示

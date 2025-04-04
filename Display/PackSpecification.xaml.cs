@@ -29,7 +29,7 @@ namespace Display
     public class ViewModelPackSpecification : Common, IWindowBase
     {
         //変数
-        ProductPackingStyle productPackingStyle;
+        ProductPackingStyle productPackingStyle = new ProductPackingStyle();
         DataTable selectTable;
         DataTable listTable;
         string containerCategory;
@@ -116,7 +116,7 @@ namespace Display
         public bool VisibileButton2                         //ボタン表示
         {
             get => visibileButton2;
-        set => SetProperty(ref visibileButton2, value);
+            set => SetProperty(ref visibileButton2, value);
         }
         public bool VisibileButton3                         //ボタン表示
         {
@@ -140,9 +140,9 @@ namespace Display
         //コンストラクター
         public ViewModelPackSpecification()
         {
-            productPackingStyle = new ProductPackingStyle();
             CopyProperty(productPackingStyle, this);
             DisplayImage();
+
             SelectTable = productPackingStyle.SelectPakingIndex();
         }
 
@@ -164,7 +164,7 @@ namespace Display
                 VisibleList = false,
                 VisibleInfo = false,
                 VisibleDefect = false,
-                VisibleArrow = true,
+                VisibleArrow = false,
                 VisiblePlan = false,
                 ProcessWork = "梱包仕様書",
                 Process = "梱包"
@@ -254,6 +254,7 @@ namespace Display
             }
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
+            WindowProperty.VisibleArrow = productPackingStyle.DataCount > 0;
         }
 
         //画像表示処理

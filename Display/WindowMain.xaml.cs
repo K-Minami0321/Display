@@ -459,19 +459,12 @@ namespace Display
 
                 case "F4":
 
-                    //計画
-                    FramePage = new PlanList();
-                    IniFile.WriteString("Page", "Initial", "PlanList");
-                    break;
-
-                case "F5":
-
                     //梱包仕様書
                     FramePage = new PackSpecification();
                     IniFile.WriteString("Page", "Initial", "PackSpecification");
                     break;
 
-                case "F6":
+                case "F11":
 
                     //作業マニュアル
                     FramePage = new Manual();

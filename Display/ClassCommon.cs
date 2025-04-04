@@ -257,15 +257,19 @@ namespace Display
         }
 
         //スタートページを表示
-        public void StartPage(string page, string code = null, string date = null)
+        public void StartPage(string page, string code = null, string date = null, string lotnumber = null)
         {
             PropertyWindow windowProperty = new PropertyWindow();
             var type = Type.GetType("Display." + page);
  
             switch(page)
             {
-                case "ManufactureInfo": case "InProcessInfo":
-                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty, string.Empty);
+                 case "ManufactureInfo":  case "InProcessInfo":
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, code, date, lotnumber);
+                    break;
+
+                case "InProcessList": case "ManufactureList":
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, DateTime.Now.ToString("yyyyMMdd"));
                     break;
 
                 default:

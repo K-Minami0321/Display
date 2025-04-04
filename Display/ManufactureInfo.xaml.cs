@@ -15,9 +15,9 @@ namespace Display
     public partial class ManufactureInfo : UserControl
     {
         //コンストラクター
-        public ManufactureInfo(string code = "", string date = "")
+        public ManufactureInfo(string code, string date, string lotnumber = "")
         {
-            DataContext = new ViewModelManufactureInfo(code, date);
+            DataContext = new ViewModelManufactureInfo(code, date, lotnumber);
             InitializeComponent();
         }
     }
@@ -390,12 +390,13 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelManufactureInfo(string code, string date)
+        internal ViewModelManufactureInfo(string code, string date, string lotnumber)
         {
             Ibarcode = this;
 
             ReadINI();
-            Initialize();
+            Initialize(lotnumber);
+
             ManufactureCODE = code;
             ManufactureDate =string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
@@ -408,9 +409,9 @@ namespace Display
         }
 
         //初期化
-        public void Initialize()
+        public void Initialize(string lotnumber = "")
         {
-            LotNumber = string.Empty;
+            LotNumber = lotnumber;
             LotNumberSEQ = string.Empty;
             ProductName = string.Empty;
             StartTime = string.Empty;
@@ -422,6 +423,7 @@ namespace Display
             Sales = string.Empty;
             IsRegist = true;
             IsEnable = true;
+            DisplayLot(LotNumber);
 
             //工程初期値
             switch (ProcessName)

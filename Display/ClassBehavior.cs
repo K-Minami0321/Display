@@ -947,17 +947,19 @@ namespace Display
             switch (e.Key)
             {
                 case Key.Enter:
-                    //選択処理
+
                     e.Handled = true;
                     AssociatedObject.CommitEdit();
                     Iselect.SelectList();
                     break;
 
                 case Key.Left:
+
                     e.Handled = true;
                     break;
 
                 case Key.Right:
+
                     e.Handled = true;
                     break;
 
