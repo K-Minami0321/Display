@@ -138,8 +138,11 @@ namespace Display
             switch (Page)
             {
                 case "InProcessInfo":
-                    InProcessInfo.InProcessCODE = string.Empty;
-                    InProcessInfo.LotNumber = LotNumber;
+
+
+
+
+
                     break;
 
                 case "ManufactureInfo":

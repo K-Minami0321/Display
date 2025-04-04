@@ -445,7 +445,7 @@ namespace Display
 
                     //売上
                     if (Process == "検査") { return; }
-                     FramePage = new InProcessInfo();
+                     FramePage = new InProcessInfo(string.Empty, string.Empty);
                     IniFile.WriteString("Page", "Initial", "InProcessInfo");
                     break;
 

@@ -7,6 +7,11 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NPOI.SS.Formula.Functions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using NAudio;
+using System.Windows.Media.Media3D;
+using NPOI.Util;
 
 #pragma warning disable
 namespace Display
@@ -14,15 +19,10 @@ namespace Display
     //画面クラス
     public partial class InProcessInfo : UserControl
     {
-        public static string InProcessCODE     //仕掛CODE
-        { get; set; }
-        public static string LotNumber         //ロット番号
-        { get; set; }
-
         //コンストラクター
-        public InProcessInfo()
+        public InProcessInfo(string code, string date)
         {
-            DataContext = new ViewModelInProcessInfo(InProcessCODE, LotNumber);
+            DataContext = new ViewModelInProcessInfo(code, date);
             InitializeComponent();
         }
     }
@@ -33,6 +33,7 @@ namespace Display
         //変数
         InProcess inProcess = new InProcess();
         string inProcessCODE;
+        string inProcessDate;
         string lotNumber;
         string lotNumberSEQ;
         string coil;
@@ -40,7 +41,6 @@ namespace Display
         string weight = string.Empty;
         string amount = string.Empty;
         string shirringUnit;
-        string inProcessDate;
         string transportDate = string.Empty;
         string completed;
         string status = "搬入";
@@ -54,7 +54,7 @@ namespace Display
         int lengthWeight = 6;
         int lengthUnit = 6;
         string labelWeight;
-        string labelAmount;
+        string labelAmount = "数 量";
         string labelUnit;
         bool visibleCoil;
         bool visibleItem1;
@@ -83,10 +83,23 @@ namespace Display
 
                 inProcess = new InProcess(ProcessName);
                 inProcess.InProcessCODE = value;
-                CopyProperty(inProcess, this, "InProcessCODE");
+                if (inProcess.DataCount == 0) { return; }
 
+                CopyProperty(inProcess, this, "InProcessCODE");
                 DisplayLot(LotNumber, value);
-                IsRegist = string.IsNullOrEmpty(value);
+                IsRegist = false;
+            }
+        }
+        public string InProcessDate     //搬入日
+        {
+            get => inProcessDate;
+            set
+            {
+                if (string.IsNullOrEmpty(value)) { value = SetToDay(DateTime.Now); }
+                SetProperty(ref inProcessDate, value);
+
+                IsDate = value == SetToDay(DateTime.Now) ? true : false;
+                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) && !string.IsNullOrEmpty(InProcessCODE) ? false : true;
             }
         }
         public string LotNumber         //ロット番号
@@ -118,15 +131,6 @@ namespace Display
         {
             get => shirringUnit;
             set => SetProperty(ref shirringUnit, value);
-        }
-        public string InProcessDate     //搬入日
-        {
-            get => inProcessDate;
-            set 
-            { 
-                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) ? false : true;
-                SetProperty(ref inProcessDate, value);
-            }
         }
         public string TransportDate     //搬出日
         {
@@ -261,6 +265,8 @@ namespace Display
                 Amount = !VisibleCoil ? Amount : Amount.ToCircleEnclosing();
             }
         }
+        public bool IsDate                      //日付調整
+        { get; set; }
         public bool FocusLotNumber      //フォーカス（ロット番号）
         {
             get => focusLotNumber;
@@ -308,13 +314,14 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelInProcessInfo(string code, string number)
+        internal ViewModelInProcessInfo(string code, string date)
         {
             Ibarcode = this;
 
             ReadINI();
             Initialize();
             InProcessCODE = code;
+            InProcessDate = string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
 
         //ロード時
@@ -327,11 +334,14 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            //初期値
-            InProcessDate = SetToDay(DateTime.Now);
-            InProcessCODE = string.Empty;
             LotNumber = string.Empty;
             LotNumberSEQ = string.Empty;
+            ProductName = string.Empty;
+            Worker = string.Empty;
+            Weight = string.Empty;
+            Unit = string.Empty;
+            Amount = string.Empty;
+            Completed = string.Empty;
             AmountWidth = 150;
             IsRegist = true;
             IsEnable = true;
@@ -763,7 +773,7 @@ namespace Display
         //現在の日付設定
         public void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (IsRegist) { InProcessDate = SetToDay(DateTime.Now); }
+            if (IsRegist && IsDate) { InProcessDate = SetToDay(DateTime.Now); }
         }
 
         //QRコード処理
@@ -849,7 +859,7 @@ namespace Display
                     if (messege)
                     {
                         DeleteDate();
-                        DisplayFramePage(new InProcessList());
+                        DisplayFramePage(new InProcessList(InProcessDate));
                     }
                     MessageControl = null;
                     break;
@@ -918,7 +928,7 @@ namespace Display
                 case "DisplayList":
 
                     //仕掛在庫一覧画面
-                    DisplayFramePage(new InProcessList());
+                    DisplayFramePage(new InProcessList(InProcessDate));
                     break;
 
                 case "DisplayPlan":

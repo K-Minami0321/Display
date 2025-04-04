@@ -11,9 +11,9 @@ namespace Display
     //画面クラス
     public partial class InProcessList : UserControl
     {
-        public InProcessList()
+        public InProcessList(string date)
         {
-            DataContext = ViewModelInProcessList.Instance;
+            DataContext = new ViewModelInProcessList(date);
             InitializeComponent();
         }
     }
@@ -22,6 +22,7 @@ namespace Display
     public class ViewModelInProcessList : Common, IWindowBase, ISelect
     {
         //変数
+        InProcess inProcess = new InProcess();
         string inProcessCODE;
         string inProcessDate;
         string headerUnit;
@@ -32,9 +33,12 @@ namespace Display
         bool visibleWeight;
 
         //プロパティ
-        public static ViewModelInProcessList Instance   //インスタンス
-        { get; set; } = new ViewModelInProcessList();
-        public string InProcessDate                     //作業日
+        public string InProcessCODE             //売上CODE
+        {
+            get => inProcessCODE;
+            set => SetProperty(ref inProcessCODE, value);
+        }
+        public string InProcessDate             //売上日
         {
             get { return inProcessDate; }
             set 
@@ -43,32 +47,32 @@ namespace Display
                 DiaplayList();
             }
         }
-        public string HeaderUnit                        //コイル・枚数
+        public string HeaderUnit                //コイル・枚数
         {
             get => headerUnit;
             set => SetProperty(ref headerUnit, value);
         }
-        public string HeaderWeight                      //焼結重量・単重
+        public string HeaderWeight              //焼結重量・単重
         {
             get => headerWeight;
             set => SetProperty(ref headerWeight, value);
         }
-        public string HeaderAmount                      //ヘッダー（重量・数量）
+        public string HeaderAmount              //ヘッダー（重量・数量）
         {
             get => headerAmount;
             set => SetProperty(ref headerAmount, value);
         }
-        public bool VisibleShape                        //表示・非表示（形状）
+        public bool VisibleShape                //表示・非表示（形状）
         {
             get => visibleShape;
             set => SetProperty(ref visibleShape, value);
         }
-        public bool VisibleUnit                         //表示・非表示（コイル・枚数）
+        public bool VisibleUnit                 //表示・非表示（コイル・枚数）
         {
             get => visibleUnit;
             set => SetProperty(ref visibleUnit, value);
         }
-        public bool VisibleWeight                       //表示・非表示（重量）
+        public bool VisibleWeight               //表示・非表示（重量）
         {
             get => visibleWeight;
             set => SetProperty(ref visibleWeight, value);
@@ -81,12 +85,13 @@ namespace Display
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
-        internal ViewModelInProcessList()
+        internal ViewModelInProcessList(string date)
         {
-            Instance = this;
-
             ReadINI();
-            Initialize();
+
+            SelectedIndex = -1;
+            InProcessCODE = string.Empty;
+            InProcessDate = date.ToStringDateDB();
         }
 
         //ロード時
@@ -141,18 +146,9 @@ namespace Display
                     break;
             }
         }
-        
-        //初期化
-        public void Initialize()
-        {
-            SelectedIndex = -1;
-            InProcessDate = SetToDay(DateTime.Now).ToStringDateDB();
-        }
-
         //一覧表示
         private void DiaplayList()
         {
-            var inProcess = new InProcess();
             SelectTable = inProcess.SelectList(ProcessName, null, null, InProcessDate);           
         }
 
@@ -160,9 +156,8 @@ namespace Display
         public async void SelectList()
         {
             if(SelectedItem == null) { return; }
-            InProcessInfo.InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            InProcessInfo.LotNumber = string.Empty;
-            DisplayFramePage(new InProcessInfo());
+            InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            DisplayFramePage(new InProcessInfo(InProcessCODE, InProcessDate));
         }
 
         //スワイプ処理
@@ -184,15 +179,14 @@ namespace Display
                 case "DisplayInfo":
 
                     //搬入登録画面
-                    DataInitialize();
-                    DisplayFramePage(new InProcessInfo());
+                    DisplayFramePage(new InProcessInfo(InProcessCODE, InProcessDate));
                     break;
 
                 case "DisplayList":
 
                     //仕掛在庫一覧画面
-                    Initialize();
-                    DisplayFramePage(new InProcessList());
+                    InProcessDate = DateTime.Now.ToString("yyyyMMdd");
+                    DisplayFramePage(new InProcessList(InProcessDate));
                     break;
 
                 case "DisplayPlan":

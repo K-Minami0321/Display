@@ -88,14 +88,13 @@ namespace Display
             {
                 SetProperty(ref manufactureCODE, value);
 
-                var manufacture = new Manufacture(value);
+                var manufacture = new Manufacture(ProcessName);
                 manufacture.ManufactureCODE = value;
                 if (manufacture.DataCount == 0) { return; }
 
                 CopyProperty(manufacture, this, "ManufactureCODE");
                 DisplayLot(LotNumber);
                 IsRegist = false;
-
             }
         }
         public string ManufactureDate           //製造日
@@ -398,7 +397,7 @@ namespace Display
             ReadINI();
             Initialize();
             ManufactureCODE = code;
-            ManufactureDate = date;
+            ManufactureDate =string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
 
         //ロード時
@@ -411,9 +410,6 @@ namespace Display
         //初期化
         public void Initialize()
         {
-            //初期化
-            ManufactureCODE = string.Empty;
-            ManufactureDate = string.IsNullOrEmpty(ManufactureDate) ? SetToDay(DateTime.Now) : ManufactureDate;
             LotNumber = string.Empty;
             LotNumberSEQ = string.Empty;
             ProductName = string.Empty;
@@ -746,7 +742,7 @@ namespace Display
                 manufacture.Delete(ManufactureCODE);
 
                 Initialize();
-                DisplayFramePage(new ManufactureList());
+                DisplayFramePage(new ManufactureList(ManufactureDate));
             }
             MessageControl = null;
         }
@@ -1368,7 +1364,7 @@ namespace Display
                 case "DisplayList":
 
                     //加工一覧画面
-                    DisplayFramePage(new ManufactureList());
+                    DisplayFramePage(new ManufactureList(ManufactureDate));
                     break;
 
                 case "DisplayPlan":

@@ -264,7 +264,7 @@ namespace Display
  
             switch(page)
             {
-                case "ManufactureInfo":
+                case "ManufactureInfo": case "InProcessInfo":
                     windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty, string.Empty);
                     break;
 
@@ -300,13 +300,6 @@ namespace Display
             //コイル数取得
             var inProcess = new InProcess();
             Coil = inProcess.InProcessCoil(lotnumber, inProcesscode);   
-        }
-
-        //データ初期化
-        public void DataInitialize()
-        {
-            InProcessInfo.InProcessCODE = string.Empty;
-            InProcessInfo.LotNumber = string.Empty;
         }
     }
 }

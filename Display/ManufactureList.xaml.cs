@@ -11,9 +11,9 @@ namespace Display
     //画面クラス
     public partial class ManufactureList : UserControl
     {
-        public ManufactureList()
+        public ManufactureList(string date)
         {
-            DataContext = new ViewModelManufactureList();
+            DataContext = new ViewModelManufactureList(date);
             InitializeComponent();
         }
     }
@@ -22,12 +22,11 @@ namespace Display
     public class ViewModelManufactureList : Common, IWindowBase, ISelect
     {
         //変数
+        Manufacture manufacture = new Manufacture();
         string manufactureCODE;
         string manufactureDate;
 
         //プロパティ
-        public static ViewModelManufactureList Instance     //インスタンス
-        { get; set; } = new ViewModelManufactureList();
         public string ManufactureCODE                       //加工CODE
         {
             get => manufactureCODE;
@@ -48,25 +47,20 @@ namespace Display
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
 
         //コンストラクター
-        internal ViewModelManufactureList()
+        internal ViewModelManufactureList(string date)
         {
-            Initialize();
+            ReadINI();
+
+            SelectedIndex = -1;
+            ManufactureCODE = string.Empty;
+            ManufactureDate = date.ToStringDateDB();
         }
 
         //ロード時
         private void OnLoad()
         {
-            ReadINI();
             DisplayCapution();
             DiaplayList();
-        }
-
-        //初期化
-        private void Initialize()
-        {
-            SelectedIndex = -1;
-            ManufactureCODE = string.Empty;
-            ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
         }
 
         //コントロールの設定
@@ -91,7 +85,6 @@ namespace Display
         //一覧表示
         private void DiaplayList()
         {
-            var manufacture = new Manufacture();
             SelectTable = manufacture.SelectHistoryListDate(ProcessName, ManufactureDate);
         }
 
@@ -122,7 +115,6 @@ namespace Display
                 case "DisplayInfo":
 
                     //搬入登録画面
-                    DataInitialize();
                     DisplayFramePage(new ManufactureInfo(string.Empty, ManufactureDate));
                     break;
 
@@ -130,7 +122,7 @@ namespace Display
 
                     //搬入一覧画面
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
-                    DisplayFramePage(new ManufactureList());
+                    DisplayFramePage(new ManufactureList(ManufactureDate));
                     break;
 
                 case "DisplayPlan":
