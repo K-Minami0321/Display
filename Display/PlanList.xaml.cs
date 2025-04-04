@@ -1,7 +1,6 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
-using NPOI.SS.Formula.Functions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,7 +12,7 @@ namespace Display
     {
         public PlanList()
         {
-            DataContext = ViewModelPlanList.Instance;
+            DataContext = new ViewModelPlanList();
             InitializeComponent();
         }
     }
@@ -72,8 +71,6 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
-            Instance = this;
-
             ReadINI();
             Initialize();
         }
@@ -160,8 +157,12 @@ namespace Display
             switch (Page)
             {
                 case "InProcessInfo":
-                    InProcessInfo.InProcessCODE = string.Empty;
-                    InProcessInfo.LotNumber = LotNumber;
+
+
+
+
+
+
                     break;
 
                 case "ManufactureInfo":

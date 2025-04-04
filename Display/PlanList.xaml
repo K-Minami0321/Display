@@ -65,7 +65,7 @@
                           ColumnHeaderStyle="{StaticResource DefultHeader}">
                     <!-- 項目設定 -->
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="納期日" Width="150">
+                        <DataGridTemplateColumn Header="納期日" Width="150" CellStyle="{StaticResource TabStopCell}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">

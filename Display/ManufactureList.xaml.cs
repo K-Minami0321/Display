@@ -13,7 +13,7 @@ namespace Display
     {
         public ManufactureList()
         {
-            DataContext = ViewModelManufactureList.Instance;
+            DataContext = new ViewModelManufactureList();
             InitializeComponent();
         }
     }
@@ -50,7 +50,6 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList()
         {
-            Instance = this;
             Initialize();
         }
 

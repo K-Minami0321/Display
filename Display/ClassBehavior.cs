@@ -884,37 +884,6 @@ namespace Display
             }
         }
     }
-
-    //土曜・日曜に色をつける
-    [ValueConversion(typeof(DateTime), typeof(Brush))]
-    public class DateTimeToDayOfWeekBrushConverter : IValueConverter
-    {
-        //プロパティ
-        public static Brush SundayBrush     // 日曜日用のブラシリソース
-        {
-            get { return Brushes.Red; }
-        }
-        public static Brush SaturdayBrush   // 土曜日用のブラシリソース
-        {
-            get { return Brushes.Blue; }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (!(value is DateTime)) { return DependencyProperty.UnsetValue; }
-            var dayOfWeek = ((DateTime)value).DayOfWeek;
-            switch (dayOfWeek)
-            {
-                case DayOfWeek.Sunday:
-                    return SundayBrush;
-                case DayOfWeek.Saturday:
-                    return SaturdayBrush;
-                default:
-                    return DependencyProperty.UnsetValue;
-            }
-        }
-    }
     #endregion
 
     #region DataGrid：Behavior

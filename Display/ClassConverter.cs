@@ -47,11 +47,7 @@ namespace Display
     public class InsertConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            var str = value.ToString();
-            return (str.Length > 2) ? value.ToString() : STRING.Insert(value.ToString(), 1);
-        }
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => (value.ToString().Length > 2) ? value.ToString() : STRING.Insert(value.ToString(), 1);
     }
 
     //通貨形式
@@ -114,24 +110,19 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null || string.IsNullOrEmpty(value.ToString())) { return null; }
-            var color = string.Empty;
             var ret = STRING.ToTrim(value);
             switch (ret)
             {
                 case "設定":
-                    color = "#FF90A4AE";
-                    break;
+                    return "#FF90A4AE";
 
                 case "完了":
-                    color = "#00FFFFFF";
-                    break;
+                    return "#00FFFFFF";
 
                 default:
                     ProcessCategory process = new ProcessCategory(ret);
-                    color = process.Color;
-                    break;
+                    return process.Color;
             }
-            return color;
         }
     }
 
@@ -139,23 +130,7 @@ namespace Display
     public class CompletedColorConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            var color = string.Empty;
-            var ret = STRING.ToTrim(value);
-
-            switch (ret)
-            {
-                case "完了":
-                    color = "#FFFF0000";
-                    break;
-
-                default:
-                    color = "#FFFFFFFF";
-                    break;
-            }
-            return color;
-        }
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => STRING.ToTrim(value) == "完了" ? "#FFFF0000" : "#FFFFFFFF";
     }
 
     //チェックがあれば赤
@@ -170,6 +145,37 @@ namespace Display
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToString() == "E" ? CONVERT.ToCollapsed(true) : CONVERT.ToCollapsed(false);
+    }
+
+    //土曜・日曜に色をつける
+    public class DateTimeToDayOfWeekBrushConverter : IValueConverter
+    {
+        //プロパティ
+        public static Brush WeekdayBrush    //平日用のブラシリソース
+        { get => Brushes.Gray; }
+        public static Brush SundayBrush     // 日曜日用のブラシリソース
+        { get => Brushes.Red; }
+        public static Brush SaturdayBrush   // 土曜日用のブラシリソース
+        { get => Brushes.Blue; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (!(value.ToDate() is DateTime)) { return WeekdayBrush; }
+            var dayOfWeek = (value.ToDate()).DayOfWeek;
+
+            switch (dayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    return SundayBrush;
+
+                case DayOfWeek.Saturday:
+                    return SaturdayBrush;
+
+                default:
+                    return WeekdayBrush;
+            }
+        }
     }
     #endregion
 }

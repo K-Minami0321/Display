@@ -43,7 +43,7 @@
         <KeyBinding Gesture="F12" Command="{Binding CommandKey}" CommandParameter="F12"/>
     </Window.InputBindings>
     <!-- 画面 -->
-    <materialDesign:DialogHost CloseOnClickAway="False">
+    <materialDesign:DialogHost CloseOnClickAway="False" IsTabStop="False">
         <Grid x:Name="Main">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50*"/>

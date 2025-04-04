@@ -7,11 +7,8 @@
 
     <!-- Converter -->
     <local:InsertConverter x:Key="InsertConverter" />
-    <local:ProcessColorConverter x:Key="ProcessColorConverter" />
-    <local:CompletedColorConverter x:Key="CompletedColorConverter"/>
     <local:CollapsedConverter x:Key="CollapsedConverter"/>
     <local:CollapsedValueConverter x:Key="CollapsedValueConverter"/>
-    <local:CheckColorConverter x:Key="CheckColorConverter"/>
     <local:CheckConverter x:Key="CheckConverter"/>
     <local:CoilConverter x:Key="CoilConverter"/>
     <local:CompletedConverter x:Key="CompletedConverter"/>
@@ -22,7 +19,11 @@
     <local:MonthDayConverter x:Key="MonthDayConverter"/>
     <local:AsteriskConverter x:Key="AsteriskConverter"/>
     <local:CompletConverter x:Key="CompletConverter"/>
-   
+    <local:ProcessColorConverter x:Key="ProcessColorConverter" />
+    <local:CompletedColorConverter x:Key="CompletedColorConverter"/>
+    <local:CheckColorConverter x:Key="CheckColorConverter"/>
+    <local:DateTimeToDayOfWeekBrushConverter x:Key="DateTimeToDayOfWeekBrushConverter"/>
+
     <!-- ScrollBar -->
     <sys:Double x:Key="ScrollBarSize">20</sys:Double>
     <sys:Double x:Key="ThumbSize">16</sys:Double>
@@ -240,7 +241,6 @@
 
     <Style x:Key="Search" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="120"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontSize" Value="25"/>
@@ -317,7 +317,8 @@
     <Style x:Key="TextDate" TargetType="TextBlock">
         <Setter Property="FontSize" Value="32"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="#888888"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Opacity" Value="0.8"/>
         <Setter Property="Margin" Value="0,0,0,2"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
@@ -325,7 +326,8 @@
     <Style x:Key="TextDateLeft" TargetType="TextBlock">
         <Setter Property="FontSize" Value="32"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="#888888"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Opacity" Value="0.8"/>
         <Setter Property="Margin" Value="0,0,0,2"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
@@ -497,7 +499,7 @@
         </Style.Triggers>
     </Style>
     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="IsTabStop" Value="false"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
@@ -507,5 +509,19 @@
     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style x:Key="TabStopCell" TargetType="{x:Type DataGridCell}">
+        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,5,10,5"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="Margin" Value="0,5,0,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="#000000"/>
+                <Setter Property="Background" Value="#DDDDDD"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

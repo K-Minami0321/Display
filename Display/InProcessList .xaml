@@ -30,14 +30,15 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Viewbox Stretch="Uniform">
-                    <TextBlock Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter},FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}"/>
+                    <TextBlock Text="{Binding InProcessDate,Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}"
+                               Foreground="{Binding InProcessDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
                 </Viewbox>
             </StackPanel>
             <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="ロット番号" Width="200">
+                    <DataGridTemplateColumn Header="ロット番号" Width="200" CellStyle="{StaticResource TabStopCell}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center"/>
