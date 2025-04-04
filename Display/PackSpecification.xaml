@@ -85,7 +85,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2" Visibility="{Binding VisibileButton1, Converter={StaticResource CollapsedConverter}}">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2" Visibility="{Binding VisibileButton2, Converter={StaticResource CollapsedConverter}}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
                                         <materialDesign:PackIcon Kind="{Binding IconButton[1], FallbackValue=PackageVariant}" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -94,11 +94,11 @@
                                 </Viewbox>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TouchDown">
-                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ContainerCategory3"/>
+                                        <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="ContainerCategory2"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3" Visibility="{Binding VisibileButton2, Converter={StaticResource CollapsedConverter}}">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3" Visibility="{Binding VisibileButton3, Converter={StaticResource CollapsedConverter}}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
                                         <materialDesign:PackIcon Kind="{Binding IconButton[2], FallbackValue=PackageVariant}" Margin="0,3,20,0" Height="30" Width="30"/>

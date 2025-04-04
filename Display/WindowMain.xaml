@@ -17,7 +17,7 @@
         WindowState="{Binding DisplayState}"
         FontSize="30" FontFamily="Meiryo UI"
         IsManipulationEnabled="True">
-    <!-- イベント設定 -->
+    <!-- イベント -->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding CommandClosing}"/>

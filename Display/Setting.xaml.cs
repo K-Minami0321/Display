@@ -176,7 +176,7 @@ namespace Display
             IniFile.WriteString("Page", "Equipment", EquipmentCODE);
             IniFile.WriteString("Page", "Worker", Worker);
 
-            WindowProperty.Process = IniFile.GetString("Page", "Process");
+            WindowProperty.Process = ProcessName;
             StartPage(IniFile.GetString("Page", "Initial"));
         }
 
@@ -194,7 +194,8 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
-            var control = new ControlMessage();
+            if (IsMessage) { return; }
+
             var result = false;
 
             switch (value)
@@ -202,29 +203,33 @@ namespace Display
                 case "Regist":
 
                     //登録
+                    MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {
                         Message = "登録します",
                         Contents = "※入力されたものを反映します。",
                         Type = "警告"
                     };
-                    result = (bool)await DialogHost.Show(control);
+                    result = (bool)await DialogHost.Show(MessageControl);
 
                     if (result) { RegistData(); }
+                    MessageControl = null;
                     break;
 
                 case "Cancel":
 
                     //取消
+                    MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {
                         Message = "修正を破棄します",
                         Contents = "※入力されたものは設定に反映されません。",
                         Type = "警告"
                     };
-                    result = (bool)await DialogHost.Show(control);
+                    result = (bool)await DialogHost.Show(MessageControl);
 
                     if (result) { StartPage(IniFile.GetString("Page", "Initial"));  }
+                    MessageControl = null;
                     break;
 
                 case "Server":

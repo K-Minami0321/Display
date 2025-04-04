@@ -417,6 +417,8 @@ namespace Display
         //必須チェック
         private async Task<bool> IsRequiredRegist()
         {
+            if (IsMessage) { return false; }
+
             var result = true;
             var focus = string.Empty;
             var messege1 = string.Empty;
@@ -807,31 +809,32 @@ namespace Display
                     //登録
                     if (!(bool)await IsRequiredRegist()) { return;  }
 
-                        MessageControl = new ControlMessage();
-                        MessageProperty = new PropertyMessage()
-                        {
-                            Message = "搬入データを登録します",
-                            Contents = "",
-                            Type = "警告"
-                        };
-                        messege = (bool)await DialogHost.Show(MessageControl);
-                        await System.Threading.Tasks.Task.Delay(100);
+                    if (IsMessage) { return; }
 
-                        SetGotFocus(Focus);
-                        if (messege)
-                        {
-                            RegistData();
-                            SetGotFocus("LotNumber");
-                        }
-                        MessageControl = null;
+                    MessageControl = new ControlMessage();
+                    MessageProperty = new PropertyMessage()
+                    {
+                        Message = "搬入データを登録します",
+                        Contents = "",
+                        Type = "警告"
+                    };
+                    messege = (bool)await DialogHost.Show(MessageControl);
+                    await System.Threading.Tasks.Task.Delay(100);
 
+                    SetGotFocus(Focus);
+                    if (messege)
+                    {
+                        RegistData();
+                        SetGotFocus("LotNumber");
+                    }
+                    MessageControl = null;
                     break;
 
                 case "Delete":
 
+                    //削除
                     if (IsMessage) { return; }
 
-                    //削除
                     MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {
@@ -854,6 +857,8 @@ namespace Display
                 case "Cancel":
 
                     //取消
+                    if (IsMessage) { return; }
+
                     MessageControl = new ControlMessage();
                     MessageProperty = new PropertyMessage()
                     {

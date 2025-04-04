@@ -43,7 +43,8 @@ namespace Display
         ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール" };
         ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant" };
         bool visibileButton1 = true;
-        bool visibileButton2 = false;
+        bool visibileButton2 = true;
+        bool visibileButton3 = false;
         bool focusLotProductName = false;
 
         //プロパティ
@@ -116,6 +117,11 @@ namespace Display
         {
             get => visibileButton2;
         set => SetProperty(ref visibileButton2, value);
+        }
+        public bool VisibileButton3                         //ボタン表示
+        {
+            get => visibileButton3;
+            set => SetProperty(ref visibileButton3, value);
         }
         public bool FocusProductName                        //フォーカス（品番）
         {
@@ -209,6 +215,11 @@ namespace Display
         //梱包仕様表示
         private void DisplayPackStyle(string code, string no = "")
         {
+            //初期値
+            VisibileButton1 = true;
+            visibileButton2 = true;
+            visibileButton3 = false;
+
             //データ取得
             ListTable = productPackingStyle.SelectPaking(code, no);
             CopyProperty(productPackingStyle, this);
@@ -217,13 +228,10 @@ namespace Display
             ProductName = code;
             if (productPackingStyle.DataCount > 0) { ContainerCategory = SetName(ContainerCategory); }
             Container = STRING.ToTrim(Container.Replace("P", "").Replace("D", ""));
+            DisplayImage();
 
             if (!string.IsNullOrEmpty(code))
             {
-                //ボタン制御
-                VisibileButton1 = productPackingStyle.DataCount >= 2;
-                VisibileButton2 = productPackingStyle.DataCount == 3;
-
                 var count = 0;
                 foreach (DataRow datarow in ListTable.Rows)
                 {
@@ -236,13 +244,16 @@ namespace Display
                 var querry = from a in SelectTable.AsEnumerable()
                              where a.Field<string>("品番") == code
                              select new { 連番 = a.Field<Int64>("連番") };
-                if (querry.Count() <= 0) { return; }
-                IndexNumber = INT.ToInt(querry.FirstOrDefault().連番);
+                if (querry.Count() > 0)
+                {
+                    IndexNumber = INT.ToInt(querry.FirstOrDefault().連番);
+                    VisibileButton1 = productPackingStyle.DataCount >= 1;
+                    VisibileButton2 = productPackingStyle.DataCount >= 2;
+                    VisibileButton3 = productPackingStyle.DataCount == 3;
+                }
             }
-
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";
             string SetIcon(string value) => value == "P" ? "Package" : "PackageVariant";
-            DisplayImage();
         }
 
         //画像表示処理
@@ -273,10 +284,12 @@ namespace Display
             switch (value)
             {
                 case "Right":
+
                     SetAroundCode("Back");
                     break;
 
                 case "Left":
+
                     SetAroundCode("Forword");
                     break;
             }
@@ -288,9 +301,12 @@ namespace Display
             switch (value)
             {
                 case "Back":
+
                     if (IndexNumber < SelectTable.Rows.Count) { IndexNumber = IndexNumber + 1; }
                     break;
+
                 case "Forword":
+
                     IndexNumber = IndexNumber - 1;
                     break;
             }
@@ -298,7 +314,6 @@ namespace Display
             //CODEの設定
             if (IndexNumber < 0) { IndexNumber = 0; }
             DataRow dr = SelectTable.Rows[IndexNumber];
-
             var code = dr["品番"].ToString();
             DisplayPackStyle(dr["品番"].ToString());
         }

@@ -116,7 +116,6 @@ namespace Display
             get => ViewModel.IsMessage;
             set => ViewModel.IsMessage = value;
         }
-
         public PropertyWindow()                         //コンストラクター
         {
             IconList = "ViewList";
@@ -285,7 +284,6 @@ namespace Display
 
             //表示項目
             FunctionColor = IsServer ? "1" : "0.5";
-            StartPage(IniFile.GetString("Page", "Initial"));
             VisiblePower = false;
             VisibleList = false;
             VisibleInfo = false;
@@ -384,7 +382,8 @@ namespace Display
             comPort.IserialPort = this;
 
             //設定
-            ProcessName = IniFile.GetString("Page", "Process");
+            Process = IniFile.GetString("Page", "Process");
+            StartPage(IniFile.GetString("Page", "Initial"));
         }
 
         //アイコン初期化
@@ -427,7 +426,6 @@ namespace Display
         private void KeyDown(object value)
         {
             if (IsMessage) { return; }
-
             switch (value)
             {
                 case "ESC":
@@ -438,32 +436,30 @@ namespace Display
 
                 case "F1":
 
-                    //実績登録画面
+                    //実績
                     FramePage = new ManufactureInfo(string.Empty, string.Empty);
                     IniFile.WriteString("Page", "Initial", "ManufactureInfo");
                     break;
 
                 case "F2":
 
-                    //搬入登録画面
-                    if (ProcessName == "検査" || ProcessName == "梱包") { return; }
-                    InProcessInfo.InProcessCODE = string.Empty;
-                    InProcessInfo.LotNumber = string.Empty;
-                    FramePage = new InProcessInfo();
+                    //売上
+                    if (Process == "検査") { return; }
+                     FramePage = new InProcessInfo();
                     IniFile.WriteString("Page", "Initial", "InProcessInfo");
                     break;
 
                 case "F3":
 
-                    //搬出登録画面
-                    if (ProcessName == "梱包") { return; }
+                    //搬出
+                    if (Process == "検査" || Process == "梱包") { return; }
                     FramePage = new Transport();
                     IniFile.WriteString("Page", "Initial", "Transport");
                     break;
 
                 case "F4":
 
-                    //計画一覧画面
+                    //計画
                     FramePage = new PlanList();
                     IniFile.WriteString("Page", "Initial", "PlanList");
                     break;
@@ -477,13 +473,13 @@ namespace Display
 
                 case "F6":
 
-                    //作業マニュアル画面
+                    //作業マニュアル
                     FramePage = new Manual();
                     break;
 
                 case "F12":
 
-                    //設定画面
+                    //設定
                     FramePage = new Setting();
                     break;
 
@@ -495,6 +491,7 @@ namespace Display
                     break;
 
                 case "Grid":
+
                     if (IwindowBase != null) { IwindowBase.KeyDown(value); }
                     break;
             }
