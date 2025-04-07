@@ -124,7 +124,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
                 <i:Interaction.Behaviors>
-                    <local:DataGridBehavior/>
+                    <local:DataGridBehavior Iselect="{Binding Iselect}"/>
                 </i:Interaction.Behaviors>
             </DataGrid>
             <!-- 下領域 -->

@@ -87,9 +87,10 @@ namespace Display
         //コンストラクター
         internal ViewModelInProcessList(string date)
         {
+            Iselect = this;
             ReadINI();
+
             SelectedIndex = -1;
-            InProcessCODE = string.Empty;
             InProcessDate = date.ToStringDateDB();
         }
 
@@ -97,9 +98,7 @@ namespace Display
         private void OnLoad()
         {
             DisplayCapution();
-            DiaplayList();
-
-            DataGridBehavior.Instance.Iselect = this;
+            DiaplayList(); 
         }
 
         //キャプション・ボタン表示
@@ -155,8 +154,8 @@ namespace Display
         public async void SelectList()
         {
             if(SelectedItem == null) { return; }
-            InProcessCODE = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            DisplayFramePage(new InProcessInfo(InProcessCODE, InProcessDate));
+            var code = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            DisplayFramePage(new InProcessInfo(code, InProcessDate));
         }
 
         //スワイプ処理
@@ -178,12 +177,13 @@ namespace Display
                 case "DisplayInfo":
 
                     //搬入登録
-                    DisplayFramePage(new InProcessInfo(InProcessCODE, InProcessDate));
+                    DisplayFramePage(new InProcessInfo(string.Empty, InProcessDate));
                     break;
 
                 case "DisplayList":
 
                     //仕掛在庫一覧
+                    SelectedIndex = -1;
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
                     DisplayFramePage(new InProcessList(InProcessDate));
                     break;

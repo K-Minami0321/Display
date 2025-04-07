@@ -65,7 +65,9 @@ namespace Display
         //コンストラクター
         internal ViewModelPlanList()
         {
+            Iselect = this;
             ReadINI();
+
             SelectedIndex = -1;
             LotNumber = string.Empty;
             VisibleUnit = ProcessName == "合板" ? true : false;
@@ -77,10 +79,7 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
-
-            DataGridBehavior.Instance.Iselect = this;
         }
-
 
         //キャプション・ボタン表示
         private void DisplayCapution()
@@ -110,8 +109,8 @@ namespace Display
             SelectTable = plan.SelectPlanList(ProcessName, where, true);
 
             //行選択・スクロール設定
-            DataGridBehavior.Instance.SetScrollViewer();
-            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
+            //DataGridBehavior.Instance.SetScrollViewer();
+            //DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
             SelectedIndex = selectIndex;
         }
 
@@ -164,6 +163,7 @@ namespace Display
                 case "DisplayPlan":
 
                     //計画一覧画面
+                    SelectedIndex = -1;
                     DiaplayList();
                     break;
 

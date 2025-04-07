@@ -1207,7 +1207,7 @@ namespace Display
         }
 
         //QRコード処理
-        public void SetBarcode()
+        public void GetQRCode()
         {
             //ロット番号
             if (CONVERT.IsLotNumber(ReceivedData)) 

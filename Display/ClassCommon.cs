@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Windows.Controls;
 
 #pragma warning disable
@@ -12,7 +13,7 @@ namespace Display
     //インターフェース
     public interface IBarcode
     {
-        void SetBarcode();
+        void GetQRCode();
     }
 
     //共通クラス
@@ -23,6 +24,7 @@ namespace Display
         ContentControl framePage;
         DataTable selectTable;
         DataRowView selectedItem;
+        ISelect iselect;
         int indexNumber;
         int selectedIndex = -1;
         double scrollIndex;
@@ -78,6 +80,11 @@ namespace Display
         { get; set; }
         public IBarcode Ibarcode                                //インターフェース（QRコード）
         { get; set; }
+        public ISelect Iselect                                  //インターフェース（一覧データ）
+        {
+            get => iselect;
+            set => SetProperty(ref iselect, value);
+        }
         public DataTable SelectTable                            //一覧データ
         {
             get => selectTable;
@@ -114,7 +121,7 @@ namespace Display
             set
             {
                 receivedData = value;
-                if (Ibarcode != null) { Ibarcode.SetBarcode(); }
+                if (Ibarcode != null) { Ibarcode.GetQRCode(); }
             }
         }
         public string NextFocus                                 //次のフォーカス
@@ -304,6 +311,24 @@ namespace Display
             //コイル数取得
             var inProcess = new InProcess();
             Coil = inProcess.InProcessCoil(lotnumber, inProcesscode);   
+        }
+
+        //仕上記号単位の件数・枚数を算出
+        public DataTable CalculatePage(DataTable datatable)
+        {
+            var query = from a in datatable.AsEnumerable()
+                        orderby a.Field<string>("仕上記号") descending
+                        group a by a.Field<string>("仕上記号") into b
+                        select new
+                        {
+                            仕上記号 = b.Max(a => a.Field<string>("仕上記号")),
+                            件数 = b.Count(),
+                            枚数 = Math.Ceiling((double)b.Count() / 3),
+                            色 = b.Max(a => a.Field<string>("色")),
+                            文字色 = b.Max(a => a.Field<string>("文字色")),
+                            ボーダー色 = b.Max(a => a.Field<string>("ボーダー色")),
+                        };
+            return query.CreateDataTable();
         }
     }
 }

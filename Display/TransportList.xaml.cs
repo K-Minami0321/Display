@@ -14,7 +14,7 @@ namespace Display
         //コンストラクター
         public TransportList()
         {
-            DataContext = ViewModelTransportList.Instance;
+            DataContext = new ViewModelTransportList();
             InitializeComponent();
         }
     }
@@ -35,13 +35,6 @@ namespace Display
         bool visibleWeight;
 
         //プロパティ
-        public static ViewModelTransportList Instance    //インスタンス
-        { get; set; } = new ViewModelTransportList();
-        public string InProcessCODE                         //仕掛在庫CODE
-        {
-            get => inProcessCODE;
-            set => SetProperty(ref inProcessCODE, value);
-        }
         public string TransportDate                         //作業日
         {
             get => transportDate;
@@ -91,24 +84,18 @@ namespace Display
         //コンストラクター
         internal ViewModelTransportList()
         {
-            Instance = this;
-            Initialize();
+            Iselect = this;
+            ReadINI();
+
+            SelectedIndex = -1;
+            TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
         }
 
         //ロード時
         private void OnLoad()
         {
-            ReadINI();
             DisplayCapution();
             DiaplayList();
-        }
-
-        //初期化
-        public void Initialize()
-        {
-            SelectedIndex = -1;
-            InProcessCODE = string.Empty;
-            TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
         }
 
         //キャプション・ボタン表示
@@ -126,15 +113,12 @@ namespace Display
                 VisiblePlan = false,
                 VisiblePrinter = false,
                 IconList = "ViewList"
-            };
-
-            DataGridBehavior.Instance.Iselect = this;           
+            };    
         }
 
         //一覧表示
         private void DiaplayList()
         {
-            
             SelectTable = inProcess.SelectListTransportHistory("合板","プレス",TransportDate);           
         }
 
@@ -160,11 +144,15 @@ namespace Display
                 case "DisplayList":
 
                     //引取履歴
-                    Initialize();
+                    SelectedIndex = -1;
+                    TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
+
                     DiaplayList();
                     break;
 
                 case "DisplayInfo":
+
+                    //引取登録
                     DisplayFramePage(new Transport());
                     break;
 

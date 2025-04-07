@@ -84,6 +84,7 @@ namespace Display
         {
             Ibarcode = this;
             ReadINI();
+            SelectedIndex = -1;
         }
 
         //ロード時
@@ -113,14 +114,14 @@ namespace Display
         }
 
         //QRコード処理
-        public void SetBarcode()
+        public void GetQRCode()
         {
             if (CONVERT.IsLotNumber(ReceivedData)) 
             {
                 //ロット番号
                 LotNumber = ReceivedData.StringLeft(10);
                 LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-                SelectTable = managementSlip.Select(SelectTable, LotNumber, LotNumberSEQ);
+                SelectTable = managementSlip.SelectMove(SelectTable, LotNumber, LotNumberSEQ);
             }
             else
             {

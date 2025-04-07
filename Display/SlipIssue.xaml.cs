@@ -1,7 +1,13 @@
 ﻿using ClassBase;
 using ClassLibrary;
+using MathNet.Numerics.Financial;
 using Microsoft.Xaml.Behaviors.Core;
+using NPOI.SS.Formula.Functions;
+using NPOI.Util;
+using System.Data;
+using System.Diagnostics.Metrics;
 using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 
 #pragma warning disable
@@ -18,46 +24,77 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelSlipIssue : Common, IWindowBase, ISelect
+    public class ViewModelSlipIssue : Common, IWindowBase, ISelect, IBarcode
     {
         //変数
+        ManagementSlip managementSlip = new ManagementSlip();
+        DataTable pageTable;
         string lotNumber;
-        string updateDate;
-        string file;
-        bool visibleUnit;
-        bool visibleAmount;
-        bool enableSelect;
+        string lotNumberSEQ;
+        string planNumber;
+        string shirringUnit;
+        string ironType;
+        string powderType;
+        string measurement;
+        string coilWeight;
+        string unit;
+        bool visibleWeight;
 
         //プロパティ
-        public string LotNumber                     //ロット番号
+        public DataTable PageTable          //印刷用紙カラー
         {
-            get => lotNumber; 
-            set => SetProperty(ref lotNumber, value); 
+            get => pageTable;
+            set => SetProperty(ref pageTable, value);
         }
-        public string UpdateDate                    //更新表示
+        public string LotNumber             //ロット番号
         {
-            get => updateDate;
-            set => SetProperty(ref updateDate, value);
+            get => lotNumber;
+            set => SetProperty(ref lotNumber, value);
         }
-        public string File                          //ファイル名
+        public string LotNumberSEQ          //SEQ
         {
-            get => file;
-            set => SetProperty(ref file, value); 
+            get => lotNumberSEQ;
+            set => SetProperty(ref lotNumberSEQ, value);
         }
-        public bool VisibleUnit                     //表示・非表示（コイル・シート絞り込み）
+        public string PlanNumber            //計画数
         {
-            get => visibleUnit; 
-            set => SetProperty(ref visibleUnit, value); 
+            get => planNumber;
+            set => SetProperty(ref planNumber, value);
         }
-        public bool VisibleAmount                   //表示・非表示（完了数）
+        public string ShirringUnit          //コイル数
         {
-            get => visibleAmount; 
-            set => SetProperty(ref visibleAmount, value); 
+            get => shirringUnit;
+            set => SetProperty(ref shirringUnit, value);
         }
-        public bool EnableSelect                    //選択可能
+        public string IronType              //鉄種
         {
-            get => enableSelect; 
-            set => SetProperty(ref enableSelect, value); 
+            get => ironType;
+            set => SetProperty(ref ironType, value);
+        }
+        public string PowderType            //粉種
+        {
+            get => powderType;
+            set => SetProperty(ref powderType, value);
+        }
+        public string Measurement           //寸法
+        {
+            get => measurement;
+            set => SetProperty(ref measurement, value);
+        }
+        public string CoilWeight            //コイル重量
+        {
+            get => coilWeight;
+            set => SetProperty(ref coilWeight, value);
+        }
+        public string Unit                  //単位表示（枚・C）
+        {
+            get => unit;
+            set => SetProperty(ref unit, value);
+        }
+        public bool VisibleWeight           //コイル重量表示
+        {
+            get => visibleWeight;
+            set => SetProperty(ref visibleWeight, value);
         }
 
         //イベント
@@ -68,14 +105,17 @@ namespace Display
         //コンストラクター
         public ViewModelSlipIssue()
         {
+            Ibarcode = this;
+            Iselect = this;
+
             ReadINI();
+            SelectedIndex = -1;
         }
 
         //ロード時
         private void OnLoad()
         {
             DisplayCapution();
-            DiaplayList();
         }
 
         //キャプション・ボタン表示
@@ -94,58 +134,38 @@ namespace Display
                 Process = ProcessName,
                 ProcessWork = "現品票発行"
             };
-
-            DataGridBehavior.Instance.Iselect = this;
-
-        }
-
-        //一覧表示
-        private void DiaplayList(string where = "")
-        {
-            var selectIndex = SelectedIndex;
-            var plan = new Plan();
-            SelectTable = plan.SelectPlanList(ProcessName, where, true);
-
-            //行選択・スクロール設定
-            DataGridBehavior.Instance.SetScrollViewer();
-            DataGridBehavior.Instance.Scroll.ScrollToVerticalOffset(ScrollIndex);
-            SelectedIndex = selectIndex;
         }
 
         //選択処理
-        public void SelectList()
-        {
-            if (SelectedItem == null) { return; }
-            if (SelectedItem.Row.ItemArray[15].ToString() == "完了") { return; }
+        public void SelectList() { return; }
 
-            //ロット番号設定
-            LotNumber = DATATABLE.SelectedRowsItem(SelectedItem, "ロット番号");
-            ChangePage();
-        }
-
-        //ページ遷移
-        private void ChangePage()
+        //QRコード処理
+        public void GetQRCode()
         {
-            switch (Page)
+            //ロット番号
+            if (CONVERT.IsLotNumber(ReceivedData))
             {
-                case "InProcessInfo":
-
-
-
-
-
-                    break;
-
-                case "ManufactureInfo":
-
-
-
-
-
-
-                    break;
+                LotNumber = ReceivedData.StringLeft(10);
+                LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+                SelectTable = managementSlip.Select(LotNumber);
             }
-            if (EnableSelect) { StartPage(Page); }
+            PageTable = CalculatePage(SelectTable);
+
+            //表示
+            foreach (DataRow datarow in SelectTable.Rows)
+            {
+                LotNumber = datarow["ロット番号"].ToTrim();
+                LotNumberSEQ = datarow["SEQ"].ToTrim();
+                ProductName = datarow["品番"].ToTrim();
+                PlanNumber = datarow["計画数"].ToTrim();
+                IronType = datarow["鉄種"].ToTrim();
+                PowderType = datarow["粉種"].ToTrim();
+                Measurement = datarow["鉄板規格"].ToTrim();
+                CoilWeight = datarow["コイル重量"].ToTrim();
+                ShirringUnit = datarow["数量"].ToTrim();
+                Unit = datarow["形状"].ToTrim() == "シート" ? "枚" : "Ｃ";
+                VisibleWeight = datarow["形状"].ToTrim() == "コイル" ? true : false;
+            }
         }
 
         //スワイプ処理
@@ -154,7 +174,6 @@ namespace Display
             switch (value)
             {
                 case "Right":
-
 
                     break;
             }

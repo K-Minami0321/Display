@@ -27,11 +27,6 @@ namespace Display
         string manufactureDate;
 
         //プロパティ
-        public string ManufactureCODE                       //加工CODE
-        {
-            get => manufactureCODE;
-            set => SetProperty(ref manufactureCODE, value);
-        }
         public string ManufactureDate                       //作業日
         {
             get { return manufactureDate; }
@@ -49,9 +44,10 @@ namespace Display
         //コンストラクター
         internal ViewModelManufactureList(string date)
         {
+            Iselect = this;
             ReadINI();
+
             SelectedIndex = -1;
-            ManufactureCODE = string.Empty;
             ManufactureDate = date.ToStringDateDB();
         }
 
@@ -60,8 +56,6 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
-
-            DataGridBehavior.Instance.Iselect = this;
         }
 
         //コントロールの設定
@@ -91,8 +85,8 @@ namespace Display
         public async void SelectList()
         {
             if (SelectedItem == null) { return; }
-            ManufactureCODE = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            DisplayFramePage(new ManufactureInfo(ManufactureCODE, ManufactureDate));
+            var code = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
+            DisplayFramePage(new ManufactureInfo(code, ManufactureDate));
         }
 
         //スワイプ処理
@@ -120,6 +114,7 @@ namespace Display
                 case "DisplayList":
 
                     //搬入一覧画面
+                    SelectedIndex = -1;
                     ManufactureDate = DateTime.Now.ToString("yyyyMMdd");
                     DisplayFramePage(new ManufactureList(ManufactureDate));
                     break;

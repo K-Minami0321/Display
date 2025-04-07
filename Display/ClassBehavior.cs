@@ -899,15 +899,18 @@ namespace Display
 
     public class DataGridBehavior : Behavior<DataGrid>
     {
-        public static DataGridBehavior Instance     //インスタンス
-        { get; set; }
+        //依存プロパティ
+        public static readonly DependencyProperty IselectProperty =
+            DependencyProperty.Register("Iselect", typeof(ISelect), typeof(DataGridBehavior), new FrameworkPropertyMetadata(null));
+
+        //プロパティ
         public ISelect Iselect                      //インターフェース
-        { get; set; }
+        {
+            get => (ISelect)GetValue(IselectProperty);
+            set => SetValue(IselectProperty, value);
+        }
         public Decorator Child;
         public ScrollViewer Scroll;
-
-        //コンストラクター
-        public DataGridBehavior() { Instance = this; }
 
         protected override void OnAttached()
         {
