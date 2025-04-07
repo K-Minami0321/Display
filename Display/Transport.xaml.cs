@@ -2,7 +2,6 @@
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -90,7 +89,6 @@ namespace Display
         //ロード時
         private void OnLoad()
         {
-            
             DisplayCapution();
         }
 
@@ -101,12 +99,12 @@ namespace Display
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
-                VisiblePower = true,
-                VisibleList = false,
+                VisibleList = true,
                 VisibleInfo = false,
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = false,
+                VisiblePrinter = false,
                 IconList = "ViewList",
                 IconPlan = "TrayArrowUp",
                 Process = ProcessName,
@@ -128,7 +126,6 @@ namespace Display
             {
                 //作業者
                 Worker = ReceivedData;
-
             }
         }
 
@@ -140,15 +137,18 @@ namespace Display
         {
             switch (value)
             {
-                case "DisplayList":
-                    //引取履歴
+                case "DisplayInfo":
 
+                    //引取登録
+                    DisplayFramePage(new Transport());
                     break;
 
-                case "DisplayPlan":
-                    //仕掛置場
+                case "DisplayList":
+
+                    //引取履歴
                     DisplayFramePage(new TransportList());
                     break;
+
             }
         }
     }

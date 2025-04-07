@@ -23,10 +23,10 @@ namespace Display
     //インターフェース
     public interface IWindowBase
     {
-        string ReceivedData                                 //COMポートからの値
+        string ReceivedData                             //COMポートからの値
         { get; set; }
-        void KeyDown(object value);                         //キー押下処理
-        void Swipe(object value);                           //スワイプ処理
+        void KeyDown(object value);                     //キー押下処理
+        void Swipe(object value);                       //スワイプ処理
     }
 
     //インターフェース
@@ -96,6 +96,11 @@ namespace Display
             get => ViewModel.VisiblePlan;
             set => ViewModel.VisiblePlan = value;
         }
+        public bool VisiblePrinter                      //表示・非表示（予定ボタン）
+        {
+            get => ViewModel.VisiblePrinter;
+            set => ViewModel.VisiblePrinter = value;
+        }
         public string IconPlan                          //アイコン（計画一覧）
         {
             get => ViewModel.IconPlan;
@@ -142,12 +147,13 @@ namespace Display
         string processWork = string.Empty;
         string functionColor = string.Empty;
         string receivedData;
-        bool visiblePower = false;
+        bool visiblePower = true;
         bool visibleList = false;
         bool visibleInfo = false;
         bool visibleDefect = false;
         bool visibleArrow = false;
         bool visiblePlan = false;
+        bool visiblePrinter = false;
         string iconPlan = string.Empty;
         string iconList = string.Empty;
         int iconSize = 30;
@@ -246,6 +252,11 @@ namespace Display
             get => visiblePlan;
             set => SetProperty(ref visiblePlan, value);
         }
+        public bool VisiblePrinter                      //表示・非表示（印刷ボタン）
+        {
+            get => visiblePrinter;
+            set => SetProperty(ref visiblePrinter, value);
+        }
         public string IconPlan                          //アイコン（計画一覧）
         {
             get => iconPlan;
@@ -284,11 +295,6 @@ namespace Display
 
             //表示項目
             FunctionColor = IsServer ? "1" : "0.5";
-            VisiblePower = false;
-            VisibleList = false;
-            VisibleInfo = false;
-            VisibleDefect = false;
-            VisibleArrow = false;
         }
 
         //終了処理
@@ -459,10 +465,18 @@ namespace Display
 
                 case "F4":
 
+                    //現品票発行
+                    FramePage = new SlipIssue();
+                    IniFile.WriteString("Page", "Initial", "SlipIssue");
+                    break;
+
+                case "F5":
+
                     //梱包仕様書
+                    if (Process == "検査" || Process == "梱包") { return; }
                     FramePage = new PackSpecification();
                     IniFile.WriteString("Page", "Initial", "PackSpecification");
-                    break;
+                    break;  
 
                 case "F11":
 

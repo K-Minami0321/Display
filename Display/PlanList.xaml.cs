@@ -89,12 +89,12 @@ namespace Display
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
-                VisiblePower = true,
                 VisiblePlan = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisibleList = true,
                 VisibleInfo = true,
+                VisiblePrinter = false,
                 Process = ProcessName,
                 ProcessWork = ProcessName + "計画一覧"
             };

@@ -65,10 +65,15 @@ namespace Display
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandButton;
 
+        //コンストラクター
+        public ViewModelSlipIssue()
+        {
+            ReadINI();
+        }
+
         //ロード時
         private void OnLoad()
         {
-            ReadINI();
             DisplayCapution();
             DiaplayList();
         }
@@ -80,32 +85,18 @@ namespace Display
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
-                VisiblePower = true,
-                VisiblePlan = true,
+                VisibleList = false,
+                VisibleInfo = false,
                 VisibleDefect = false,
                 VisibleArrow = false,
+                VisiblePlan = false,
+                VisiblePrinter = true,
                 Process = ProcessName,
-                ProcessWork = ProcessName + "現品票発行"
+                ProcessWork = "現品票発行"
             };
 
             DataGridBehavior.Instance.Iselect = this;
 
-            //遷移ページ設定
-            switch (Page)
-            {
-                case "PlanList":
-                    //計画一覧
-                    WindowProperty.VisibleList = false;
-                    WindowProperty.VisibleInfo = false;
-                    EnableSelect = false;
-                    break;
-
-                default:
-                    WindowProperty.VisibleList = true;
-                    WindowProperty.VisibleInfo = true;
-                    EnableSelect = true;
-                    break;
-            }
         }
 
         //一覧表示

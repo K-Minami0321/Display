@@ -325,6 +325,7 @@ namespace Display
         {
             DisplayCapution();
             SetFocus();
+            VisibleCoil = string.IsNullOrEmpty(ShirringUnit) ? false : true;
         }
 
         //初期化
@@ -352,12 +353,12 @@ namespace Display
             {
                 IwindowBase = this,
                 Itimer = this,
-                VisiblePower = true,
                 VisibleList = true,
                 VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = true,
+                VisiblePrinter = false,
                 Process = ProcessName,
                 ProcessWork = ProcessName + "売上",
             };

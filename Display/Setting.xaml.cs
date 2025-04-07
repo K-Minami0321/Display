@@ -195,7 +195,6 @@ namespace Display
         public async void KeyDown(object value)
         {
             if (IsMessage) { return; }
-
             var result = false;
 
             switch (value)

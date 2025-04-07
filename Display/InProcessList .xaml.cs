@@ -177,20 +177,20 @@ namespace Display
             {
                 case "DisplayInfo":
 
-                    //搬入登録画面
+                    //搬入登録
                     DisplayFramePage(new InProcessInfo(InProcessCODE, InProcessDate));
                     break;
 
                 case "DisplayList":
 
-                    //仕掛在庫一覧画面
+                    //仕掛在庫一覧
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
                     DisplayFramePage(new InProcessList(InProcessDate));
                     break;
 
                 case "DisplayPlan":
 
-                    //計画一覧画面
+                    //計画一覧
                     DisplayFramePage(new PlanList());
                     break;
 

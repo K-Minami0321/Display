@@ -466,12 +466,12 @@ namespace Display
             {
                 IwindowBase = this,
                 Itimer = this,
-                VisiblePower = true,
                 VisibleList = true,
                 VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = true,
+                VisiblePrinter = false,
                 Process = ProcessName,
                 ProcessWork = string.IsNullOrEmpty(Equipment1) ? "作業実績" : Equipment1 + " - " + EquipmentCODE
             };

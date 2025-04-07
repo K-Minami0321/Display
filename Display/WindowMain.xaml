@@ -90,9 +90,9 @@
                                 </i:Interaction.Triggers>
                             </Button>
                         </StackPanel>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-2">
-                                <materialDesign:PackIcon Kind="{Binding IconPlan, FallbackValue=CalendarMonth}" Height="{Binding IconSize,FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="{Binding IconPlan, FallbackValue=CalendarMonth}" Height="{Binding IconSize, FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
                             </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
@@ -100,7 +100,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="{Binding IconList, FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
                             </Viewbox>
@@ -110,13 +110,23 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayInfo" Visibility="{Binding VisibleInfo,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayInfo" Visibility="{Binding VisibleInfo, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="Pen" Height="30" Width="30" HorizontalAlignment="Center"/>
                             </Viewbox>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TouchDown">
                                     <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DisplayInfo"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="Print" Visibility="{Binding VisiblePrinter, Converter={StaticResource CollapsedConverter}}">
+                            <Viewbox Stretch="Uniform" Margin="-3">
+                                <materialDesign:PackIcon Kind="Printer" Height="35" Width="35" HorizontalAlignment="Center"/>
+                            </Viewbox>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Print"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
@@ -130,7 +140,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower,Converter={StaticResource CollapsedConverter}}">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-4">
                                 <materialDesign:PackIcon Kind="Power" Height="35" Width="35" HorizontalAlignment="Center" />
                             </Viewbox>
