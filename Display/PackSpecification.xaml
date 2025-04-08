@@ -27,24 +27,25 @@
                     <!-- 左領域 -->
                     <Grid Margin="40,40,0,40" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="140"/>
-                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="300"/>
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="60"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="70"/>
-                            <RowDefinition Height="70"/>
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="70"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="90"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="20"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
+                        
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="40"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="520" Padding="5,5,5,5"
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="480" Padding="5,5,5,5"
                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthProductName}" InputMethod.IsInputMethodEnabled="False" FontSize="40">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -64,11 +65,25 @@
                                 <local:TextBoxBehavior Mode="AlphabetHyphen" Upper="true"/>
                             </i:Interaction.Behaviors>
                         </TextBox>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ContainerCategory, FallbackValue=段ボール・ポリ箱}" FontSize="40"/>
-                        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Container, FallbackValue=青箱 大}" FontSize="60"/>
+                        <Grid Grid.Row="2" Grid.Column="0" >
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="容 器" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ContainerCategory, FallbackValue=段ボール・ポリ箱}" FontSize="40"/>
+                        <Grid Grid.Row="3" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}" Margin="0,10,0,0">
+                                <TextBlock Text="梱包仕様" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Container, FallbackValue=青箱 大}" FontSize="60"/>
                         <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Carton, FallbackValue=99}" HorizontalAlignment="Right" FontSize="60" Margin="0,0,20,0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Text="個" FontSize="40" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
-                        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Text="パレット：" Visibility="{Binding Palette, Converter={StaticResource CollapsedValueConverter}}" FontSize="33"/>
+                        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Text="個" FontSize="40" VerticalAlignment="Center" Margin="0,20,0,2"/>
+                        <Grid Grid.Row="5" Grid.Column="0" >
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="パレット" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Palette, FallbackValue=折パレ}" FontSize="33"/>
                         <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="33"/>
                         <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Orientation="Horizontal">

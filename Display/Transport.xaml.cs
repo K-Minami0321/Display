@@ -106,6 +106,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = false,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 IconList = "ViewList",
                 IconPlan = "TrayArrowUp",
                 Process = ProcessName,

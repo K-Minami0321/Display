@@ -145,6 +145,8 @@ namespace Display
                 VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
+                VisiblePrinter = false,
+                VisibleQRcode = false,
                 ProcessWork = "設定画面",
                 Process = "設定"
             };

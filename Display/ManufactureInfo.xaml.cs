@@ -472,6 +472,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = true,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 Process = ProcessName,
                 ProcessWork = string.IsNullOrEmpty(Equipment1) ? "作業実績" : Equipment1 + " - " + EquipmentCODE
             };

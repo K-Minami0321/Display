@@ -82,6 +82,8 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = false,
                 VisiblePlan = false,
+                VisiblePrinter = false,
+                VisibleQRcode = false,
                 ProcessWork = "動画マニュアル"
             };
 

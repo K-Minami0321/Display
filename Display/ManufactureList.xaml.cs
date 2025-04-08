@@ -70,6 +70,8 @@ namespace Display
                 VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = true,
+                VisiblePrinter = false,
+                VisibleQRcode = false,
                 Process = ProcessName,
                 ProcessWork = "作業実績"
             };

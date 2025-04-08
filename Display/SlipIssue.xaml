@@ -41,16 +41,17 @@
                             <RowDefinition Height="140"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TextBlock Text="ロット番号" FontSize="35"/>
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="ロット番号" Style="{StaticResource TextLabel}"/>
+                            </Border>
                         </Grid>
-                        <Viewbox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource Label}" Margin="10,10,10,10">
-                            <StackPanel Orientation="Horizontal">
+                        <Viewbox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource Label}">
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                 <TextBlock Text="{Binding LotNumber, FallbackValue=202501-001}" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding LotNumberSEQ, Converter={StaticResource CircleEnclosingConverter}, FallbackValue=①}" FontWeight="Bold" Margin="20,0,0,0"/>
-
                             </StackPanel>
                         </Viewbox>
-                        <Grid Grid.Row="0" Grid.Column="3" Margin="0,10,0,0">
+                        <Grid Grid.Row="0" Grid.Column="3" Margin="0,0,50,0" HorizontalAlignment="Right">
                             <ItemsControl ItemsSource="{Binding PageTable}" IsTabStop="False">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -69,56 +70,77 @@
                             </ItemsControl>
                         </Grid>
                         <Grid Grid.Row="1" Grid.Column="0">
-                            <TextBlock Text="品 番" FontSize="35"/>
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="品 番" Style="{StaticResource TextLabel}"/>
+                            </Border>
                         </Grid>
-                        <Viewbox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding ProductName, FallbackValue=MH024000}" FontWeight="Bold"/>
+                        <Viewbox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Style="{StaticResource Label}" Margin="10,0,10,10">
+                            <TextBlock Text="{Binding ProductName, FallbackValue=TT-S1007-05200-00}" FontWeight="Bold"/>
                         </Viewbox>
-                        <Viewbox Grid.Row="2" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="ロット数"/>
-                        </Viewbox>
+                        <Grid Grid.Row="2" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="ロット数" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="2" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding PlanNumber, Converter={StaticResource CurrencyConverter}, FallbackValue=1000}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding PlanNumber, Converter={StaticResource CurrencyConverter}, FallbackValue=1000}" FontWeight="Bold" Margin="10,0,0,0"/>
                         </Viewbox>
-                        <Viewbox Grid.Row="2" Grid.Column="2" Style="{StaticResource Label}">
-                            <TextBlock Text="鉄 板"/>
-                        </Viewbox>
+                        <Grid Grid.Row="2" Grid.Column="2">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="鉄 板" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="2" Grid.Column="3" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                 <TextBlock Text="{Binding ShirringUnit, FallbackValue=1}" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding Unit}" FontWeight="Bold" Margin="10,0,0,0"/>
                             </StackPanel>
                         </Viewbox>
-                        <Viewbox Grid.Row="3" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="粉 種"/>
-                        </Viewbox>
+                        <Grid Grid.Row="3" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="粉 種" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="3" Grid.Column="1" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding PowderType}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding PowderType}" FontWeight="Bold" Margin="10,0,0,0"/>
                         </Viewbox>
-                        <Viewbox Grid.Row="3" Grid.Column="2" Style="{StaticResource Label}">
-                            <TextBlock Text="鉄 種"/>
-                        </Viewbox>
+                        <Grid Grid.Row="3" Grid.Column="2">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="鉄 種" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="3" Grid.Column="3" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding IronType}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding IronType}" FontWeight="Bold" Margin="10,0,0,0"/>
                         </Viewbox>
-                        <Viewbox Grid.Row="4" Grid.Column="0" Style="{StaticResource Label}">
-                            <TextBlock Text="規 格"/>
-                        </Viewbox>
+                        <Grid Grid.Row="4" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="規 格" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="4" Grid.Column="1" Style="{StaticResource Label}">
-                            <TextBlock Text="{Binding Measurement, FallbackValue=4.3×89×2445}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Measurement, FallbackValue=4.3×89×2445}" FontWeight="Bold" Margin="10,0,0,0"/>
                         </Viewbox>
-                        <Viewbox Grid.Row="4" Grid.Column="2" Style="{StaticResource Label}">
-                            <TextBlock Text="コイル重量"/>
-                        </Viewbox>
+                        <Grid Grid.Row="4" Grid.Column="2">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="コイル重量" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
                         <Viewbox Grid.Row="4" Grid.Column="3" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                 <TextBlock Text="{Binding CoilWeight,Converter={StaticResource CurrencyConverter}, FallbackValue=100}" FontWeight="Bold"/>
                                 <TextBlock Text="kg" FontWeight="Bold" Margin="10,0,0,0" Visibility="{Binding VisibleWeight,Converter={StaticResource CollapsedConverter}}"/>
                             </StackPanel>
                         </Viewbox>
-                        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Margin="0,60,0,0">
-                            <TextBlock Text="※この現品票は製造課仕上にて加工上、複数ロットに分割した為発行したものです。" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
-                        </Grid>
+                        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Margin="0,60,0,0" Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="※この現品票は" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
+                                <TextBlock Text="{Binding ProcessLabel, FallbackValue=製造課仕上}" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
+                                <TextBlock Text="加工上、複数ロットに分割した為発行したものです。" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
+                            </StackPanel>
+                            
+                            
+                            <TextBlock Text="　 副番のトップに正規の現品票を添付します。" FontWeight="Bold"  FontSize="30" Foreground="#FF0000" Visibility="{Binding VisibleComment, Converter={StaticResource CollapsedConverter}}"/>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </StackPanel>

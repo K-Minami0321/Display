@@ -26,10 +26,11 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelPackSpecification : Common, IWindowBase
+    public class ViewModelPackSpecification : Common, IWindowBase, IBarcode
     {
         //変数
         ProductPackingStyle productPackingStyle = new ProductPackingStyle();
+        Management management = new Management();
         DataTable selectTable;
         DataTable listTable;
         string containerCategory;
@@ -140,9 +141,10 @@ namespace Display
         //コンストラクター
         public ViewModelPackSpecification()
         {
+            Ibarcode = this;
+
             CopyProperty(productPackingStyle, this);
             DisplayImage();
-
             SelectTable = productPackingStyle.SelectPakingIndex();
         }
 
@@ -166,6 +168,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = false,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 ProcessWork = "梱包仕様書",
                 Process = "梱包"
             };
@@ -258,7 +261,7 @@ namespace Display
         }
 
         //画像表示処理
-        private void DisplayImage()
+        private async void DisplayImage()
         {
             //画像1
             var img1 = File.Exists(productPackingStyle.ImageFolder + productPackingStyle.ImageSource1) ? productPackingStyle.ImageSource1 : "nophoto.jpg";
@@ -277,6 +280,18 @@ namespace Display
             Image2 = BitmapSourceConverter.ToBitmapSource(mat2);
             mat2.Dispose();
             source2.Dispose();
+        }
+
+        //QRコード設定
+        public void GetQRCode()
+        {
+            //ロット番号
+            if (CONVERT.IsLotNumber(ReceivedData))
+            {
+                management.LotNumber = ReceivedData.StringLeft(10);
+                ProductName = management.ProductName;
+                //DisplayPackStyle(ProductName);
+            }
         }
 
         //スワイプ処理

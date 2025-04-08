@@ -114,6 +114,8 @@ namespace Display
                 VisibleDefect = false,
                 VisibleArrow = true,
                 VisiblePlan = true,
+                VisiblePrinter = false,
+                VisibleQRcode = false,
                 ProcessWork = ProcessName + "売上"
             };
 

@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Printing;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 #pragma warning disable
 namespace Display
 {
+    #region 共通クラス
     //インターフェース
     public interface IBarcode
     {
@@ -208,10 +212,10 @@ namespace Display
             {
                 SetProperty(ref productName, value);
 
-                if (!string.IsNullOrEmpty(value) && ProductName != value) 
+                if (!string.IsNullOrEmpty(value) && ProductName != value)
                 {
                     var Sound = new SoundPlay();
-                    Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT); 
+                    Sound.PlayAsync(SoundFolder + CONST.SOUND_LOT);
                 }
             }
         }
@@ -268,10 +272,10 @@ namespace Display
         {
             PropertyWindow windowProperty = new PropertyWindow();
             var type = Type.GetType("Display." + page);
- 
-            switch(page)
+
+            switch (page)
             {
-                 case "ManufactureInfo":  case "InProcessInfo":
+                case "ManufactureInfo": case "InProcessInfo":
                     windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, code, date, lotnumber);
                     break;
 
@@ -310,7 +314,7 @@ namespace Display
 
             //コイル数取得
             var inProcess = new InProcess();
-            Coil = inProcess.InProcessCoil(lotnumber, inProcesscode);   
+            Coil = inProcess.InProcessCoil(lotnumber, inProcesscode);
         }
 
         //仕上記号単位の件数・枚数を算出
@@ -331,4 +335,52 @@ namespace Display
             return query.CreateDataTable();
         }
     }
+    #endregion
+
+    #region 印刷処理
+    public class PrintPage : Common, ISerialPort
+    {
+        //プロパティ
+        public string PrintText                     //印刷画面名
+        { get; set; }
+        public PageMediaSize PaperSize              //用紙サイズ
+        { get; set; }
+        public PageOrientation PaperOrientation     //用紙の向き（縦：Portrait/横：Landscape）  
+        { get; set; }
+        public FixedDocument Document               //印刷データ
+        { get; set; }
+        public FixedPage Page                       //印刷ページ
+        { get; set; }
+
+        //印刷処理
+        public void Print()
+        {
+            //各種オブジェクトの生成
+            var localprintserver = new LocalPrintServer();
+            var queue = localprintserver.DefaultPrintQueue;
+
+            //用紙設定
+            var printticket = queue.DefaultPrintTicket;
+            printticket.PageMediaSize = PaperSize;
+            printticket.PageOrientation = PaperOrientation;
+
+
+
+
+            // 印刷します。
+            var writer = PrintQueue.CreateXpsDocumentWriter(queue);
+            writer.Write(Page, printticket);
+
+
+
+
+            //ダイアログ表示
+            //var printdialog = new PrintDialog();
+            //printdialog.UserPageRangeEnabled = true;
+            //printdialog.PrintTicket = (PrintTicket)Document.PrintTicket;
+            //printdialog.PrintTicket.PageOrientation = printticket.PageOrientation;
+            //if (printdialog.ShowDialog() == true) { printdialog.PrintDocument(Document.DocumentPaginator, PrintText); }
+        }
+    }
+    #endregion
 }

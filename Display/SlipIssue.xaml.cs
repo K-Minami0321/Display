@@ -1,13 +1,12 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using MathNet.Numerics.Financial;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Xaml.Behaviors.Core;
-using NPOI.SS.Formula.Functions;
-using NPOI.Util;
 using System.Data;
-using System.Diagnostics.Metrics;
+using System.Printing;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.VisualStyles;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 #pragma warning disable
@@ -38,7 +37,9 @@ namespace Display
         string measurement;
         string coilWeight;
         string unit;
+        string processLabel;
         bool visibleWeight;
+        bool visibleComment;
 
         //プロパティ
         public DataTable PageTable          //印刷用紙カラー
@@ -91,10 +92,20 @@ namespace Display
             get => unit;
             set => SetProperty(ref unit, value);
         }
+        public string ProcessLabel          //表示ラベル
+        {
+            get => processLabel;
+            set => SetProperty(ref processLabel, value);
+        }
         public bool VisibleWeight           //コイル重量表示
         {
             get => visibleWeight;
             set => SetProperty(ref visibleWeight, value);
+        }
+        public bool VisibleComment          //備考の表示
+        {
+            get => visibleComment;
+            set => SetProperty(ref visibleComment, value);
         }
 
         //イベント
@@ -116,6 +127,24 @@ namespace Display
         private void OnLoad()
         {
             DisplayCapution();
+            Initialize();
+        }
+
+        //初期化
+        private void Initialize()
+        {
+            LotNumber = string.Empty;
+            LotNumberSEQ = string.Empty;
+            ProductName = "現品票のQRコードを読み込む";
+            PlanNumber = string.Empty;
+            ShirringUnit = string.Empty;
+            IronType = string.Empty;
+            PowderType = string.Empty;
+            Measurement = string.Empty;
+            CoilWeight = string.Empty;
+            Unit = string.Empty;
+            VisibleWeight = false;
+            PageTable = null;
         }
 
         //キャプション・ボタン表示
@@ -131,9 +160,26 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = false,
                 VisiblePrinter = true,
+                VisibleQRcode = true,
                 Process = ProcessName,
                 ProcessWork = "現品票発行"
             };
+
+            switch (ProcessName)
+            {
+                case "合板":
+                    ProcessLabel = "素材課にて";
+                    break;
+
+                case "プレス":
+                    ProcessLabel = "製造課プレスにて";
+                    break;
+
+                case "仕上":
+                    ProcessLabel = "製造課仕上にて";
+                    break;
+            }
+            VisibleComment = ProcessName == "合板";
         }
 
         //選択処理
@@ -175,18 +221,72 @@ namespace Display
             {
                 case "Right":
 
+
                     break;
             }
         }
 
         //キーイベント
-        public void KeyDown(object value)
+        public async void KeyDown(object value)
         {
             switch (value)
             {
+                case "Print":
 
+                    if (string.IsNullOrEmpty(LotNumber)) { return; }
 
+                    MessageControl = new ControlMessage();
+                    MessageProperty = new PropertyMessage()
+                    {
+                        Message = "現品票を印刷します",
+                        Contents = "カラー用紙をセットしOKボタンを押してください。",
+                        Type = "警告"
+                    };
+                    var messege = (bool)await DialogHost.Show(MessageControl);
 
+                    if (messege)
+                    {
+                        //印刷フォーマット
+                        UIElement report;
+                        switch (ProcessName)
+                        {
+                            case "合板":
+                                report = new SlipBoard(SelectTable);
+                                break;
+
+                            case "プレス":
+                                report = new SlipPress(SelectTable);
+                                break;
+
+                            case "仕上":
+                                report = new SlipCompletion(SelectTable);
+                                break;
+
+                            default:
+                                report = new SlipInspection(SelectTable);
+                                break;
+                        }
+
+                        //印刷処理
+                        var pageContent = new PageContent();
+                        var printPage = new PrintPage();
+                        printPage.PaperSize = new PageMediaSize(PageMediaSizeName.ISOA4);
+                        printPage.PaperOrientation = PageOrientation.Landscape;
+                        printPage.Document = new FixedDocument();
+                        printPage.Page = new FixedPage() { Width = CONST.PRINT_LONG, Height = CONST.PRINT_SHORT };
+                        printPage.Page.Children.Add(report);
+                        pageContent.Child = printPage.Page;
+                        printPage.Document.Pages.Add(pageContent);
+                        printPage.Print();
+                    }
+                    MessageControl = null;
+                    break;
+
+                case "QRcode":
+
+                    //初期化
+                    Initialize();
+                    break;
             }
         }
     }

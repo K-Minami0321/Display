@@ -94,6 +94,7 @@ namespace Display
                 VisibleList = true,
                 VisibleInfo = true,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 Process = ProcessName,
                 ProcessWork = ProcessName + "計画一覧"
             };

@@ -112,6 +112,7 @@ namespace Display
                 VisibleArrow = true,
                 VisiblePlan = false,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 IconList = "ViewList"
             };    
         }

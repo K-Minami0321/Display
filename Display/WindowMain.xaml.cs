@@ -6,6 +6,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ZXing.QrCode.Internal;
 
 #pragma warning disable
 namespace Display
@@ -96,10 +97,15 @@ namespace Display
             get => ViewModel.VisiblePlan;
             set => ViewModel.VisiblePlan = value;
         }
-        public bool VisiblePrinter                      //表示・非表示（予定ボタン）
+        public bool VisiblePrinter                      //表示・非表示（印刷ボタン）
         {
             get => ViewModel.VisiblePrinter;
             set => ViewModel.VisiblePrinter = value;
+        }
+        public bool VisibleQRcode                       //表示・非表示（QRコードボタン）
+        {
+            get => ViewModel.VisibleQRcode;
+            set => ViewModel.VisibleQRcode = value;
         }
         public string IconPlan                          //アイコン（計画一覧）
         {
@@ -154,6 +160,7 @@ namespace Display
         bool visibleArrow = false;
         bool visiblePlan = false;
         bool visiblePrinter = false;
+        bool visibleQRcode = false;
         string iconPlan = string.Empty;
         string iconList = string.Empty;
         int iconSize = 30;
@@ -256,6 +263,11 @@ namespace Display
         {
             get => visiblePrinter;
             set => SetProperty(ref visiblePrinter, value);
+        }
+        public bool VisibleQRcode                       //表示・非表示（QRコードボタン)
+        {
+            get => visibleQRcode;
+            set => SetProperty(ref visibleQRcode, value);
         }
         public string IconPlan                          //アイコン（計画一覧）
         {
@@ -473,7 +485,7 @@ namespace Display
                 case "F5":
 
                     //梱包仕様書
-                    if (Process == "検査" || Process == "梱包") { return; }
+                    if (Process != "検査" && Process != "梱包") { return; }
                     FramePage = new PackSpecification();
                     IniFile.WriteString("Page", "Initial", "PackSpecification");
                     break;  
@@ -491,7 +503,7 @@ namespace Display
                     break;
 
                 case "DisplayInfo": case "DisplayList": case "DefectInfo": case "DisplayPlan":
-                case "PreviousDate": case "NextDate": case "Today":
+                case "PreviousDate": case "NextDate": case "Today": case "Print": case "QRcode":
 
                     //画面遷移
                     if (IwindowBase != null) { IwindowBase.KeyDown(value); }

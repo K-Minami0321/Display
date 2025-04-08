@@ -238,7 +238,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="Search" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Width" Value="120"/>
@@ -284,6 +283,15 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Border -->
+    <Style x:Key="BorderLabel" TargetType="Border">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="#FF90A4AE"/>
+        <Setter Property="Width" Value="180"/>
+        <Setter Property="Height" Value="55"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+      
     <!-- CheckBox -->
     <Style TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -312,6 +320,12 @@
     <!-- TextBlock -->
     <Style TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style x:Key="TextLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
     <Style x:Key="TextDate" TargetType="TextBlock">
@@ -354,7 +368,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#FFFFFF"/>

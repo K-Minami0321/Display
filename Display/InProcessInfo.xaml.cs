@@ -359,6 +359,7 @@ namespace Display
                 VisibleArrow = false,
                 VisiblePlan = true,
                 VisiblePrinter = false,
+                VisibleQRcode = false,
                 Process = ProcessName,
                 ProcessWork = ProcessName + "売上",
             };
