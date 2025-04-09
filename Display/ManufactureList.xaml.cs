@@ -88,7 +88,7 @@ namespace Display
         {
             if (SelectedItem == null) { return; }
             var code = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
-            DisplayFramePage(new ManufactureInfo(code, ManufactureDate));
+            DisplayFramePage(new ManufactureInfo(code, string.Empty));
         }
 
         //スワイプ処理
@@ -110,7 +110,7 @@ namespace Display
                 case "DisplayInfo":
 
                     //搬入登録画面
-                    DisplayFramePage(new ManufactureInfo(string.Empty, ManufactureDate));
+                    DisplayFramePage(new ManufactureInfo(string.Empty, string.Empty));
                     break;
 
                 case "DisplayList":

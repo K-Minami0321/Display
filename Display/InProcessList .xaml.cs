@@ -157,7 +157,7 @@ namespace Display
         {
             if(SelectedItem == null) { return; }
             var code = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
-            DisplayFramePage(new InProcessInfo(code, InProcessDate));
+            DisplayFramePage(new InProcessInfo(code, string.Empty));
         }
 
         //スワイプ処理
@@ -179,7 +179,7 @@ namespace Display
                 case "DisplayInfo":
 
                     //搬入登録
-                    DisplayFramePage(new InProcessInfo(string.Empty, InProcessDate));
+                    DisplayFramePage(new InProcessInfo(string.Empty, string.Empty));
                     break;
 
                 case "DisplayList":

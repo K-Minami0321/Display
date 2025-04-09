@@ -5,11 +5,11 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Image\note-edit.ico</ApplicationIcon>
+    <ApplicationIcon>display.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Image\note-edit.ico" />
+    <Content Include="display.ico" />
   </ItemGroup>
 
   <ItemGroup>

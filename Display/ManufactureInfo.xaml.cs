@@ -15,9 +15,9 @@ namespace Display
     public partial class ManufactureInfo : UserControl
     {
         //コンストラクター
-        public ManufactureInfo(string code, string date, string lotnumber = "")
+        public ManufactureInfo(string code, string lotnumber = "")
         {
-            DataContext = new ViewModelManufactureInfo(code, date, lotnumber);
+            DataContext = new ViewModelManufactureInfo(code, lotnumber);
             InitializeComponent();
         }
     }
@@ -390,15 +390,15 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelManufactureInfo(string code, string date, string lotnumber)
+        internal ViewModelManufactureInfo(string code, string lotnumber)
         {
             Ibarcode = this;
 
             ReadINI();
             Initialize(lotnumber);
 
+            ManufactureDate = SetToDay(DateTime.Now);
             ManufactureCODE = code;
-            ManufactureDate =string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
 
         //ロード時
@@ -413,6 +413,7 @@ namespace Display
         {
             LotNumber = lotnumber;
             LotNumberSEQ = string.Empty;
+            ManufactureDate = SetToDay(DateTime.Now);
             ProductName = string.Empty;
             StartTime = string.Empty;
             EndTime = string.Empty;
@@ -615,7 +616,6 @@ namespace Display
                 messege2 = "※担当者は必須項目です。";
                 messege3 = "確認";
                 result = false;
-
             }
 
             switch(ProcessName)

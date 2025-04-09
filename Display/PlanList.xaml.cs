@@ -129,7 +129,7 @@ namespace Display
         //ページ遷移
         private void ChangePage()
         {
-            StartPage(Page, string.Empty, string.Empty, LotNumber);
+            StartPage(Page, string.Empty, LotNumber);
         }
 
         //スワイプ処理

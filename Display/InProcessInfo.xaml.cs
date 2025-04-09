@@ -15,9 +15,9 @@ namespace Display
     public partial class InProcessInfo : UserControl
     {
         //コンストラクター
-        public InProcessInfo(string code, string date, string lotnumber = "")
+        public InProcessInfo(string code, string lotnumber = "")
         {
-            DataContext = new ViewModelInProcessInfo(code, date, lotnumber);
+            DataContext = new ViewModelInProcessInfo(code, lotnumber);
             InitializeComponent();
         }
     }
@@ -309,15 +309,15 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        internal ViewModelInProcessInfo(string code, string date, string lotnumber)
+        internal ViewModelInProcessInfo(string code, string lotnumber)
         {
             Ibarcode = this;
 
             ReadINI();
             Initialize(lotnumber);
 
+            InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = code;
-            InProcessDate = string.IsNullOrEmpty(date) ? SetToDay(DateTime.Now) : date;
         }
 
         //ロード時
@@ -333,6 +333,7 @@ namespace Display
         {
             LotNumber = lotnumber;
             LotNumberSEQ = string.Empty;
+            InProcessDate = SetToDay(DateTime.Now);
             ProductName = string.Empty;
             Worker = string.Empty;
             Weight = string.Empty;
@@ -361,7 +362,7 @@ namespace Display
                 VisiblePrinter = false,
                 VisibleQRcode = false,
                 Process = ProcessName,
-                ProcessWork = ProcessName + "売上",
+                ProcessWork = "売上処理",
             };
 
             //テンキーコントロール

@@ -6,7 +6,6 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ZXing.QrCode.Internal;
 
 #pragma warning disable
 namespace Display
@@ -166,6 +165,8 @@ namespace Display
         int iconSize = 30;
 
         //プロパティ
+        public ControlMessage MessageControl            //メッセージボックス
+        { get; set; }
         public IWindowBase IwindowBase                  //インターフェース
         { get; set; }
         public ITimer Itimer                            //インターフェース
@@ -318,27 +319,21 @@ namespace Display
         //シャットダウン
         private async void PowerOff()
         {
-            try
+            MessageControl = new ControlMessage();
+            MessageProperty = new PropertyMessage()
             {
-                var control = new ControlMessage();
-                MessageProperty = new PropertyMessage()
-                {
-                    Message = "システム終了",
-                    Contents = "※登録を破棄してシステムを終了します。",
-                    Type = "警告"
-                };
+                Message = "システム終了",
+                Contents = "※登録を破棄してシステムを終了します。",
+                Type = "警告"
+            };
 
-                if ((bool)await DialogHost.Show(control)) 
-                {
-                    sql.DatabaseClose();
-                    comPort.PortClose();
-                    Application.Current.Shutdown(); 
-                }
-            }
-            catch
+            if ((bool)await DialogHost.Show(MessageControl)) 
             {
-                //DialogHost is already open
+                sql.DatabaseClose();
+                comPort.PortClose();
+                Application.Current.Shutdown(); 
             }
+            MessageControl = null;
         }
 
         //Windowサイズ・位置復元

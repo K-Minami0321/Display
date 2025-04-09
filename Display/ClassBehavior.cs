@@ -1,4 +1,5 @@
 ﻿using ClassBase;
+using ClassLibrary;
 using Microsoft.Xaml.Behaviors;
 using System;
 using System.Collections.Generic;
@@ -19,18 +20,6 @@ using System.Windows.Controls.Primitives;
 #pragma warning disable
 namespace Display
 {
-    #region Behavior共通
-    public static class Behavior
-    {
-        //色変換
-        public static SolidColorBrush ToSolidColorBrush(this string Color)
-        {
-            object result = ColorConverter.ConvertFromString(Color);
-            return new SolidColorBrush((Color)result);
-        }
-    }
-    #endregion
-
     #region WindowBehavior：Behavior
     public interface IWindow
     {
@@ -113,7 +102,7 @@ namespace Display
             AssociatedObject.KeyDown += KeyDown;
             AssociatedObject.PreviewMouseLeftButtonDown += MouseLeftButtonDown;
             AssociatedObject.Padding = new Thickness(5, 5, 5, 5);
-            AssociatedObject.BorderBrush = Behavior.ToSolidColorBrush("#FF90A4AE");
+            AssociatedObject.BorderBrush = CONVERT.ToSolidColorBrush("#FF90A4AE");
             AssociatedObject.PreviewKeyDown += PreviewKeyDown;
             AssociatedObject.PreviewTextInput += PreviewTextInput;
             AssociatedObject.TextChanged += TextChanged;
@@ -290,7 +279,7 @@ namespace Display
             base.OnAttached();
             AssociatedObject.KeyDown += KeyDown;
             AssociatedObject.Padding = new Thickness(5, 5, 20, 5);
-            AssociatedObject.BorderBrush = Behavior.ToSolidColorBrush("#FF90A4AE");
+            AssociatedObject.BorderBrush = CONVERT.ToSolidColorBrush("#FF90A4AE");
 
         }
 
@@ -434,15 +423,15 @@ namespace Display
             if (!(sender is CheckBox control)) { return; }
             if (control.IsChecked == true)
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR_FORCUS);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_FORCUS);
-                control.BorderBrush = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_FORCUS);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR_FORCUS);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
+                control.BorderBrush = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
             }
             else
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR_FORCUS);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_FORCUS);
-                control.BorderBrush = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_FORCUS);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR_FORCUS);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK);
+                control.BorderBrush = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR_FORCUS);
             }
         }
 
@@ -458,15 +447,15 @@ namespace Display
             if (!(sender is CheckBox control)) { return; }
             if (control.IsChecked == true)
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR_SELECT);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
-                control.BorderBrush = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR_SELECT);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
+                control.BorderBrush = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
             }
             else
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK);
-                control.BorderBrush = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_LINE);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK);
+                control.BorderBrush = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_LINE);
             }
         }
     }
@@ -533,8 +522,8 @@ namespace Display
         {
             if (!(sender is ToggleButton control)) { return; }
 
-            control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR);
-            control.Background = Behavior.ToSolidColorBrush(CONST.COLOR_FORCUS);
+            control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR);
+            control.Background = CONVERT.ToSolidColorBrush(CONST.COLOR_FORCUS);
 
         }
 
@@ -549,13 +538,13 @@ namespace Display
             if (!(sender is ToggleButton control)) { return; }
             if (control.IsChecked == true)
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR_SELECT);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR_SELECT);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK_SELECT);
             }
             else
             {
-                control.Foreground = Behavior.ToSolidColorBrush(CONST.CHACK_CHAR);
-                control.Background = Behavior.ToSolidColorBrush(CONST.CHACK_BACK);
+                control.Foreground = CONVERT.ToSolidColorBrush(CONST.CHACK_CHAR);
+                control.Background = CONVERT.ToSolidColorBrush(CONST.CHACK_BACK);
             }
         }
     }

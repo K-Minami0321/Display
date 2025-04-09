@@ -8,7 +8,6 @@ using System.Linq;
 using System.Printing;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Media;
 
 #pragma warning disable
 namespace Display
@@ -268,7 +267,7 @@ namespace Display
         }
 
         //スタートページを表示
-        public void StartPage(string page, string code = null, string date = null, string lotnumber = null)
+        public void StartPage(string page, string code = null, string lotnumber = null)
         {
             PropertyWindow windowProperty = new PropertyWindow();
             var type = Type.GetType("Display." + page);
@@ -276,7 +275,7 @@ namespace Display
             switch (page)
             {
                 case "ManufactureInfo": case "InProcessInfo":
-                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, code, date, lotnumber);
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, code, lotnumber);
                     break;
 
                 case "InProcessList": case "ManufactureList":
@@ -364,22 +363,10 @@ namespace Display
             printticket.PageMediaSize = PaperSize;
             printticket.PageOrientation = PaperOrientation;
 
-
-
-
             // 印刷します。
             var writer = PrintQueue.CreateXpsDocumentWriter(queue);
             writer.Write(Page, printticket);
 
-
-
-
-            //ダイアログ表示
-            //var printdialog = new PrintDialog();
-            //printdialog.UserPageRangeEnabled = true;
-            //printdialog.PrintTicket = (PrintTicket)Document.PrintTicket;
-            //printdialog.PrintTicket.PageOrientation = printticket.PageOrientation;
-            //if (printdialog.ShowDialog() == true) { printdialog.PrintDocument(Document.DocumentPaginator, PrintText); }
         }
     }
     #endregion
