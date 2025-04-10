@@ -40,6 +40,9 @@
     <Compile Update="Manual.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="ShippingList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="SlipIssue.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

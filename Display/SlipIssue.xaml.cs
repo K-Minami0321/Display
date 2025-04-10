@@ -23,7 +23,7 @@ namespace Display
     }
 
     //ViewModel
-    public class ViewModelSlipIssue : Common, IWindowBase, ISelect, IBarcode
+    public class ViewModelSlipIssue : Common, IWindowBase, IBarcode
     {
         //変数
         ManagementSlip managementSlip = new ManagementSlip();
@@ -40,6 +40,7 @@ namespace Display
         string processLabel;
         bool visibleWeight;
         bool visibleComment;
+        bool focusLotNumber;
 
         //プロパティ
         public DataTable PageTable          //印刷用紙カラー
@@ -107,17 +108,23 @@ namespace Display
             get => visibleComment;
             set => SetProperty(ref visibleComment, value);
         }
+        public bool FocusLotNumber      //フォーカス（ロット番号）
+        {
+            get => focusLotNumber;
+            set => SetProperty(ref focusLotNumber, value);
+        }
 
         //イベント
         ActionCommand commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandButton;
+        public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
+        ActionCommand lostFocus;
+        public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
         public ViewModelSlipIssue()
         {
-            Ibarcode = this;
-            Iselect = this;
 
             ReadINI();
             SelectedIndex = -1;
@@ -145,6 +152,7 @@ namespace Display
             Unit = string.Empty;
             VisibleWeight = false;
             PageTable = null;
+            FocusLotNumber = true;
         }
 
         //キャプション・ボタン表示
@@ -182,26 +190,17 @@ namespace Display
             VisibleComment = ProcessName == "合板";
         }
 
-        //選択処理
-        public void SelectList() { return; }
-
-        //QRコード処理
-        public void GetQRCode()
+        //現品票データ
+        private void SetSlipIssue()
         {
-            //ロット番号
-            if (CONVERT.IsLotNumber(ReceivedData))
-            {
-                LotNumber = ReceivedData.StringLeft(10);
-                LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
-                SelectTable = managementSlip.Select(LotNumber);
-            }
+            Initialize();
             PageTable = CalculatePage(SelectTable);
 
             //表示
             foreach (DataRow datarow in SelectTable.Rows)
             {
                 LotNumber = datarow["ロット番号"].ToTrim();
-                LotNumberSEQ = datarow["SEQ"].ToTrim();
+                //LotNumberSEQ = datarow["SEQ"].ToTrim();
                 ProductName = datarow["品番"].ToTrim();
                 PlanNumber = datarow["計画数"].ToTrim();
                 IronType = datarow["鉄種"].ToTrim();
@@ -212,6 +211,27 @@ namespace Display
                 Unit = datarow["形状"].ToTrim() == "シート" ? "枚" : "Ｃ";
                 VisibleWeight = datarow["形状"].ToTrim() == "コイル" ? true : false;
             }
+        }
+
+        //ロット番号フォーカス処理（LostFoucus）
+        private void SetLostFocus()
+        {
+            DisplayLot(LotNumber);
+            SelectTable = managementSlip.Select(LotNumber);
+            SetSlipIssue();
+        }
+
+        //QRコード処理
+        public void GetQRCode()
+        {
+            //ロット番号
+            if (CONVERT.IsLotNumber(ReceivedData))
+            {
+                LotNumber = ReceivedData.StringLeft(10);
+                //LotNumberSEQ = ReceivedData.StringRight(ReceivedData.Length - 11);
+                SelectTable = managementSlip.Select(LotNumber);
+            }
+            SetSlipIssue();
         }
 
         //スワイプ処理
@@ -285,6 +305,7 @@ namespace Display
                 case "QRcode":
 
                     //初期化
+                    FocusLotNumber = false;
                     Initialize();
                     break;
             }

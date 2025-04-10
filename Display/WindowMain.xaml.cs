@@ -319,6 +319,8 @@ namespace Display
         //シャットダウン
         private async void PowerOff()
         {
+            MessageControl = null;
+
             MessageControl = new ControlMessage();
             MessageProperty = new PropertyMessage()
             {
@@ -327,11 +329,11 @@ namespace Display
                 Type = "警告"
             };
 
-            if ((bool)await DialogHost.Show(MessageControl)) 
+            if ((bool)await DialogHost.Show(MessageControl))
             {
                 sql.DatabaseClose();
                 comPort.PortClose();
-                Application.Current.Shutdown(); 
+                Application.Current.Shutdown();
             }
             MessageControl = null;
         }

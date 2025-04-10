@@ -143,11 +143,6 @@
                 <Setter Property="Background" Value="#34515E"/>
                 <Setter Property="Opacity" Value="1.2"/>
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="#FFFFFF"/>
-                <Setter Property="Background" Value="#34515E"/>
-                <Setter Property="Opacity" Value="1.2"/>
-            </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="Top" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
@@ -160,9 +155,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -183,9 +178,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -204,9 +199,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -227,9 +222,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -248,9 +243,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -271,9 +266,9 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Foreground" Value="#24414E"/>
-                <Setter Property="Opacity" Value="1.2"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Background" Value="#34515E"/>
+                <Setter Property="Opacity" Value="0.9"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="#FFFFFF"/>
