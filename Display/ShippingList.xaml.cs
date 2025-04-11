@@ -1,8 +1,10 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #pragma warning disable
 namespace Display
@@ -21,16 +23,19 @@ namespace Display
     public class ViewModelShippingList : Common, IWindowBase, ISelect
     {
         //変数
-
-
-
+        ShippingStock shippingStock = new ShippingStock();
+        string shippingDate;
 
         //プロパティ
-
-
-
-
-
+        public string ShippingDate              //出荷日
+        {
+            get { return shippingDate; }
+            set
+            {
+                SetProperty(ref shippingDate, value);
+                DiaplayList();
+            }
+        }
 
         //イベント
         ActionCommand commandLoad;
@@ -41,9 +46,11 @@ namespace Display
         //コンストラクター
         public ViewModelShippingList()
         {
+            Iselect = this;
+            ReadINI();
 
-
-
+            SelectedIndex = -1;
+            ShippingDate = DateTime.Now.ToString("yyyyMMdd");
 
         }
 
@@ -61,11 +68,11 @@ namespace Display
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
-                VisiblePlan = true,
+                VisiblePlan = false,
                 VisibleDefect = false,
-                VisibleArrow = false,
-                VisibleList = true,
-                VisibleInfo = true,
+                VisibleArrow = true,
+                VisibleList = false,
+                VisibleInfo = false,
                 VisiblePrinter = false,
                 VisibleQRcode = false,
                 ProcessWork = "出荷一覧"
@@ -75,21 +82,11 @@ namespace Display
         //一覧表示
         private void DiaplayList(string where = "")
         {
-
-
-
-
+            SelectTable = shippingStock.ShippingList(ShippingDate);
         }
 
         //選択処理
-        public void SelectList()
-        {
-
-
-
-
-        }
-
+        public void SelectList() { return; }
 
         //スワイプ処理
         public void Swipe(object value) { return; }
@@ -99,11 +96,17 @@ namespace Display
         {
             switch (value)
             {
+                case "PreviousDate":
 
+                    //前日へ移動
+                    ShippingDate = DATETIME.AddDate(ShippingDate, -1).ToString("yyyyMMdd");
+                    break;
 
+                case "NextDate":
 
-
-
+                    //次の日へ移動
+                    ShippingDate = DATETIME.AddDate(ShippingDate, 1).ToString("yyyyMMdd");
+                    break;
             }
         }
     }

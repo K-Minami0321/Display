@@ -32,61 +32,34 @@
                 <Grid Grid.Column="0" Grid.Row="0" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="900*"/>
-                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0"
-                                Visibility="{Binding VisibleUnit,Converter={StaticResource CollapsedConverter}}">
-                        <Button Command="{Binding CommandButton}" CommandParameter="Sheet" Style="{StaticResource Search}" Height="35" FontSize="22">
-                            <Viewbox Stretch="Uniform">
-                                <TextBlock Text="シート"/>
-                            </Viewbox>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TouchDown">
-                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Sheet"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
-                        <Button Command="{Binding CommandButton}" CommandParameter="Coil" Style="{StaticResource Search}" Height="35" FontSize="22">
-                            <Viewbox Stretch="Uniform">
-                                <TextBlock Text="コイル"/>
-                            </Viewbox>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TouchDown">
-                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Coil"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Viewbox Stretch="Uniform">
+                            <TextBlock Text="{Binding ShippingDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}" 
+                               Foreground="{Binding ShippingDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
+                        </Viewbox>
                     </StackPanel>
-                    <Viewbox Grid.Column="1" Grid.Row="0" Stretch="Uniform">
-                        <TextBlock Text="{Binding UpdateDate,FallbackValue=2024年6月版}" Style="{StaticResource TextDate}"/>
-                    </Viewbox>
                 </Grid>
                 <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                           ColumnHeaderStyle="{StaticResource DefultHeader}">
                     <!-- 項目設定 -->
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="納期日" Width="150" CellStyle="{StaticResource TabStopCell}">
+                        <DataGridTemplateColumn Header="取引先" Width="250">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 日付,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding 略称}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="開始日" Width="150">
+                        <DataGridTemplateColumn Header="納品場所" Width="330">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 開始日,Converter={StaticResource MonthDayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding 納品場所}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                     </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="ロット番号" Width="200">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ロット番号}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -99,40 +72,29 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="形状" Width="90" Visibility="{Binding Path=DataContext.VisibleUnit,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding 形状}" HorizontalAlignment="Center"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="ロット数" Width="120">
+                        <DataGridTemplateColumn Header="納品数" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 計画数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding 納品数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="完了" Width="120" Visibility="{Binding Path=DataContext.VisibleAmount,Converter={StaticResource CollapsedConverter}, Source={StaticResource proxyElement}}">
+                        <DataGridTemplateColumn Header="箱数" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding 実績数,Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding 箱数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="進捗" Width="90">
+                        <DataGridTemplateColumn Header="端数" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <Border CornerRadius="2" Background="{Binding 工程, Converter={StaticResource ProcessColorConverter},FallbackValue=#00FFFFFF}" 
-                                                MinWidth="70" Height="32" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding 工程}" Foreground="{Binding 工程,Converter={StaticResource CompletedColorConverter}}" 
-                                                       FontWeight="Bold" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        </Border>
+                                        <TextBlock Text="{Binding 端数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

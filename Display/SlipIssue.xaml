@@ -17,8 +17,8 @@
     <!-- 画面表示 -->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="600"/>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="570"/>
+            <RowDefinition Height="60*"/>
         </Grid.RowDefinitions>
         <!-- 表示 -->
         <Grid Grid.Row="0" Background="#D7DCDE" Height="590">
@@ -153,14 +153,12 @@
                                 <TextBlock Text="kg" FontWeight="Bold" Margin="10,0,0,0" Visibility="{Binding VisibleWeight,Converter={StaticResource CollapsedConverter}}"/>
                             </StackPanel>
                         </Viewbox>
-                        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Margin="0,60,0,0" Orientation="Vertical">
+                        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Margin="0,30,0,0" Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="※この現品票は" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
                                 <TextBlock Text="{Binding ProcessLabel, FallbackValue=製造課仕上}" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
                                 <TextBlock Text="加工上、複数ロットに分割した為発行したものです。" FontWeight="Bold"  FontSize="30" Foreground="#FF0000"/>
                             </StackPanel>
-                            
-                            
                             <TextBlock Text="　 副番のトップに正規の現品票を添付します。" FontWeight="Bold"  FontSize="30" Foreground="#FF0000" Visibility="{Binding VisibleComment, Converter={StaticResource CollapsedConverter}}"/>
                         </StackPanel>
                     </Grid>

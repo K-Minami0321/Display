@@ -101,10 +101,10 @@ namespace Display
             {
                 IwindowBase = this,
                 VisibleList = true,
-                VisibleInfo = false,
+                VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
-                VisiblePlan = false,
+                VisiblePlan = true,
                 VisiblePrinter = false,
                 VisibleQRcode = false,
                 IconList = "ViewList",

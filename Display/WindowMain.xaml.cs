@@ -467,9 +467,17 @@ namespace Display
                 case "F3":
 
                     //搬出
-                    if (Process == "検査" || Process == "梱包") { return; }
-                    FramePage = new Transport();
-                    IniFile.WriteString("Page", "Initial", "Transport");
+                    if (Process == "検査" || Process == "梱包") 
+                    {
+                        FramePage = new ShippingList();
+                        IniFile.WriteString("Page", "Initial", "ShippingList");
+                    }
+                    else
+                    {
+                        FramePage = new Transport();
+                        IniFile.WriteString("Page", "Initial", "Transport");
+                    }
+
                     break;
 
                 case "F4":

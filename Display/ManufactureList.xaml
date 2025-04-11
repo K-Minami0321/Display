@@ -21,8 +21,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="560"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="550"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Viewbox Stretch="Uniform">

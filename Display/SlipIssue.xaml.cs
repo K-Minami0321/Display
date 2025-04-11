@@ -163,10 +163,10 @@ namespace Display
             {
                 IwindowBase = this,
                 VisibleList = false,
-                VisibleInfo = false,
+                VisibleInfo = true,
                 VisibleDefect = false,
                 VisibleArrow = false,
-                VisiblePlan = false,
+                VisiblePlan = true,
                 VisiblePrinter = true,
                 VisibleQRcode = true,
                 Process = ProcessName,
@@ -302,11 +302,10 @@ namespace Display
                     MessageControl = null;
                     break;
 
-                case "QRcode":
+                case "DisplayInfo":
 
                     //初期化
-                    FocusLotNumber = false;
-                    Initialize();
+                    DisplayFramePage(new SlipIssue());
                     break;
             }
         }

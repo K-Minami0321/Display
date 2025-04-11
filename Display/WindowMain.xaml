@@ -52,7 +52,8 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="720*"/>
+                <RowDefinition Height="720"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                 <!-- 上領域 -->
@@ -100,6 +101,16 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="Print" Visibility="{Binding VisiblePrinter, Converter={StaticResource CollapsedConverter}}">
+                            <Viewbox Stretch="Uniform" Margin="-3">
+                                <materialDesign:PackIcon Kind="Printer" Height="35" Width="35" HorizontalAlignment="Center"/>
+                            </Viewbox>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Print"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayList" Visibility="{Binding VisibleList, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-3">
                                 <materialDesign:PackIcon Kind="{Binding IconList, FallbackValue=ViewList}" Height="35" Width="35" HorizontalAlignment="Center"/>
@@ -120,26 +131,6 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="Print" Visibility="{Binding VisiblePrinter, Converter={StaticResource CollapsedConverter}}">
-                            <Viewbox Stretch="Uniform" Margin="-3">
-                                <materialDesign:PackIcon Kind="Printer" Height="35" Width="35" HorizontalAlignment="Center"/>
-                            </Viewbox>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TouchDown">
-                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Print"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
-                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="QRcode" Visibility="{Binding VisibleQRcode, Converter={StaticResource CollapsedConverter}}">
-                            <Viewbox Stretch="Uniform" Margin="-3">
-                                <materialDesign:PackIcon Kind="QrcodeScan" Height="35" Width="35" HorizontalAlignment="Center"/>
-                            </Viewbox>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TouchDown">
-                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="Manual"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
                         <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="ESC" Visibility="{Binding VisiblePower, Converter={StaticResource CollapsedConverter}}">
                             <Viewbox Stretch="Uniform" Margin="-4">
                                 <materialDesign:PackIcon Kind="Power" Height="35" Width="35" HorizontalAlignment="Center" />
@@ -155,8 +146,27 @@
                 <!-- メイン画面 -->
                 <Grid>
                     <ContentControl Content="{Binding FramePage}" Background="#FFFFFF" IsTabStop="False" Focusable="False" RenderTransformOrigin="0.5,0.5" Height="650" Margin="0,10,0,0"/>
+                    
+                    
+                    
+                    
+                    
+                    
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="-10,580,0,0" Visibility="Collapsed">
+                        <Button Style="{StaticResource Top}" Command="{Binding CommandButton}" CommandParameter="DisplayPlan" Visibility="{Binding VisiblePlan, Converter={StaticResource CollapsedConverter}}">
+                            <Viewbox Stretch="Uniform" Margin="-2">
+                                <materialDesign:PackIcon Kind="{Binding IconPlan, FallbackValue=CalendarMonth}" Height="{Binding IconSize, FallbackValue=30}" Width="{Binding IconSize,FallbackValue=30}" HorizontalAlignment="Center"/>
+                            </Viewbox>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TouchDown">
+                                    <i:InvokeCommandAction Command="{Binding CommandButton}" CommandParameter="DisplayPlan"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </StackPanel>
+
         </Grid>
     </materialDesign:DialogHost>
     <i:Interaction.Behaviors>
