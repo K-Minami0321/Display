@@ -899,6 +899,7 @@ namespace Display
     public class DataGridBehavior : Behavior<DataGrid>
     {
         //依存プロパティ
+
         public static readonly DependencyProperty IselectProperty =
             DependencyProperty.Register("Iselect", typeof(ISelect), typeof(DataGridBehavior), new FrameworkPropertyMetadata(null));
 
@@ -914,8 +915,9 @@ namespace Display
         protected override void OnAttached()
         {
             base.OnDetaching();
+            AssociatedObject.Loaded += OnLoaded;
             AssociatedObject.PreviewKeyDown += KeyDown;
-            AssociatedObject.MouseLeftButtonUp += MouseDoubleClick;
+            AssociatedObject.MouseDoubleClick += MouseDoubleClick;
             AssociatedObject.CurrentCellChanged += CurrentCellChanged;
             AssociatedObject.GotFocus += GotFocus;           
         }
@@ -923,10 +925,18 @@ namespace Display
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            AssociatedObject.Loaded -= OnLoaded;
             AssociatedObject.PreviewKeyDown -= KeyDown;
-            AssociatedObject.MouseLeftButtonUp -= MouseDoubleClick;
+            AssociatedObject.MouseDoubleClick -= MouseDoubleClick;
             AssociatedObject.CurrentCellChanged -= CurrentCellChanged;
             AssociatedObject.GotFocus -= GotFocus;
+        }
+
+        //ロード時
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Iselect == null) { return; }
+            SetScroll(Iselect.ScrollIndex);
         }
 
         //選択処理
@@ -939,7 +949,7 @@ namespace Display
 
             //スクロール値をセット
             var chack = Scroll;
-            SetScrollViewer();
+            GetScroll();
             if (chack != null) { Iselect.ScrollIndex = Scroll.VerticalOffset; }
         }
 
@@ -983,11 +993,20 @@ namespace Display
             AssociatedObject.SelectedIndex = 0;
         }
 
-        //SetScrollViewerを設定
-        public void SetScrollViewer()
+        //スクロール値取得
+        public void GetScroll()
         {
             Child = VisualTreeHelper.GetChild(AssociatedObject, 0) as Decorator;
             Scroll = Child.Child as ScrollViewer;
+        }
+
+        //スクロールを設定
+        public void SetScroll(double scrollindex)
+        {
+            if (VisualTreeHelper.GetChildrenCount(AssociatedObject) == 0) { return; }
+            Child = VisualTreeHelper.GetChild(AssociatedObject, 0) as Decorator;
+            Scroll = Child.Child as ScrollViewer;
+            Scroll.ScrollToVerticalOffset(scrollindex);
         }
     }
     #endregion

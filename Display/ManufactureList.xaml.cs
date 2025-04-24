@@ -27,7 +27,7 @@ namespace Display
         string manufactureDate;
 
         //プロパティ
-        public string ManufactureDate                       //作業日
+        public string ManufactureDate           //作業日
         {
             get { return manufactureDate; }
             set 
@@ -36,6 +36,12 @@ namespace Display
                 DiaplayList();
             }
         }
+        public static string CacheDate          //キャッシュ（対象日）
+        { get; set; }
+        public static int CacheSelectedIndex    //キャッシュ（選択行）
+        { get; set; }
+        public static double CacheScrollIndex   //キャッシュ（スクロール位置）
+        { get; set; }
 
         //イベント
         ActionCommand commandLoad;
@@ -48,7 +54,7 @@ namespace Display
             ReadINI();
 
             SelectedIndex = -1;
-            ManufactureDate = date.ToStringDateDB();
+            ManufactureDate = CacheDate ?? date.ToStringDateDB();
         }
 
         //ロード時
@@ -56,6 +62,7 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
+            StateLoad();
         }
 
         //コントロールの設定
@@ -77,6 +84,21 @@ namespace Display
             };
         }
 
+        //状態読込
+        private void StateLoad()
+        {
+            SelectedIndex = CacheSelectedIndex;
+            ScrollIndex = CacheScrollIndex;
+        }
+
+        //状態保存
+        private void StateSave()
+        {
+            CacheDate = ManufactureDate;
+            CacheSelectedIndex = SelectedIndex;
+            CacheScrollIndex = ScrollIndex;
+        }
+
         //一覧表示
         private void DiaplayList()
         {
@@ -88,6 +110,7 @@ namespace Display
         {
             if (SelectedItem == null) { return; }
             var code = DATATABLE.SelectedRowsItem(SelectedItem, "製造CODE");
+            StateSave();
             DisplayFramePage(new ManufactureInfo(code, string.Empty));
         }
 

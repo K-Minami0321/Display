@@ -28,7 +28,7 @@ namespace Display
         List<string> customers;
 
         //プロパティ
-        public string ShippingDate                  //出荷日
+        public string ShippingDate              //出荷日
         {
             get=> shippingDate;
             set
@@ -37,12 +37,16 @@ namespace Display
                 DiaplayList();
             }
         }
-        public List<string> Customers               //取引先
+        public List<string> Customers           //取引先
         {
             get => customers;
             set => SetProperty(ref customers, value);
         }
-        public static string CacheShippingDate      //キャッシュ（対象日）
+        public static string CacheDate          //キャッシュ（対象日）
+        { get; set; }
+        public static int CacheSelectedIndex    //キャッシュ（選択行）
+        { get; set; }
+        public static double CacheScrollIndex   //キャッシュ（スクロール位置）
         { get; set; }
 
         //イベント
@@ -56,11 +60,7 @@ namespace Display
         {
             Iselect = this;
             ReadINI();
-
-            SelectedIndex = -1;
-            StateLoad();
-            ListSource.Date = ShippingDate;
-            Customers = ListSource.ShippingCustomers;
+            ShippingDate = CacheDate ?? DateTime.Now.ToString("yyyyMMdd");
         }
 
         //ロード時
@@ -68,6 +68,7 @@ namespace Display
         {
             DisplayCapution();
             DiaplayList();
+            StateLoad();
         }
 
         //キャプション・ボタン表示
@@ -91,27 +92,22 @@ namespace Display
         //状態読込
         private void StateLoad()
         {
-            ShippingDate = CacheShippingDate ?? DateTime.Now.ToString("yyyyMMdd");
-
-
-
+            SelectedIndex = CacheSelectedIndex;
+            ScrollIndex = CacheScrollIndex;
         }
 
         //状態保存
         private void StateSave()
         {
-            CacheShippingDate = ShippingDate;
-
-
-
+            CacheDate = ShippingDate;
+            CacheSelectedIndex = SelectedIndex;
+            CacheScrollIndex = ScrollIndex;
         }
 
         //一覧表示
         private void DiaplayList(string where = "")
         {
             SelectTable = shippingStock.ShippingList(ShippingDate);
-            ListSource.Date = ShippingDate;
-            Customers = ListSource.ShippingCustomers;
         }
 
         //選択処理

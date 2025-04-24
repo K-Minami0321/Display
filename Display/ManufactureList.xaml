@@ -34,17 +34,17 @@
                       ColumnHeaderStyle="{StaticResource DefultHeader}">
                 <!-- 項目設定 -->
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="ロット番号" Width="200" CellStyle="{StaticResource TabStopCell}">
+                    <DataGridTemplateColumn Header="ロット番号" Width="200" CellStyle="{StaticResource TabStopCell}" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center" Opacity="0.8"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="品番" Width="260*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 品番}" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding 品番}" HorizontalAlignment="Left" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -77,6 +77,12 @@ namespace Display
             get => visibleWeight;
             set => SetProperty(ref visibleWeight, value);
         }
+        public static string CacheDate          //キャッシュ（対象日）
+        { get; set; }
+        public static int CacheSelectedIndex    //キャッシュ（選択行）
+        { get; set; }
+        public static double CacheScrollIndex   //キャッシュ（スクロール位置）
+        { get; set; }
 
         //イベント
         ActionCommand commandLoad;
@@ -91,14 +97,15 @@ namespace Display
             ReadINI();
 
             SelectedIndex = -1;
-            InProcessDate = date.ToStringDateDB();
+            InProcessDate = CacheDate ?? date.ToStringDateDB();
         }
 
         //ロード時
         private void OnLoad()
         {
             DisplayCapution();
-            DiaplayList(); 
+            DiaplayList();
+            StateLoad();
         }
 
         //キャプション・ボタン表示
@@ -146,6 +153,22 @@ namespace Display
                     break;
             }
         }
+
+        //状態読込
+        private void StateLoad()
+        {
+            SelectedIndex = CacheSelectedIndex;
+            ScrollIndex = CacheScrollIndex;
+        }
+
+        //状態保存
+        private void StateSave()
+        {
+            CacheDate = InProcessDate;
+            CacheSelectedIndex = SelectedIndex;
+            CacheScrollIndex = ScrollIndex;
+        }
+
         //一覧表示
         private void DiaplayList()
         {
@@ -157,6 +180,7 @@ namespace Display
         {
             if(SelectedItem == null) { return; }
             var code = DATATABLE.SelectedRowsItem(SelectedItem, "仕掛CODE");
+            StateSave();
             DisplayFramePage(new InProcessInfo(code, string.Empty));
         }
 

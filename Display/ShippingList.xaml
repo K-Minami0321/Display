@@ -26,17 +26,15 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="560"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Column="0" Grid.Row="0" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="900*"/>
-                        <ColumnDefinition Width="400"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ShippingDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}" 
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Viewbox Stretch="Uniform">
+                        <TextBlock Text="{Binding ShippingDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}" 
                                Foreground="{Binding ShippingDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
-                </Grid>
+                    </Viewbox>
+                </StackPanel>
                 <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                           ColumnHeaderStyle="{StaticResource DefultHeader}">
                     <!-- 項目設定 -->
@@ -45,7 +43,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Height="36">
-                                        <TextBlock Text="{Binding 取引先名}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="22" FontWeight="Bold" Foreground="#666666"/>
+                                        <TextBlock Text="{Binding 取引先名}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="22" FontWeight="Bold"  Opacity="0.8"/>
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -78,16 +76,15 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="" Width="70">
+                        <DataGridTemplateColumn Header="" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Height="36">
                                         <CheckBox IsChecked="{Binding 印刷, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCheckBox}">
                                             <CheckBox.LayoutTransform>
-                                                <ScaleTransform CenterX="0" CenterY="0" ScaleX="1.6" ScaleY="1.6"/>
+                                                <ScaleTransform CenterX="0" CenterY="0" ScaleX="1.8" ScaleY="1.8"/>
                                             </CheckBox.LayoutTransform>
-
                                         </CheckBox>
                                     </Grid>
                                 </DataTemplate>

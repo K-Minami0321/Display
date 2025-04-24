@@ -41,14 +41,14 @@
                     <DataGridTemplateColumn Header="ロット番号" Width="200" CellStyle="{StaticResource TabStopCell}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding ロット番号}" HorizontalAlignment="Center" Opacity="0.8"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="品番" Width="300*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 品番}" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding 品番}" HorizontalAlignment="Left" FontWeight="Bold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -90,7 +90,7 @@
                     <DataGridTemplateColumn Header="" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding 完了,Converter={StaticResource CompletedConverter}}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{Binding 仕掛区分,Converter={StaticResource ProcessColorConverter}}"/>
+                                <TextBlock Text="{Binding 完了,Converter={StaticResource CompletedConverter}}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{Binding 仕掛区分,Converter={StaticResource ProcessColorConverter}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
