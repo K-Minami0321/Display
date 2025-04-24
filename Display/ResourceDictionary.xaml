@@ -8,6 +8,7 @@
     <!-- Converter -->
     <local:InsertConverter x:Key="InsertConverter" />
     <local:CollapsedConverter x:Key="CollapsedConverter"/>
+    <local:DisplayConverter x:Key="DisplayConverter"/>
     <local:CollapsedValueConverter x:Key="CollapsedValueConverter"/>
     <local:CheckConverter x:Key="CheckConverter"/>
     <local:CoilConverter x:Key="CoilConverter"/>
@@ -215,10 +216,9 @@
         <Setter Property="Focusable" Value="True"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Width" Value="200"/>
+        <Setter Property="Width" Value="160"/>
         <Setter Property="Height" Value="60"/>
-        <Setter Property="Margin" Value="0,0,20,0"/>
-        <Setter Property="Background" Value="#607D8B"/>
+        <Setter Property="Margin" Value="0,0,30,0"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
@@ -282,7 +282,7 @@
     <Style x:Key="BorderLabel" TargetType="Border">
         <Setter Property="CornerRadius" Value="2"/>
         <Setter Property="Background" Value="#FF90A4AE"/>
-        <Setter Property="Width" Value="180"/>
+        <Setter Property="Width" Value="160"/>
         <Setter Property="Height" Value="55"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
     </Style>
@@ -318,17 +318,16 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
     <Style x:Key="TextLabel" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="FontSize" Value="28"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
     <Style x:Key="TextDate" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontSize" Value="40"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="Gray"/>
         <Setter Property="Opacity" Value="0.8"/>
-        <Setter Property="Margin" Value="0,0,0,2"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
     </Style>
@@ -337,7 +336,6 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="Gray"/>
         <Setter Property="Opacity" Value="0.8"/>
-        <Setter Property="Margin" Value="0,0,0,2"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="Margin" Value="0,0,0,5"/>
@@ -487,7 +485,7 @@
         <Setter Property="EnableRowVirtualization" Value="True"/>
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
         <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Standard"/>
-        <Setter Property="IsManipulationEnabled" Value="False" />
+        <Setter Property="IsManipulationEnabled" Value="False"/>
     </Style>
     <Style x:Key="DefultHeader" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>

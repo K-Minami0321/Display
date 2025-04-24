@@ -482,23 +482,25 @@ namespace Display
 
                 case "F4":
 
-                    //現品票発行
-                    FramePage = new SlipIssue();
-                    IniFile.WriteString("Page", "Initial", "SlipIssue");
+                    if (Process == "検査" || Process == "梱包") 
+                    { 
+                        //梱包仕様書
+                        if (Process != "検査" && Process != "梱包") { return; }
+                        FramePage = new PackSpecification(string.Empty);
+                        IniFile.WriteString("Page", "Initial", "PackSpecification");
+                    }
+                    else
+                    {
+                        //現品票発行
+                        FramePage = new SlipIssue();
+                        IniFile.WriteString("Page", "Initial", "SlipIssue");
+                    }
                     break;
-
-                case "F5":
-
-                    //梱包仕様書
-                    if (Process != "検査" && Process != "梱包") { return; }
-                    FramePage = new PackSpecification();
-                    IniFile.WriteString("Page", "Initial", "PackSpecification");
-                    break;  
 
                 case "F11":
 
                     //作業マニュアル
-                    FramePage = new Manual();
+                    //FramePage = new Manual();
                     break;
 
                 case "F12":

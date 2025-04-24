@@ -22,6 +22,12 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => CONVERT.ToCollapsed((bool)value);
     }
 
+    public class DisplayConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringBool().ToCollapsed();
+    }
+
     //値があれば表示
     public class CollapsedValueConverter : IValueConverter
     {

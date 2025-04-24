@@ -2,9 +2,9 @@
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #pragma warning disable
 namespace Display
@@ -25,17 +25,25 @@ namespace Display
         //変数
         ShippingStock shippingStock = new ShippingStock();
         string shippingDate;
+        List<string> customers;
 
         //プロパティ
-        public string ShippingDate              //出荷日
+        public string ShippingDate                  //出荷日
         {
-            get { return shippingDate; }
+            get=> shippingDate;
             set
             {
                 SetProperty(ref shippingDate, value);
                 DiaplayList();
             }
         }
+        public List<string> Customers               //取引先
+        {
+            get => customers;
+            set => SetProperty(ref customers, value);
+        }
+        public static string CacheShippingDate      //キャッシュ（対象日）
+        { get; set; }
 
         //イベント
         ActionCommand commandLoad;
@@ -50,8 +58,9 @@ namespace Display
             ReadINI();
 
             SelectedIndex = -1;
-            ShippingDate = DateTime.Now.ToString("yyyyMMdd");
-
+            StateLoad();
+            ListSource.Date = ShippingDate;
+            Customers = ListSource.ShippingCustomers;
         }
 
         //ロード時
@@ -75,18 +84,44 @@ namespace Display
                 VisibleInfo = false,
                 VisiblePrinter = false,
                 VisibleQRcode = false,
-                ProcessWork = "出荷一覧"
+                ProcessWork = "出庫一覧"
             };
+        }
+
+        //状態読込
+        private void StateLoad()
+        {
+            ShippingDate = CacheShippingDate ?? DateTime.Now.ToString("yyyyMMdd");
+
+
+
+        }
+
+        //状態保存
+        private void StateSave()
+        {
+            CacheShippingDate = ShippingDate;
+
+
+
         }
 
         //一覧表示
         private void DiaplayList(string where = "")
         {
             SelectTable = shippingStock.ShippingList(ShippingDate);
+            ListSource.Date = ShippingDate;
+            Customers = ListSource.ShippingCustomers;
         }
 
         //選択処理
-        public void SelectList() { return; }
+        public void SelectList() 
+        {
+            if (SelectedItem == null) { return; }
+            var code = DATATABLE.SelectedRowsItem(SelectedItem, "品番");
+            StateSave();
+            DisplayFramePage(new PackSpecification(code));
+        }
 
         //スワイプ処理
         public void Swipe(object value) { return; }

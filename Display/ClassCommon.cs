@@ -282,6 +282,10 @@ namespace Display
                     windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, DateTime.Now.ToString("yyyyMMdd"));
                     break;
 
+                case "PackSpecification":
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty);
+                    break;
+
                 default:
                     windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type);
                     break;

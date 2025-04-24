@@ -27,8 +27,8 @@
                     <!-- 左領域 -->
                     <Grid Margin="40,40,0,40" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="320"/>
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="60"/>
                         </Grid.ColumnDefinitions>
@@ -37,14 +37,14 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="90"/>
-                            <RowDefinition Height="20"/>
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="70"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="48" HorizontalAlignment="Center" Margin="-15,0,0,0"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="480" Padding="5,5,5,5"
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="36" HorizontalAlignment="Center" Margin="-25,0,0,0"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ProductName, FallbackValue=MH024000}" FontSize="50" FontWeight="Bold"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="480" Padding="5,5,5,5" Visibility="{Binding VisibleProduct, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}"
                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthProductName}" InputMethod.IsInputMethodEnabled="False" FontSize="40">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -64,34 +64,9 @@
                                 <local:TextBoxBehavior Mode="AlphabetHyphen" Upper="true"/>
                             </i:Interaction.Behaviors>
                         </TextBox>
-                        <Grid Grid.Row="2" Grid.Column="0" >
-                            <Border Style="{StaticResource BorderLabel}">
-                                <TextBlock Text="容　器" Style="{StaticResource TextLabel}"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ContainerCategory, FallbackValue=段ボール・ポリ箱}" FontSize="40"/>
-                        <Grid Grid.Row="3" Grid.Column="0">
-                            <Border Style="{StaticResource BorderLabel}" Margin="0,10,0,0">
-                                <TextBlock Text="梱包仕様" Style="{StaticResource TextLabel}"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Container, FallbackValue=青箱 大}" FontSize="55"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Carton, FallbackValue=99}" HorizontalAlignment="Right" FontSize="55" Margin="10,0,10,0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Text="個" FontSize="30" VerticalAlignment="Center" Margin="0,20,0,2"/>
-                        <Grid Grid.Row="5" Grid.Column="0" >
-                            <Border Style="{StaticResource BorderLabel}">
-                                <TextBlock Text="パレット" Style="{StaticResource TextLabel}"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Palette, FallbackValue=折パレ}" FontSize="28"/>
-                        <Grid Grid.Row="6" Grid.Column="0">
-                            <Border Style="{StaticResource BorderLabel}" Margin="0,10,0,0">
-                                <TextBlock Text="メ　モ" Style="{StaticResource TextLabel}"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="28" Margin="0,10,0,0"/>
-                        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Orientation="Horizontal">
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory1" Visibility="{Binding VisibileButton1, Converter={StaticResource CollapsedConverter}}">
+                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Orientation="Horizontal">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory1" 
+                                    Visibility="{Binding VisibleButton1, Converter={StaticResource CollapsedConverter}}" Background="{Binding ColorButton1, FallbackValue=#FF90A4AE}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
                                         <materialDesign:PackIcon Kind="{Binding IconButton[0], FallbackValue=Package}" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -104,7 +79,8 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2" Visibility="{Binding VisibileButton2, Converter={StaticResource CollapsedConverter}}">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory2" 
+                                    Visibility="{Binding VisibleButton2, Converter={StaticResource CollapsedConverter}}" Background="{Binding ColorButton2, FallbackValue=#FF90A4AE}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
                                         <materialDesign:PackIcon Kind="{Binding IconButton[1], FallbackValue=PackageVariant}" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -117,7 +93,8 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3" Visibility="{Binding VisibileButton3, Converter={StaticResource CollapsedConverter}}">
+                            <Button Style="{StaticResource BottomPackSpecification}" Command="{Binding CommandButton}" CommandParameter="ContainerCategory3" 
+                                    Visibility="{Binding VisibleButton3, Converter={StaticResource CollapsedConverter}}" Background="{Binding ColorButton3, FallbackValue=#FF90A4AE}">
                                 <Viewbox Style="{StaticResource Button}">
                                     <WrapPanel>
                                         <materialDesign:PackIcon Kind="{Binding IconButton[2], FallbackValue=PackageVariant}" Margin="0,3,20,0" Height="30" Width="30"/>
@@ -130,8 +107,39 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-
                         </StackPanel>
+                        <Grid Grid.Row="3" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}" Margin="0,10,0,0">
+                                <TextBlock Text="梱包仕様" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Container, FallbackValue=青箱 大}" FontSize="50"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Carton, FallbackValue=99}" HorizontalAlignment="Right" FontSize="50" Margin="10,0,10,0"/>
+                        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Text="個" FontSize="30" VerticalAlignment="Center" Margin="0,10,0,2"/>
+                        <Grid Grid.Row="4" Grid.Column="0" >
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="パレット" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Palette, FallbackValue=折パレ}" FontSize="28"/>
+                        <Grid Grid.Row="5" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="客先品番" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ProductCustomer}" FontSize="28"/>
+                        <Grid Grid.Row="6" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="棚　番" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding RackNo}" FontSize="28"/>
+                        <Grid Grid.Row="7" Grid.Column="0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="メ　モ" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="25"/>
                     </Grid>
                 </StackPanel>
             </StackPanel>
