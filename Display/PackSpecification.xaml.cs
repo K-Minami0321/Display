@@ -1,6 +1,5 @@
 ﻿using ClassBase;
 using ClassLibrary;
-using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Xaml.Behaviors.Core;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
@@ -19,9 +18,9 @@ namespace Display
     //画面クラス
     public partial class PackSpecification : UserControl
     {
-        public PackSpecification(string code)
+        public PackSpecification(string code, string customer)
         {
-            DataContext = new ViewModelPackSpecification(code);
+            DataContext = new ViewModelPackSpecification(code, customer);
             InitializeComponent();
         }
     }
@@ -177,7 +176,7 @@ namespace Display
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
-        public ViewModelPackSpecification(string code)
+        public ViewModelPackSpecification(string code, string customer)
         {
             Ibarcode = this;
 
@@ -186,6 +185,7 @@ namespace Display
 
             SelectTable = productPackingStyle.SelectPakingIndex();
             ProductName = code;
+            ProductCustomer = customer;
             VisibleProduct = string.IsNullOrEmpty(ProductName);
         }
 
@@ -309,18 +309,21 @@ namespace Display
             switch (no)
             {
                 case "1": case "":
+
                     ColorButton1 = CONST.BUTTON_SELECT;
                     ColorButton2 = CONST.BUTTON_FORCUS;
                     ColorButton3 = CONST.BUTTON_FORCUS;
                     break;
 
                 case "2":
+
                     ColorButton1 = CONST.BUTTON_FORCUS;
                     ColorButton2 = CONST.BUTTON_SELECT;
                     ColorButton3 = CONST.BUTTON_FORCUS;
                     break;
 
                 case "3":
+
                     ColorButton1 = CONST.BUTTON_FORCUS;
                     ColorButton2 = CONST.BUTTON_FORCUS;
                     ColorButton3 = CONST.BUTTON_SELECT;

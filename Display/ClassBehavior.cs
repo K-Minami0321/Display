@@ -889,11 +889,11 @@ namespace Display
     //インターフェース
     public interface ISelect
     {
-        int SelectedIndex                           //行選択
+        int SelectedIndex                   //行選択
         { get; set; }
-        double ScrollIndex                          //スクロール位置
+        double ScrollIndex                  //スクロール位置
         { get; set; }
-        void SelectList();                          //DataGrid選択処理
+        void SelectList();                  //DataGrid選択処理
     }
 
     public class DataGridBehavior : Behavior<DataGrid>
@@ -904,13 +904,15 @@ namespace Display
             DependencyProperty.Register("Iselect", typeof(ISelect), typeof(DataGridBehavior), new FrameworkPropertyMetadata(null));
 
         //プロパティ
-        public ISelect Iselect                      //インターフェース
+        public ISelect Iselect              //インターフェース
         {
             get => (ISelect)GetValue(IselectProperty);
             set => SetValue(IselectProperty, value);
         }
-        public Decorator Child;
-        public ScrollViewer Scroll;
+        public Decorator Child              //VisualTreeHelper
+        { get; set; }
+        public ScrollViewer Scroll          //スクロール値
+        { get; set; }
 
         protected override void OnAttached()
         {
@@ -919,7 +921,8 @@ namespace Display
             AssociatedObject.PreviewKeyDown += KeyDown;
             AssociatedObject.MouseDoubleClick += MouseDoubleClick;
             AssociatedObject.CurrentCellChanged += CurrentCellChanged;
-            AssociatedObject.GotFocus += GotFocus;           
+            AssociatedObject.GotFocus += GotFocus;
+            AssociatedObject.TargetUpdated += TargetUpdated;
         }
 
         protected override void OnDetaching()
@@ -930,6 +933,7 @@ namespace Display
             AssociatedObject.MouseDoubleClick -= MouseDoubleClick;
             AssociatedObject.CurrentCellChanged -= CurrentCellChanged;
             AssociatedObject.GotFocus -= GotFocus;
+            AssociatedObject.TargetUpdated -= TargetUpdated;
         }
 
         //ロード時
@@ -937,6 +941,12 @@ namespace Display
         {
             if (Iselect == null) { return; }
             SetScroll(Iselect.ScrollIndex);
+        }
+
+        //データ更新時
+        private void TargetUpdated(object? sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            SetScroll(0);
         }
 
         //選択処理

@@ -62,6 +62,7 @@ namespace Display
         public ViewModelShippingList()
         {
             Iselect = this;
+
             ReadINI();
             ShippingDate = CacheDate ?? DateTime.Now.ToString("yyyyMMdd");
         }
@@ -70,7 +71,6 @@ namespace Display
         private void OnLoad()
         {
             DisplayCapution();
-            DiaplayList();
             StateLoad();
         }
 
@@ -116,9 +116,8 @@ namespace Display
         public void SelectList() 
         {
             if (SelectedItem == null) { return; }
-            var code = DATATABLE.SelectedRowsItem(SelectedItem, "品番");
             StateSave();
-            DisplayFramePage(new PackSpecification(code));
+            DisplayFramePage(new PackSpecification(DATATABLE.SelectedRowsItem(SelectedItem, "品番"), DATATABLE.SelectedRowsItem(SelectedItem, "顧客部品番号")));
         }
 
         //チェック処理
@@ -126,9 +125,7 @@ namespace Display
         {
             foreach (DataRow datarow in SelectTable.Rows)
             {
-                var code = datarow["受注CODE"].ToTrim();
-                var process = datarow["検品済"].ToTrim();
-                shippingStock.ProcessInspection(code, process);
+                shippingStock.ProcessInspection(datarow["受注CODE"].ToTrim(), datarow["検品済"].ToTrim());
             }
         }
 
@@ -144,12 +141,16 @@ namespace Display
 
                     //前日へ移動
                     ShippingDate = DATETIME.AddDate(ShippingDate, -1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
 
                 case "NextDate":
 
                     //次の日へ移動
                     ShippingDate = DATETIME.AddDate(ShippingDate, 1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
             }
             StateSave();

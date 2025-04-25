@@ -161,12 +161,16 @@ namespace Display
 
                     //前日へ移動
                     TransportDate = DATETIME.AddDate(TransportDate, -1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
 
                 case "NextDate":
 
                     //次の日へ移動
                     TransportDate = DATETIME.AddDate(TransportDate, 1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
             }
         }

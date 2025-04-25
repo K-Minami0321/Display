@@ -486,7 +486,7 @@ namespace Display
                     { 
                         //梱包仕様書
                         if (Process != "検査" && Process != "梱包") { return; }
-                        FramePage = new PackSpecification(string.Empty);
+                        FramePage = new PackSpecification(string.Empty, string.Empty);
                         IniFile.WriteString("Page", "Initial", "PackSpecification");
                     }
                     else

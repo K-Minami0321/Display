@@ -134,6 +134,8 @@
                             </Border>
                         </Grid>
                         <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding RackNo}" FontSize="28"/>
+                        
+                        
                         <Grid Grid.Row="7" Grid.Column="0">
                             <Border Style="{StaticResource BorderLabel}">
                                 <TextBlock Text="メ　モ" Style="{StaticResource TextLabel}"/>

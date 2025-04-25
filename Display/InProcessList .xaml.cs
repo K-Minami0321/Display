@@ -224,18 +224,24 @@ namespace Display
 
                     //前日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, -1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
 
                 case "NextDate":
 
                     //次の日へ移動
                     InProcessDate = DATETIME.AddDate(InProcessDate, 1).ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
 
                 case "Today":
 
                     //当日へ移動
                     InProcessDate = DateTime.Now.ToString("yyyyMMdd");
+                    SelectedIndex = 0;
+                    ScrollIndex = 0;
                     break;
             }
         }

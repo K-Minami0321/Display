@@ -283,7 +283,7 @@ namespace Display
                     break;
 
                 case "PackSpecification":
-                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty);
+                    windowProperty.FramePage = (ContentControl)Activator.CreateInstance(type, string.Empty, string.Empty);
                     break;
 
                 default:

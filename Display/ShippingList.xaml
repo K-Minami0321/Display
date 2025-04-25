@@ -35,7 +35,7 @@
                                    Foreground="{Binding ShippingDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
                     </Viewbox>
                 </StackPanel>
-                <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
+                <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable,NotifyOnTargetUpdated=True}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
                           ColumnHeaderStyle="{StaticResource DefultHeader}">
                     <!-- 項目設定 -->
                     <DataGrid.Columns>
