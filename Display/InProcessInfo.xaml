@@ -43,7 +43,7 @@
                             <TextBlock Text="搬入日"/>
                         </Viewbox>
                         <Viewbox Grid.Row="0" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding InProcessDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年7月21日}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding InProcessDate, Converter={StaticResource DateWeekConverter}, FallbackValue=2024年7月21日}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="1" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="品 番"/>
@@ -79,7 +79,7 @@
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBox x:Name="TextLotNumberSEQ" Text="{Binding LotNumberSEQ, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="20,0,0,0" TextAlignment="Center"
-                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False">
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="2" InputMethod.IsInputMethodEnabled="False" Visibility="Collapsed">
                                 <TextBox.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
                                         <Style.Triggers>

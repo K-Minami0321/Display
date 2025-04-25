@@ -43,7 +43,7 @@
                             <TextBlock Text="作業日"/>
                         </Viewbox>
                         <Viewbox Grid.Row="0" Grid.Column="1" Style="{StaticResource Label}" Margin="0,10,10,10">
-                            <TextBlock Text="{Binding ManufactureDate, FallbackValue=2024年6月3日, Converter={StaticResource DateTimeConverter}}"/>
+                            <TextBlock Text="{Binding ManufactureDate, FallbackValue=2024年6月3日, Converter={StaticResource DateWeekConverter}}"/>
                         </Viewbox>
                         <Viewbox Grid.Row="1" Grid.Column="0" Style="{StaticResource Label}">
                             <TextBlock Text="品 番"/>

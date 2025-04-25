@@ -308,8 +308,7 @@ namespace Display
             //ボタンの色
             switch (no)
             {
-                case "1":
-                case "":
+                case "1": case "":
                     ColorButton1 = CONST.BUTTON_SELECT;
                     ColorButton2 = CONST.BUTTON_FORCUS;
                     ColorButton3 = CONST.BUTTON_FORCUS;

@@ -75,6 +75,12 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate();
     }
 
+    public class DateWeekConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDateWeek();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDateWeek();
+    }
+
     public class MonthDayConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => value.ToStringDate("M月d日");

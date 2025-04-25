@@ -31,8 +31,8 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Viewbox Stretch="Uniform">
-                        <TextBlock Text="{Binding ShippingDate, Converter={StaticResource DateTimeConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}" 
-                               Foreground="{Binding ShippingDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
+                        <TextBlock Text="{Binding ShippingDate, Converter={StaticResource DateWeekConverter}, FallbackValue=2024年6月3日}" Style="{StaticResource TextDate}" 
+                                   Foreground="{Binding ShippingDate, Converter={StaticResource DateTimeToDayOfWeekBrushConverter}, FallbackValue=#666666}" Opacity="0.8"/>
                     </Viewbox>
                 </StackPanel>
                 <DataGrid Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectTable}" SelectedIndex="{Binding SelectedIndex}" SelectedItem="{Binding SelectedItem}"
@@ -80,11 +80,16 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Height="36">
-                                        <CheckBox IsChecked="{Binding 印刷, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCheckBox}">
+                                        <CheckBox IsChecked="{Binding 検品済, Converter={StaticResource AsteriskConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                  IsEnabled="{Binding Path=DataContext.IsCheck, Source={StaticResource proxyElement}}" Style="{StaticResource MaterialDesignCheckBox}">
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform CenterX="0" CenterY="0" ScaleX="1.8" ScaleY="1.8"/>
                                             </CheckBox.LayoutTransform>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.CommandCheck, Source={StaticResource proxyElement}}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
                                         </CheckBox>
                                     </Grid>
                                 </DataTemplate>

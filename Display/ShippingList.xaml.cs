@@ -3,6 +3,7 @@ using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -54,6 +55,8 @@ namespace Display
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
         ActionCommand commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
+        ActionCommand commandCheck;
+        public ICommand CommandCheck => commandCheck ??= new ActionCommand(OnCheck);
 
         //コンストラクター
         public ViewModelShippingList()
@@ -74,14 +77,13 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
             WindowProperty = new PropertyWindow()
             {
                 IwindowBase = this,
                 VisiblePlan = false,
                 VisibleDefect = false,
                 VisibleArrow = true,
-                VisibleList = false,
+                VisibleList = true,
                 VisibleInfo = false,
                 VisiblePrinter = false,
                 VisibleQRcode = false,
@@ -119,6 +121,17 @@ namespace Display
             DisplayFramePage(new PackSpecification(code));
         }
 
+        //チェック処理
+        private void OnCheck()
+        {
+            foreach (DataRow datarow in SelectTable.Rows)
+            {
+                var code = datarow["受注CODE"].ToTrim();
+                var process = datarow["検品済"].ToTrim();
+                shippingStock.ProcessInspection(code, process);
+            }
+        }
+
         //スワイプ処理
         public void Swipe(object value) { return; }
 
@@ -139,6 +152,7 @@ namespace Display
                     ShippingDate = DATETIME.AddDate(ShippingDate, 1).ToString("yyyyMMdd");
                     break;
             }
+            StateSave();
         }
     }
 }
