@@ -328,6 +328,17 @@ namespace Display
                     ColorButton3 = CONST.BUTTON_SELECT;
                     break;
             }
+
+            //棚番表示（複数件分割）
+            var array = RackNo.Split("・");
+
+
+
+
+
+
+
+
         }
 
         //画像表示処理

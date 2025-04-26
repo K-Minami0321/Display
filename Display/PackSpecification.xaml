@@ -40,7 +40,7 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="70"/>
-                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="36" HorizontalAlignment="Center" Margin="-25,0,0,0"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ProductName, FallbackValue=MH024000}" FontSize="46" FontWeight="Bold"/>
@@ -128,35 +128,40 @@
                             </Border>
                         </Grid>
                         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ProductCustomer}" FontSize="28"/>
+
                         <Grid Grid.Row="6" Grid.Column="0">
-                            <Border Style="{StaticResource BorderLabel}">
-                                <TextBlock Text="棚　番" Style="{StaticResource TextLabel}"/>
-                            </Border>
-                        </Grid>
-
-
-
-                        <StackPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
-
-                            <Border Style="{StaticResource BorderNotice}" Background="#FF2E8B57" Opacity="0.8" Visibility="{Binding RackNo,Converter={StaticResource CollapsedValueConverter}}">
-                                <TextBlock Text="{Binding RackNo}" FontSize="28" Foreground="#FFFFFFFF"/>
-                            </Border>
-                            
-                        </StackPanel>
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        <Grid Grid.Row="7" Grid.Column="0">
                             <Border Style="{StaticResource BorderLabel}">
                                 <TextBlock Text="メ　モ" Style="{StaticResource TextLabel}"/>
                             </Border>
                         </Grid>
-                        <TextBlock Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="25"/>
+                        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding ContainerComment}" FontSize="25"/>
+                    
+                    
+                    
+                        <Grid Grid.Row="7" Grid.Column="0" VerticalAlignment="Top" Margin="0,10,0,0">
+                            <Border Style="{StaticResource BorderLabel}">
+                                <TextBlock Text="棚　番" Style="{StaticResource TextLabel}"/>
+                            </Border>
+                        </Grid>
+                        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+
+                            
+                            
+                            <Border Style="{StaticResource BorderNotice}" Background="#FF2E8B57" Opacity="0.8" Visibility="{Binding RackNo, Converter={StaticResource CollapsedValueConverter}}" VerticalAlignment="Top" Margin="0,20,0,0">
+                                <TextBlock Text="{Binding RackNo}" FontSize="28" Foreground="#FFFFFFFF"/>
+                            </Border>
+                            
+                            
+                            
+                        </StackPanel>
+
+
+
+
                     </Grid>
+
+
+
                 </StackPanel>
             </StackPanel>
         </Grid>
