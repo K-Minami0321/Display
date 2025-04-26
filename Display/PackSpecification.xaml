@@ -43,7 +43,7 @@
                             <RowDefinition Height="70"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="36" HorizontalAlignment="Center" Margin="-25,0,0,0"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ProductName, FallbackValue=MH024000}" FontSize="50" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ProductName, FallbackValue=MH024000}" FontSize="46" FontWeight="Bold"/>
                         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="480" Padding="5,5,5,5" Visibility="{Binding VisibleProduct, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}"
                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthProductName}" InputMethod.IsInputMethodEnabled="False" FontSize="40">
                             <TextBox.Resources>
@@ -133,7 +133,21 @@
                                 <TextBlock Text="棚　番" Style="{StaticResource TextLabel}"/>
                             </Border>
                         </Grid>
-                        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding RackNo}" FontSize="28"/>
+
+
+
+                        <StackPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+
+                            <Border Style="{StaticResource BorderNotice}" Background="#FF2E8B57" Opacity="0.8" Visibility="{Binding RackNo,Converter={StaticResource CollapsedValueConverter}}">
+                                <TextBlock Text="{Binding RackNo}" FontSize="28" Foreground="#FFFFFFFF"/>
+                            </Border>
+                            
+                        </StackPanel>
+
+                        
+                        
+                        
+                        
                         
                         
                         <Grid Grid.Row="7" Grid.Column="0">

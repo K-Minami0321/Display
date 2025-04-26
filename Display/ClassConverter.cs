@@ -35,6 +35,13 @@ namespace Display
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => string.IsNullOrEmpty((string?)value) || (string?)value == "0" ? CONVERT.ToCollapsed((false)) : CONVERT.ToCollapsed((true));
     }
 
+    public class CollapsedNumberConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => (int?)value == 0 ? CONVERT.ToCollapsed((false)) : CONVERT.ToCollapsed((true));
+    }
+
+
     //アスタリスク変換
     public class AsteriskConverter : IValueConverter
     {

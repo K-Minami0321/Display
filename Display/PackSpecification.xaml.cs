@@ -165,7 +165,6 @@ namespace Display
             get => focusLotProductName;
             set => SetProperty(ref focusLotProductName, value);
         }
-        
 
         //イベント
         ActionCommand commandLoad;

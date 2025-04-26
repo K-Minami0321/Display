@@ -48,7 +48,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="品番" Width="300*">
+                        <DataGridTemplateColumn Header="品番" Width="325">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding 品番}" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold" FontSize="28"/>
@@ -62,21 +62,25 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="箱数" Width="70">
+                        <DataGridTemplateColumn Header="箱数" Width="125">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding 箱数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Grid Height="36">
+                                        <TextBlock Text="{Binding 荷姿, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding 箱数,Converter={StaticResource CollapsedNumberConverter}}"/>
+                                    </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="端数" Width="70">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding 端数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FF0000"/>
+                                    <Grid Height="36">
+                                        <TextBlock Text="{Binding 端数, Converter={StaticResource CurrencyConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FF0000"/>
+                                    </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="" Width="80">
+                        <DataGridTemplateColumn Header="" Width="70">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Height="36">
