@@ -1,6 +1,7 @@
 ﻿using ClassBase;
 using ClassLibrary;
 using Microsoft.Xaml.Behaviors.Core;
+using NPOI.SS.Formula.Functions;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
@@ -43,6 +44,7 @@ namespace Display
         int lengthProductName = 20;
         BitmapSource image1;
         BitmapSource image2;
+        ObservableCollection<string> displayRack = new ObservableCollection<string> { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール" };
         ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant" };
         string colorButton1 = CONST.BUTTON_COLOR;
@@ -114,6 +116,11 @@ namespace Display
         {
             get => image2;
             set => SetProperty(ref image2, value);
+        }
+        public ObservableCollection<string> DisplayRack     //表示（棚番）
+        {
+            get => displayRack;
+            set => SetProperty(ref displayRack, value);
         }
         public ObservableCollection<string> NameButton      //ボタン名称
         {
@@ -331,14 +338,14 @@ namespace Display
 
             //棚番表示（複数件分割）
             var array = RackNo.Split("・");
+            var countrack = 0;
 
-
-
-
-
-
-
-
+            DisplayRack = new ObservableCollection<string> { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+            foreach (var item in array)
+            {
+                DisplayRack[countrack] = item;
+                countrack++;
+            }
         }
 
         //画像表示処理
