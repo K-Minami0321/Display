@@ -31,22 +31,22 @@ namespace Display
     {
         //変数
         ProductPackingStyle productPackingStyle = new ProductPackingStyle();
-        Management management = new Management();
+        Management management = new();
         DataTable selectTable;
         DataTable listTable;
-        string containerCategory;
-        string container;
-        string productCustomer;
-        string carton;
-        string palette;
-        string containerComment;
-        string rackNo;
+        string containerCategory = string.Empty;
+        string container = string.Empty;
+        string productCustomer = string.Empty;
+        string carton = string.Empty;
+        string palette = string.Empty;
+        string containerComment = string.Empty;
+        string rackNo = string.Empty;
         int lengthProductName = 20;
         BitmapSource image1;
         BitmapSource image2;
         ObservableCollection<string> displayRack = new ObservableCollection<string> { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール" };
-        ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant" };
+        ObservableCollection<string> nameButton = new ObservableCollection<string> { "ポリ箱", "段ボール", "段ボール", "段ボール", "段ボール" };
+        ObservableCollection<string> iconButton = new ObservableCollection<string> { "Package", "PackageVariant", "PackageVariant", "PackageVariant", "PackageVariant" };
         string colorButton1 = CONST.BUTTON_COLOR;
         string colorButton2 = CONST.BUTTON_COLOR;
         string colorButton3 = CONST.BUTTON_COLOR;
@@ -304,7 +304,7 @@ namespace Display
                     IndexNumber = INT.ToInt(querry.FirstOrDefault().連番);
                     VisibleButton1 = productPackingStyle.DataCount >= 1;
                     VisibleButton2 = productPackingStyle.DataCount >= 2;
-                    VisibleButton3 = productPackingStyle.DataCount == 3;
+                    VisibleButton3 = productPackingStyle.DataCount >= 3;
                 }
             }
             string SetName(string value) => value == "P" ? "ポリ箱" : "段ボール";

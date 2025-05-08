@@ -44,7 +44,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="品　番" FontSize="36" HorizontalAlignment="Center" Margin="-25,0,0,0"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ProductName, FallbackValue=MH024000}" FontSize="46" FontWeight="Bold"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="500" Padding="5,5,5,5" Visibility="{Binding VisibleProduct, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}"
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextProductName" Text="{Binding ProductName, FallbackValue=MH024000}" Width="498" Padding="5,5,5,5" Visibility="{Binding VisibleProduct, Converter={StaticResource CollapsedConverter}, FallbackValue=Collapsed}"
                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed" MaxLength="{Binding LengthProductName}" InputMethod.IsInputMethodEnabled="False" FontSize="40">
                             <TextBox.Resources>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBox}">
@@ -163,9 +163,6 @@
                                     <TextBlock Text="{Binding DisplayRack[5]}" FontSize="24" Foreground="#FFFFFFFF"/>
                                 </Border>
                             </StackPanel>
-
-
-
                         </StackPanel>
                     </Grid>
                 </StackPanel>
