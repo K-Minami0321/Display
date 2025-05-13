@@ -26,8 +26,8 @@ namespace Display
     public class ViewModelManual : Common, IWindowBase
     {
         //変数
-        string processName;
-        string file;
+        string processName = string.Empty;
+        string file = string.Empty;
 
         //プロパティ
         public string ProcessName   //工程区分
@@ -42,7 +42,7 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
 
         //コンストラクター
@@ -70,10 +70,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-
-
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisiblePower = false,

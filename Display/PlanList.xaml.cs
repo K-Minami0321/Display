@@ -21,6 +21,7 @@ namespace Display
     public class ViewModelPlanList : Common, IWindowBase, ISelect
     {
         //変数
+        Plan plan;
         string lotNumber;
         string updateDate;
         string file;
@@ -57,17 +58,17 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
         internal ViewModelPlanList()
         {
-            Iselect = this;
-            ReadINI();
+            plan = new();
 
+            ReadINI();
             SelectedIndex = -1;
             LotNumber = string.Empty;
             VisibleUnit = ProcessName == "合板" ? true : false;
@@ -84,8 +85,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisiblePlan = true,
@@ -98,14 +98,13 @@ namespace Display
                 Process = ProcessName,
                 ProcessWork = ProcessName + "計画一覧"
             };
+            Iselect = this;
         }
 
         //一覧表示
         private void DiaplayList(string where = "")
         {
             var selectIndex = SelectedIndex;
-            var plan = new Plan();
-
             UpdateDate = plan.SelectFile(ProcessName) + "版";
             SelectTable = plan.SelectPlanList(ProcessName, where, true);
 

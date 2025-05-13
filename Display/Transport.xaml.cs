@@ -23,11 +23,11 @@ namespace Display
     public class ViewModelTransport : Common, IWindowBase, IBarcode
     {
         //変数
-        ManagementSlip managementSlip = new ManagementSlip();
+        ManagementSlip managementSlip;
         string transportDate = DateTime.Now.ToString();
-        string headerUnit;
-        string headerWeight;
-        string headerAmount;
+        string headerUnit = string.Empty;
+        string headerWeight = string.Empty;
+        string headerAmount = string.Empty;
         bool visibleShape;
         bool visibleUnit;
         bool visibleWeight;
@@ -74,15 +74,16 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
         internal ViewModelTransport()
         {
-            Ibarcode = this;
+            managementSlip = new();
+
             ReadINI();
             SelectedIndex = -1;
         }
@@ -96,8 +97,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisibleList = true,
@@ -112,6 +112,7 @@ namespace Display
                 Process = ProcessName,
                 ProcessWork = "引取処理",
             };
+            Ibarcode = this;
         }
 
         //QRコード処理

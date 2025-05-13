@@ -30,8 +30,8 @@ namespace Display
     public class ViewModelPackSpecification : Common, IWindowBase, IBarcode
     {
         //変数
-        ProductPackingStyle productPackingStyle = new ProductPackingStyle();
-        Management management = new();
+        ProductPackingStyle productPackingStyle;
+        Management management;
         DataTable selectTable;
         DataTable listTable;
         string containerCategory = string.Empty;
@@ -184,11 +184,11 @@ namespace Display
         //コンストラクター
         public ViewModelPackSpecification(string code, string customer)
         {
-            Ibarcode = this;
+            productPackingStyle = new();
+            management = new();
 
             CopyProperty(productPackingStyle, this);
             DisplayImage();
-
             SelectTable = productPackingStyle.SelectPakingIndex();
             ProductName = code;
             ProductCustomer = customer;
@@ -206,7 +206,7 @@ namespace Display
         //コントロールの設定
         private void DisplayCapution()
         {
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisibleList = !string.IsNullOrEmpty(ProductName),
@@ -219,6 +219,8 @@ namespace Display
                 ProcessWork = "梱包仕様書",
                 Process = "梱包"
             };
+
+            Ibarcode = this;
         }
 
         //キーイベント

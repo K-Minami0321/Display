@@ -26,21 +26,21 @@ namespace Display
     public class ViewModelInProcessInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, ITimer
     {
         //変数
-        InProcess inProcess = new InProcess();
-        string inProcessCODE;
-        string inProcessDate;
-        string lotNumber;
-        string lotNumberSEQ;
-        string coil;
+        InProcess inProcess;
+        string inProcessCODE = string.Empty;
+        string inProcessDate = string.Empty;
+        string lotNumber = string.Empty;
+        string lotNumberSEQ = string.Empty;
+        string coil = string.Empty;
         string unit = string.Empty;
         string weight = string.Empty;
         string amount = string.Empty;
-        string shirringUnit;
+        string shirringUnit = string.Empty;
         string transportDate = string.Empty;
         string completed;
         string status = "搬入";
-        string notice;
-        string buttonName;
+        string notice = string.Empty;
+        string buttonName = string.Empty;
         int amountWidth = 150;
         int amountRow = 5;
         int lengthLotNumberSEQ = 2;
@@ -48,9 +48,9 @@ namespace Display
         int lengthAmount = 6;
         int lengthWeight = 6;
         int lengthUnit = 6;
-        string labelWeight;
+        string labelWeight = string.Empty;
         string labelAmount = "数 量";
-        string labelUnit;
+        string labelUnit = string.Empty;
         bool visibleCoil;
         bool visibleItem1;
         bool visibleItem2;
@@ -83,18 +83,7 @@ namespace Display
                 CopyProperty(inProcess, this, "InProcessCODE");
                 DisplayLot(LotNumber, value);
                 IsRegist = false;
-            }
-        }
-        public string InProcessDate     //搬入日
-        {
-            get => inProcessDate;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) { value = SetToDay(DateTime.Now); }
-                SetProperty(ref inProcessDate, value);
-
-                IsDate = value == SetToDay(DateTime.Now) ? true : false;
-                IsEnable = value.ToDate() < SetVerificationDay(DateTime.Now) && !string.IsNullOrEmpty(InProcessCODE) ? false : true;
+                IsEnable = InProcessDate.ToDate() < SetVerificationDay(DateTime.Now) && !string.IsNullOrEmpty(InProcessCODE) ? false : true;
             }
         }
         public string LotNumber         //ロット番号
@@ -136,6 +125,17 @@ namespace Display
         {
             get => completed;
             set => SetProperty(ref completed, value);
+        }
+        public string InProcessDate     //搬入日
+        {
+            get => inProcessDate;
+            set
+            {
+                if (string.IsNullOrEmpty(value)) { value = SetToDay(DateTime.Now); }
+                SetProperty(ref inProcessDate, value);
+
+                IsDate = value == SetToDay(DateTime.Now) ? true : false;
+            }
         }
         public string Status            //状態
         {
@@ -260,7 +260,7 @@ namespace Display
                 Amount = !VisibleCoil ? Amount : Amount.ToCircleEnclosing();
             }
         }
-        public bool IsDate                      //日付調整
+        public bool IsDate              //日付調整
         { get; set; }
         public bool FocusLotNumber      //フォーカス（ロット番号）
         {
@@ -299,23 +299,20 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-        ActionCommand gotFocus;
+        ActionCommand? gotFocus;
         public ICommand GotFocus => gotFocus ??= new ActionCommand(SetGotFocus);
-        ActionCommand lostFocus;
+        ActionCommand? lostFocus;
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
         internal ViewModelInProcessInfo(string code, string lotnumber)
         {
-            Ibarcode = this;
-
             ReadINI();
             Initialize(lotnumber);
-
             InProcessDate = SetToDay(DateTime.Now);
             InProcessCODE = code;
         }
@@ -325,7 +322,6 @@ namespace Display
         {
             DisplayCapution();
             SetFocus();
-            VisibleCoil = string.IsNullOrEmpty(ShirringUnit) ? false : true;
         }
 
         //初期化
@@ -349,8 +345,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 Itimer = this,
@@ -365,15 +360,9 @@ namespace Display
                 ProcessWork = "売上処理",
             };
 
-            //テンキーコントロール
-            TenKeyProperty = new PropertyTenKey();
-            TenKeyProperty.Itenkey = this;
+            TenKeyProperty = new() { Itenkey = this };
+            WorkerProperty = new() { Iworker = this };
 
-            //作業者コントロール
-            WorkerProperty = new PropertyWorker();
-            WorkerProperty.Iworker = this;
-
-            //工程区分
             switch (ProcessName)
             {
                 case "合板":
@@ -410,6 +399,8 @@ namespace Display
                     VisibleCoil = false;
                     break;
             }
+
+            Ibarcode = this;
         }
 
         //選択処理
@@ -464,8 +455,8 @@ namespace Display
 
             if (!result)
             {
-                MessageControl = new ControlMessage();
-                MessageProperty = new PropertyMessage()
+                MessageControl = new();
+                MessageProperty = new()
                 {
                     Message = messege1,
                     Contents = messege2,
@@ -821,8 +812,8 @@ namespace Display
 
                     if (IsMessage) { return; }
 
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "搬入データを登録します",
                         Contents = "",
@@ -845,8 +836,8 @@ namespace Display
                     //削除
                     if (IsMessage) { return; }
 
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "搬入データを削除します",
                         Contents = "※削除されたデータは復元できません。",
@@ -869,8 +860,8 @@ namespace Display
                     //取消
                     if (IsMessage) { return; }
 
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "搬入データをクリアします",
                         Contents = "※入力されたものが消去されます。",

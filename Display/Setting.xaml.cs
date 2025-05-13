@@ -25,9 +25,9 @@ namespace Display
     public class ViewModelSetting : Common, IWindowBase
     {
         //変数
-        string version;
-        string processName;
-        string logText;
+        string version = string.Empty;
+        string processName = string.Empty;
+        string logText = string.Empty;
         string log = CONST.SQL_LOG;
         bool isServer;
         bool isProcessName;
@@ -119,9 +119,9 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //ロード時
@@ -135,8 +135,7 @@ namespace Display
         //初期化
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisiblePower = true,
@@ -150,8 +149,6 @@ namespace Display
                 ProcessWork = "設定画面",
                 Process = "設定"
             };
-
-            //表示
             Version = CONST.DISPLAY_VERSION;
             IsFocusServer = true;
         }
@@ -160,16 +157,15 @@ namespace Display
         private void DisplayLog()
         {
             var file = FOLDER.ApplicationPath() + Log;
+            var reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
 
             if (!File.Exists(file)) { return; }
-            StreamReader reader = new StreamReader(file, Encoding.GetEncoding("utf-8"));
             if (reader != null) { LogText = reader.ReadToEnd(); }
         }
 
         //登録処理
         public void RegistData()
         {
-            //サーバー情報取得
             var server = GetServerIP(Connection);
             var connection = Connection.Replace(server, Server);
 
@@ -196,16 +192,16 @@ namespace Display
         //キーイベント
         public async void KeyDown(object value)
         {
-            if (IsMessage) { return; }
             var result = false;
 
+            if (IsMessage) { return; }
             switch (value)
             {
                 case "Regist":
 
                     //登録
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "登録します",
                         Contents = "※入力されたものを反映します。",
@@ -220,8 +216,8 @@ namespace Display
                 case "Cancel":
 
                     //取消
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "修正を破棄します",
                         Contents = "※入力されたものは設定に反映されません。",

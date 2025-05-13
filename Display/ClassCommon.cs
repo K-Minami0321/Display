@@ -32,23 +32,23 @@ namespace Display
         int selectedIndex = -1;
         double scrollIndex;
         object focus;
-        string receivedData;
-        string nextFocus;
-        string soundFolder;
-        string page;
-        string connection;
-        string server;
-        string processName;
-        string processBefore;
-        string mark;
-        string equipmentCODE;
-        string equipmentName;
-        string worker;
-        string processWork;
-        string productName;
-        string shapeName;
-        string mode;
-        string coil;
+        string receivedData = string.Empty;
+        string nextFocus = string.Empty;
+        string soundFolder = string.Empty;
+        string page = string.Empty;
+        string connection = string.Empty;
+        string server = string.Empty;
+        string processName = string.Empty;
+        string processBefore = string.Empty;
+        string mark = string.Empty;
+        string equipmentCODE = string.Empty;
+        string equipmentName = string.Empty;
+        string worker = string.Empty;
+        string processWork = string.Empty;
+        string productName = string.Empty;
+        string shapeName = string.Empty;
+        string mode = string.Empty;
+        string coil = string.Empty;
         bool isMessage;
         List<string> equipmentCODES;
         List<string> workers;
@@ -269,7 +269,7 @@ namespace Display
         //スタートページを表示
         public void StartPage(string page, string code = null, string lotnumber = null)
         {
-            PropertyWindow windowProperty = new PropertyWindow();
+            var windowProperty = new PropertyWindow();
             var type = Type.GetType("Display." + page);
 
             switch (page)
@@ -295,7 +295,7 @@ namespace Display
         //ページ移動
         public void DisplayFramePage(object framepage)
         {
-            PropertyWindow windowProperty = new PropertyWindow();
+            var windowProperty = new PropertyWindow();
             windowProperty.FramePage = (ContentControl)framepage;
         }
 

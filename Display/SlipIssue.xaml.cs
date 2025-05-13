@@ -26,7 +26,7 @@ namespace Display
     public class ViewModelSlipIssue : Common, IWindowBase, IBarcode
     {
         //変数
-        ManagementSlip managementSlip = new ManagementSlip();
+        ManagementSlip managementSlip;
         DataTable pageTable;
         string lotNumber;
         string lotNumberSEQ;
@@ -108,23 +108,24 @@ namespace Display
             get => visibleComment;
             set => SetProperty(ref visibleComment, value);
         }
-        public bool FocusLotNumber      //フォーカス（ロット番号）
+        public bool FocusLotNumber          //フォーカス（ロット番号）
         {
             get => focusLotNumber;
             set => SetProperty(ref focusLotNumber, value);
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-        ActionCommand lostFocus;
+        ActionCommand? lostFocus;
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
         public ViewModelSlipIssue()
         {
+            managementSlip = new();
 
             ReadINI();
             SelectedIndex = -1;
@@ -158,8 +159,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisibleList = false,
@@ -187,7 +187,9 @@ namespace Display
                     ProcessLabel = "製造課仕上にて";
                     break;
             }
+
             VisibleComment = ProcessName == "合板";
+            Ibarcode = this;
         }
 
         //現品票データ
@@ -255,8 +257,8 @@ namespace Display
 
                     if (string.IsNullOrEmpty(LotNumber)) { return; }
 
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "現品票を印刷します",
                         Contents = "カラー用紙をセットしOKボタンを押してください。",
@@ -290,6 +292,7 @@ namespace Display
                         //印刷処理
                         var pageContent = new PageContent();
                         var printPage = new PrintPage();
+
                         printPage.PaperSize = new PageMediaSize(PageMediaSizeName.ISOA4);
                         printPage.PaperOrientation = PageOrientation.Landscape;
                         printPage.Document = new FixedDocument();

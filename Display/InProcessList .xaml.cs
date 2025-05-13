@@ -22,12 +22,12 @@ namespace Display
     public class ViewModelInProcessList : Common, IWindowBase, ISelect
     {
         //変数
-        InProcess inProcess = new InProcess();
-        string inProcessCODE;
-        string inProcessDate;
-        string headerUnit;
-        string headerWeight;
-        string headerAmount;
+        InProcess inProcess;
+        string inProcessCODE = string.Empty;
+        string inProcessDate = string.Empty;
+        string headerUnit = string.Empty;
+        string headerWeight = string.Empty;
+        string headerAmount = string.Empty;
         bool visibleShape;
         bool visibleUnit;
         bool visibleWeight;
@@ -85,17 +85,17 @@ namespace Display
         { get; set; }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
-        internal ViewModelInProcessList(string date)
+        public ViewModelInProcessList(string date)
         {
-            Iselect = this;
-            ReadINI();
+            inProcess = new();
 
+            ReadINI();
             SelectedIndex = -1;
             InProcessDate = CacheDate ?? date.ToStringDateDB();
         }
@@ -111,8 +111,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisiblePower = true,
@@ -126,10 +125,10 @@ namespace Display
                 ProcessWork = ProcessName + "売上"
             };
 
-            //工程区分
             switch (ProcessName)
             {
                 case "合板":
+
                     VisibleShape = true;
                     VisibleUnit = true;
                     VisibleWeight = false;
@@ -138,6 +137,7 @@ namespace Display
                     break;
 
                 case "プレス":
+
                     VisibleShape = false;
                     VisibleUnit = false;
                     VisibleWeight = true;
@@ -146,12 +146,15 @@ namespace Display
                     break;
 
                 default:
+
                     VisibleShape = false;
                     VisibleUnit = false;
                     VisibleWeight = false;
                     HeaderAmount = "数量";
                     break;
             }
+
+            Iselect = this;
         }
 
         //状態読込

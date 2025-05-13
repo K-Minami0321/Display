@@ -26,10 +26,10 @@ namespace Display
     public class ViewModelManufactureInfo : Common, IWindowBase, IBarcode, ITenKey, IWorker, IWorkProcess, ITimer
     {
         //変数
-        Manufacture manufacture = new Manufacture();
-        string processName;
-        string manufactureCODE;
-        string manufactureDate;
+        Manufacture manufacture;
+        string processName = string.Empty;
+        string manufactureCODE = string.Empty;
+        string manufactureDate = string.Empty;
         string lotNumber = string.Empty;
         string lotNumberSEQ = string.Empty;
         string productName = string.Empty;
@@ -44,7 +44,7 @@ namespace Display
         string team = string.Empty;
         string completed = string.Empty;
         string sales = string.Empty;
-        string breakName;
+        string breakName = string.Empty;
         string buttonName = "数 量";
         string labelAmount = "数 量";
         int lengthLotNumber = 10;
@@ -88,7 +88,7 @@ namespace Display
             {
                 SetProperty(ref manufactureCODE, value);
 
-                var manufacture = new Manufacture(ProcessName);
+                manufacture = new(ProcessName);
                 manufacture.ManufactureCODE = value;
                 if (manufacture.DataCount == 0) { return; }
 
@@ -378,25 +378,22 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-        ActionCommand commandFocus;
+        ActionCommand? commandFocus;
         public ICommand CommandFocus => commandFocus ??= new ActionCommand(RegistData);
-        ActionCommand gotFocus;
+        ActionCommand? gotFocus;
         public ICommand GotFocus => gotFocus ??= new ActionCommand(SetGotFocus);
-        ActionCommand lostFocus;
+        ActionCommand? lostFocus;
         public ICommand LostFocus => lostFocus ??= new ActionCommand(SetLostFocus);
 
         //コンストラクター
         internal ViewModelManufactureInfo(string code, string lotnumber)
         {
-            Ibarcode = this;
-
             ReadINI();
             Initialize(lotnumber);
-
             ManufactureDate = SetToDay(DateTime.Now);
             ManufactureCODE = code;
         }
@@ -462,8 +459,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 Itimer = this,
@@ -478,17 +474,9 @@ namespace Display
                 ProcessWork = string.IsNullOrEmpty(Equipment1) ? "作業実績" : Equipment1 + " - " + EquipmentCODE
             };
 
-            //テンキーコントロール
-            TenKeyProperty = new PropertyTenKey();
-            TenKeyProperty.Itenkey = this;
-
-            //作業者コントロール
-            WorkerProperty = new PropertyWorker();
-            WorkerProperty.Iworker = this;
-
-            //工程コントロール
-            WorkProcessProperty = new PropertyWorkProcess();
-            WorkProcessProperty.IworkProcess = this;
+            TenKeyProperty = new() { Itenkey = this };
+            WorkerProperty = new() { Iworker = this };
+            WorkProcessProperty = new() { IworkProcess = this };
 
             switch (Mode)
             {
@@ -576,10 +564,10 @@ namespace Display
                     break;
             }
 
-            //ボタン設定
             WindowProperty.VisiblePower = true;
             WindowProperty.VisibleInfo = true;
             WindowProperty.VisibleArrow = false;
+            Ibarcode = this;
         }
 
         //選択処理
@@ -644,8 +632,8 @@ namespace Display
 
             if (!result) 
             {
-                MessageControl = new ControlMessage();
-                MessageProperty = new PropertyMessage()
+                MessageControl = new();
+                MessageProperty = new()
                 {
                     Message = messege1,
                     Contents = messege2,
@@ -670,13 +658,13 @@ namespace Display
             var messege = false;
             var forcus = string.Empty;
             var mode = string.Empty;
-            MessageControl = new ControlMessage();
+            MessageControl = new();
 
             switch (Mode)
             {
                 case "登録":
 
-                    MessageProperty = new PropertyMessage()
+                    MessageProperty = new()
                     {
                         Message = "作業データを" + ButtonName.Replace("　", "") + "します",
                         Contents = "※「はい」ボタンを押して作業データを" + ButtonName.Replace("　", "") + "します。",
@@ -688,7 +676,7 @@ namespace Display
 
                 case "作業中":
 
-                    MessageProperty = new PropertyMessage()
+                    MessageProperty = new()
                     {
                         Message = "作業を完了します",
                         Contents = "※登録後、次の作業の準備をしてください。",
@@ -728,8 +716,8 @@ namespace Display
         {
             if (IsMessage) { return; }
 
-            MessageControl = new ControlMessage();
-            MessageProperty = new PropertyMessage()
+            MessageControl = new();
+            MessageProperty = new()
             {
                 Message = "作業データを削除します",
                 Contents = "※削除されたデータは復元できません",
@@ -1253,8 +1241,8 @@ namespace Display
                     //作業開始
                     if (await IsRequiredRegist())
                     {
-                        MessageControl = new ControlMessage();
-                        MessageProperty = new PropertyMessage()
+                        MessageControl = new();
+                        MessageProperty = new()
                         {
                             Message = "作業を開始します",
                             Contents = "※「はい」ボタンを押して作業を開始します。",
@@ -1290,8 +1278,8 @@ namespace Display
                 case "Cancel":
 
                     //取消
-                    MessageControl = new ControlMessage();
-                    MessageProperty = new PropertyMessage()
+                    MessageControl = new();
+                    MessageProperty = new()
                     {
                         Message = "この作業を取消します",
                         Contents = "※入力されたものが消去されます。",

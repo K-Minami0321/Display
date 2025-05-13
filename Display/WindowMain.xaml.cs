@@ -32,115 +32,15 @@ namespace Display
     //インターフェース
     public interface ITimer
     {
-        //タイマー処理
         void OnTimerElapsed(object sender, ElapsedEventArgs e);
-    }
-
-    //プロパティ
-    public class PropertyWindow
-    {
-        public static ViewModelWindowMain ViewModel     //ViewModel
-        { get; set; }
-        public IWindowBase IwindowBase                  //インターフェース
-        {
-            get => ViewModel.IwindowBase;
-            set => ViewModel.IwindowBase = value;
-        }
-        public ITimer Itimer                            //インターフェース
-        {
-            get => ViewModel.Itimer;
-            set => ViewModel.Itimer = value;
-        }
-        public ContentControl FramePage                 //画面ページ
-        {
-            get => ViewModel.FramePage;
-            set => ViewModel.FramePage = value;
-        }
-        public string Process                           //工程区分
-        {
-            get => ViewModel.Process;
-            set => ViewModel.Process = value;
-        }
-        public string ProcessWork                       //工程区分表示
-        {
-            get => ViewModel.ProcessWork;
-            set => ViewModel.ProcessWork = value;
-        }
-        public bool VisiblePower                        //表示・非表示（電源ボタン）
-        {
-            get => ViewModel.VisiblePower;
-            set => ViewModel.VisiblePower = value;
-        }
-        public bool VisibleList                         //表示・非表示（一覧ボタン）
-        {
-            get => ViewModel.VisibleList;
-            set => ViewModel.VisibleList = value;
-        }
-        public bool VisibleInfo                         //表示・非表示（登録ボタン）
-        {
-            get => ViewModel.VisibleInfo;
-            set => ViewModel.VisibleInfo = value;
-        }
-        public bool VisibleDefect                       //表示・非表示（不良ボタン）
-        {
-            get => ViewModel.VisibleDefect;
-            set => ViewModel.VisibleDefect = value;
-        }
-        public bool VisibleArrow                        //表示・非表示（矢印ボタン）
-        {
-            get => ViewModel.VisibleArrow;
-            set => ViewModel.VisibleArrow = value;
-        }
-        public bool VisiblePlan                         //表示・非表示（予定ボタン）
-        {
-            get => ViewModel.VisiblePlan;
-            set => ViewModel.VisiblePlan = value;
-        }
-        public bool VisiblePrinter                      //表示・非表示（印刷ボタン）
-        {
-            get => ViewModel.VisiblePrinter;
-            set => ViewModel.VisiblePrinter = value;
-        }
-        public bool VisibleQRcode                       //表示・非表示（QRコードボタン）
-        {
-            get => ViewModel.VisibleQRcode;
-            set => ViewModel.VisibleQRcode = value;
-        }
-        public string IconPlan                          //アイコン（計画一覧）
-        {
-            get => ViewModel.IconPlan;
-            set => ViewModel.IconPlan = value;
-        }
-        public string IconList                          //アイコン（計画一覧）
-        {
-            get => ViewModel.IconList;
-            set => ViewModel.IconList = value;
-        }
-        public int IconSize                             //アイコンサイズ
-        {
-            get => ViewModel.IconSize;
-            set => ViewModel.IconSize = value;
-        }
-        public bool IsMessage                           //メッセージコントロールが開いてるかどうか
-        {
-            get => ViewModel.IsMessage;
-            set => ViewModel.IsMessage = value;
-        }
-        public PropertyWindow()                         //コンストラクター
-        {
-            IconList = "ViewList";
-            IconPlan = "CalendarMonth";
-            IconSize = 30;
-        }
     }
 
     //ViewModel
     public class ViewModelWindowMain : Common, IWindow, ISerialPort
     {
         //変数
-        INIFile IniFile;                                //設定ファイル
-        SQL sql = new SQL();                            //データベース
-        ComPort comPort;                                //COMポート
+        SQL sql;
+        ComPort comPort;
         WindowState displayState;
         WindowStyle displayStyle;
         ContentControl framePage;
@@ -287,11 +187,11 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandClosing;
+        ActionCommand? commandClosing;
         public ICommand CommandClosing => commandClosing ??= new ActionCommand(OnClosing);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-        ActionCommand commandKey;
+        ActionCommand? commandKey;
         public ICommand CommandKey => commandKey ??= new ActionCommand(KeyDown);
 
         //コンストラクター
@@ -301,7 +201,7 @@ namespace Display
             WindowBehavior.Instance.iWindow = this;
 
             //初期設定
-            IniFile = new INIFile(CONST.SETTING_INI);   //INIファイル取得
+            IniFile = new(CONST.SETTING_INI);           //INIファイル取得
             LoadWindowProperty();                       //Windowのサイズ・位置を復元
             ReadIniFile();                              //設定ファイル読み込み
             StartTimer();                               //時刻設定スタート
@@ -319,10 +219,8 @@ namespace Display
         //シャットダウン
         private async void PowerOff()
         {
-            MessageControl = null;
-
-            MessageControl = new ControlMessage();
-            MessageProperty = new PropertyMessage()
+            MessageControl = new();
+            MessageProperty = new()
             {
                 Message = "システム終了",
                 Contents = "※登録を破棄してシステムを終了します。",
@@ -389,10 +287,11 @@ namespace Display
             //データベース接続
             var db = IniFile.GetString("Database", "Database");
             var connect = IniFile.GetString("Database", "ConnectString");
+            sql = new();
             sql.DatabaseOpen(db, connect);
 
             //シリアルポート接続
-            comPort = new ComPort();
+            comPort = new();
             comPort.PortOpen(IniFile.GetString("Common", "SerialPort", ""));
             comPort.IserialPort = this;
 
@@ -521,6 +420,104 @@ namespace Display
                     if (IwindowBase != null) { IwindowBase.KeyDown(value); }
                     break;
             }
+        }
+    }
+
+    //プロパティ
+    public class PropertyWindow
+    {
+        public static ViewModelWindowMain ViewModel     //ViewModel
+        { get; set; }
+        public IWindowBase IwindowBase                  //インターフェース
+        {
+            get => ViewModel.IwindowBase;
+            set => ViewModel.IwindowBase = value;
+        }
+        public ITimer Itimer                            //インターフェース
+        {
+            get => ViewModel.Itimer;
+            set => ViewModel.Itimer = value;
+        }
+        public ContentControl FramePage                 //画面ページ
+        {
+            get => ViewModel.FramePage;
+            set => ViewModel.FramePage = value;
+        }
+        public string Process                           //工程区分
+        {
+            get => ViewModel.Process;
+            set => ViewModel.Process = value;
+        }
+        public string ProcessWork                       //工程区分表示
+        {
+            get => ViewModel.ProcessWork;
+            set => ViewModel.ProcessWork = value;
+        }
+        public bool VisiblePower                        //表示・非表示（電源ボタン）
+        {
+            get => ViewModel.VisiblePower;
+            set => ViewModel.VisiblePower = value;
+        }
+        public bool VisibleList                         //表示・非表示（一覧ボタン）
+        {
+            get => ViewModel.VisibleList;
+            set => ViewModel.VisibleList = value;
+        }
+        public bool VisibleInfo                         //表示・非表示（登録ボタン）
+        {
+            get => ViewModel.VisibleInfo;
+            set => ViewModel.VisibleInfo = value;
+        }
+        public bool VisibleDefect                       //表示・非表示（不良ボタン）
+        {
+            get => ViewModel.VisibleDefect;
+            set => ViewModel.VisibleDefect = value;
+        }
+        public bool VisibleArrow                        //表示・非表示（矢印ボタン）
+        {
+            get => ViewModel.VisibleArrow;
+            set => ViewModel.VisibleArrow = value;
+        }
+        public bool VisiblePlan                         //表示・非表示（予定ボタン）
+        {
+            get => ViewModel.VisiblePlan;
+            set => ViewModel.VisiblePlan = value;
+        }
+        public bool VisiblePrinter                      //表示・非表示（印刷ボタン）
+        {
+            get => ViewModel.VisiblePrinter;
+            set => ViewModel.VisiblePrinter = value;
+        }
+        public bool VisibleQRcode                       //表示・非表示（QRコードボタン）
+        {
+            get => ViewModel.VisibleQRcode;
+            set => ViewModel.VisibleQRcode = value;
+        }
+        public string IconPlan                          //アイコン（計画一覧）
+        {
+            get => ViewModel.IconPlan;
+            set => ViewModel.IconPlan = value;
+        }
+        public string IconList                          //アイコン（計画一覧）
+        {
+            get => ViewModel.IconList;
+            set => ViewModel.IconList = value;
+        }
+        public int IconSize                             //アイコンサイズ
+        {
+            get => ViewModel.IconSize;
+            set => ViewModel.IconSize = value;
+        }
+        public bool IsMessage                           //メッセージコントロールが開いてるかどうか
+        {
+            get => ViewModel.IsMessage;
+            set => ViewModel.IsMessage = value;
+        }
+        public PropertyWindow()                         //コンストラクター
+        {
+            IconList = "ViewList";
+            IconPlan = "CalendarMonth";
+            IconSize = 30;
         }
     }
 }

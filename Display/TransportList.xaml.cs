@@ -23,13 +23,13 @@ namespace Display
     public class ViewModelTransportList : Common, IWindowBase, ISelect
     {
         //変数
-        InProcess inProcess = new InProcess();
-        string processName;
-        string inProcessCODE;
-        string transportDate;
-        string headerUnit;
-        string headerWeight;
-        string headerAmount;
+        InProcess inProcess;
+        string processName = string.Empty;
+        string inProcessCODE = string.Empty;
+        string transportDate = string.Empty;
+        string headerUnit = string.Empty;
+        string headerWeight = string.Empty;
+        string headerAmount = string.Empty;
         bool visibleShape;
         bool visibleUnit;
         bool visibleWeight;
@@ -76,17 +76,17 @@ namespace Display
         }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
 
         //コンストラクター
         internal ViewModelTransportList()
         {
-            Iselect = this;
+            inProcess = new();
+            
             ReadINI();
-
             SelectedIndex = -1;
             TransportDate = SetToDay(DateTime.Now).ToStringDateDB();
         }
@@ -101,8 +101,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            //WindowMain
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 ProcessWork = "引取履歴",
@@ -114,7 +113,8 @@ namespace Display
                 VisiblePrinter = false,
                 VisibleQRcode = false,
                 IconList = "ViewList"
-            };    
+            };
+            Iselect = this;
         }
 
         //一覧表示
@@ -132,6 +132,7 @@ namespace Display
             switch (value)
             {
                 case "Right":
+
                     KeyDown("DiaplayPlan");
                     break;
             }

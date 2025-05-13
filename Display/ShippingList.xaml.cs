@@ -24,8 +24,8 @@ namespace Display
     public class ViewModelShippingList : Common, IWindowBase, ISelect
     {
         //変数
-        ShippingStock shippingStock = new ShippingStock();
-        string shippingDate;
+        ShippingStock shippingStock;
+        string shippingDate = string.Empty;
         List<string> customers;
 
         //プロパティ
@@ -51,17 +51,17 @@ namespace Display
         { get; set; }
 
         //イベント
-        ActionCommand commandLoad;
+        ActionCommand? commandLoad;
         public ICommand CommandLoad => commandLoad ??= new ActionCommand(OnLoad);
-        ActionCommand commandButton;
+        ActionCommand? commandButton;
         public ICommand CommandButton => commandButton ??= new ActionCommand(KeyDown);
-        ActionCommand commandCheck;
+        ActionCommand? commandCheck;
         public ICommand CommandCheck => commandCheck ??= new ActionCommand(OnCheck);
 
         //コンストラクター
         public ViewModelShippingList()
         {
-            Iselect = this;
+            shippingStock = new();
 
             ReadINI();
             ShippingDate = CacheDate ?? DateTime.Now.ToString("yyyyMMdd");
@@ -77,7 +77,7 @@ namespace Display
         //キャプション・ボタン表示
         private void DisplayCapution()
         {
-            WindowProperty = new PropertyWindow()
+            WindowProperty = new()
             {
                 IwindowBase = this,
                 VisiblePlan = false,
@@ -89,6 +89,7 @@ namespace Display
                 VisibleQRcode = false,
                 ProcessWork = "出庫一覧"
             };
+            Iselect = this;
         }
 
         //状態読込
